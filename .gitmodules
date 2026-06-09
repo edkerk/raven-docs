@@ -1,0 +1,15 @@
+[submodule "RAVEN"]
+	path = RAVEN
+	url = https://github.com/SysBioChalmers/RAVEN.git
+	branch = main
+	shallow = true
+[submodule "raven-python"]
+	path = raven-python
+	url = https://github.com/SysBioChalmers/raven-python.git
+	branch = main
+	shallow = true
+[submodule "hanpo-GEM"]
+	path = hanpo-GEM
+	url = https://github.com/SysBioChalmers/hanpo-GEM.git
+	branch = main
+	shallow = true

@@ -1,0 +1,8 @@
+mkdocs>=1.6
+mkdocs-material>=9.5
+pymdown-extensions>=10.0
+mkdocstrings[python]>=0.26
+mkdocstrings-matlab>=2.0
+mkdocs-gen-files>=0.5
+mkdocs-literate-nav>=0.6
+black>=24

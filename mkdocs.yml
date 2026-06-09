@@ -1,0 +1,125 @@
+site_name: RAVEN
+site_description: >-
+  Reconstruction, Analysis and Visualization of Metabolic Networks — the RAVEN
+  Toolbox (MATLAB) and raven-python, documented side by side.
+site_author: Wang, Marcisauskas, Sanchez, Domenzain, Hermansson, Agren, Nielsen, Kerkhoven et al.
+repo_url: https://github.com/SysBioChalmers/RAVEN
+repo_name: SysBioChalmers/RAVEN
+edit_uri: ""
+
+plugins:
+  - search
+  # gen-files runs the generator at build time, emitting one API page per
+  # shared category plus the literate-nav SUMMARY from the submodule sources.
+  - gen-files:
+      scripts:
+        - scripts/gen_api_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        # Python API (raven-python) -- collected statically by griffe from the
+        # submodule source, so the package does not need to be installed.
+        python:
+          paths: [raven-python/src]
+          options:
+            docstring_style: numpy
+            docstring_section_style: table
+            show_root_heading: false
+            show_root_toc_entry: false
+            show_source: false
+            separate_signature: true
+            show_signature_annotations: true
+        # MATLAB API (RAVEN) -- pure-Python tree-sitter collection, no MATLAB
+        # runtime required. Functions are referenced by name; paths are limited
+        # to the documented user-facing categories so names stay unambiguous
+        # (legacy/ and external/ are intentionally excluded).
+        matlab:
+          paths:
+            - RAVEN/core
+            - RAVEN/io
+            - RAVEN/solver
+            - RAVEN/pathway
+            - RAVEN/plotting
+            - RAVEN/hpa
+            - RAVEN/struct_conversion
+            - RAVEN/utils
+          paths_recursive: true
+          options:
+            show_root_heading: false
+            show_root_toc_entry: false
+            show_source: false
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - content.code.copy
+    - toc.follow
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: green
+      accent: green
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: green
+      accent: green
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path: ["."]
+      check_paths: true
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Tutorials:
+      - Overview: tutorials/index.md
+      - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
+      - 2 - Construct a functional small model: tutorials/tutorial2.md
+      - 3 - Knockouts, MOMA and omics data: tutorials/tutorial3.md
+      - 4 - Fix an erroneous model: tutorials/tutorial4.md
+      - 5 - Reconstruct a GEM from KEGG: tutorials/tutorial5.md
+      - 6 - Reconstruct a GEM from MetaCyc + KEGG: tutorials/tutorial6.md
+  - GEM reconstruction protocol:
+      - Introduction: protocol/index.md
+      - Materials and installation: protocol/materials.md
+      - Import template models: protocol/template-models.md
+      - Draft from homology: protocol/homology.md
+      - Biomass composition: protocol/biomass.md
+      - Curation of lipid reactions: protocol/lipid-curation.md
+      - Gap-filling: protocol/gap-filling.md
+      - Save and simulate: protocol/simulation.md
+      - Manual curation: protocol/manual-curation.md
+      - Anticipated results: protocol/anticipated-results.md
+  - API reference: api/
+  - References: references.md
