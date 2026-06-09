@@ -1,0 +1,23 @@
+# Read the Docs configuration file for the RAVEN documentation
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html
+
+version: 2
+
+# Pull in the RAVEN (MATLAB), raven-python (Python) and hanpo-GEM (protocol)
+# sources tracked as git submodules, so their docstrings and protocol code can
+# be auto-documented.
+submodules:
+  include: all
+  recursive: true
+
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.12"
+
+mkdocs:
+  configuration: mkdocs.yml
+
+python:
+  install:
+    - requirements: requirements.txt
