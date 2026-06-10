@@ -35,13 +35,23 @@ PYPKG = ROOT / "raven-python" / "src" / "raven_python"
 # Mirrors the matlab handler `paths:` in mkdocs.yml. legacy/ and external/ are
 # intentionally excluded (deprecated / third-party).
 MATLAB_CATEGORIES = [
-    ("core", "Core"),
+    ("reconstruction", "Reconstruction"),
+    ("manipulation", "Manipulation"),
+    ("analysis", "Analysis"),
+    ("gapfilling", "Gap-filling"),
+    ("annotation", "Annotation"),
+    ("biomass", "Biomass"),
+    ("curation", "Curation"),
+    ("conversion", "Format conversion"),
+    ("conditions", "Conditions"),
+    ("comparison", "Comparison"),
+    ("omics", "Omics integration"),
+    ("localization", "Localization"),
+    ("queries", "Queries"),
     ("io", "Input / output"),
     ("solver", "Solvers"),
-    ("pathway", "Pathways"),
-    ("plotting", "Plotting"),
-    ("hpa", "Human Protein Atlas"),
-    ("struct_conversion", "Model structure conversion"),
+    ("tasks", "Metabolic tasks"),
+    ("visualization", "Visualization"),
     ("utils", "Utilities"),
 ]
 

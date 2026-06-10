@@ -37,13 +37,23 @@ plugins:
         # (legacy/ and external/ are intentionally excluded).
         matlab:
           paths:
-            - RAVEN/core
+            - RAVEN/reconstruction
+            - RAVEN/manipulation
+            - RAVEN/analysis
+            - RAVEN/gapfilling
+            - RAVEN/annotation
+            - RAVEN/biomass
+            - RAVEN/curation
+            - RAVEN/conversion
+            - RAVEN/conditions
+            - RAVEN/comparison
+            - RAVEN/omics
+            - RAVEN/localization
+            - RAVEN/queries
             - RAVEN/io
             - RAVEN/solver
-            - RAVEN/pathway
-            - RAVEN/plotting
-            - RAVEN/hpa
-            - RAVEN/struct_conversion
+            - RAVEN/tasks
+            - RAVEN/visualization
             - RAVEN/utils
           paths_recursive: true
           options:

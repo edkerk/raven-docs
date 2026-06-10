@@ -1,7 +1,7 @@
 [submodule "RAVEN"]
 	path = RAVEN
 	url = https://github.com/SysBioChalmers/RAVEN.git
-	branch = main
+	branch = develop3
 	shallow = true
 [submodule "raven-python"]
 	path = raven-python
