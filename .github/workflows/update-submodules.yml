@@ -24,9 +24,18 @@ jobs:
 
       - name: Bump submodules to their tracked branches
         run: |
-          # Pulls each submodule to the tip of the branch in .gitmodules
+          # Fetch each submodule's tracked branch (from .gitmodules) and check
+          # it out at its tip. Done explicitly because the submodules are
+          # `shallow = true`, so only the pinned commit is present and
+          # `git submodule update --remote` can't resolve the remote branch ref.
           # (RAVEN -> develop3, raven-python -> develop, hanpo-GEM -> main)
-          git submodule update --remote --recursive
+          git submodule sync --recursive
+          git submodule foreach '
+            branch=$(git config -f "$toplevel/.gitmodules" "submodule.$name.branch" || echo main)
+            echo "Updating $name -> $branch"
+            git fetch --depth 1 origin "$branch"
+            git checkout -B "$branch" FETCH_HEAD
+          '
 
       - name: Commit & push if anything changed
         run: |
