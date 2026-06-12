@@ -1,41 +1,217 @@
 # Tutorial 5 — Reconstruct a GEM from KEGG
 
-This exercise creates a draft model *de novo* from protein sequences in a FASTA
-file, using **KEGG** as the reaction database, and runs some functionality
-checks on the result. The example organism is *Saccharomyces cerevisiae*.
+This exercise creates a model from KEGG, based on protein sequences in a FASTA
+file, and runs some functionality checks on the result. The example organism is
+*Saccharomyces cerevisiae*.
 
-Unlike Tutorials 1–4, this is a **showcase**: its main purpose is to serve as a
-scaffold you can adapt to reconstruct a GEM for any organism.
-
-## What the script does
-
-1. **Download trained HMMs.** KEGG Orthology groups are matched with profile
-   Hidden Markov Models. The archive `euk90_kegg105` (for eukaryotes) is fetched
-   automatically; see the RAVEN Wiki for how these archives are prepared.
-2. **Reconstruct from KEGG** with `getKEGGModelForOrganism`, supplying the
-   organism's whole-proteome FASTA (`sce.fa`). This searches the sequences
-   against the HMMs and assembles a draft model from the matching KEGG reactions.
-3. **Inspect and check** the draft model — number of reactions, metabolites and
-   genes, and basic connectivity/quality checks.
-
-The key reconstruction call looks like:
-
-```matlab
-model = getKEGGModelForOrganism('sce', 'sce.fa', 'euk90_kegg105', 'output', ...
-    false, false, false, false, 10^-30, 0.8, 0.3, -1);
-```
+Unlike Tutorials 1–4, this is more of a **showcase**: its main purpose is to
+serve as a scaffold you can adapt to reconstruct a GEM for any organism.
 
 !!! note "Runtime"
     *De novo* reconstruction performs sequence searches against large HMM
-    databases and can take a long time on a full proteome. The downloaded
-    archives are also large.
+    databases. Building the model takes up to 20–35 minutes on macOS and Unix
+    systems and 40–55 minutes on Windows, depending on your hardware and the
+    size of the target organism's proteome. `gapReport` can take several to many
+    hours, depending on the number of gaps in the model.
+
+## Step by step
+
+### 1. Reconstruct from KEGG
+
+Start by downloading trained Hidden Markov Models for eukaryotes. This can be
+done automatically or manually from the RAVEN Wiki in its GitHub repository;
+here the archive `euk90_kegg105` is picked for automatic download. See the RAVEN
+Wiki for more information regarding preparation of such an archive.
+
+`getKEGGModelForOrganism` then creates a model for *S. cerevisiae* from the
+whole-proteome FASTA (`sce.fa`). The parameters are set to exclude general or
+unclear reactions and reactions with undefined stoichiometry. Type
+`help getKEGGModelForOrganism` to see what the different parameters are for.
+
+```matlab
+model=getKEGGModelForOrganism('sce','sce.fa','euk90_kegg105','output',false,false,false,false,10^-30,0.8,0.3,-1);
+disp(model);
+```
+
+The resulting model should contain around 1589 reactions, 1600 metabolites and
+836 genes. Small variations are possible since it is a heuristic algorithm, and
+different KEGG versions give slightly different results.
+
+### 2. Remove reactions that make something from nothing
+
+A first control is that the model should not be able to produce any metabolites
+without uptake of some metabolites. This commonly happens when metabolites have
+a different meaning in different reactions. `removeBadRxns` tries to find and
+remove such reactions in an automated manner; type `help removeBadRxns` for
+details.
+
+```matlab
+[newModel, removedRxns]=removeBadRxns(model);
+```
+
+This reports that H⁺ can be made even if no reactions were unbalanced. Protons
+are particularly problematic since it is rather arbitrary at which pH the
+formulas are written. For this analysis the protons can be ignored and fixed
+later, so rerun while allowing H⁺ to be produced.
+
+```matlab
+[newModel, removedRxns]=removeBadRxns(model,1,{'H+'},true);
+disp(removedRxns);
+```
+
+Only one reaction was removed because it enabled the model to produce something
+from nothing. Since it is only one reaction, it is worthwhile to look into it in
+more detail.
+
+### 3. Investigate the problematic reaction
+
+According to KEGG, the removed reaction is a general polymer reaction. Use
+`makeSomething` to look at the flux distributions in more detail and find out if
+there is a better alternative to delete.
+
+```matlab
+[fluxes, metabolite]=makeSomething(model,{'H+'},true);
+model.metNames(metabolite)
+printFluxes(model, fluxes, false, [], [],'%rxnID (%rxnName):\n\t%eqn: %flux\n')
+```
+
+This shows the model could produce H₂O, and results in quite a lot of fluxes to
+look through. It is easier if the elementally balanced reactions are excluded.
+Since water was produced, only look at the reactions unbalanced for oxygen
+(column 6 of the elemental balance).
+
+```matlab
+balanceStructure=getElementalBalance(model);
+goodOnes=balanceStructure.leftComp(:,6)==balanceStructure.rightComp(:,6);
+printFluxes(removeReactions(model,goodOnes), fluxes(~goodOnes), false, [], [],'%rxnID (%rxnName):\n\t%eqn: %flux\n');
+```
+
+There is still a good number of reactions. Leave only the reactions which
+involve amylose or starch, from one of the problematic reactions identified
+earlier.
+
+```matlab
+printFluxes(model, fluxes, false, [], [],'%rxnID (%rxnName):\n\t%eqn: %flux\n',{'Amylose';'Starch'});
+```
+
+There are two elementally unbalanced reactions, including the one identified by
+`removeBadRxns`. They contradict each other: the first shows that amylose and
+starch are interconvertible, while the second shows that amylose contains one
+less glucose unit than starch. Such general reactions should be fixed manually.
+Trusting `removeBadRxns`, delete `R02110`.
+
+```matlab
+model=removeReactions(model,'R02110');
+```
+
+### 4. Check consumption and add uptakes
+
+The model can no longer make something from nothing. Check whether it can
+consume something without any output.
+
+```matlab
+[solution, metabolite]=consumeSomething(model,{'H+'},true);
+model.metNames(metabolite)
+```
+
+Nothing is consumed without output, so that is good. Now add some uptakes and
+see what the model can produce.
+
+```matlab
+[~, J]=ismember({'D-Glucose';'H2O';'Orthophosphate';'Oxygen';'NH3';'Sulfate'},model.metNames);
+[model, addedRxns]=addExchangeRxns(model,'in',J);
+```
+
+`canProduce` reports which metabolites can be produced given these uptakes. It
+allows output of all metabolites — which does not happen in a real cell, but is
+very useful for functionality testing.
+
+```matlab
+I=canProduce(model);
+fprintf('%d%%\n', round(sum(I)/numel(model.mets)*100));
+```
+
+Around 31% of the metabolites could be synthesized. It is not directly clear
+whether this is high or low — many metabolites should not be possible to
+synthesize from those simple precursors.
+
+### 5. Fill gaps using the full KEGG model
+
+Try to fill gaps using the full KEGG model to see if that gives a significantly
+higher number. `getModelFromKEGG` retrieves the full KEGG model. It is
+associated with more than 6,400,000 genes that are not used for gap-filling, so
+they are removed to make this a little faster.
+
+```matlab
+keggModel=getModelFromKEGG([],false,false,false,false);
+keggModel=rmfield(keggModel,'genes');
+keggModel=rmfield(keggModel,'rxnGeneMat');
+```
+
+It is already known that there are some unbalanced reactions in KEGG. Only the
+balanced ones are used for gap-filling.
+
+```matlab
+balanceStructure=getElementalBalance(keggModel);
+keggModel=removeReactions(keggModel,balanceStructure.balanceStatus~=1,true,true);
+```
+
+`fillGaps` with these settings tries to include reactions so that there is flux
+through all reactions in the model. The first flag says that production of all
+metabolites should be allowed.
+
+```matlab
+params.relGap=0.6; %Lower number for a more exhaustive search
+params.printReport=true;
+[newConnected, cannotConnect, addedRxns, newModel, exitFlag]=fillGaps(model,keggModel,true,false,false,[],params);
+```
+
+The results show that `fillGaps` could connect around 29 reactions
+(`newConnected`) by including around 41 reactions from the KEGG model
+(`addedRxns`). These should of course be checked manually to confirm that they
+exist in yeast, but here it is assumed they all occur in yeast.
+
+### 6. Report on connectivity
+
+Continue to improve the connectivity of the model by identifying metabolites
+that should be connected. `gapReport` gives a convenient overview of how
+connected the model is, together with a lot of useful data.
+
+```matlab
+[noFluxRxns, noFluxRxnsRelaxed, subGraphs, notProducedMets, minToConnect,...
+    neededForProductionMat]=gapReport(newModel);
+```
+
+The results show that 532 from 1634 reactions cannot carry flux. Because output
+is allowed for all metabolites, it calculates 532 in both cases. 543 from 1617
+metabolites cannot be synthesized from the supplied precursors. There are 6
+subnetworks in the model, of which 1605 from 1617 metabolites belong to the
+first one.
+
+`gapReport` also prints the metabolites to connect: to enable net production of
+all metabolites, a total of 322 metabolites must be connected, with the top
+ranked one being Acyl-CoA (which connects 162 metabolites). Connecting only the
+top 10 in the list already connects 271/543 (50%) of them. This is a very useful
+way of directing the gap-filling tasks to where they are of greatest use.
+
+### 7. Add minimal-media uptakes and iterate
+
+The list reveals that yeast cannot grow on only the substrates defined so far;
+it requires some other precursors for co-factor synthesis as well. Add uptake
+reactions for the minimal-media constituents needed for yeast to grow.
+
+```matlab
+[~, J]=ismember({'4-Aminobenzoate';'Riboflavin';'Thiamine';'Biotin';'Folate';'Nicotinate';'Zymosterol';'Choline'},newModel.metNames);
+[newModel, addedRxns]=addExchangeRxns(newModel,'in',J);
+```
+
+Rerun `gapReport` and use the output for targeting the gap-filling efforts. Note
+that only some info is printed; most of it is available in the output
+structures. Work like this in an iterative manner until the model is of
+sufficient quality.
 
 ## Full script
 
 ```matlab
 --8<-- "RAVEN/tutorial/tutorial5.m"
 ```
-
-For the complete, narrated description see *Tutorial 5* in the
-[`RAVEN tutorials.docx`](https://github.com/SysBioChalmers/RAVEN/blob/main/tutorial/RAVEN%20tutorials.docx)
-that ships in the `tutorial/` folder.

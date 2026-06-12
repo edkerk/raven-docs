@@ -1,12 +1,13 @@
 # Tutorial 2 — Construct a functional small model
 
-This exercise deals with a small glycolysis model in RAVEN-compatible Excel
-format and shows the most basic aspects of stoichiometric modelling: building a
-model from scratch, setting parameters and running simple simulations.
+This exercise deals with a small glycolysis model in RAVEN format and shows the
+most basic aspects of stoichiometric modelling: building a model from scratch,
+setting parameters and running simple simulations.
 
-You will edit `empty.xlsx` (which already contains the first reaction of
-glycolysis) until it reproduces the provided solution model `small.xlsx`. The
-companion script `tutorial2_solutions.m` imports `small.xlsx` directly.
+You start from `empty.xml` (an incomplete model containing the first reaction of
+glycolysis) and extend it until it forms a functional network. The companion
+script `tutorial2_solutions.m` reads the provided solution model `small.yml`
+directly with `readYAMLmodel`.
 
 !!! question "Goal"
     Build a model of glycolysis and answer: **how many units of ATP can be
@@ -17,42 +18,31 @@ companion script `tutorial2_solutions.m` imports `small.xlsx` directly.
 ### 1. Import the starter model
 
 ```matlab
-smallModel = importExcelModel('empty.xlsx');
+smallModel = importModel('empty.xml');
 sol = solveLP(smallModel);
 printFluxes(smallModel, sol.x, true);
 ```
 
 When you import the (incomplete) model, RAVEN warns that some internal
-metabolites are used in only one reaction:
-
-```text
-WARNING: The following internal metabolite(s) are only used in one reaction
-(zero flux is the only solution):
- (m13 [c]) H2O   (m15 [c]) NAD+   (m18 [c]) phosphate
- (m14 [e]) H2O   (m16 [c]) NADH   (m19 [c]) pyruvate   (m20 [e]) sucrose
-```
+metabolites are used in only one reaction, so the only feasible solution is zero
+flux. If `sol.f` equals zero the problem is not solvable, and you need to ensure
+that uptake and excretion of all necessary metabolites are added to the model
+before running `solveLP` again.
 
 ### 2. Understand internal vs. external metabolites
 
 Under the steady-state assumption, the production rate of each *internal*
 metabolite must equal its consumption rate. A metabolite that participates in
 only one reaction can therefore carry no flux. The fix is to introduce
-**external (boundary) metabolites**, which need not be mass-balanced: they are
-flagged `true` in the `UNCONSTRAINED` field of the `METS` sheet and live, by
-convention, in the boundary compartment `b`. Reactions involving them are
-**exchange reactions**.
+**external (boundary) metabolites**, which need not be mass-balanced. Reactions
+involving them are **exchange reactions**.
 
 ### 3. Add the glycolysis reactions and exchanges
 
-In Excel, add the remaining 11 reactions (you may use short abbreviations such
-as `g6p`). Then add exchange and transport reactions so that the cell can take
-up sucrose and excrete pyruvate and water, for example:
+Add the remaining reactions of glycolysis, then add exchange and transport
+reactions so that the cell can take up sucrose and excrete pyruvate and water.
 
-```text
-sucrose[b] => sucrose[e]
-```
-
-Save often and re-run `importExcelModel` to check the structure.
+Re-import the model with `importModel` to check the structure as you go.
 
 ### 4. Handle cofactors and define the objective
 
@@ -66,20 +56,23 @@ Two problems remain:
   the network can make. Watch the directionality so you don't accidentally allow
   free ATP synthesis.
 
-Constrain only the exchange reactions: set the sucrose uptake `UPPER BOUND` to
-`1.0` and put `1` in the `OBJECTIVE` column for the ATP-hydrolysis reaction.
+Constrain the sucrose uptake to one unit and set the ATP-hydrolysis reaction as
+the objective to maximise.
 
 ### 5. Solve
 
+Once the model is complete, solve the linear programming problem and print the
+fluxes. The completed model is provided as `small.yml`, which the solutions
+script reads directly:
+
 ```matlab
-smallModel = importExcelModel('empty.xlsx');   % your completed model
+smallModel = readYAMLmodel('small.yml');
 sol = solveLP(smallModel);
-printFluxes(smallModel, sol.x, true);          % exchange fluxes; check C balance
-printFluxes(smallModel, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
+printFluxes(smallModel, sol.x, true);                                          % exchange fluxes
+printFluxes(smallModel, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');  % all fluxes
 ```
 
-??? success "Answer to Question 1"
-    **4 mol ATP per mol sucrose.**
+See Tutorial 2 in *RAVEN tutorials.docx* for more details and the worked answer.
 
 ## Full script
 
