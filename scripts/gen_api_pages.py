@@ -51,7 +51,6 @@ MATLAB_CATEGORIES = [
     ("io", "Input / output"),
     ("solver", "Solvers"),
     ("tasks", "Metabolic tasks"),
-    ("visualization", "Visualization"),
     ("utils", "Utilities"),
 ]
 
