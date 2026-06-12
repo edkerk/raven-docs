@@ -7,6 +7,12 @@ repo_url: https://github.com/SysBioChalmers/RAVEN
 repo_name: SysBioChalmers/RAVEN
 edit_uri: ""
 
+# Build-time hooks that keep the site resilient to structural changes in the
+# RAVEN / raven-python submodules (folders or files added/removed on the
+# tracked dev branches). See scripts/build_hooks.py.
+hooks:
+  - scripts/build_hooks.py
+
 plugins:
   - search
   # gen-files runs the generator at build time, emitting one API page per
@@ -53,7 +59,6 @@ plugins:
             - RAVEN/io
             - RAVEN/solver
             - RAVEN/tasks
-            - RAVEN/visualization
             - RAVEN/utils
           paths_recursive: true
           options:
@@ -126,7 +131,6 @@ nav:
       - 3 - Knockouts, MOMA and omics data: tutorials/tutorial3.md
       - 4 - Fix an erroneous model: tutorials/tutorial4.md
       - 5 - Reconstruct a GEM from KEGG: tutorials/tutorial5.md
-      - 6 - Reconstruct a GEM from MetaCyc + KEGG: tutorials/tutorial6.md
   - GEM reconstruction protocol:
       - Introduction: protocol/index.md
       - Materials and installation: protocol/materials.md
