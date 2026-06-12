@@ -6,7 +6,7 @@
 [submodule "raven-python"]
 	path = raven-python
 	url = https://github.com/SysBioChalmers/raven-python.git
-	branch = main
+	branch = develop
 	shallow = true
 [submodule "hanpo-GEM"]
 	path = hanpo-GEM
