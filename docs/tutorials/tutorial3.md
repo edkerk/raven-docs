@@ -2,64 +2,105 @@
 
 This exercise shows how to run FBA and **minimization of metabolic adjustment
 (MOMA)** simulations, and how a GEM can serve as a scaffold for interpreting
-microarray data. It uses a simplified model of yeast central carbon metabolism
-(`smallYeast.xlsx`), which adds metabolite compositions and gene associations
-on top of the Tutorial 2 model.
+microarray data. It uses a simplified model of yeast metabolism
+(`smallYeast.yml`), imported with `readYAMLmodel`.
 
 It is assumed you have completed Tutorial 2.
 
+!!! note "Skeleton and solutions"
+    `tutorial3.m` is a skeleton script for you to work through. The completed
+    answers are in the companion script `tutorial3_solutions.m`. The code
+    excerpts below follow the solutions; try to derive them yourself before
+    looking.
+
 ## Step by step
 
-### 1. Import and validate
+### 1. Import and check ATP yield
+
+Import the model, restrict it to anaerobic glucose growth, and maximize ATP
+hydrolysis (`ATPX`):
 
 ```matlab
-model = importExcelModel('smallYeast.xlsx', true);
+model = readYAMLmodel('smallYeast.yml');
+model = setParam(model, 'ub', {'glcIN' 'o2IN'}, [1 0]);
+model = setParam(model, 'obj', {'ATPX'}, 1);
+sol = solveLP(model);
+printFluxes(model, sol.x, false);
+```
+
+The ATP production rate should be 2.0. It was 4.0 in Tutorial 2, but there
+sucrose was used instead of glucose.
+
+### 2. Check product yields
+
+Switch to fully aerobic conditions and check the yield of different products,
+maximizing each in turn:
+
+```matlab
 model = setParam(model, 'ub', {'glcIN' 'o2IN'}, [1 1000]);
 model = setParam(model, 'obj', {'ethOUT'}, 1);
 sol = solveLP(model);
-printFluxes(model, sol.x, true);
+fprintf(['Yield of ethanol is ' num2str(sol.f) ' mol/mol\n']);
 ```
 
-Try to reproduce the maximal ATP/ethanol yields from Tutorial 2 (note that
-glucose is used here, not sucrose), and calculate the maximal yields of biomass,
-ethanol, glycerol and acetate on glucose under aerobic conditions.
+The same is repeated for acetate (`acOUT`), glycerol (`glyOUT`) and biomass
+(`biomassOUT`).
 
-### 2. Single gene deletions with FBA
+### 3. Aerobic vs. limited oxygen
 
-FBA can suggest gene deletions that couple a desired product (here, glycerol) to
-growth. After running a deletion scan, keep only solutions that still grow:
+Solve for biomass production under full aeration, then restrict the oxygen
+uptake upper bound to 0.5 and solve again:
 
 ```matlab
+solA = solveLP(model);
+model = setParam(model, 'ub', {'o2IN'}, 0.5);
+solB = solveLP(model);
+```
+
+### 4. Single gene deletions with FBA
+
+Set the model to anaerobic growth maximizing biomass, then scan single gene
+deletions. After running the deletion scan, keep only solutions that still grow
+and look for the one giving the highest glycerol production:
+
+```matlab
+model = setParam(model, 'eq', {'o2IN'}, 0);
+model = setParam(model, 'obj', {'biomassOUT'}, 1);
+sol = solveLP(model);
+printFluxes(model, sol.x, true);
+
 [genes, fluxes, originalGenes, details] = findGeneDeletions(model, 'sgd', 'fba');
 
 I = getIndexes(model, {'biomassOUT'}, 'rxns');
 J = getIndexes(model, {'glyOUT'}, 'rxns');
 okSolutions = find(fluxes(I,:) > 10^-2);          % still growing
 [maxGlycerol, J] = max(fluxes(J, okSolutions));
-disp(maxGlycerol);
-disp(originalGenes(genes(okSolutions(J), :)));
+fprintf(['Glycerol production is ' num2str(maxGlycerol) ...
+    ' after deletion of ' originalGenes{genes(okSolutions(J),:)} '\n']);
 ```
 
-The strongest hit is the `ZWF1` deletion. Visualise the change:
+The model predicts a glycerol production of 0.23 mmol/gDW/h for the unperturbed
+anaerobic case. The best gene deletion corresponds to turning off the `ZWF`
+reaction (`ZWF1`, `YNL241C`). Compare the deletion strain to wild type and
+follow the changed fluxes around the redox metabolites:
 
 ```matlab
 model2 = setParam(model, 'eq', {'ZWF'}, 0);
 sol2 = solveLP(model2);
-load 'pathway.mat' pathway;
-drawMap('ZWF1 deletion vs WT', pathway, model, sol.x, sol2.x, [], 'mapZWF.pdf', 10^-5);
 followChanged(model, sol2.x, sol.x, 10, 10^-2, 0, {'NADPH' 'NADH' 'NAD' 'NADP'});
 ```
 
-### 3. MOMA
+### 5. MOMA
 
 FBA assumes the cell re-optimises after a perturbation. **MOMA** instead assumes
 the perturbed cell changes its metabolism as little as possible — useful when
-you have wild-type data and want to predict a mutant. Provide a constrained
-wild-type model and an unconstrained model with `ZWF` knocked out:
+you have wild-type data and want to predict a mutant. Constrain the wild-type
+model to the recorded batch exchange rates, then define an unconstrained model
+with `ZWF` knocked out:
 
 ```matlab
-SBMLFromExcel('smallYeast.xlsx', 'smallYeast.xml');
-model = importModel('smallYeast.xml', true);
+model = setParam(model, 'ub', {'acOUT' 'biomassOUT' 'co2OUT' 'ethOUT' 'glyOUT' 'glcIN' 'o2IN' 'ethIN'}, [0 0.67706 22.4122 19.0946 1.4717 15 1.6 0]*1.0001);
+model = setParam(model, 'lb', {'acOUT' 'biomassOUT' 'co2OUT' 'ethOUT' 'glyOUT' 'glcIN' 'o2IN' 'ethIN'}, [0 0.67706 22.4122 19.0946 1.4717 15 1.6 0]*0.9999);
 
 model2 = model;
 I = getIndexes(model, getExchangeRxns(model), 'rxns');
@@ -67,14 +108,16 @@ model2.lb(I) = 0;  model2.ub(I) = 1000;
 model2 = setParam(model2, 'eq', {'ZWF'}, 0);
 
 [fluxA, fluxB, flag] = qMOMA(model, model2);
-drawMap('WT vs ZWF1 (MOMA)', pathway, model, fluxA, fluxB, [], 'mapMOMA.pdf', 10^-5);
 ```
 
-### 4. Reporter metabolites from microarray data
+The glycerol production is higher in the deletion strain. Note that this is
+without any objectives, just by trying to maintain the cell's original flux
+distribution.
+
+### 6. Reporter metabolites from microarray data
 
 A GEM can highlight the metabolites around which significant transcriptional
-changes cluster. Load expression data (ethanol vs. glucose growth) and run the
-reporter-metabolites test:
+changes cluster. Load expression data and run the reporter-metabolites test:
 
 ```matlab
 [orfs, pvalues] = textread('expression.txt', '%s%f');
@@ -86,9 +129,6 @@ for i = 1:min(numel(J), 10)
     fprintf([repMets.mets{J(i)} '\t' num2str(I(i)) '\n']);
 end
 ```
-
-The reactions involving the top reporter metabolites can then be drawn on a
-trimmed map with `trimPathway` and `drawMap`.
 
 ## Full script
 

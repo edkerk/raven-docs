@@ -11,7 +11,7 @@ RAVEN comes in two implementations that expose the **same** functionality:
 
 <div class="grid cards" markdown>
 
--   :material-language-matlab: **RAVEN (MATLAB)**
+-   :custom-matlab: **RAVEN (MATLAB)**
 
     The original toolbox, built on the COBRA Toolbox and `libSBML`.
     Functions use `camelCase` names (e.g. `getModelFromHomology`).

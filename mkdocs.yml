@@ -69,6 +69,9 @@ plugins:
 
 theme:
   name: material
+  # Custom icons live under overrides/.icons/ and are referenced as
+  # :custom-<name>: in markdown (e.g. :custom-matlab:).
+  custom_dir: overrides
   features:
     - navigation.sections
     - navigation.top
@@ -111,12 +114,17 @@ markdown_extensions:
   - md_in_html
   - pymdownx.tabbed:
       alternate_style: true
-  # Renders Material icon/emoji shortcodes (e.g. :material-language-matlab:) as
+  # Renders Material icon/emoji shortcodes (e.g. :octicons-arrow-right-24:) as
   # inline SVG instead of literal text. material.extensions.emoji is the path
-  # for mkdocs-material >= 9 (see requirements.txt).
+  # for mkdocs-material >= 9 (see requirements.txt). custom_icons registers
+  # overrides/.icons so project icons like :custom-matlab: resolve (Material
+  # does not auto-scan custom_dir/.icons).
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
 
 extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

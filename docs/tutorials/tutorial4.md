@@ -3,7 +3,7 @@
 The power of GEMs comes from their size — but that size makes errors almost
 inevitable, whether you build a model yourself or use someone else's. This
 exercise is a systematic round of quality control on a deliberately broken
-version of the small yeast model.
+version of the small yeast model, `smallYeastBad.yml`.
 
 Model validation is **iterative**: some errors only surface once others are
 fixed. The RAVEN philosophy is that it is more valuable to try to make a model
@@ -11,104 +11,137 @@ do something it *should not* (e.g. create mass from nothing) than to test only
 for what it should do.
 
 `tutorial4.m` leaves several gaps for you to fill; the completed version is in
-`tutorial4_solutions.m`. Most of these checks are also wrapped by the
+`tutorial4_solutions.m`. Many of these checks are also wrapped by the
 `gapReport` function, but doing them step by step is far more instructive.
+
+!!! note
+    Many of these changes are easier to do in the Excel sheet. They are done
+    here in code just to avoid having several model files. It is assumed that
+    you have already completed Tutorials 2–3 and are somewhat familiar with
+    linear programming.
 
 ## Step by step
 
 ### 1. Can the model make something from nothing?
 
-With all uptake closed, maximise the sum of producing exchange reactions. Any
-non-zero solution is a problem.
+Import the broken model, close all uptake, and maximise the sum of the producing
+exchange reactions. Any non-zero solution is a problem.
+
+```matlab
+model = readYAMLmodel('smallYeastBad.yml');
+model = setParam(model, 'eq', {'glcIN', 'o2IN'}, [0 0]);
+model = setParam(model, 'obj', {'acOUT' 'biomassOUT' 'co2OUT' 'ethOUT' 'glyOUT'}, [1 1 1 1 1]);
+sol = solveLP(model);
+printFluxes(model, sol.x, true); %Nothing produced, good
+```
 
 ### 2. Provoke hidden errors
 
-An error may be masked because it costs energy or redox power. Relax constraints
-and add temporary "free" cofactor reactions (ATP ⇌ ADP + Pᵢ, and similar for
-NADH/NADPH) to provoke the model, then minimise the sum of fluxes for an
-interpretable solution:
+An error may be masked because it costs energy or redox power. Add temporary
+"free" cofactor reactions (ATP ⇌ ADP + Pᵢ, and similar for NADH/NADPH) to
+provoke the model, then minimise the sum of fluxes for an interpretable
+solution:
 
 ```matlab
+rxns.rxns = {'FREE_ATP'; 'FREE_NADH'; 'FREE_NADPH'};
+rxns.equations = {'ATP <=> ADP + phosphate'; 'NAD(+) <=> NADH'; 'NADP(+) <=> NADPH'};
+model = addRxns(model, rxns, 2, 'c');
 sol = solveLP(model, 1);
-printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
+printFluxes(model, sol.x, false, [], [], '%rxnID (%rxnName):%flux\n\t%eqn\n');
 ```
 
 ??? success "Answer to Question 2 — production of ethanol from nothing"
-    `ADH1` is unbalanced. Change
-    `acetaldehyde[c] + NADH[c] => 2 ethanol[c] + NAD(+)[c]` to
-    `acetaldehyde[c] + NADH[c] => ethanol[c] + NAD(+)[c]`.
+    Lots of ethanol is produced. `ADH1` should only produce one unit of
+    ethanol. Change its equation with
+    `model = changeRxns(model, 'ADH1', 'acetaldehyde[c] + NADH[c] => ethanol[c] + NAD(+)[c]', 3);`
 
 ### 3. Allow every metabolite to be excreted
 
 Add a second column to `model.b` so RAVEN treats it as lower/upper bounds on the
 equality constraints — letting anything be excreted. This exposes errors that
-need a partner metabolite to be dumped. The SBML-from-Excel warnings point at
-the unbalanced reactions.
+need a partner metabolite to be dumped.
 
 ```matlab
 model.b = [model.b inf(numel(model.b), 1)];
+sol = solveLP(model, 1);
+printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
 ```
 
 ??? success "Answer to Question 3 — two unbalanced reactions"
-    `FBP`: change `… => 2 beta-D-fructofuranose 6-phosphate[c] + phosphate[c]`
-    to `… => beta-D-fructofuranose 6-phosphate[c] + phosphate[c]`.
-    `PFK`: change `… => ADP[c] + 2 beta-D-fructofuranose 1,6-bisphosphate[c]`
-    to `… => ADP[c] + beta-D-fructofuranose 1,6-bisphosphate[c]`.
+    By looking at the reactions which were unbalanced and that were in the flux
+    list, one can see that two reactions should each result in only one unit of
+    product:
 
-### 4. `canProduce` / `canConsume`
+    - `FBP` should give one unit of F6P: change it to
+      `beta-D-fructofuranose 1,6-bisphosphate[c] => beta-D-fructofuranose 6-phosphate[c] + phosphate[c]`.
+    - `PFK` should give one unit of F16P: change it to
+      `ATP[c] + beta-D-fructofuranose 6-phosphate[c] => ADP[c] + beta-D-fructofuranose 1,6-bisphosphate[c]`.
+
+    Apply each with `changeRxns(model, …, 3)`.
+
+### 4. `canConsume`
+
+Set all uptakes and production to 0, drop the excretion column again, and check
+which metabolites can be consumed without any production:
 
 ```matlab
+model = setParam(model, 'eq', getExchangeRxns(model), 0);
+model.b = model.b(:, 1);
+I = canConsume(model);
+disp(model.mets(I)); %These 12 metabolites can be consumed without any production
+```
+
+`canConsume` reports the metabolites the model can consume even when no
+production is allowed. Allow all uptake again, then force the uptake of one of
+them — here CO2 — and study the fluxes (a negative output means input):
+
+```matlab
+model.b = [ones(numel(model.b), 1) * -1000 model.b];
+model = setParam(model, 'eq', {'co2OUT'}, -1);
+sol = solveLP(model);
+printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n'); %Now it works
+```
+
+??? success "Answer to Question 4 — `PDC` is missing a product"
+    `PDC` converts pyruvate (3 carbons) to acetaldehyde (2 carbons) without any
+    other products — CO2 is missing. This would be simpler to change in the
+    Excel file (or using `changeRxns`), but as an exercise one can add the
+    cytosolic CO2 coefficient directly to the stoichiometric matrix:
+
+    ```matlab
+    Irxn = ismember(model.rxns, 'PDC');
+    Imet = ismember(model.mets, 'CO2_c');
+    model.S(Imet, Irxn) = 1; %The coefficient is 1.0
+    constructEquations(model, Irxn)
+    ```
+
+    The solution is now infeasible, meaning it is no longer possible to force
+    uptake of CO2 without any output.
+
+### 5. Gap-filling against a reference model
+
+`tutorial4.m` also imports a reference model to draw reactions from, allows all
+excretion, and reports gaps before filling them:
+
+```matlab
+model = readYAMLmodel('smallYeastBad.yml');
+refModel = readYAMLmodel('smallYeast.yml');
+model.b = [model.b inf(numel(model.b), 1)];
+sol = solveLP(model, 1);
+printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
 I = canConsume(model);
 disp(model.mets(I));
-```
+gapReport(model, {refModel});
 
-`canConsume` reports metabolites the model can consume even when no production is
-allowed. Force the uptake of one (set its lower bound non-zero) and relax
-`model.b` to allow uptake of all metabolites, then study the fluxes.
-
-??? success "Answer to Question 4"
-    `PDC` is missing a product. Change `pyruvate[c] => acetaldehyde[c]` to
-    `pyruvate[c] => acetaldehyde[c] + CO2[c]`.
-
-### 5. Naming errors with `simplifyModel`
-
-Switch to `smallYeastBad2.xlsx`. Metabolites that are meant to be the same but
-named differently create dead ends. `simplifyModel` removes reactions that
-cannot carry flux, which you can use to spot them; check the `importExcelModel`
-warnings for the obvious spelling error.
-
-```matlab
-[reducedModel, deletedReactions, deletedMetabolites] = ...
-    simplifyModel(model, false, false, false, true);
-```
-
-??? success "Answer to Question 5 — spelling error"
-    `6-O-phosphono-D-glucono-1,5-lactonec]` in `ZWF1` should be
-    `6-O-phosphono-D-glucono-1,5-lactone[c]`.
-
-### 6. `checkProduction` and gap-filling
-
-```matlab
-[notProducedMets, ~, neededForProductionMat, minToConnect] = ...
-    checkProduction(model, true, model.comps, false);
-disp(minToConnect);
-
-refModel = importExcelModel('smallYeast.xlsx');
 [newConnected, cannotConnect, addedRxns, newModel] = fillGaps(model, {refModel}, false);
 disp(addedRxns);
+disp(newConnected);
+disp(cannotConnect);
 ```
 
-`checkProduction` reports the smallest set of metabolites that must be
-synthesised for everything else to be producible; ignore the cofactors and look
-at the top non-cofactor hit.
-
-??? success "Answer to Question 6 — suspicious similarity"
-    Dihydroxyacetone phosphate (DHAP) and glycerone phosphate (GLYP) are the
-    same metabolite.
-
-Finally, fill remaining gaps from a reference model (here the Tutorial 3 small
-yeast model) with `fillGaps`. And remember: `gapReport` automates this whole
-workflow.
+`gapReport` automates this whole quality-control workflow, while `fillGaps`
+adds reactions from the reference model (here the Tutorial 3 small yeast model)
+to connect the remaining gaps.
 
 ## Full script
 
