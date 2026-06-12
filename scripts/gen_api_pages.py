@@ -1,22 +1,21 @@
 """Generate the API reference for raven-docs at build time.
 
-Run by the ``mkdocs-gen-files`` plugin. Walks the two submodules:
+Run by the ``mkdocs-gen-files`` plugin. Walks the two submodules and emits a
+cobrapy-style ``autoapi`` reference as **two parallel trees** plus a name map:
 
-* ``RAVEN``         -- the MATLAB toolbox (released ``main``), classic flat
-                       layout (``core``, ``io``, ``solver`` ...).
-* ``raven-python``  -- the Python port, modern modular layout
-                       (``reconstruction``, ``manipulation`` ...).
+* **MATLAB API (RAVEN)** -- one page per category folder (``reconstruction``,
+  ``manipulation`` ...), each with a *Functions* summary table followed by the
+  full help for every function (rendered by the ``matlab`` mkdocstrings
+  handler via tree-sitter -- no MATLAB runtime needed).
+* **Python API (raven-python)** -- one page per package, same shape, rendered
+  by the ``python`` handler (griffe collects from source statically).
+* **MATLAB <-> Python** -- a single translation table pairing the two naming
+  conventions (``camelCase`` <-> ``snake_case``) by normalised name, for every
+  function that exists in both.
 
-The two implementations expose the *same* functions under
-``camelCase`` (MATLAB) / ``snake_case`` (Python) names, but on ``main`` they
-live in different folders. So functions are paired **globally by normalised
-name**, the reference is organised by RAVEN's categories (every MATLAB
-function is documented, with the Python counterpart shown beside it when it
-exists), and any Python functions without a MATLAB counterpart are documented
-on their own per-package pages. A literate-nav ``SUMMARY.md`` ties it together.
-
-No MATLAB runtime or installed package is needed: docstrings are collected
-statically by mkdocstrings (tree-sitter for MATLAB, griffe for Python).
+Each function gets its own ``## name`` heading (so the summary table can link
+to it) followed by a ``:::`` autodoc block. A literate-nav ``SUMMARY.md`` ties
+the trees together.
 """
 
 from __future__ import annotations
@@ -32,8 +31,8 @@ RAVEN = ROOT / "RAVEN"
 PYPKG = ROOT / "raven-python" / "src" / "raven_python"
 
 # RAVEN top-level categories to document, in nav order: (folder, page title).
-# Mirrors the matlab handler `paths:` in mkdocs.yml. legacy/ and external/ are
-# intentionally excluded (deprecated / third-party).
+# Pruned to existing folders at build time by scripts/build_hooks.py / the
+# matlab handler; legacy/ and external/ are intentionally excluded.
 MATLAB_CATEGORIES = [
     ("reconstruction", "Reconstruction"),
     ("manipulation", "Manipulation"),
@@ -54,7 +53,7 @@ MATLAB_CATEGORIES = [
     ("utils", "Utilities"),
 ]
 
-# Friendly titles for raven-python packages (Python-only leftovers).
+# Friendly titles for raven-python packages.
 PY_PACKAGE_TITLES = {
     "reconstruction": "Reconstruction",
     "manipulation": "Manipulation",
@@ -77,6 +76,17 @@ def norm(name: str) -> str:
     return re.sub(r"[_\s]", "", name).lower()
 
 
+def slug(name: str) -> str:
+    """Reproduce Python-Markdown's default heading slug for in-page anchors."""
+    value = re.sub(r"[^\w\s-]", "", name).strip().lower()
+    return re.sub(r"[-\s]+", "-", value)
+
+
+def cell(text: str) -> str:
+    """Make a string safe for a single Markdown table cell."""
+    return " ".join(text.split()).replace("|", "\\|")
+
+
 # --------------------------------------------------------------------------- #
 # Collect MATLAB functions                                                    #
 # --------------------------------------------------------------------------- #
@@ -94,19 +104,60 @@ def is_matlab_function(path: Path) -> bool:
     return False
 
 
-def collect_matlab() -> dict[str, list[str]]:
-    """category -> sorted list of MATLAB function names."""
-    cats: dict[str, list[str]] = {}
+def matlab_summary(path: Path, fname: str) -> str:
+    """First descriptive line of a function's MATLAB help block."""
+    try:
+        with path.open(encoding="utf-8", errors="ignore") as fh:
+            lines = fh.readlines()
+    except OSError:
+        return ""
+
+    help_lines: list[str] = []
+    started = False
+    for line in lines:
+        stripped = line.strip()
+        if not started:
+            if stripped.startswith("function"):
+                started = True
+            continue
+        if stripped.startswith("%"):
+            help_lines.append(stripped.lstrip("%").strip())
+        elif stripped == "" and not help_lines:
+            continue
+        else:
+            break
+
+    cleaned = [h for h in help_lines if h]
+    if not cleaned:
+        return ""
+    # The first help line is often just the function name; strip it.
+    first = cleaned[0]
+    if first.lower().startswith(fname.lower()):
+        rest = first[len(fname):].strip(" -:\t")
+        if rest:
+            return rest
+        if len(cleaned) > 1:
+            return cleaned[1]
+        return ""
+    return first
+
+
+def collect_matlab() -> dict[str, list[dict]]:
+    """category -> sorted list of {name, summary} for documented functions."""
+    cats: dict[str, list[dict]] = {}
     for folder, _title in MATLAB_CATEGORIES:
-        names = []
+        funcs: dict[str, str] = {}
         base = RAVEN / folder
         for m in base.rglob("*.m"):
             if m.stem == "Contents":
                 continue
             if not is_matlab_function(m):
                 continue
-            names.append(m.stem)
-        cats[folder] = sorted(set(names), key=str.lower)
+            funcs.setdefault(m.stem, matlab_summary(m, m.stem))
+        cats[folder] = [
+            {"name": n, "summary": funcs[n]}
+            for n in sorted(funcs, key=str.lower)
+        ]
     return cats
 
 
@@ -122,13 +173,19 @@ def module_dotted(path: Path) -> str:
     return ".".join(parts)
 
 
+def py_summary(node: ast.AST) -> str:
+    """First non-empty line of a node's docstring."""
+    doc = ast.get_docstring(node) or ""
+    for line in doc.strip().splitlines():
+        if line.strip():
+            return line.strip()
+    return ""
+
+
 def collect_python() -> list[dict]:
-    """List of {name, ident, package} for every public top-level def/class."""
+    """List of {name, ident, package, summary} for public top-level objects."""
     objects: list[dict] = []
     for py in PYPKG.rglob("*.py"):
-        if any(part.startswith("_") and part != "__init__.py" for part in py.parts):
-            # skip private modules / packages (but keep __init__.py)
-            pass
         try:
             tree = ast.parse(py.read_text(encoding="utf-8"))
         except (SyntaxError, OSError):
@@ -142,98 +199,112 @@ def collect_python() -> list[dict]:
                     continue
                 ident = f"{dotted}.{node.name}" if dotted else node.name
                 objects.append(
-                    {"name": node.name, "ident": ident, "package": package}
+                    {
+                        "name": node.name,
+                        "ident": ident,
+                        "package": package,
+                        "summary": py_summary(node),
+                    }
                 )
     return objects
 
 
 # --------------------------------------------------------------------------- #
-# Rendering helpers                                                           #
+# Page rendering                                                              #
 # --------------------------------------------------------------------------- #
-def matlab_block(name: str, indent: str = "") -> str:
-    lines = [f"{indent}::: {name}", f"{indent}    handler: matlab"]
-    return "\n".join(lines)
+def render_page(title: str, intro: str, entries: list[dict], handler: str | None) -> str:
+    """A cobrapy-style page: summary table, then one section per object.
 
-
-def python_block(ident: str, indent: str = "") -> str:
-    return f"{indent}::: {ident}"
-
-
-def paired_section(title: str, matlab_name: str | None, python_ident: str | None) -> str:
-    """One ## entry: MATLAB and/or Python, in tabs when both exist."""
-    out = [f"## {title}", ""]
-    if matlab_name and python_ident:
-        out += ['=== "MATLAB · RAVEN"', "", matlab_block(matlab_name, "    "), ""]
-        out += ['=== "Python · raven-python"', "", python_block(python_ident, "    "), ""]
-    elif matlab_name:
-        out += [matlab_block(matlab_name), ""]
-    elif python_ident:
-        out += [python_block(python_ident), ""]
+    ``entries`` items: {name, summary, ref} where ref is the autodoc target
+    (function name for matlab, dotted ident for python). ``handler`` is the
+    mkdocstrings handler name, or None to use the default (python).
+    """
+    out = [f"# {title}", "", intro, "", "## Functions", ""]
+    out += ["| Function | Summary |", "|---|---|"]
+    for e in entries:
+        out.append(f"| [`{e['name']}`](#{slug(e['name'])}) | {cell(e['summary'])} |")
+    out += ["", "## Reference", ""]
+    for e in entries:
+        out += [f"### {e['name']}", ""]
+        if handler:
+            out += [f"::: {e['ref']}", f"    handler: {handler}", ""]
+        else:
+            out += [f"::: {e['ref']}", ""]
     return "\n".join(out) + "\n"
 
 
-# --------------------------------------------------------------------------- #
-# Build the pages                                                             #
-# --------------------------------------------------------------------------- #
 matlab = collect_matlab()
 python_objs = collect_python()
 
-# normalised name -> python ident (first definition wins)
-py_by_norm: dict[str, str] = {}
+# normalised name -> (python ident, package) ; first definition wins
+py_by_norm: dict[str, dict] = {}
 for obj in python_objs:
-    py_by_norm.setdefault(norm(obj["name"]), obj["ident"])
+    py_by_norm.setdefault(norm(obj["name"]), obj)
 
-used_python: set[str] = set()
-summary: list[str] = ["* [Overview](index.md)", "* MATLAB ↔ Python"]
+summary: list[str] = ["* [Overview](index.md)"]
 
+# --- MATLAB API tree ------------------------------------------------------- #
+summary.append("* MATLAB API (RAVEN)")
 for folder, title in MATLAB_CATEGORIES:
-    names = matlab[folder]
-    if not names:
+    funcs = matlab[folder]
+    if not funcs:
         continue
-    page = f"{folder}.md"
-    lines = [
-        f"# {title}",
-        "",
-        f"MATLAB functions in `RAVEN/{folder}`, paired with their "
-        "`raven-python` counterpart where one exists on the tracked `main` "
-        "branch.",
-        "",
-    ]
-    for name in names:
-        ident = py_by_norm.get(norm(name))
-        if ident:
-            used_python.add(ident)
-        lines.append(paired_section(name, name, ident))
-    with mkdocs_gen_files.open(f"api/{page}", "w") as fh:
-        fh.write("\n".join(lines))
-    summary.append(f"    * [{title}]({page})")
+    entries = [{"name": f["name"], "summary": f["summary"], "ref": f["name"]} for f in funcs]
+    intro = (
+        f"MATLAB functions in `RAVEN/{folder}` of the RAVEN toolbox. Help text "
+        "is collected from the source of the tracked branch."
+    )
+    with mkdocs_gen_files.open(f"api/matlab/{folder}.md", "w") as fh:
+        fh.write(render_page(title, intro, entries, handler="matlab"))
+    summary.append(f"    * [{title}](matlab/{folder}.md)")
 
-# Python-only objects, grouped by package.
-leftover: dict[str, list[dict]] = {}
+# --- Python API tree ------------------------------------------------------- #
+by_package: dict[str, list[dict]] = {}
 for obj in python_objs:
-    if obj["ident"] in used_python:
-        continue
-    leftover.setdefault(obj["package"], []).append(obj)
+    by_package.setdefault(obj["package"], []).append(obj)
 
-if leftover:
-    summary.append("* raven-python (Python-only)")
-    for package in sorted(leftover, key=lambda p: (p == "_toplevel", p)):
-        objs = sorted(leftover[package], key=lambda o: o["name"].lower())
-        title = PY_PACKAGE_TITLES.get(package, package)
-        page = f"python/{package}.md"
-        lines = [
-            f"# {title} (Python)",
-            "",
-            f"`raven-python` objects in `raven_python"
-            f"{'' if package == '_toplevel' else '.' + package}` that do not "
-            "have a direct MATLAB counterpart on RAVEN's `main` branch.",
-            "",
-        ]
-        for obj in objs:
-            lines.append(paired_section(obj["name"], None, obj["ident"]))
-        with mkdocs_gen_files.open(f"api/{page}", "w") as fh:
-            fh.write("\n".join(lines))
-        summary.append(f"    * [{title}]({page})")
+summary.append("* Python API (raven-python)")
+for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TITLES.get(p, p).lower())):
+    objs = sorted(by_package[package], key=lambda o: o["name"].lower())
+    title = PY_PACKAGE_TITLES.get(package, package)
+    dotted = "raven_python" if package == "_toplevel" else f"raven_python.{package}"
+    entries = [{"name": o["name"], "summary": o["summary"], "ref": o["ident"]} for o in objs]
+    intro = f"`raven-python` objects in `{dotted}`, collected from the source of the tracked branch."
+    with mkdocs_gen_files.open(f"api/python/{package}.md", "w") as fh:
+        fh.write(render_page(f"{title} (Python)", intro, entries, handler=None))
+    summary.append(f"    * [{title}](python/{package}.md)")
 
+# --- MATLAB <-> Python translation table ----------------------------------- #
+pairs: list[tuple[str, str, str, str, str]] = []  # (matlab, folder, python, package, summary)
+for folder, _title in MATLAB_CATEGORIES:
+    for f in matlab[folder]:
+        match = py_by_norm.get(norm(f["name"]))
+        if match:
+            text = f["summary"] or match["summary"]
+            pairs.append((f["name"], folder, match["name"], match["package"], text))
+
+lines = [
+    "# MATLAB ↔ Python",
+    "",
+    "RAVEN (MATLAB) and raven-python implement the same functionality. MATLAB "
+    "uses `camelCase`, raven-python uses `snake_case`. The table below pairs the "
+    "functions that exist in both; click a name to jump to its full reference. "
+    "Functions that exist in only one implementation appear in that language's "
+    "tree but not here.",
+    "",
+    f"**{len(pairs)}** paired functions.",
+    "",
+    "| RAVEN (MATLAB) | raven-python (Python) | Summary |",
+    "|---|---|---|",
+]
+for m_name, m_folder, p_name, p_pkg, text in sorted(pairs, key=lambda r: r[0].lower()):
+    m_link = f"[`{m_name}`](matlab/{m_folder}.md#{slug(m_name)})"
+    p_link = f"[`{p_name}`](python/{p_pkg}.md#{slug(p_name)})"
+    lines.append(f"| {m_link} | {p_link} | {cell(text)} |")
+with mkdocs_gen_files.open("api/translation.md", "w") as fh:
+    fh.write("\n".join(lines) + "\n")
+summary.append("* [MATLAB ↔ Python](translation.md)")
+
+# --- literate-nav SUMMARY -------------------------------------------------- #
 with mkdocs_gen_files.open("api/SUMMARY.md", "w") as fh:
     fh.write("\n".join(summary) + "\n")
