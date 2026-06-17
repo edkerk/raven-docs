@@ -5,68 +5,80 @@
 
 ## Requirements
 
-- **Python ≥ 3.11**.
-- [cobrapy](https://opencobra.github.io/cobrapy/) — installed automatically as a
-  dependency.
-- A **solver**: the open-source **GLPK** (bundled with cobrapy) works for small
-  and medium models; **Gurobi** is recommended for genome-scale optimization.
+- **Python ≥ 3.11**
+- **cobrapy** — installed automatically as a dependency
+- A **solver**: GLPK (bundled with cobrapy) works for small and medium models;
+  [Gurobi](https://www.gurobi.com/) is recommended for genome-scale work.
   See [Choosing a solver](index.md#choosing-a-solver).
 
-It is good practice to install into a virtual environment:
+!!! tip "Use a virtual environment"
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate      # Windows: .venv\Scripts\activate
+    ```
 
-```bash
-python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
-```
+---
 
 ## Install
 
-```bash
-pip install raven-toolbox
-```
+=== ":material-package: From PyPI"
 
-### Development install (from source)
+    ```bash
+    pip install raven-toolbox
+    ```
 
-To work with the latest, unreleased code or to contribute:
+=== ":octicons-git-branch-16: From source"
 
-```bash
-git clone https://github.com/SysBioChalmers/raven-toolbox.git
-cd raven-toolbox
-pip install -e .
-```
+    For the latest unreleased code or to contribute:
 
-## Verify the installation
+    ```bash
+    git clone https://github.com/SysBioChalmers/raven-toolbox.git
+    cd raven-toolbox
+    pip install -e .
+    ```
+
+---
+
+## Verify
 
 ```python
 import raven_toolbox
 print(raven_toolbox.__version__)
 ```
 
-The import package is `raven_toolbox` (underscore), while the PyPI distribution
-is `raven-toolbox` (hyphen).
+!!! note
+    The import package is `raven_toolbox` (underscore); the PyPI distribution
+    name is `raven-toolbox` (hyphen).
 
-## Upgrading
+---
 
-```bash
-pip install --upgrade raven-toolbox
-```
+## Upgrade
 
-For a development (`-e`) install, pull the latest changes instead:
+=== ":material-package: PyPI install"
 
-```bash
-git pull origin develop
-```
+    ```bash
+    pip install --upgrade raven-toolbox
+    ```
 
-## Removing
+=== ":octicons-git-branch-16: Source install"
+
+    ```bash
+    git pull origin develop
+    ```
+
+---
+
+## Remove
 
 ```bash
 pip uninstall raven-toolbox
 ```
 
+---
+
 ## Solver configuration
 
-raven-toolbox uses cobrapy's solver interface. Set the active solver through
-cobrapy, for example:
+raven-toolbox uses cobrapy's solver interface:
 
 ```python
 import cobra

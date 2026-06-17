@@ -139,7 +139,6 @@ extra_css:
   - stylesheets/extra.css
 
 extra_javascript:
-  - js/toolbox-toggle.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
@@ -149,7 +148,7 @@ nav:
       - RAVEN (MATLAB): installation/raven.md
       - raven-toolbox (Python): installation/python.md
   - MATLAB vs Python: matlab-vs-python.md
-  - Protocols:
+  - Guides:
       - Overview: protocol/index.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
@@ -162,12 +161,12 @@ nav:
           - Save and simulate: protocol/simulation.md
           - Manual curation: protocol/manual-curation.md
           - Anticipated results: protocol/anticipated-results.md
-  - Legacy tutorials:
-      - Overview: tutorials/index.md
-      - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
-      - 2 - Build a small model: tutorials/tutorial2.md
-      - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
-      - 4 - Fix an erroneous model: tutorials/tutorial4.md
-      - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
+      - Legacy tutorials:
+          - Overview: tutorials/index.md
+          - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
+          - 2 - Build a small model: tutorials/tutorial2.md
+          - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
+          - 4 - Fix an erroneous model: tutorials/tutorial4.md
+          - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
   - API documentation: api/
   - References: references.md
