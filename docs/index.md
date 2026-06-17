@@ -5,6 +5,8 @@ hide:
 
 <div class="raven-hero" markdown>
 
+![RAVEN](assets/raven-bird-navy.png){ .raven-hero-logo }
+
 # RAVEN
 
 Reconstruction, analysis and visualization of metabolic networks — in MATLAB and Python.
@@ -55,7 +57,7 @@ Reconstruction, analysis and visualization of metabolic networks — in MATLAB a
 
 -   :material-api:{ .raven-nav-icon }
 
-    **[API](api/index.md)**
+    **[API docs](api/index.md)**
 
 </div>
 
