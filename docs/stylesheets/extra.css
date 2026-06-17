@@ -1,10 +1,9 @@
 /* ===== RAVEN brand palette (navy) ===================================== */
 :root {
-  --raven-navy:        #16335C;
-  --raven-navy-dark:   #0F2547;
-  --raven-navy-light:  #1F4576;
-  --raven-accent:      #2E6FB8;
-  --raven-hero-text:   #D7E4F5;
+  --raven-navy:        #122F57;
+  --raven-navy-dark:   #0C2142;
+  --raven-navy-light:  #1A3F6D;
+  --raven-accent:      #2864A6;
 }
 
 [data-md-color-scheme="default"] {
@@ -26,65 +25,6 @@
   --md-typeset-a-color:         #79b0ec;
 }
 
-/* ===== Homepage hero ================================================== */
-.raven-hero {
-  background: var(--raven-navy);
-  color: #ffffff;
-  border-radius: 12px;
-  padding: 2.6rem 2rem;
-  margin: 0 0 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1.8rem;
-  flex-wrap: wrap;
-}
-.raven-hero__logo { height: 104px; width: auto; flex-shrink: 0; }
-.raven-hero__body { flex: 1 1 320px; min-width: 0; }
-.md-typeset .raven-hero__title {
-  font-size: 2.1rem;
-  line-height: 1.15;
-  font-weight: 700;
-  margin: 0 0 .4rem;
-  padding: 0;
-  border: 0;
-  color: #ffffff;
-}
-.md-typeset .raven-hero__tagline {
-  font-size: .92rem;
-  line-height: 1.6;
-  color: var(--raven-hero-text);
-  margin: 0 0 1.1rem;
-  max-width: 46ch;
-}
-.raven-hero .headerlink { display: none; }
-
-/* Segmented "choose your language" switch (Design B style) */
-.lang-switch {
-  display: inline-flex;
-  background: var(--raven-navy-dark);
-  border-radius: 8px;
-  padding: 4px;
-  gap: 4px;
-}
-.lang-switch a {
-  display: inline-flex;
-  align-items: center;
-  gap: .45rem;
-  padding: .42rem .95rem;
-  border-radius: 6px;
-  font-size: .82rem;
-  font-weight: 600;
-  color: var(--raven-hero-text);
-  text-decoration: none;
-  transition: background .15s, color .15s;
-}
-.lang-switch a:hover { color: #ffffff; }
-.lang-switch a.lang-switch--active {
-  background: #ffffff;
-  color: var(--raven-navy);
-}
-.lang-switch svg, .lang-switch .twemoji { height: 1.05em; vertical-align: -.18em; }
-
 /* ===== Feature cards (Material grid cards) ============================ */
 .md-typeset .grid.cards > ul > li {
   border-radius: 12px;
@@ -94,7 +34,7 @@
   border-color: var(--raven-accent);
 }
 
-/* ===== Denser, sectioned sidebar (between B and C) ==================== */
+/* ===== Denser, sectioned sidebar ====================================== */
 .md-nav { font-size: .72rem; }
 .md-nav__item .md-nav__item { font-size: .98em; }
 [dir=ltr] .md-nav--primary .md-nav__list { padding-left: .2rem; }
