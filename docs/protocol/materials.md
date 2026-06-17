@@ -21,7 +21,7 @@ Most of it is open source or available under an academic license.
   **Gurobi** (free academic license); RAVEN can alternatively use the
   open-source **GLPK** solver bundled with COBRA.
 
-See [Installation](../installation.md) for the full setup.
+See [Installation](../installation/raven.md) for the full setup.
 
 ## Files
 

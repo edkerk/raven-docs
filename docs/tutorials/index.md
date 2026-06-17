@@ -20,7 +20,7 @@ folder of the RAVEN repository.
 ## Before you start
 
 - These tutorials use the **MATLAB** toolbox. Make sure RAVEN is installed and
-  `checkInstallation` passes — see [Installation](../installation.md).
+  `checkInstallation` passes — see [Installation](../installation/raven.md).
 - Tutorials 2–4 involve editing models in **RAVEN-compatible Excel format**, so
   you need a working `importExcelModel` (i.e. the Excel parser must pass
   `checkInstallation`).

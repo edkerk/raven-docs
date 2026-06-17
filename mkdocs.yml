@@ -141,7 +141,10 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Installation: installation.md
+  - Installation:
+      - Overview: installation/index.md
+      - RAVEN (MATLAB): installation/raven.md
+      - raven-toolbox (Python): installation/python.md
   - MATLAB vs Python: matlab-vs-python.md
   - Protocols:
       - Overview: protocol/index.md

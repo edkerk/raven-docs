@@ -80,13 +80,18 @@ the Docs.
 
 ### 4.2 Installation
 
-Separate instructions for each version:
+An **Installation** section with an overview page and a **separate page per
+version**:
 
-- **MATLAB.** Summarize requirements (MATLAB, libSBML, a solver) and link to the
-  canonical instructions on the wiki:
-  <https://github.com/SysBioChalmers/RAVEN/wiki/Installation#installation>.
-- **Python (raven-toolbox).** `pip install raven-toolbox`, plus Python version,
-  solver (GLPK/Gurobi) and the cobrapy dependency.
+- **RAVEN (MATLAB).** Requirements, then the **three install methods** from the
+  [wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation) — the
+  MATLAB Add-Ons manager (easiest), a release download, and `git clone` — plus
+  verifying (`checkInstallation`), **upgrading** (per method) and **removing**
+  (`removeRavenFromPath`).
+- **Python (raven-toolbox).** Requirements, `pip install raven-toolbox`,
+  development install, verifying, **upgrading** and **removing**, and solver
+  configuration via cobrapy.
+- A shared **Choosing a solver** table lives on the overview page.
 
 ### 4.3 MATLAB vs Python versions
 
