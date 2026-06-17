@@ -3,25 +3,12 @@ hide:
   - toc
 ---
 
-<div class="raven-hero">
-  <img class="raven-hero__logo" src="assets/raven-bird-white.png" alt="RAVEN">
-  <div class="raven-hero__body">
-    <h1 class="raven-hero__title">RAVEN</h1>
-    <p class="raven-hero__tagline">Reconstruction, analysis and visualization of genome-scale metabolic models — available as a MATLAB toolbox and as the Python package raven-toolbox.</p>
-    <div class="lang-switch" role="group" aria-label="Choose your language">
-      <a class="lang-switch--active" href="installation/raven/">MATLAB</a>
-      <a href="installation/python/">Python</a>
-    </div>
-  </div>
-</div>
+# RAVEN
 
-RAVEN supports *de novo* reconstruction from the KEGG and MetaCyc databases,
-homology-based reconstruction from template models, gap-filling, simulation
-through flux balance analysis, omics-data integration and network
-visualization — with the **same** functionality available in both
-implementations.
-
-## Get started
+Reconstruction, analysis and visualization of genome-scale metabolic models.
+RAVEN is available as the **RAVEN Toolbox** (MATLAB) and as
+**raven-toolbox** (Python) — this site documents both implementations side by
+side.
 
 <div class="grid cards" markdown>
 

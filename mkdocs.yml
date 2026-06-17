@@ -75,6 +75,8 @@ theme:
   logo: assets/raven-bird-white.png
   favicon: assets/raven-bird-navy.png
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.top
     - navigation.tracking
@@ -162,9 +164,9 @@ nav:
   - Legacy tutorials:
       - Overview: tutorials/index.md
       - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
-      - 2 - Construct a functional small model: tutorials/tutorial2.md
-      - 3 - Knockouts, MOMA and omics data: tutorials/tutorial3.md
+      - 2 - Build a small model: tutorials/tutorial2.md
+      - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
       - 4 - Fix an erroneous model: tutorials/tutorial4.md
-      - 5 - Reconstruct a GEM from KEGG: tutorials/tutorial5.md
+      - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
   - API reference: api/
   - References: references.md
