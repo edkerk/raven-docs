@@ -1,6 +1,6 @@
 """MkDocs build hooks that keep the site resilient to submodule restructuring.
 
-raven-docs documents the RAVEN (MATLAB) and raven-python sources tracked as git
+raven-docs documents the RAVEN (MATLAB) and raven-toolbox sources tracked as git
 submodules on their fast-moving dev branches (``develop3`` / ``develop``). When
 those branches add or remove folders or files, a statically-configured build
 breaks. These hooks make the build adapt automatically instead of aborting:

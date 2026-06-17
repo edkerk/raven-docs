@@ -27,7 +27,7 @@ folder of the RAVEN repository.
   the completed exercise.
 
 !!! tip "Python users"
-    The reconstruction concepts carry over directly to raven-python. Look up the
+    The reconstruction concepts carry over directly to raven-toolbox. Look up the
     `snake_case` equivalent of each function in the [API reference](../api/index.md)
     (for example `importExcelModel` → `import_excel_model`, `solveLP` →
     `solve_lp`).

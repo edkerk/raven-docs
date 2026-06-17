@@ -5,7 +5,7 @@ metabolic models with the same algorithms:
 
 - **RAVEN** — the original **MATLAB** toolbox, built on the COBRA Toolbox and
   `libSBML`. Functions use `camelCase` names.
-- **raven-python** — the **Python** port, built on cobrapy. Functions use
+- **raven-toolbox** — the **Python** port, built on cobrapy. Functions use
   `snake_case` names.
 
 The function help on these pages is extracted directly from the source of each
@@ -19,7 +19,7 @@ signature, parameters and returns:
 
 - **MATLAB API (RAVEN)** — one page per category (`Reconstruction`,
   `Manipulation`, `Input / output`, …).
-- **Python API (raven-python)** — one page per package, mirroring the same
+- **Python API (raven-toolbox)** — one page per package, mirroring the same
   categories.
 
 Every page opens with a *Functions* table you can scan, followed by the full
@@ -34,7 +34,7 @@ both references.
 The implementations are deliberately kept aligned. The main differences are
 mechanical:
 
-| | RAVEN (MATLAB) | raven-python (Python) |
+| | RAVEN (MATLAB) | raven-toolbox (Python) |
 |---|---|---|
 | Naming | `camelCase` (`getModelFromHomology`) | `snake_case` (`get_model_from_homology`) |
 | Returns | multiple outputs `[a,b] = f(...)` | one return value; objects often mutated in place |
@@ -42,7 +42,7 @@ mechanical:
 | Model object | RAVEN `model` struct | `cobra.Model` with RAVEN extensions |
 
 !!! note "A note on the two docstring styles"
-    raven-python's docstrings are NumPy-style, so they render as structured
+    raven-toolbox's docstrings are NumPy-style, so they render as structured
     parameter/return tables. RAVEN's MATLAB help blocks use the toolbox's own
     indented convention, so they render as faithful help text rather than typed
     tables. The content is the same; only the formatting differs.

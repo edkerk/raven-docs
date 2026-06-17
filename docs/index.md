@@ -18,12 +18,12 @@ RAVEN comes in two implementations that expose the **same** functionality:
 
     [:octicons-arrow-right-24: Source on GitHub](https://github.com/SysBioChalmers/RAVEN)
 
--   :material-language-python: **raven-python**
+-   :material-language-python: **raven-toolbox**
 
     The Python port, built on [cobrapy](https://opencobra.github.io/cobrapy/).
     Functions use `snake_case` names (e.g. `get_model_from_homology`).
 
-    [:octicons-arrow-right-24: Source on GitHub](https://github.com/SysBioChalmers/raven-python)
+    [:octicons-arrow-right-24: Source on GitHub](https://github.com/SysBioChalmers/raven-toolbox)
 
 </div>
 
@@ -37,7 +37,7 @@ here always matches the code.
 
 -   :material-download: **[Installation](installation.md)**
 
-    Install RAVEN (MATLAB) and raven-python, with solver setup.
+    Install RAVEN (MATLAB) and raven-toolbox, with solver setup.
 
 -   :material-school: **[Tutorials](tutorials/index.md)**
 

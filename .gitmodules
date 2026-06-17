@@ -3,9 +3,9 @@
 	url = https://github.com/SysBioChalmers/RAVEN.git
 	branch = develop3
 	shallow = true
-[submodule "raven-python"]
-	path = raven-python
-	url = https://github.com/SysBioChalmers/raven-python.git
+[submodule "raven-toolbox"]
+	path = raven-toolbox
+	url = https://github.com/SysBioChalmers/raven-toolbox.git
 	branch = develop
 	shallow = true
 [submodule "hanpo-GEM"]

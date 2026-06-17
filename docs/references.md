@@ -49,7 +49,7 @@
 
 - [RAVEN GitHub repository](https://github.com/SysBioChalmers/RAVEN) and
   [Wiki](https://github.com/SysBioChalmers/RAVEN/wiki)
-- [raven-python GitHub repository](https://github.com/SysBioChalmers/raven-python)
+- [raven-toolbox GitHub repository](https://github.com/SysBioChalmers/raven-toolbox)
 - [hanpo-GEM repository](https://github.com/SysBioChalmers/hanpo-GEM)
 - [SysBioChalmers](https://github.com/SysBioChalmers) — model and toolbox
   collection

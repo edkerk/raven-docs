@@ -52,7 +52,7 @@ fits your workflow — both build the same models with the same algorithms.
 Detailed instructions and dependency notes are kept on the
 [RAVEN GitHub Wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation).
 
-## raven-python (Python)
+## raven-toolbox (Python)
 
 ### Requirements
 
@@ -65,21 +65,21 @@ Detailed instructions and dependency notes are kept on the
 ### Install
 
 ```bash
-pip install raven-python
+pip install raven-toolbox
 ```
 
 Or install the development version from source:
 
 ```bash
-git clone https://github.com/SysBioChalmers/raven-python.git
-cd raven-python
+git clone https://github.com/SysBioChalmers/raven-toolbox.git
+cd raven-toolbox
 pip install -e .
 ```
 
-Import the package as `raven_python`:
+Import the package as `raven_toolbox`:
 
 ```python
-import raven_python
+import raven_toolbox
 ```
 
 ## Choosing a solver
@@ -91,4 +91,4 @@ import raven_python
 | SCIP   | Open source   | MILP problems (MATLAB) |
 
 Set the active solver in MATLAB with `setRavenSolver('gurobi')`; in
-raven-python, the cobra solver is configured through `cobra.Configuration`.
+raven-toolbox, the cobra solver is configured through `cobra.Configuration`.
