@@ -7,7 +7,7 @@ cobrapy-style ``autoapi`` reference as **two parallel trees** plus a name map:
   ``manipulation`` ...), each with a *Functions* summary table followed by the
   full help for every function (rendered by the ``matlab`` mkdocstrings
   handler via tree-sitter -- no MATLAB runtime needed).
-* **Python API (raven-python)** -- one page per package, same shape, rendered
+* **Python API (raven-toolbox)** -- one page per package, same shape, rendered
   by the ``python`` handler (griffe collects from source statically).
 * **MATLAB <-> Python** -- a single translation table pairing the two naming
   conventions (``camelCase`` <-> ``snake_case``) by normalised name, for every
@@ -28,7 +28,7 @@ import mkdocs_gen_files
 
 ROOT = Path(__file__).resolve().parent.parent
 RAVEN = ROOT / "RAVEN"
-PYPKG = ROOT / "raven-python" / "src" / "raven_python"
+PYPKG = ROOT / "raven-toolbox" / "src" / "raven_toolbox"
 
 # RAVEN top-level categories to document, in nav order: (folder, page title).
 # Pruned to existing folders at build time by scripts/build_hooks.py / the
@@ -53,7 +53,7 @@ MATLAB_CATEGORIES = [
     ("utils", "Utilities"),
 ]
 
-# Friendly titles for raven-python packages.
+# Friendly titles for raven-toolbox packages.
 PY_PACKAGE_TITLES = {
     "reconstruction": "Reconstruction",
     "manipulation": "Manipulation",
@@ -165,7 +165,7 @@ def collect_matlab() -> dict[str, list[dict]]:
 # Collect Python functions and classes                                        #
 # --------------------------------------------------------------------------- #
 def module_dotted(path: Path) -> str:
-    """raven-python/src/raven_python/io/excel.py -> raven_python.io.excel"""
+    """raven-toolbox/src/raven_toolbox/io/excel.py -> raven_toolbox.io.excel"""
     rel = path.relative_to(PYPKG.parent)  # relative to src/
     parts = list(rel.with_suffix("").parts)
     if parts[-1] == "__init__":
@@ -263,13 +263,13 @@ by_package: dict[str, list[dict]] = {}
 for obj in python_objs:
     by_package.setdefault(obj["package"], []).append(obj)
 
-summary.append("* Python API (raven-python)")
+summary.append("* Python API (raven-toolbox)")
 for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TITLES.get(p, p).lower())):
     objs = sorted(by_package[package], key=lambda o: o["name"].lower())
     title = PY_PACKAGE_TITLES.get(package, package)
-    dotted = "raven_python" if package == "_toplevel" else f"raven_python.{package}"
+    dotted = "raven_toolbox" if package == "_toplevel" else f"raven_toolbox.{package}"
     entries = [{"name": o["name"], "summary": o["summary"], "ref": o["ident"]} for o in objs]
-    intro = f"`raven-python` objects in `{dotted}`, collected from the source of the tracked branch."
+    intro = f"`raven-toolbox` objects in `{dotted}`, collected from the source of the tracked branch."
     with mkdocs_gen_files.open(f"api/python/{package}.md", "w") as fh:
         fh.write(render_page(f"{title} (Python)", intro, entries, handler=None))
     summary.append(f"    * [{title}](python/{package}.md)")
@@ -286,15 +286,15 @@ for folder, _title in MATLAB_CATEGORIES:
 lines = [
     "# MATLAB ↔ Python",
     "",
-    "RAVEN (MATLAB) and raven-python implement the same functionality. MATLAB "
-    "uses `camelCase`, raven-python uses `snake_case`. The table below pairs the "
+    "RAVEN (MATLAB) and raven-toolbox implement the same functionality. MATLAB "
+    "uses `camelCase`, raven-toolbox uses `snake_case`. The table below pairs the "
     "functions that exist in both; click a name to jump to its full reference. "
     "Functions that exist in only one implementation appear in that language's "
     "tree but not here.",
     "",
     f"**{len(pairs)}** paired functions.",
     "",
-    "| RAVEN (MATLAB) | raven-python (Python) | Summary |",
+    "| RAVEN (MATLAB) | raven-toolbox (Python) | Summary |",
     "|---|---|---|",
 ]
 for m_name, m_folder, p_name, p_pkg, text in sorted(pairs, key=lambda r: r[0].lower()):

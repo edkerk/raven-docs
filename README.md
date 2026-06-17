@@ -1,6 +1,6 @@
 # raven-docs
 
-Documentation site for **RAVEN** (the MATLAB toolbox) and **raven-python** (the
+Documentation site for **RAVEN** (the MATLAB toolbox) and **raven-toolbox** (the
 Python port) for genome-scale metabolic model reconstruction, analysis and
 visualization. Built with [MkDocs](https://www.mkdocs.org/) +
 [Material](https://squidfunk.github.io/mkdocs-material/) and published on Read
@@ -17,7 +17,7 @@ The site combines:
 
 The source repositories are tracked as git submodules pinned to their `main`
 branches: [`RAVEN`](https://github.com/SysBioChalmers/RAVEN),
-[`raven-python`](https://github.com/SysBioChalmers/raven-python) and
+[`raven-toolbox`](https://github.com/SysBioChalmers/raven-toolbox) and
 [`hanpo-GEM`](https://github.com/SysBioChalmers/hanpo-GEM).
 
 ## Building locally

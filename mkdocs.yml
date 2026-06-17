@@ -1,14 +1,14 @@
 site_name: RAVEN
 site_description: >-
   Reconstruction, Analysis and Visualization of Metabolic Networks — the RAVEN
-  Toolbox (MATLAB) and raven-python, documented side by side.
+  Toolbox (MATLAB) and raven-toolbox, documented side by side.
 site_author: Wang, Marcisauskas, Sanchez, Domenzain, Hermansson, Agren, Nielsen, Kerkhoven et al.
 repo_url: https://github.com/SysBioChalmers/RAVEN
 repo_name: SysBioChalmers/RAVEN
 edit_uri: ""
 
 # Build-time hooks that keep the site resilient to structural changes in the
-# RAVEN / raven-python submodules (folders or files added/removed on the
+# RAVEN / raven-toolbox submodules (folders or files added/removed on the
 # tracked dev branches). See scripts/build_hooks.py.
 hooks:
   - scripts/build_hooks.py
@@ -25,10 +25,10 @@ plugins:
   - mkdocstrings:
       default_handler: python
       handlers:
-        # Python API (raven-python) -- collected statically by griffe from the
+        # Python API (raven-toolbox) -- collected statically by griffe from the
         # submodule source, so the package does not need to be installed.
         python:
-          paths: [raven-python/src]
+          paths: [raven-toolbox/src]
           options:
             docstring_style: numpy
             docstring_section_style: table

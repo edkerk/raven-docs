@@ -3,7 +3,7 @@
 
 version: 2
 
-# Pull in the RAVEN (MATLAB), raven-python (Python) and hanpo-GEM (protocol)
+# Pull in the RAVEN (MATLAB), raven-toolbox (Python) and hanpo-GEM (protocol)
 # sources tracked as git submodules, so their docstrings and protocol code can
 # be auto-documented.
 submodules:
