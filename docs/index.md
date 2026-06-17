@@ -3,51 +3,64 @@ hide:
   - toc
 ---
 
+<div class="raven-hero" markdown>
+
 # RAVEN
 
-Reconstruction, analysis and visualization of genome-scale metabolic models.
-RAVEN is available as the **RAVEN Toolbox** (MATLAB) and as
-**raven-toolbox** (Python) — this site documents both implementations side by
-side.
-
-<div class="grid cards" markdown>
-
--   :material-download: **[Installation](installation/index.md)**
-
-    Set up RAVEN in MATLAB, or `pip install raven-toolbox` for Python.
-
--   :material-swap-horizontal: **[MATLAB vs Python](matlab-vs-python.md)**
-
-    How the two implementations relate, with a side-by-side function map.
-
--   :material-flask: **[Protocols](protocol/index.md)**
-
-    Worked, dual-language protocols — starting with a *Hansenula polymorpha*
-    reconstruction.
-
--   :material-school: **[Legacy tutorials](tutorials/index.md)**
-
-    The five hands-on tutorials from the original RAVEN paper.
-
--   :material-api: **[API reference](api/index.md)**
-
-    Every function, MATLAB and Python, generated from source.
-
--   :material-book-open-variant: **[References](references.md)**
-
-    How to cite RAVEN.
+Reconstruction, analysis and visualization of metabolic networks — in MATLAB and Python.
 
 </div>
 
-## Citing RAVEN
+=== "MATLAB"
 
-If you use RAVEN in your research, please cite:
+    <div class="grid cards" markdown>
 
-> Wang H, Marcišauskas S, Sánchez BJ, Domenzain I, Hermansson D, Agren R,
-> Nielsen J, Kerkhoven EJ (2018). **RAVEN 2.0: A versatile toolbox for metabolic
-> network reconstruction and a case study on *Streptomyces coelicolor*.**
-> *PLoS Computational Biology* 14(10): e1006541.
-> <https://doi.org/10.1371/journal.pcbi.1006541>
+    -   **RAVEN (MATLAB)**
 
-See [References](references.md) for the full citation list, including the
-*Hansenula polymorpha* reconstruction protocol.
+        Standalone toolbox. `camelCase` functions.
+
+    -   **raven-toolbox**
+
+        Built on cobrapy. `snake_case` functions.
+
+    </div>
+
+=== "Python"
+
+    <div class="grid cards" markdown>
+
+    -   **raven-toolbox**
+
+        Built on cobrapy. `snake_case` functions.
+
+    -   **RAVEN (MATLAB)**
+
+        Standalone toolbox. `camelCase` functions.
+
+    </div>
+
+<div class="grid cards raven-nav-grid" markdown>
+
+-   :material-download:{ .raven-nav-icon }
+
+    **[Install](installation/index.md)**
+
+-   :material-school:{ .raven-nav-icon }
+
+    **[Tutorials](tutorials/index.md)**
+
+-   :material-flask:{ .raven-nav-icon }
+
+    **[Protocols](protocol/index.md)**
+
+-   :material-api:{ .raven-nav-icon }
+
+    **[API](api/index.md)**
+
+</div>
+
+---
+
+If you use RAVEN in your research, please cite the
+[RAVEN 2.0 paper](https://doi.org/10.1371/journal.pcbi.1006541) — full list
+in [References](references.md).
