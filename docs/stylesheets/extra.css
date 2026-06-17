@@ -102,25 +102,6 @@
   font-weight: 700;
   color: var(--md-default-fg-color);
 }
-/* Material's default sidebar (12.1rem) is too narrow for the longest nav
-   labels ("2 - Construct a functional small model" needs ~238 px of text
-   space at the site's 14 px nav font).  Fix: widen the fixed desktop panel.
-   The drawer stays at the default width — on narrow screens labels may wrap,
-   which is acceptable. */
-@media screen and (min-width: 60em) {
-  .md-sidebar--primary { width: 13.5rem; }
-}
-/* Material's @supports scrollbar rule sets
-       padding-right: calc(100% - 11.5rem)
-   on .md-sidebar__inner, which pins the nav content to exactly 11.5rem
-   regardless of sidebar width — so widening the sidebar alone changes
-   nothing.  Override it for the primary sidebar to the actual scrollbar
-   width (0.2rem) so the extra space reaches the nav labels. */
-@supports selector(::-webkit-scrollbar) {
-  [dir="ltr"] .md-sidebar--primary .md-sidebar__inner {
-    padding-right: 0.2rem;
-  }
-}
 
 /* ===== API reference: cobrapy-ish function entries =================== */
 .md-typeset .doc-heading { scroll-margin-top: 4rem; }
