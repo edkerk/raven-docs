@@ -13,33 +13,21 @@ Reconstruction, analysis and visualization of metabolic networks — in MATLAB a
 
 </div>
 
-=== "MATLAB"
+<div class="grid cards" markdown>
 
-    <div class="grid cards" markdown>
+-   :custom-matlab: **RAVEN (MATLAB)**
 
-    -   **RAVEN (MATLAB)**
+    Standalone toolbox. `camelCase` functions. Works independently of the COBRA Toolbox.
 
-        Standalone toolbox. `camelCase` functions.
+    [:material-arrow-right: Install](installation/raven.md){ .md-button }
 
-    -   **raven-toolbox**
+-   :material-language-python: **raven-toolbox**
 
-        Built on cobrapy. `snake_case` functions.
+    Python package built on [cobrapy](https://opencobra.github.io/cobrapy/). `snake_case` functions.
 
-    </div>
+    [:material-arrow-right: Install](installation/python.md){ .md-button }
 
-=== "Python"
-
-    <div class="grid cards" markdown>
-
-    -   **raven-toolbox**
-
-        Built on cobrapy. `snake_case` functions.
-
-    -   **RAVEN (MATLAB)**
-
-        Standalone toolbox. `camelCase` functions.
-
-    </div>
+</div>
 
 <div class="grid cards raven-nav-grid" markdown>
 
@@ -47,13 +35,13 @@ Reconstruction, analysis and visualization of metabolic networks — in MATLAB a
 
     **[Install](installation/index.md)**
 
--   :material-school:{ .raven-nav-icon }
+-   :material-swap-horizontal:{ .raven-nav-icon }
 
-    **[Tutorials](tutorials/index.md)**
+    **[MATLAB vs Python](matlab-vs-python.md)**
 
 -   :material-flask:{ .raven-nav-icon }
 
-    **[Protocols](protocol/index.md)**
+    **[Guides](protocol/index.md)**
 
 -   :material-api:{ .raven-nav-icon }
 
@@ -63,6 +51,27 @@ Reconstruction, analysis and visualization of metabolic networks — in MATLAB a
 
 ---
 
-If you use RAVEN in your research, please cite the
-[RAVEN 2.0 paper](https://doi.org/10.1371/journal.pcbi.1006541) — full list
-in [References](references.md).
+## Citing RAVEN
+
+If you use RAVEN in your research, please cite:
+
+> Wang H, Marcišauskas S, Sánchez BJ, Domenzain I, Hermansson D, Agren R,
+> Nielsen J, Kerkhoven EJ (2018). **RAVEN 2.0: A versatile toolbox for
+> metabolic network reconstruction and a case study on *Streptomyces
+> coelicolor*.** *PLoS Computational Biology* 14(10): e1006541.
+> <https://doi.org/10.1371/journal.pcbi.1006541>
+
+> Agren R, Liu L, Shoaie S, Vongsangnak W, Nookaew I, Nielsen J (2013).
+> **The RAVEN toolbox and its use for generating a genome-scale metabolic model
+> for *Penicillium chrysogenum*.** *PLoS Computational Biology* 9(3): e1002980.
+> <https://doi.org/10.1371/journal.pcbi.1002980>
+
+If you use the GEM reconstruction protocol, also cite:
+
+> Zorrilla F, Kerkhoven EJ (2022). **Reconstruction of Genome-Scale Metabolic
+> Model for *Hansenula polymorpha* Using RAVEN.** In: Mapelli V, Bettiga M
+> (eds), *Yeast Metabolic Engineering: Methods and Protocols*, Methods in
+> Molecular Biology, vol. 2513. Humana, New York, NY, pp. 271–290.
+> <https://doi.org/10.1007/978-1-0716-2399-2_16>
+
+See [References](references.md) for the full list including methods cited in the protocol.
