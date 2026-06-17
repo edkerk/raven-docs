@@ -1,9 +1,9 @@
 /* ===== RAVEN brand palette (navy) ===================================== */
 :root {
-  --raven-navy:        #122F57;
-  --raven-navy-dark:   #0C2142;
-  --raven-navy-light:  #1A3F6D;
-  --raven-accent:      #2864A6;
+  --raven-navy:        #0C1D38;
+  --raven-navy-dark:   #07101E;
+  --raven-navy-light:  #112840;
+  --raven-accent:      #1A4888;
 }
 
 [data-md-color-scheme="default"] {
@@ -37,7 +37,6 @@
 /* ===== Denser, sectioned sidebar ====================================== */
 .md-nav { font-size: .72rem; }
 .md-nav__item .md-nav__item { font-size: .98em; }
-[dir=ltr] .md-nav--primary .md-nav__list { padding-left: .2rem; }
 .md-nav__item--section > .md-nav__link {
   font-weight: 700;
   color: var(--md-default-fg-color);
