@@ -42,6 +42,15 @@
   color: var(--md-default-fg-color);
 }
 
+/* ===== Homepage hero ================================================= */
+.raven-hero { text-align: center; padding: 1.5rem 0 .5rem; }
+.raven-hero h1 { font-size: 2.5rem; }
+.raven-hero p { font-size: 1.05rem; color: var(--md-default-fg-color--light); }
+
+/* ===== Homepage navigation grid ====================================== */
+.raven-nav-grid > ul > li { text-align: center; }
+.raven-nav-icon { font-size: 2rem; display: block; margin-bottom: .25rem; }
+
 /* ===== API reference: cobrapy-ish function entries =================== */
 .md-typeset .doc-heading { scroll-margin-top: 4rem; }
 .md-typeset h2.doc-heading code,
