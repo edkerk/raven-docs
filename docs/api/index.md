@@ -25,7 +25,7 @@ signature, parameters and returns:
 Every page opens with a *Functions* table you can scan, followed by the full
 help for each function.
 
-To move between the two implementations, use the **[MATLAB ↔ Python](translation.md)**
+To move between the two implementations, use the **[MATLAB vs Python](../matlab-vs-python.md)**
 table, which maps every paired function `camelCase` ↔ `snake_case` and links to
 both references.
 
@@ -48,4 +48,4 @@ mechanical:
     tables. The content is the same; only the formatting differs.
 
 Use the navigation to browse either tree, or start from the
-[MATLAB ↔ Python](translation.md) table.
+[MATLAB vs Python](../matlab-vs-python.md) table.

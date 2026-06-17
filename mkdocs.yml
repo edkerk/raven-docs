@@ -72,25 +72,32 @@ theme:
   # Custom icons live under overrides/.icons/ and are referenced as
   # :custom-<name>: in markdown (e.g. :custom-matlab:).
   custom_dir: overrides
+  logo: assets/raven-bird-white.png
+  favicon: assets/raven-bird-navy.png
   features:
     - navigation.sections
     - navigation.top
     - navigation.tracking
     - navigation.indexes
+    - navigation.instant
+    - navigation.footer
     - content.code.copy
+    - content.tabs.link        # linked, persistent MATLAB/Python tabs site-wide
     - toc.follow
     - search.suggest
     - search.highlight
+    - search.share
   palette:
+    # Brand colours (navy) are defined in docs/stylesheets/extra.css.
     - scheme: default
-      primary: green
-      accent: green
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - scheme: slate
-      primary: green
-      accent: green
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -126,29 +133,35 @@ markdown_extensions:
         custom_icons:
           - overrides/.icons
 
+extra_css:
+  - stylesheets/extra.css
+
 extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
   - Home: index.md
   - Installation: installation.md
-  - Tutorials:
+  - MATLAB vs Python: matlab-vs-python.md
+  - Protocols:
+      - Overview: protocol/index.md
+      - GEM reconstruction (H. polymorpha):
+          - Introduction: protocol/reconstruction.md
+          - Materials and installation: protocol/materials.md
+          - Import template models: protocol/template-models.md
+          - Draft from homology: protocol/homology.md
+          - Biomass composition: protocol/biomass.md
+          - Curation of lipid reactions: protocol/lipid-curation.md
+          - Gap-filling: protocol/gap-filling.md
+          - Save and simulate: protocol/simulation.md
+          - Manual curation: protocol/manual-curation.md
+          - Anticipated results: protocol/anticipated-results.md
+  - Legacy tutorials:
       - Overview: tutorials/index.md
       - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
       - 2 - Construct a functional small model: tutorials/tutorial2.md
       - 3 - Knockouts, MOMA and omics data: tutorials/tutorial3.md
       - 4 - Fix an erroneous model: tutorials/tutorial4.md
       - 5 - Reconstruct a GEM from KEGG: tutorials/tutorial5.md
-  - GEM reconstruction protocol:
-      - Introduction: protocol/index.md
-      - Materials and installation: protocol/materials.md
-      - Import template models: protocol/template-models.md
-      - Draft from homology: protocol/homology.md
-      - Biomass composition: protocol/biomass.md
-      - Curation of lipid reactions: protocol/lipid-curation.md
-      - Gap-filling: protocol/gap-filling.md
-      - Save and simulate: protocol/simulation.md
-      - Manual curation: protocol/manual-curation.md
-      - Anticipated results: protocol/anticipated-results.md
   - API reference: api/
   - References: references.md

@@ -274,7 +274,7 @@ for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TI
         fh.write(render_page(f"{title} (Python)", intro, entries, handler=None))
     summary.append(f"    * [{title}](python/{package}.md)")
 
-# --- MATLAB <-> Python translation table ----------------------------------- #
+# --- MATLAB vs Python translation table (top-level page) ------------------- #
 pairs: list[tuple[str, str, str, str, str]] = []  # (matlab, folder, python, package, summary)
 for folder, _title in MATLAB_CATEGORIES:
     for f in matlab[folder]:
@@ -284,13 +284,26 @@ for folder, _title in MATLAB_CATEGORIES:
             pairs.append((f["name"], folder, match["name"], match["package"], text))
 
 lines = [
-    "# MATLAB ↔ Python",
+    "# MATLAB vs Python",
     "",
-    "RAVEN (MATLAB) and raven-toolbox implement the same functionality. MATLAB "
-    "uses `camelCase`, raven-toolbox uses `snake_case`. The table below pairs the "
-    "functions that exist in both; click a name to jump to its full reference. "
-    "Functions that exist in only one implementation appear in that language's "
-    "tree but not here.",
+    "RAVEN ships as a MATLAB toolbox and as the Python package "
+    "**raven-toolbox**. The two have large overlap, but differ in important "
+    "ways:",
+    "",
+    "- The **MATLAB** version works completely independently — including "
+    "independently of the COBRA Toolbox — although `ravenCobraWrapper` can "
+    "translate between the RAVEN and COBRA model formats.",
+    "- **raven-toolbox** is built on top of "
+    "[cobrapy](https://cobrapy.readthedocs.io/).",
+    "- As a result, some functions are **MATLAB-only**: they are not ported "
+    "because cobrapy already provides the equivalent. In that case, look for "
+    "the function in the "
+    "[cobrapy API](https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html).",
+    "",
+    "The table below pairs the functions that exist in both implementations "
+    "(MATLAB `camelCase` ↔ Python `snake_case`); click a name to jump to its "
+    "full reference. Functions that exist in only one implementation appear in "
+    "that language's [API reference](api/index.md) tree but not here.",
     "",
     f"**{len(pairs)}** paired functions.",
     "",
@@ -298,12 +311,11 @@ lines = [
     "|---|---|---|",
 ]
 for m_name, m_folder, p_name, p_pkg, text in sorted(pairs, key=lambda r: r[0].lower()):
-    m_link = f"[`{m_name}`](matlab/{m_folder}.md#{slug(m_name)})"
-    p_link = f"[`{p_name}`](python/{p_pkg}.md#{slug(p_name)})"
+    m_link = f"[`{m_name}`](api/matlab/{m_folder}.md#{slug(m_name)})"
+    p_link = f"[`{p_name}`](api/python/{p_pkg}.md#{slug(p_name)})"
     lines.append(f"| {m_link} | {p_link} | {cell(text)} |")
-with mkdocs_gen_files.open("api/translation.md", "w") as fh:
+with mkdocs_gen_files.open("matlab-vs-python.md", "w") as fh:
     fh.write("\n".join(lines) + "\n")
-summary.append("* [MATLAB ↔ Python](translation.md)")
 
 # --- literate-nav SUMMARY -------------------------------------------------- #
 with mkdocs_gen_files.open("api/SUMMARY.md", "w") as fh:
