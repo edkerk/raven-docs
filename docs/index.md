@@ -9,8 +9,8 @@ hide:
     <h1 class="raven-hero__title">RAVEN</h1>
     <p class="raven-hero__tagline">Reconstruction, analysis and visualization of genome-scale metabolic models — available as a MATLAB toolbox and as the Python package raven-toolbox.</p>
     <div class="lang-switch" role="group" aria-label="Choose your language">
-      <a class="lang-switch--active" href="installation/#raven-matlab">MATLAB</a>
-      <a href="installation/#raven-toolbox-python">Python</a>
+      <a class="lang-switch--active" href="installation/raven/">MATLAB</a>
+      <a href="installation/python/">Python</a>
     </div>
   </div>
 </div>
@@ -25,7 +25,7 @@ implementations.
 
 <div class="grid cards" markdown>
 
--   :material-download: **[Installation](installation.md)**
+-   :material-download: **[Installation](installation/index.md)**
 
     Set up RAVEN in MATLAB, or `pip install raven-toolbox` for Python.
 
