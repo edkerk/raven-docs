@@ -139,6 +139,7 @@ extra_css:
   - stylesheets/extra.css
 
 extra_javascript:
+  - js/toolbox-toggle.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
@@ -168,5 +169,5 @@ nav:
       - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
       - 4 - Fix an erroneous model: tutorials/tutorial4.md
       - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
-  - API reference: api/
+  - API documentation: api/
   - References: references.md

@@ -44,12 +44,72 @@
 
 /* ===== Homepage hero ================================================= */
 .raven-hero { text-align: center; padding: 1.5rem 0 .5rem; }
+.raven-hero-logo { width: 80px; height: auto; display: block; margin: 0 auto 1rem; }
 .raven-hero h1 { font-size: 2.5rem; }
 .raven-hero p { font-size: 1.05rem; color: var(--md-default-fg-color--light); }
 
 /* ===== Homepage navigation grid ====================================== */
 .raven-nav-grid > ul > li { text-align: center; }
 .raven-nav-icon { font-size: 2rem; display: block; margin-bottom: .25rem; }
+
+/* ===== MATLAB / Python pill toggle (content tabs site-wide) ========== */
+.md-typeset .tabbed-labels {
+  display: inline-flex;
+  background: var(--md-code-bg-color);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+  border-bottom: none !important;
+  overflow: visible;
+}
+.md-typeset .tabbed-labels > label {
+  padding: .35rem 1.1rem;
+  border-radius: 6px;
+  border-bottom: none !important;
+  font-weight: 500;
+  font-size: .8rem;
+  color: var(--md-default-fg-color--light);
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+/* Active tab state — one rule per possible tab position */
+.md-typeset .tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
+.md-typeset .tabbed-alternate input:nth-child(2):checked ~ .tabbed-labels label:nth-child(2),
+.md-typeset .tabbed-alternate input:nth-child(3):checked ~ .tabbed-labels label:nth-child(3),
+.md-typeset .tabbed-alternate input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4) {
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-weight: 600;
+}
+
+/* ===== Header MATLAB / Python toggle ================================= */
+.raven-hdr-toggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(255, 255, 255, .15);
+  border-radius: 8px;
+  margin: 0 .6rem;
+  flex-shrink: 0;
+}
+.raven-toggle-opt {
+  padding: .22rem .75rem;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, .65);
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: background .15s, color .15s;
+}
+.raven-toggle-opt.raven-toggle-on {
+  background: rgba(255, 255, 255, .25);
+  color: #fff;
+}
 
 /* ===== API reference: cobrapy-ish function entries =================== */
 .md-typeset .doc-heading { scroll-margin-top: 4rem; }
