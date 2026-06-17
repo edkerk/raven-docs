@@ -173,9 +173,8 @@ Generated from source, organised so each function is shown for both languages.
 *(To be resolved with the maintainer; record answers here and fold the decisions
 into the relevant section above.)*
 
-1. **Theme / branding** — colour scheme, logo, and default light/dark mode.
-2. **Hosting** — Read the Docs project name / custom domain; versioned docs
-   (per release) vs always-latest from the tracked dev branches.
+- **Custom domain** — whether to serve under a project domain in addition to the
+  default Read the Docs URL (optional).
 
 ## 7. Decisions log
 
@@ -192,3 +191,11 @@ into the relevant section above.)*
 - **MATLAB↔Python mapping table:** auto-generated pairs + hand-curated cobrapy
   alternatives.
 - **Always pull all remotes (superproject + submodules) before starting work.**
+- **Look & feel:** layout "direction B" — a navy hero homepage with a
+  left **sidebar** (dense, sectioned, nested), prominent search, and a segmented
+  MATLAB/Python switch in the hero. Palette **navy** (`#16335C` hero /
+  `#2E6FB8` accent). Logo: the **RAVEN raven silhouette only** (no wordmark),
+  white on the navy header/hero; navy version as favicon.
+- **Versioning:** versioned per release via Read the Docs' native version
+  management (tag `raven-docs` releases and activate them in the RTD project;
+  RTD shows the version selector). Not mike/gh-pages.

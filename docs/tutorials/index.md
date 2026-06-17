@@ -1,8 +1,11 @@
-# Tutorials
+# Legacy tutorials
 
-RAVEN ships with five hands-on tutorials that build up from running a simulation
-on an existing model to reconstructing a genome-scale model from sequence data.
-The scripts and all the data files they use live in the
+These five hands-on tutorials were part of the original **RAVEN 1** paper
+(Agren et al., 2013). The code has been updated to run with current RAVEN, but
+the exercises themselves are otherwise unchanged. They use the **MATLAB**
+toolbox and build up from running a simulation on an existing model to
+reconstructing a genome-scale model from sequence data. The scripts and all the
+data files they use live in the
 [`tutorial/`](https://github.com/SysBioChalmers/RAVEN/tree/main/tutorial)
 folder of the RAVEN repository.
 
