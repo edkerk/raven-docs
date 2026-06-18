@@ -1,8 +1,3 @@
----
-hide:
-  - toc
----
-
 <div class="raven-hero" markdown>
 
 ![RAVEN](assets/raven-bird-navy.png){ .raven-hero-logo }
@@ -10,22 +5,6 @@ hide:
 # RAVEN
 
 Reconstruction, analysis and visualization of metabolic networks — in MATLAB and Python.
-
-</div>
-
-<div class="grid cards" markdown>
-
--   :custom-matlab: **RAVEN (MATLAB)**
-
-    Standalone toolbox. `camelCase` functions. Works independently of the COBRA Toolbox.
-
-    [:material-arrow-right: Install](installation/raven.md){ .md-button }
-
--   :material-language-python: **raven-toolbox**
-
-    Python package built on [cobrapy](https://opencobra.github.io/cobrapy/). `snake_case` functions.
-
-    [:material-arrow-right: Install](installation/python.md){ .md-button }
 
 </div>
 

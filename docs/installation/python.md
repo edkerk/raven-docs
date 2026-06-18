@@ -54,13 +54,13 @@ print(raven_toolbox.__version__)
 
 ## Upgrade
 
-=== ":material-package: PyPI install"
+=== ":material-package: From PyPI"
 
     ```bash
     pip install --upgrade raven-toolbox
     ```
 
-=== ":octicons-git-branch-16: Source install"
+=== ":octicons-git-branch-16: From source"
 
     ```bash
     git pull origin develop
