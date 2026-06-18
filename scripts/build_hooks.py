@@ -68,6 +68,28 @@ def on_config(config):
     return config
 
 
+def on_page_content(html, *, page, config, **kwargs):
+    """Strip the repeated MATLAB function name from docstring descriptions.
+
+    MATLAB convention puts the function name on the first help line:
+        % checkProduction Check which metabolites can be produced from a model.
+    mkdocstrings-matlab renders this verbatim, duplicating the h3 heading that
+    our page generator already emits.  This hook removes the leading word when
+    it matches a camelCase identifier followed by a capital letter (i.e. the
+    start of the real description).
+    """
+    if not page.file.src_path.startswith("api/matlab/"):
+        return html
+    # Require at least one uppercase letter inside the identifier so plain
+    # English words like "see", "use", "for" are not accidentally stripped.
+    html = re.sub(
+        r"(<p>)([a-z][a-z0-9]*(?:[A-Z][A-Za-z0-9]*)+) ([A-Z])",
+        r"\1\3",
+        html,
+    )
+    return html
+
+
 def on_page_markdown(markdown, *, page, config, files):
     """Neutralize snippet includes whose source file is missing."""
     root = _repo_root(config)
