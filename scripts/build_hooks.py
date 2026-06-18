@@ -78,12 +78,13 @@ def on_page_content(html, *, page, config, **kwargs):
     it matches a camelCase identifier followed by a capital letter (i.e. the
     start of the real description).
     """
-    if not page.file.src_path.startswith("api/matlab/"):
+    if not page.file.src_path.replace("\\", "/").startswith("api/matlab/"):
         return html
     # Require at least one uppercase letter inside the identifier so plain
     # English words like "see", "use", "for" are not accidentally stripped.
+    # \s+ handles the MATLAB two-space convention after the function name.
     html = re.sub(
-        r"(<p>)([a-z][a-z0-9]*(?:[A-Z][A-Za-z0-9]*)+) ([A-Z])",
+        r"(<p>)([a-z][a-z0-9]*(?:[A-Z][A-Za-z0-9]*)+)\s+([A-Z])",
         r"\1\3",
         html,
     )

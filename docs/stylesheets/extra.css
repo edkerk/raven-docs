@@ -49,7 +49,7 @@
 .raven-hero p { font-size: 1.05rem; color: var(--md-default-fg-color--light); margin-top: 0; }
 
 /* ===== Homepage navigation grid (4 cards in one row) ================ */
-.raven-nav-grid > ul {
+.md-typeset .grid.cards.raven-nav-grid > ul {
   grid-template-columns: repeat(4, 1fr);
 }
 .raven-nav-grid > ul > li { text-align: center; }
