@@ -43,17 +43,21 @@
 }
 
 /* ===== Homepage hero ================================================= */
-.raven-hero { text-align: center; padding: 1.5rem 0 .5rem; }
-.raven-hero-logo { width: 80px; height: auto; display: block; margin: 0 auto 1rem; }
-.raven-hero h1 { font-size: 2.5rem; }
-.raven-hero p { font-size: 1.05rem; color: var(--md-default-fg-color--light); }
+.raven-hero { text-align: center; padding: .75rem 0 .25rem; }
+.raven-hero-logo { width: 72px; height: auto; display: block; margin: 0 auto .5rem; }
+.raven-hero h1 { font-size: 2.5rem; margin-bottom: .15rem; }
+.raven-hero p { font-size: 1.05rem; color: var(--md-default-fg-color--light); margin-top: 0; }
 
 /* ===== Homepage navigation grid (4 cards in one row) ================ */
 .raven-nav-grid > ul {
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(4, 1fr);
 }
 .raven-nav-grid > ul > li { text-align: center; }
 .raven-nav-icon { font-size: 2rem; display: block; margin-bottom: .25rem; }
+
+/* ===== Bold active nav item ========================================= */
+.md-nav__item--active > .md-nav__link { font-weight: 700; }
+.md-tabs__item--active .md-tabs__link { font-weight: 700; }
 
 /* ===== MATLAB / Python pill toggle (content tabs site-wide) ========== */
 .md-typeset .tabbed-labels {

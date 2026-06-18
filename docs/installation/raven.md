@@ -74,11 +74,6 @@ Checking essential binary executables:
 *** checkInstallation complete ***
 ```
 
-!!! warning "Excel parsing failure"
-    If the output shows `... Excel format... FAILED`, uninstall MATLAB's
-    **Text Analytics Toolbox** — it conflicts with RAVEN's Excel parser.
-    See [RAVEN issue #55](https://github.com/SysBioChalmers/RAVEN/issues/55).
-
 ---
 
 ## Upgrade
@@ -93,7 +88,7 @@ Checking essential binary executables:
     Close MATLAB, delete the old RAVEN folder, download and extract the new
     release, and run `checkInstallation`.
 
-=== ":octicons-git-branch-16: git clone"
+=== ":octicons-git-branch-16: Clone with git"
 
     ```bash
     git pull origin main
@@ -109,7 +104,7 @@ Checking essential binary executables:
 
     Go to **Add-Ons → Manage Add-Ons** and remove RAVEN from the list.
 
-=== ":material-file-download: Release download / git clone"
+=== ":material-file-download: Release download"
 
     ```matlab
     which removeRavenFromPath   % locate the installation
@@ -117,6 +112,15 @@ Checking essential binary executables:
     ```
 
     Then delete the RAVEN folder from disk.
+
+=== ":octicons-git-branch-16: Clone with git"
+
+    ```matlab
+    which removeRavenFromPath   % locate the installation
+    removeRavenFromPath         % clear RAVEN from the MATLAB path
+    ```
+
+    Then delete the cloned RAVEN folder from disk.
 
 ---
 
