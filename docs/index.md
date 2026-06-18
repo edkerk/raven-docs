@@ -1,42 +1,137 @@
-<div class="raven-hero" markdown>
+<div class="rh-hero">
+  <p class="rh-tag">MATLAB &amp; Python</p>
+  <h1>Reconstruction, Analysis and Visualization<br>of Metabolic Networks</h1>
+  <p class="rh-tagline">A toolkit for building, curating, and simulating genome-scale metabolic models — available as a MATLAB toolbox and a Python package built on cobrapy.</p>
+  <div class="rh-badges">
+    <span class="rh-badge">MIT license</span>
+    <span class="rh-badge">Python ≥ 3.11</span>
+    <span class="rh-badge">MATLAB R2016b+</span>
+    <span class="rh-badge">cobrapy</span>
+    <span class="rh-badge">SBML</span>
+    <span class="rh-badge">Gurobi · GLPK</span>
+    <span class="rh-badge">Windows · macOS · Linux</span>
+    <span class="rh-badge">DOI 10.1371/journal.pcbi.1006541</span>
+  </div>
+</div>
 
-![RAVEN](assets/raven-bird-navy.png){ .raven-hero-logo }
+<div class="rh-install">
+  <div class="rh-install-tabs">
+    <button class="rh-itab active" data-cmd="pip install raven-toolbox">Python (pip)</button>
+    <button class="rh-itab" data-cmd="Home &rarr; Add-Ons &rarr; Get Add-Ons &rarr; search RAVEN Toolbox" data-plain>MATLAB (Add-Ons)</button>
+    <button class="rh-itab" data-cmd="git clone https://github.com/SysBioChalmers/raven-toolbox.git&#10;pip install -e raven-toolbox/">Python (git)</button>
+    <button class="rh-itab" data-cmd="git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git">MATLAB (git)</button>
+  </div>
+  <div class="rh-code-row">
+    <code id="rh-cmd">pip install raven-toolbox</code>
+    <button class="rh-copy" onclick="navigator.clipboard.writeText(document.getElementById('rh-cmd').innerText)" title="Copy to clipboard" aria-label="Copy">:octicons-copy-16:</button>
+  </div>
+</div>
 
-# RAVEN
+<p class="rh-section-label">Key features</p>
 
-Reconstruction, analysis and visualization of metabolic networks — in MATLAB and Python.
+<div class="grid cards rh-features" markdown>
+
+-   :material-dna:{ .rh-feat-icon }
+
+    **Homology reconstruction**
+
+    Build draft models by transferring reactions from template models using BLAST+, DIAMOND, or HMMER.
+
+-   :material-database:{ .rh-feat-icon }
+
+    **KEGG-based reconstruction**
+
+    Reconstruct metabolic networks directly from KEGG organism annotations and pathway databases.
+
+-   :material-chart-line:{ .rh-feat-icon }
+
+    **Flux analysis**
+
+    FBA, FVA, gene knockouts, MOMA, and sampling with Gurobi or GLPK solvers.
+
+-   :material-layers:{ .rh-feat-icon }
+
+    **ftINIT**
+
+    Fast task-and-data-driven INIT for extracting context-specific models from transcriptomics data.
+
+-   :material-transit-connection:{ .rh-feat-icon }
+
+    **Gap-filling**
+
+    Identify and fill stoichiometric gaps by LP to restore connectivity or enable predicted growth.
+
+-   :material-clipboard-check:{ .rh-feat-icon }
+
+    **Model curation**
+
+    Check mass and charge balance, dead-end metabolites, and metabolic task fulfilment.
 
 </div>
 
-<div class="grid cards" markdown>
+<hr class="rh-divider">
 
--   :custom-matlab: **RAVEN (MATLAB)**
+<p class="rh-section-label">Quick start</p>
 
-    Standalone toolbox. `camelCase` functions. Works independently of the COBRA Toolbox.
+=== "Python"
 
--   :material-language-python: **raven-toolbox**
+    ```python
+    import raven_toolbox as rv
 
-    Python package built on [cobrapy](https://opencobra.github.io/cobrapy/). `snake_case` functions.
+    # load yeast-GEM
+    model = rv.io.import_model("yeast-GEM.xml")
 
-</div>
+    # set growth as the objective
+    rv.manipulation.set_objective(model, "r_2111")
 
-<div class="grid cards raven-nav-grid" markdown>
+    # constrain glucose uptake to 1 mmol/gDW/h
+    model.reactions.get_by_id("r_1714").lower_bound = -1.0
 
--   :material-download:{ .raven-nav-icon }
+    # run FBA
+    sol = rv.analysis.run_fba(model)
+    print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
+    ```
 
-    **[Install](installation/index.md)**
+=== "MATLAB"
 
--   :material-swap-horizontal:{ .raven-nav-icon }
+    ```matlab
+    % load yeast-GEM
+    model = importModel('yeast-GEM.xml');
 
-    **[MATLAB vs Python](matlab-vs-python.md)**
+    % set growth as the objective
+    model = setParam(model, 'obj', 'r_2111', 1);
 
--   :material-flask:{ .raven-nav-icon }
+    % constrain glucose uptake to 1 mmol/gDW/h
+    model = setParam(model, 'ub', 'r_1714', 1);
+
+    % run FBA
+    sol = solveLP(model);
+    fprintf('Growth rate: %.4f h-1\n', -sol.f);
+    ```
+
+<hr class="rh-divider">
+
+<p class="rh-section-label">Documentation</p>
+
+<div class="grid cards rh-docs" markdown>
+
+-   :material-download:
+
+    **[Installation](installation/index.md)**
+
+    Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
+
+-   :material-flask:
 
     **[Guides](protocol/index.md)**
 
--   :material-api:{ .raven-nav-icon }
+    End-to-end GEM reconstruction protocol and legacy tutorials.
 
-    **[API docs](api/index.md)**
+-   :material-api:
+
+    **[API reference](api/index.md)**
+
+    Complete function reference for both MATLAB and Python.
 
 </div>
 
@@ -66,3 +161,17 @@ If you use the GEM reconstruction protocol, also cite:
 > <https://doi.org/10.1007/978-1-0716-2399-2_16>
 
 See [References](references.md) for the full list including methods cited in the protocol.
+
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.rh-itab');
+  var cmd  = document.getElementById('rh-cmd');
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabs.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      cmd.innerHTML = btn.dataset.cmd;
+    });
+  });
+})();
+</script>
