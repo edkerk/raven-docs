@@ -95,14 +95,14 @@
 === "MATLAB"
 
     ```matlab
-    % load yeast-GEM
-    model = importModel('yeast-GEM.xml');
+    % load yeast-GEM from RAVEN YAML
+    model = readYAMLmodel('yeast-GEM.yml');
 
     % set growth as the objective
     model = setParam(model, 'obj', 'r_2111', 1);
 
     % constrain glucose uptake to 1 mmol/gDW/h
-    model = setParam(model, 'ub', 'r_1714', 1);
+    model = setParam(model, 'lb', 'r_1714', -1);
 
     % run FBA
     sol = solveLP(model);
