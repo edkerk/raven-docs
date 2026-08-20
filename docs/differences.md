@@ -9,10 +9,8 @@ Both implement the same core methods for genome-scale metabolic modelling, but
 differ in language conventions, solver interface, and which features are
 available.
 
-!!! note "A full function mapping is on its way"
-    This page covers the main correspondences. A complete, generated
-    MATLAB ↔ Python cross-reference is in preparation; until then, the
-    [API reference](api/index.md) lists every function in both toolboxes.
+See the [function mapping table](matlab-vs-python.md) — generated from the source of
+both toolboxes at build time — for the full side-by-side cross-reference.
 
 ## Shared functionality
 
@@ -129,6 +127,5 @@ another cobrapy-compatible tool.
 ## Naming conventions
 
 MATLAB uses `camelCase` function names; Python uses `snake_case`. The conversion
-is mechanical: `getModelFromHomology` → `get_model_from_homology`. The
-[API reference](api/index.md) lists every function in both toolboxes; a generated
-side-by-side mapping table is in preparation.
+is mechanical: `getModelFromHomology` → `get_model_from_homology`. See the
+[function mapping table](matlab-vs-python.md) for every paired function.
