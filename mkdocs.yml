@@ -151,8 +151,12 @@ nav:
       - RAVEN (MATLAB): installation/raven.md
       - raven-toolbox (Python): installation/python.md
   - MATLAB vs Python:
+      - Overview: differences.md
       - Function mapping: matlab-vs-python.md
-      - Differences and similarities: differences.md
+      - Only in raven-toolbox: python-only.md
+      - Only in RAVEN: matlab-only.md
+      - Same function, different answer: behaviour.md
+      - What identical results means: parity.md
       - Changes from RAVEN 2: raven2-changes.md
   - Guides:
       - Overview: protocol/index.md

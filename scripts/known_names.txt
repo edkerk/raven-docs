@@ -25,6 +25,7 @@ write_sbml_model
 flux_variability_analysis
 single_gene_deletion
 find_blocked_reactions
+check_mass_balance
 
 # -- RAVEN model struct fields and function arguments -----------------------
 grRules
