@@ -50,6 +50,7 @@ plugins:
             - RAVEN/manipulation
             - RAVEN/analysis
             - RAVEN/gapfilling
+            - RAVEN/INIT
             - RAVEN/annotation
             - RAVEN/biomass
             - RAVEN/curation

@@ -15,12 +15,21 @@ is required.
 from __future__ import annotations
 
 import ast
+import os
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RAVEN = ROOT / "RAVEN"
-PYPKG = ROOT / "raven-toolbox" / "src" / "raven_toolbox"
+
+# The submodules are the source of truth for a real build. For local work they
+# can be pointed elsewhere -- e.g. at a working checkout of either toolbox --
+# which is useful when a submodule cannot be moved to the tracked commit.
+RAVEN = Path(os.environ.get("RAVEN_DOCS_RAVEN_SRC", ROOT / "RAVEN"))
+PYPKG = Path(
+    os.environ.get(
+        "RAVEN_DOCS_PYTHON_SRC", ROOT / "raven-toolbox" / "src" / "raven_toolbox"
+    )
+)
 
 # RAVEN top-level categories to document, in nav order: (folder, page title).
 # Pruned to existing folders at build time by scripts/build_hooks.py / the
@@ -34,6 +43,7 @@ MATLAB_CATEGORIES = [
     ("curation", "Curation"),
     ("conversion", "Format conversion"),
     ("gapfilling", "Gap-filling"),
+    ("INIT", "INIT / ftINIT"),
     ("io", "Input / output"),
     ("localization", "Localization"),
     ("manipulation", "Manipulation"),
