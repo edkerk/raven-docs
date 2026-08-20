@@ -25,9 +25,9 @@ signature, parameters and returns:
 Every page opens with a *Functions* table you can scan, followed by the full
 help for each function.
 
-To move between the two implementations, use the **[MATLAB vs Python](../matlab-vs-python.md)**
-table, which maps every paired function `camelCase` ↔ `snake_case` and links to
-both references.
+To move between the two implementations, see
+**[Differences and similarities](../differences.md)**. A generated table pairing every
+function `camelCase` ↔ `snake_case` is in preparation.
 
 ## How the two line up
 
@@ -47,5 +47,5 @@ mechanical:
     indented convention, so they render as faithful help text rather than typed
     tables. The content is the same; only the formatting differs.
 
-Use the navigation to browse either tree, or start from the
-[MATLAB vs Python](../matlab-vs-python.md) table.
+Use the navigation to browse either tree, or start from
+[Differences and similarities](../differences.md).

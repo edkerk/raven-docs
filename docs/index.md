@@ -76,19 +76,20 @@
 === "Python"
 
     ```python
-    import raven_toolbox as rv
+    import cobra
 
-    # load yeast-GEM
-    model = rv.io.import_model("yeast-GEM.xml")
+    # load yeast-GEM -- standard formats come from cobrapy;
+    # RAVEN YAML models use raven_toolbox.io.read_yaml_model
+    model = cobra.io.read_sbml_model("yeast-GEM.xml")
 
     # set growth as the objective
-    rv.manipulation.set_objective(model, "r_2111")
+    model.objective = "r_2111"
 
     # constrain glucose uptake to 1 mmol/gDW/h
     model.reactions.get_by_id("r_1714").lower_bound = -1.0
 
     # run FBA
-    sol = rv.analysis.run_fba(model)
+    sol = model.optimize()
     print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
     ```
 

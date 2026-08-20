@@ -1,8 +1,12 @@
 # Guides
 
 Curated, worked guides for common genome-scale metabolic modelling tasks.
-Step-by-step protocols are provided in **both MATLAB and Python** with code
-shown in MATLAB/Python tabs so you can follow along in either language.
+
+!!! info "MATLAB for now, Python next"
+    The guide below is **MATLAB only**. Dual-language guides — every code block in
+    linked MATLAB/Python tabs — are being written, starting with two new
+    reconstruction walkthroughs. Python users can follow the concepts here and look
+    up the equivalents in the [API reference](../api/index.md).
 
 ## Protocols
 
