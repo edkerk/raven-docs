@@ -76,33 +76,33 @@
 === "Python"
 
     ```python
-    import raven_toolbox as rv
+    from raven_toolbox.io import read_yaml_model
 
-    # load yeast-GEM
-    model = rv.io.import_model("yeast-GEM.xml")
+    # load yeast-GEM from RAVEN YAML -- returns a plain cobra.Model
+    model = read_yaml_model("yeast-GEM.yml")
 
     # set growth as the objective
-    rv.manipulation.set_objective(model, "r_2111")
+    model.objective = "r_2111"
 
     # constrain glucose uptake to 1 mmol/gDW/h
     model.reactions.get_by_id("r_1714").lower_bound = -1.0
 
-    # run FBA
-    sol = rv.analysis.run_fba(model)
+    # run FBA -- simulation comes from cobrapy, unchanged
+    sol = model.optimize()
     print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
     ```
 
 === "MATLAB"
 
     ```matlab
-    % load yeast-GEM
-    model = importModel('yeast-GEM.xml');
+    % load yeast-GEM from RAVEN YAML
+    model = readYAMLmodel('yeast-GEM.yml');
 
     % set growth as the objective
     model = setParam(model, 'obj', 'r_2111', 1);
 
     % constrain glucose uptake to 1 mmol/gDW/h
-    model = setParam(model, 'ub', 'r_1714', 1);
+    model = setParam(model, 'lb', 'r_1714', -1);
 
     % run FBA
     sol = solveLP(model);

@@ -7,8 +7,12 @@ RAVEN is available as two independent implementations:
 
 Both implement the same core methods for genome-scale metabolic modelling, but
 differ in language conventions, solver interface, and which features are
-available. See the [function mapping table](matlab-vs-python.md) for a full
-side-by-side cross-reference.
+available.
+
+!!! note "A full function mapping is on its way"
+    This page covers the main correspondences. A complete, generated
+    MATLAB ↔ Python cross-reference is in preparation; until then, the
+    [API reference](api/index.md) lists every function in both toolboxes.
 
 ## Shared functionality
 
@@ -22,8 +26,8 @@ implementations.
 | RAVEN (MATLAB) | raven-toolbox (Python) |
 |---|---|
 | `getModelFromHomology` | `get_model_from_homology` |
-| `getBlast` | `get_blast` |
-| `getDiamond` | `get_diamond` |
+| `getBlast` | `run_blast` |
+| `getDiamond` | `run_diamond` |
 
 ### KEGG-based reconstruction
 
@@ -36,12 +40,15 @@ can download and cache KEGG data locally.
 
 ### Gap-filling
 
-Both provide gap-filling by linear programming to identify the minimum reaction
-set needed to restore connectivity or growth.
+Both provide gap-filling to identify the smallest set of reactions needed to
+restore connectivity or growth. RAVEN gathers this in one function; raven-toolbox
+splits it by algorithm, so the Python side is a choice rather than a single call.
 
 | RAVEN (MATLAB) | raven-toolbox (Python) |
 |---|---|
-| `fillGaps` | `fill_gaps` |
+| `fillGaps` (connectivity mode) | `connect_blocked_reactions` |
+| `fillGaps` (targeted mode) | `fill_gaps_fast_lp`, `fill_gaps_kumar_milp` |
+| `checkProduction`, `getAllSubGraphs`, `haveFlux` | `analyse_topology` |
 
 ### Flux analysis
 
@@ -50,15 +57,27 @@ are available in both, with equivalent solver interfaces.
 
 ### Model import and export
 
-Both can read and write SBML (`.xml`) and RAVEN's Excel format (`.xlsx`), making
-models fully portable between implementations.
+Both read and write SBML (`.xml`) and the RAVEN YAML format (`.yml`), so models
+move between the two implementations in either direction. In Python the standard
+formats are handled by cobrapy itself, and raven-toolbox adds the RAVEN-specific
+ones.
 
-| RAVEN (MATLAB) | raven-toolbox (Python) |
-|---|---|
-| `importModel` | `import_model` |
-| `exportModel` | `export_model` |
-| `importExcelModel` | `import_excel_model` |
-| `exportToExcelFormat` | `export_to_excel_format` |
+| RAVEN (MATLAB) | raven-toolbox (Python) | |
+|---|---|---|
+| `importModel` | `cobra.io.read_sbml_model` | cobrapy |
+| `exportModel` | `cobra.io.write_sbml_model` | cobrapy |
+| `readYAMLmodel` | `read_yaml_model` | |
+| `writeYAMLmodel` | `write_yaml_model` | |
+| `exportToExcelFormat` | `export_to_excel` | |
+| `exportForGit` | `export_for_git` | |
+| `exportModelToSIF` | `export_model_to_sif` | |
+
+!!! warning "Excel is export-only"
+    Neither toolbox reads models from Excel any more. raven-toolbox writes Excel
+    but has never had a reader — a deliberate omission. RAVEN's `importExcelModel`
+    was removed during the RAVEN 3 refactor, and its tutorial models were
+    converted to YAML; released RAVEN 2.x still ships it. Use SBML or YAML to move
+    a model between the two implementations.
 
 ---
 
@@ -89,9 +108,11 @@ dependency.
 
 ### Visualisation
 
-RAVEN's `drawMap`-family functions provide flux map visualisation on top of
-stoichiometric network maps. raven-toolbox currently has no built-in
-visualisation; use Escher or cobrapy-compatible tools instead.
+Released RAVEN 2.x ships a `plotting/` folder (`drawMap`, `drawPathway`,
+`setOmicDataToRxns`, …) for flux maps drawn on stoichiometric network maps. That
+folder was dropped in the RAVEN 3 reorganisation, so neither the documented
+RAVEN branch nor raven-toolbox has built-in visualisation today — use Escher or
+another cobrapy-compatible tool.
 
 ---
 
@@ -108,5 +129,6 @@ visualisation; use Escher or cobrapy-compatible tools instead.
 ## Naming conventions
 
 MATLAB uses `camelCase` function names; Python uses `snake_case`. The conversion
-is mechanical: `getModelFromHomology` → `get_model_from_homology`. See the
-[function mapping table](matlab-vs-python.md) for the full list.
+is mechanical: `getModelFromHomology` → `get_model_from_homology`. The
+[API reference](api/index.md) lists every function in both toolboxes; a generated
+side-by-side mapping table is in preparation.

@@ -147,7 +147,6 @@ nav:
       - RAVEN (MATLAB): installation/raven.md
       - raven-toolbox (Python): installation/python.md
   - MATLAB vs Python:
-      - Function mapping: matlab-vs-python.md
       - Differences and similarities: differences.md
       - Changes from RAVEN 2: raven2-changes.md
   - Guides:

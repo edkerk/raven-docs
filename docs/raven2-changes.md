@@ -56,7 +56,8 @@ static analysis with `mypy`. This was not possible in the MATLAB toolbox.
 
 - Core algorithms (homology search, gap-filling, KEGG reconstruction) use the
   same logic as RAVEN 2.0 with equivalent default parameters.
-- SBML (`.xml`) and RAVEN Excel (`.xlsx`) model formats are fully interoperable
-  between RAVEN 2.0 and raven-toolbox.
+- SBML (`.xml`) and YAML (`.yml`) model formats are fully interoperable between
+  RAVEN 2.0 and raven-toolbox. Excel is export-only in raven-toolbox — see
+  [Differences and similarities](differences.md).
 - Function naming follows the same conceptual structure, converted to `snake_case`
-  (see the [function mapping table](matlab-vs-python.md)).
+  (see [Differences and similarities](differences.md)).
