@@ -60,4 +60,4 @@ static analysis with `mypy`. This was not possible in the MATLAB toolbox.
   RAVEN 2.0 and raven-toolbox. Excel is export-only in raven-toolbox — see
   [Differences and similarities](differences.md).
 - Function naming follows the same conceptual structure, converted to `snake_case`
-  (see [Differences and similarities](differences.md)).
+  (see the [function mapping table](matlab-vs-python.md)).

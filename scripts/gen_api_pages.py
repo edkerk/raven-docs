@@ -20,197 +20,26 @@ the trees together.
 
 from __future__ import annotations
 
-import ast
-import re
+import sys
 from pathlib import Path
+
+import yaml
 
 import mkdocs_gen_files
 
-ROOT = Path(__file__).resolve().parent.parent
-RAVEN = ROOT / "RAVEN"
-PYPKG = ROOT / "raven-toolbox" / "src" / "raven_toolbox"
+# The collection layer is shared with scripts/check_names.py, so the prose is
+# validated against exactly the index these pages are generated from.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# RAVEN top-level categories to document, in nav order: (folder, page title).
-# Pruned to existing folders at build time by scripts/build_hooks.py / the
-# matlab handler; legacy/ and external/ are intentionally excluded.
-MATLAB_CATEGORIES = [
-    ("analysis", "Analysis"),
-    ("annotation", "Annotation"),
-    ("biomass", "Biomass"),
-    ("comparison", "Comparison"),
-    ("conditions", "Conditions"),
-    ("curation", "Curation"),
-    ("conversion", "Format conversion"),
-    ("gapfilling", "Gap-filling"),
-    ("io", "Input / output"),
-    ("localization", "Localization"),
-    ("manipulation", "Manipulation"),
-    ("tasks", "Metabolic tasks"),
-    ("omics", "Omics integration"),
-    ("queries", "Queries"),
-    ("reconstruction", "Reconstruction"),
-    ("solver", "Solvers"),
-    ("utils", "Utilities"),
-]
-
-# Friendly titles for raven-toolbox packages.
-PY_PACKAGE_TITLES = {
-    "analysis": "Analysis",
-    "annotation": "Annotation",
-    "biomass": "Biomass",
-    "comparison": "Comparison",
-    "conditions": "Conditions",
-    "curation": "Curation",
-    "gapfilling": "Gap-filling",
-    "init": "Initialization",
-    "io": "Input / output",
-    "localization": "Localization",
-    "manipulation": "Manipulation",
-    "omics": "Omics integration",
-    "plotting": "Plotting",
-    "reconstruction": "Reconstruction",
-    "tasks": "Metabolic tasks",
-    "utils": "Utilities",
-    "_toplevel": "Top-level",
-}
-
-
-def norm(name: str) -> str:
-    """Normalise a function name for cross-language matching."""
-    return re.sub(r"[_\s]", "", name).lower()
-
-
-def slug(name: str) -> str:
-    """Reproduce Python-Markdown's default heading slug for in-page anchors."""
-    value = re.sub(r"[^\w\s-]", "", name).strip().lower()
-    return re.sub(r"[-\s]+", "-", value)
-
-
-def cell(text: str) -> str:
-    """Make a string safe for a single Markdown table cell."""
-    return " ".join(text.split()).replace("|", "\\|")
-
-
-# --------------------------------------------------------------------------- #
-# Collect MATLAB functions                                                    #
-# --------------------------------------------------------------------------- #
-def is_matlab_function(path: Path) -> bool:
-    """True if the .m file declares a function (i.e. not a plain script)."""
-    try:
-        with path.open(encoding="utf-8", errors="ignore") as fh:
-            for line in fh:
-                stripped = line.strip()
-                if not stripped or stripped.startswith("%"):
-                    continue
-                return stripped.startswith("function")
-    except OSError:
-        return False
-    return False
-
-
-def matlab_summary(path: Path, fname: str) -> str:
-    """First descriptive line of a function's MATLAB help block."""
-    try:
-        with path.open(encoding="utf-8", errors="ignore") as fh:
-            lines = fh.readlines()
-    except OSError:
-        return ""
-
-    help_lines: list[str] = []
-    started = False
-    for line in lines:
-        stripped = line.strip()
-        if not started:
-            if stripped.startswith("function"):
-                started = True
-            continue
-        if stripped.startswith("%"):
-            help_lines.append(stripped.lstrip("%").strip())
-        elif stripped == "" and not help_lines:
-            continue
-        else:
-            break
-
-    cleaned = [h for h in help_lines if h]
-    if not cleaned:
-        return ""
-    # The first help line is often just the function name; strip it.
-    first = cleaned[0]
-    if first.lower().startswith(fname.lower()):
-        rest = first[len(fname):].strip(" -:\t")
-        if rest:
-            return rest
-        if len(cleaned) > 1:
-            return cleaned[1]
-        return ""
-    return first
-
-
-def collect_matlab() -> dict[str, list[dict]]:
-    """category -> sorted list of {name, summary} for documented functions."""
-    cats: dict[str, list[dict]] = {}
-    for folder, _title in MATLAB_CATEGORIES:
-        funcs: dict[str, str] = {}
-        base = RAVEN / folder
-        for m in base.rglob("*.m"):
-            if m.stem == "Contents":
-                continue
-            if not is_matlab_function(m):
-                continue
-            funcs.setdefault(m.stem, matlab_summary(m, m.stem))
-        cats[folder] = [
-            {"name": n, "summary": funcs[n]}
-            for n in sorted(funcs, key=str.lower)
-        ]
-    return cats
-
-
-# --------------------------------------------------------------------------- #
-# Collect Python functions and classes                                        #
-# --------------------------------------------------------------------------- #
-def module_dotted(path: Path) -> str:
-    """raven-toolbox/src/raven_toolbox/io/excel.py -> raven_toolbox.io.excel"""
-    rel = path.relative_to(PYPKG.parent)  # relative to src/
-    parts = list(rel.with_suffix("").parts)
-    if parts[-1] == "__init__":
-        parts = parts[:-1]
-    return ".".join(parts)
-
-
-def py_summary(node: ast.AST) -> str:
-    """First non-empty line of a node's docstring."""
-    doc = ast.get_docstring(node) or ""
-    for line in doc.strip().splitlines():
-        if line.strip():
-            return line.strip()
-    return ""
-
-
-def collect_python() -> list[dict]:
-    """List of {name, ident, package, summary} for public top-level objects."""
-    objects: list[dict] = []
-    for py in PYPKG.rglob("*.py"):
-        try:
-            tree = ast.parse(py.read_text(encoding="utf-8"))
-        except (SyntaxError, OSError):
-            continue
-        dotted = module_dotted(py)
-        rel = py.relative_to(PYPKG)
-        package = rel.parts[0] if len(rel.parts) > 1 else "_toplevel"
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                if node.name.startswith("_"):
-                    continue
-                ident = f"{dotted}.{node.name}" if dotted else node.name
-                objects.append(
-                    {
-                        "name": node.name,
-                        "ident": ident,
-                        "package": package,
-                        "summary": py_summary(node),
-                    }
-                )
-    return objects
+from api_index import (  # noqa: E402
+    MATLAB_CATEGORIES,
+    PY_PACKAGE_TITLES,
+    cell,
+    collect_matlab,
+    collect_python,
+    norm,
+    slug,
+)
 
 
 # --------------------------------------------------------------------------- #
@@ -279,14 +108,51 @@ for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TI
     summary.append(f"    * [{title}](python/{package}.md)")
 
 # --- MATLAB vs Python translation table (top-level page) ------------------- #
-pairs: list[tuple[str, str, str, str, str]] = []  # (matlab, folder, python, package, summary)
+# Automatic pairs: the names normalise to the same string. That only catches the
+# mechanical cases, so scripts/curated_pairs.yml records the rest -- renamed
+# counterparts, cobrapy replacements, and deliberate omissions.
+CURATED = yaml.safe_load(
+    (Path(__file__).resolve().parent / "curated_pairs.yml").read_text(encoding="utf-8")
+)
+
+matlab_all = {f["name"]: folder for folder, _t in MATLAB_CATEGORIES for f in matlab[folder]}
+py_by_name = {obj["name"]: obj for obj in python_objs}
+
+# Curated entries must resolve, or the build stops: this file is hand-written,
+# and an unchecked hand-written name is exactly how the wrong ones got in.
+unresolved: list[str] = []
+for m_name, p_name in CURATED["aliases"].items():
+    if m_name not in matlab_all:
+        unresolved.append(f"aliases: RAVEN function '{m_name}' is not on the tracked branch")
+    if p_name not in py_by_name:
+        unresolved.append(f"aliases: raven-toolbox function '{p_name}' (for {m_name}) does not exist")
+for section in ("cobrapy", "not_ported"):
+    for m_name in CURATED[section]:
+        if m_name not in matlab_all:
+            unresolved.append(f"{section}: RAVEN function '{m_name}' is not on the tracked branch")
+if unresolved:
+    listed = "\n  - ".join(unresolved)
+    raise SystemExit(
+        f"gen_api_pages: scripts/curated_pairs.yml is out of date:\n  - {listed}"
+    )
+
+pairs: list[tuple[str, str, str, str, str, bool]] = []
+seen_matlab: set[str] = set()
 for folder, _title in MATLAB_CATEGORIES:
     for f in matlab[folder]:
         match = py_by_norm.get(norm(f["name"]))
         if match:
-            text = f["summary"] or match["summary"]
-            pairs.append((f["name"], folder, match["name"], match["package"], text))
+            pairs.append((f["name"], folder, match["name"], match["package"], f["summary"] or match["summary"], False))
+            seen_matlab.add(f["name"])
+for m_name, p_name in CURATED["aliases"].items():
+    if m_name in seen_matlab:
+        continue
+    folder = matlab_all[m_name]
+    obj = py_by_name[p_name]
+    m_summary = next((f["summary"] for f in matlab[folder] if f["name"] == m_name), "")
+    pairs.append((m_name, folder, p_name, obj["package"], m_summary or obj["summary"], True))
 
+n_auto = sum(1 for r in pairs if not r[5])
 lines = [
     "# MATLAB vs Python",
     "",
@@ -298,26 +164,81 @@ lines = [
     "independently of the COBRA Toolbox — although `ravenCobraWrapper` can "
     "translate between the RAVEN and COBRA model formats.",
     "- **raven-toolbox** is built on top of "
-    "[cobrapy](https://cobrapy.readthedocs.io/).",
-    "- As a result, some functions are **MATLAB-only**: they are not ported "
-    "because cobrapy already provides the equivalent. In that case, look for "
-    "the function in the "
-    "[cobrapy API](https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html).",
+    "[cobrapy](https://cobrapy.readthedocs.io/), so anything cobrapy already "
+    "does well is used directly rather than reimplemented.",
+    "- Names are not always a mechanical `camelCase` → `snake_case` rewrite: "
+    "much of the API was deliberately renamed, so check the table rather than "
+    "guessing.",
     "",
-    "The table below pairs the functions that exist in both implementations "
-    "(MATLAB `camelCase` ↔ Python `snake_case`); click a name to jump to its "
-    "full reference. Functions that exist in only one implementation appear in "
-    "that language's [API reference](api/index.md) tree but not here.",
+    "This page is generated from the source of both toolboxes at build time. "
+    "Pairs are found automatically where the names match, and completed from a "
+    "curated list where they do not; every name is verified to exist.",
     "",
-    f"**{len(pairs)}** paired functions.",
+    "## Paired functions",
+    "",
+    f"**{len(pairs)}** pairs — {n_auto} matched automatically, "
+    f"{len(pairs) - n_auto} curated.",
     "",
     "| RAVEN (MATLAB) | raven-toolbox (Python) | Summary |",
     "|---|---|---|",
 ]
-for m_name, m_folder, p_name, p_pkg, text in sorted(pairs, key=lambda r: r[0].lower()):
+for m_name, m_folder, p_name, p_pkg, text, _curated in sorted(pairs, key=lambda r: r[0].lower()):
     m_link = f"[`{m_name}`](api/matlab/{m_folder}.md#{slug(m_name)})"
     p_link = f"[`{p_name}`](api/python/{p_pkg}.md#{slug(p_name)})"
     lines.append(f"| {m_link} | {p_link} | {cell(text)} |")
+
+lines += [
+    "",
+    "## Covered by cobrapy",
+    "",
+    "These RAVEN functions have no raven-toolbox counterpart because cobrapy "
+    "already provides the capability. Follow the link for its documentation.",
+    "",
+    "| RAVEN (MATLAB) | Use instead |",
+    "|---|---|",
+]
+for m_name, target in sorted(CURATED["cobrapy"].items(), key=lambda kv: kv[0].lower()):
+    folder = matlab_all[m_name]
+    m_link = f"[`{m_name}`](api/matlab/{folder}.md#{slug(m_name)})"
+    url = "https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html"
+    lines.append(f"| {m_link} | [`{target}`]({url}) |")
+
+lines += [
+    "",
+    "## Deliberately not ported",
+    "",
+    "| RAVEN (MATLAB) | Why not |",
+    "|---|---|",
+]
+for m_name, reason in sorted(CURATED["not_ported"].items(), key=lambda kv: kv[0].lower()):
+    folder = matlab_all[m_name]
+    m_link = f"[`{m_name}`](api/matlab/{folder}.md#{slug(m_name)})"
+    lines.append(f"| {m_link} | {cell(reason)} |")
+
+# Whatever is left over is unmapped -- neither paired, nor delegated to cobrapy,
+# nor recorded as a deliberate omission. Listing it keeps the table honest about
+# its own coverage, and doubles as the work list for extending curated_pairs.yml.
+accounted = (
+    {r[0] for r in pairs} | set(CURATED["cobrapy"]) | set(CURATED["not_ported"])
+)
+unmapped = sorted((n for n in matlab_all if n not in accounted), key=str.lower)
+if unmapped:
+    lines += [
+        "",
+        "## Not yet mapped",
+        "",
+        f"**{len(unmapped)}** RAVEN functions are not yet recorded here. Some have "
+        "a Python counterpart that has not been curated into the table, some are "
+        "MATLAB-specific plumbing (path handling, argument parsing, printing) "
+        "with nothing to map to, and some are genuinely absent from "
+        "raven-toolbox. Until a function appears in one of the tables above, "
+        "treat its status as unknown rather than as \"not ported\".",
+        "",
+    ]
+    for chunk_start in range(0, len(unmapped), 6):
+        row = unmapped[chunk_start:chunk_start + 6]
+        lines.append(", ".join(f"`{n}`" for n in row) + ("," if chunk_start + 6 < len(unmapped) else ""))
+
 with mkdocs_gen_files.open("matlab-vs-python.md", "w") as fh:
     fh.write("\n".join(lines) + "\n")
 

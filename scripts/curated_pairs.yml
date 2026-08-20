@@ -1,0 +1,114 @@
+# Hand-curated half of the MATLAB <-> Python function mapping.
+#
+# gen_api_pages.py pairs functions automatically when the two names normalise to
+# the same string (getModelFromHomology <-> get_model_from_homology). That only
+# catches the mechanical cases: raven-toolbox deliberately renamed much of the
+# API, so most real counterparts do not match by name and have to be recorded
+# here.
+#
+# Every name below is checked against the collected sources at build time. A
+# MATLAB name that no longer exists on the tracked branch, or a Python name that
+# is not defined in the package, fails the build -- so this file cannot rot
+# quietly the way the old hand-written tables did.
+#
+# Three kinds of entry:
+#   aliases    -- a genuine counterpart under a different name
+#   cobrapy    -- no raven-toolbox function because cobrapy already covers it
+#   not_ported -- deliberately absent from Python, with the reason
+
+aliases:
+  # Manipulation
+  addRxns: add_reactions_from_equations
+  addRxnsGenesMets: add_reactions_from_model
+  addTransport: add_transport_reactions
+  changeGrRules: change_gene_reaction_rules
+  changeRxns: change_reaction_equations
+  contractModel: remove_duplicate_reactions
+  convertToIrrev: convert_to_irreversible
+  copyToComps: copy_to_compartment
+  findDuplicateRxns: find_duplicate_reactions
+  removeMets: remove_metabolites
+  simplifyModel: remove_dead_end_reactions
+  sortModel: sort_identifiers
+
+  # Curation, annotation, validation
+  assignSBOterms: add_sbo_terms
+  checkModelStruct: check_model
+  curateModelFromTables: batch_curate_from_tsv
+  deltaGCSV: load_delta_g_csv
+  grRuleToDNF: gpr_to_dnf
+  isDnfGrRule: is_dnf
+  standardizeGrRules: gpr_to_dnf
+
+  # Reconstruction
+  getBlast: run_blast
+  getDiamond: run_diamond
+  getPhylDist: phyl_dist
+
+  # Gap-filling and topology
+  fillGaps: connect_blocked_reactions
+  canProduce: analyse_topology
+  canConsume: analyse_topology
+  checkProduction: analyse_topology
+  getAllSubGraphs: analyse_topology
+  haveFlux: analyse_topology
+
+  # INIT / ftINIT
+  ftINITFillGaps: fill_tasks
+  ftINITFillGapsMILP: fill_tasks
+  ftINITFillGapsForAllTasks: fill_tasks
+  ftINITInternalAlg: run_ftinit
+  prepINITModel: prep_init_model
+  rescaleModelForINIT: rescale_for_init
+  scoreComplexModel: score_reactions_from_genes
+
+  # Biomass and omics
+  getBiomassFractions: sum_biomass
+  scaleBiomassFraction: scale_biomass
+  scaleBiomassPseudoreaction: rescale_pseudoreaction
+  scoreModel: hpa_gene_scores
+
+  # Localization
+  getUniProtScores: load_uniprot
+  parseScores: combine_scores
+
+  # Comparison and queries
+  compareMultipleModels: compare_models
+  getIndexes: parse_name_comp
+  exportToExcelFormat: export_to_excel
+
+cobrapy:
+  # RAVEN function -> the cobrapy object or function that replaces it.
+  importModel: cobra.io.read_sbml_model
+  exportModel: cobra.io.write_sbml_model
+  solveLP: cobra.Model.optimize
+  setParam: cobra.Reaction.bounds
+  setExchangeBounds: cobra.Model.medium
+  getExchangeRxns: cobra.Model.exchanges
+  removeReactions: cobra.Model.remove_reactions
+  constructEquations: cobra.Reaction.build_reaction_string
+  getRxnsInComp: cobra.Reaction.compartments
+  findGeneDeletions: cobra.flux_analysis.single_gene_deletion
+  runProductionEnvelope: cobra.flux_analysis.production_envelope
+  runPhenotypePhasePlane: cobra.flux_analysis.production_envelope
+  qMOMA: cobra.flux_analysis.moma
+  modelSummary: cobra.Model.summary
+  setRavenSolver: cobra.Configuration
+
+not_ported:
+  runDynamicFBA: >-
+    Dynamic FBA is covered by maintained Python packages (dfba, reframed, mewpy).
+  ravenCobraWrapper: >-
+    Not needed: a raven-toolbox model is a cobra.Model already, so there is
+    nothing to convert.
+  editMiriam: >-
+    cobra's .annotation is already a {namespace: id} dictionary -- read and
+    write it directly.
+  extractMiriam: >-
+    cobra's .annotation is already a {namespace: id} dictionary -- read and
+    write it directly.
+  mapCompartments: >-
+    Overlaps compare_models on the reaction-id intersection.
+  printFluxes: >-
+    No equivalent yet. Use cobra's model.summary(), or the solution's fluxes
+    Series directly.

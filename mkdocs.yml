@@ -12,6 +12,9 @@ edit_uri: ""
 # tracked dev branches). See scripts/build_hooks.py.
 hooks:
   - scripts/build_hooks.py
+  # Aborts the build if a hand-written page names a function that does not
+  # exist in either toolbox. See scripts/check_names.py.
+  - scripts/check_names.py
 
 plugins:
   - search
@@ -47,6 +50,7 @@ plugins:
             - RAVEN/manipulation
             - RAVEN/analysis
             - RAVEN/gapfilling
+            - RAVEN/INIT
             - RAVEN/annotation
             - RAVEN/biomass
             - RAVEN/curation
@@ -147,7 +151,12 @@ nav:
       - RAVEN (MATLAB): installation/raven.md
       - raven-toolbox (Python): installation/python.md
   - MATLAB vs Python:
-      - Differences and similarities: differences.md
+      - Overview: differences.md
+      - Function mapping: matlab-vs-python.md
+      - Only in raven-toolbox: python-only.md
+      - Only in RAVEN: matlab-only.md
+      - Same function, different answer: behaviour.md
+      - What identical results means: parity.md
       - Changes from RAVEN 2: raven2-changes.md
   - Guides:
       - Overview: protocol/index.md
