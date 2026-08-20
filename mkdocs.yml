@@ -12,6 +12,9 @@ edit_uri: ""
 # tracked dev branches). See scripts/build_hooks.py.
 hooks:
   - scripts/build_hooks.py
+  # Aborts the build if a hand-written page names a function that does not
+  # exist in either toolbox. See scripts/check_names.py.
+  - scripts/check_names.py
 
 plugins:
   - search

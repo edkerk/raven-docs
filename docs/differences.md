@@ -68,7 +68,6 @@ ones.
 | `writeYAMLmodel` | `write_yaml_model` | |
 | `exportToExcelFormat` | `export_to_excel` | |
 | `exportForGit` | `export_for_git` | |
-| `exportModelToSIF` | `export_model_to_sif` | |
 
 !!! warning "Excel is export-only"
     Neither toolbox reads models from Excel any more. raven-toolbox writes Excel
@@ -86,6 +85,12 @@ ones.
 raven-toolbox includes tools to generate KEGG artefact databases — stoichiometric
 matrices and reaction lists for arbitrary KEGG organisms. This is used to produce
 updated KEGG reference data and is not available in the MATLAB toolbox.
+
+### SIF export for Cytoscape
+
+`export_model_to_sif` writes the reaction/metabolite graph as Cytoscape SIF.
+RAVEN had `exportModelToSIF`, but it was dropped in the RAVEN 3 codebase review,
+so this is Python-only on the branches documented here.
 
 ### cobrapy interoperability
 

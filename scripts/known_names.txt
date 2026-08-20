@@ -1,0 +1,62 @@
+# Names that look like functions but are not functions of either toolbox.
+#
+# check_names.py resolves every camelCase / snake_case identifier in the
+# hand-written pages against the RAVEN and raven-toolbox sources. Anything
+# listed here is exempt. Keep the list short and grouped: each entry is a name
+# that nothing can verify for you, so an entry added carelessly re-opens exactly
+# the hole this check exists to close.
+
+# -- prose terms ------------------------------------------------------------
+camelCase
+snake_case
+raven_toolbox                 # the Python package name, not a function
+libSBML                       # third-party library
+
+# -- cobrapy ----------------------------------------------------------------
+# cobra is not installed in the docs build environment, so its names cannot be
+# resolved automatically. Only the ones actually used in the pages are listed.
+optimize
+slim_optimize
+get_by_id
+summary
+Configuration
+read_sbml_model
+write_sbml_model
+flux_variability_analysis
+single_gene_deletion
+find_blocked_reactions
+
+# -- RAVEN model struct fields and function arguments -----------------------
+grRules
+rxnsToAdd
+stoichCoeffs
+allowNetProduction
+useModelConstraints
+
+# -- variables and identifiers used in worked examples ----------------------
+iAL1006                       # model name in legacy tutorial 1
+bmOUT
+acOUT
+glyOUT
+biomassOUT
+newConnected
+addedRxns
+euk90_kegg105                 # KEGG HMM library artefact
+
+# -- helpers that live in a model repository, not in RAVEN ------------------
+# hanpo-GEM ships these alongside the reconstruction protocol.
+newCommit
+newRelease
+addLipidReactions             # SLIMEr
+addSLIMEreactions             # SLIMEr
+
+# -- functions of released RAVEN 2.x, referenced as history -----------------
+# These no longer exist on develop3 (the branch this site documents) but are
+# named in the pages precisely to say so. Do not add a name here just because
+# the checker flagged it -- confirm first that the page discusses it as removed.
+importExcelModel              # removed in RAVEN/#631
+exportModelToSIF              # removed in RAVEN/#650
+drawMap                       # plotting/ dropped in RAVEN/#614
+drawPathway                   # plotting/ dropped in RAVEN/#614
+setOmicDataToRxns             # plotting/ dropped in RAVEN/#614
+getMetaCycModelForOrganism    # external/metacyc dropped in RAVEN/#614
