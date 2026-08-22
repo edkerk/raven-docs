@@ -160,6 +160,9 @@ nav:
       - Changes from RAVEN 2: raven2-changes.md
   - Guides:
       - Overview: protocol/index.md
+      - User guide:
+          - Overview: guide/index.md
+          - Getting started: guide/getting-started.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
