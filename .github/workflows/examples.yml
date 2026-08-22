@@ -1,0 +1,76 @@
+name: Guide examples
+
+# Runs every Python snippet in docs/guide/ and checks it still prints what the
+# page says it prints. See scripts/run_examples.py.
+#
+# The submodules are bumped automatically (update-submodules.yml), so the weekly
+# schedule is what catches an upstream API change that silently invalidates a
+# documented output; the pull_request trigger catches a page that was written
+# with a snippet that never ran.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/guide/**"
+      - "docs/data/**"
+      - "scripts/run_examples.py"
+      - ".github/workflows/examples.yml"
+      - "raven-toolbox"
+  pull_request:
+    paths:
+      - "docs/guide/**"
+      - "docs/data/**"
+      - "scripts/run_examples.py"
+      - ".github/workflows/examples.yml"
+      - "raven-toolbox"
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # raven-toolbox is installed from the submodule, so the docs are always
+          # checked against the exact commit the API reference is generated from.
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install raven-toolbox from the submodule
+        run: |
+          python -m pip install --upgrade pip
+          # GLPK arrives as a wheel via cobrapy's optlang/swiglpk dependency, so
+          # no system solver has to be installed. openpyxl is needed by the
+          # Excel export example.
+          python -m pip install "./raven-toolbox[excel]"
+
+      - name: Report versions
+        run: |
+          python -c "import cobra, raven_toolbox, optlang; print('cobra', cobra.__version__); print('raven_toolbox', raven_toolbox.__version__); print('solvers', sorted(optlang.available_solvers))"
+
+      - name: Run guide examples
+        run: python scripts/run_examples.py
+
+  # MATLAB tabs are not executed yet. When we want them checked too, MathWorks'
+  # actions run MATLAB on GitHub-hosted runners free of charge for public
+  # repositories:
+  #
+  #   - uses: matlab-actions/setup-matlab@v2
+  #     with: { products: 'Optimization_Toolbox' }
+  #   - uses: matlab-actions/run-command@v2
+  #     with: { command: "addpath(genpath('RAVEN')); checkInstallation" }
+  #
+  # That needs a MATLAB harness equivalent to run_examples.py (extract the
+  # `=== "MATLAB"` blocks, run them, diff the output). Until then the MATLAB
+  # snippets are only name-checked, by scripts/check_names.py at build time.
