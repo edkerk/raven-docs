@@ -1,0 +1,3 @@
+# Model files are kept byte-identical to their upstream releases, so git must
+# not rewrite their line endings on checkout.
+docs/data/** -text
