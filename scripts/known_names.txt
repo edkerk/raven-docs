@@ -29,6 +29,10 @@ check_mass_balance
 
 # -- RAVEN model struct fields and function arguments -----------------------
 grRules
+rxnNames
+metNames
+metFormulas
+rxnGeneMat
 rxnsToAdd
 stoichCoeffs
 allowNetProduction
@@ -40,9 +44,19 @@ bmOUT
 acOUT
 glyOUT
 biomassOUT
+glcIN                         # smallYeast.yml, docs/data/
+ethIN
+o2IN
 newConnected
 addedRxns
 euk90_kegg105                 # KEGG HMM library artefact
+
+# -- cobrapy attributes named in the guide ----------------------------------
+# Attributes, not functions, so they resolve nowhere; the guide names them when
+# explaining how the RAVEN struct and cobra.Model correspond.
+gene_reaction_rule
+lower_bound
+upper_bound
 
 # -- helpers that live in a model repository, not in RAVEN ------------------
 # hanpo-GEM ships these alongside the reconstruction protocol.
