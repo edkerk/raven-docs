@@ -131,11 +131,15 @@ class Index:
                 if not isinstance(node, ast.Call):
                     continue
                 func = node.func
-                name = (
-                    func.attr if isinstance(func, ast.Attribute)
-                    else func.id if isinstance(func, ast.Name)
-                    else None
-                )
+                # Only bare calls are checked. A method call belongs to whatever
+                # object is on the left (a cobra.Model, a DataFrame, a Path), not
+                # to the raven-toolbox namespace, so there is nothing here that
+                # could verify it -- and allow-listing every .items(), .replace()
+                # and .rglob() the examples use would dilute the check that does
+                # work. The failure this exists to catch, an invented function
+                # imported and called (``from raven_toolbox.io import
+                # import_model``), is a bare call and is still caught.
+                name = func.id if isinstance(func, ast.Name) else None
                 if name is None or name in _BUILTINS or name in self.allowed:
                     continue
                 if name not in self.python:
