@@ -69,11 +69,8 @@ aliases:
   scoreModel: hpa_gene_scores
 
   # Localization
-  # RAVEN's parseScores and raven-toolbox's load_deeploc both default to the
-  # DeepLoc 2 per-protein CSV. The other predictors each side understands differ:
-  # parseScores also reads CELLO, MULocDeep, COMPARTMENTS and UniProt exports,
-  # while raven-toolbox adds load_wolfpsort for WoLF PSORT summaries.
-  parseScores: load_deeploc
+  getUniProtScores: load_uniprot
+  parseScores: combine_scores
 
   # Comparison and queries
   compareMultipleModels: compare_models
@@ -115,7 +112,3 @@ not_ported:
   printFluxes: >-
     No equivalent yet. Use cobra's model.summary(), or the solution's fluxes
     Series directly.
-  getUniProtScores: >-
-    No UniProt REST client in raven-toolbox. Export the annotations yourself and
-    build a LocalizationScores from the gene x compartment table, or use
-    load_deeploc / load_wolfpsort on a predictor's output.

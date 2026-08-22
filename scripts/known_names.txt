@@ -9,6 +9,7 @@
 # -- prose terms ------------------------------------------------------------
 camelCase
 snake_case
+Path                          # pathlib, used by several examples
 raven_toolbox                 # the Python package name, not a function
 libSBML                       # third-party library
 
@@ -26,8 +27,15 @@ flux_variability_analysis
 single_gene_deletion
 find_blocked_reactions
 check_mass_balance
+pfba
+minimal_medium
+load_workbook               # openpyxl, used by the Excel example
 
 # -- RAVEN model struct fields and function arguments -----------------------
+removePrefix                  # importModel argument
+sortIds                       # exportToExcelFormat / writeYAMLmodel argument
+sort_ids                      # the raven-toolbox spelling of the same argument
+expected_uptake_count         # key in a condition YAML file
 grRules
 rxnNames
 metNames

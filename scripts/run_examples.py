@@ -119,6 +119,10 @@ class PageResult:
     page: Path
     examples: list[Example] = field(default_factory=list)
     skipped_page: bool = False
+    # The page as it was when the examples were collected. --update rewrites
+    # blocks by line number, so a page edited while a run is in flight would be
+    # rewritten from stale positions and end up with duplicated fences.
+    source: str = ""
 
     @property
     def failures(self) -> list[Example]:
@@ -166,8 +170,9 @@ def _preceding_comment_marks_skip(lines: list[str], fence: Fence) -> bool:
 
 
 def collect_examples(page: Path) -> PageResult:
-    lines = page.read_text(encoding="utf-8").splitlines()
-    result = PageResult(page=page)
+    source = page.read_text(encoding="utf-8")
+    lines = source.splitlines()
+    result = PageResult(page=page, source=source)
     if any(SKIP_FILE in line for line in lines):
         result.skipped_page = True
         return result
@@ -315,7 +320,14 @@ def update_page(result: PageResult) -> bool:
     output get one inserted, indented to match the code block above it.
     Returns True when the file changed.
     """
-    lines = result.page.read_text(encoding="utf-8").splitlines()
+    current = result.page.read_text(encoding="utf-8")
+    if current != result.source:
+        print(
+            f"  skipped  {rel(result.page)}  (changed on disk since it was read; "
+            f"re-run --update)"
+        )
+        return False
+    lines = current.splitlines()
     edits: list[tuple[int, int, list[str]]] = []  # (start, end_exclusive, replacement)
 
     for example in result.examples:

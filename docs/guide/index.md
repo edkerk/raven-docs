@@ -39,15 +39,23 @@ reconstruction protocol and the legacy tutorials.
 **Foundations**
 
 - [Getting started](getting-started.md) — load a model and inspect it.
-- Model structure and identifiers *(planned)*
-- Reading and writing models *(planned)*
+- [Model structure and identifiers](model-structure.md) — how the RAVEN struct
+  and `cobra.Model` correspond, field by field.
+- [Reading and writing models](io.md) — SBML, RAVEN YAML, Excel, text, and the
+  layout a model repository expects.
 - Solvers and configuration *(planned)*
 
 **Building and editing** *(planned)* — building from scratch, editing,
 compartments and transport, combining and simplifying.
 
-**Simulation** *(planned)* — FBA, growth media, flux variability, deletions and
-essentiality, sampling, phenotype exploration, engineering targets.
+**Simulation**
+
+- [Simulating growth with FBA](fba.md) — objective, bounds, solve, read the
+  fluxes.
+- [Growth media and conditions](media.md) — define a medium, keep a condition as
+  data.
+- Flux variability, deletions and essentiality, sampling, phenotype exploration,
+  engineering targets *(planned)*
 
 **Quality and gaps** *(planned)* — quality control, gap-filling, metabolic
 tasks, biomass composition, annotation.

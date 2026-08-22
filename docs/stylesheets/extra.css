@@ -7,6 +7,11 @@
 }
 
 [data-md-color-scheme="default"] {
+  /* MATLAB/Python switch: a neutral gray pill, not the navy brand colour --
+     it is a control, not a call to action, and navy reads as black. */
+  --raven-tab-track:            rgba(0, 0, 0, .05);
+  --raven-tab-active:           #5f6773;
+  --raven-tab-active-fg:        #ffffff;
   --md-primary-fg-color:        var(--raven-navy);
   --md-primary-fg-color--light: var(--raven-navy-light);
   --md-primary-fg-color--dark:  var(--raven-navy-dark);
@@ -18,6 +23,9 @@
 
 /* Dark mode: keep the navy header, lift links/accent for contrast */
 [data-md-color-scheme="slate"] {
+  --raven-tab-track:            rgba(255, 255, 255, .06);
+  --raven-tab-active:           #7a828f;
+  --raven-tab-active-fg:        #10151c;
   --md-primary-fg-color:        var(--raven-navy);
   --md-primary-bg-color:        #ffffff;
   --md-primary-bg-color--light: rgba(255, 255, 255, 0.75);
@@ -128,31 +136,47 @@ hr.rh-divider {
 /* ===== MATLAB / Python pill toggle (content tabs site-wide) ========== */
 .md-typeset .tabbed-labels {
   display: inline-flex;
-  background: var(--md-code-bg-color);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 2px;
+  /* Material's own rule sets display: flex, which stretches the track across the
+     whole column; a segmented control should be as wide as its labels. */
+  width: max-content;
+  max-width: 100%;
+  background: var(--raven-tab-track);
+  border-radius: 5px;
+  padding: 2px;
+  gap: 1px;
   border-bottom: none !important;
   overflow: visible;
 }
+/* Material puts the click target (and its generous padding) on an anchor inside
+   the label, so shrinking the label alone changes nothing -- reset the anchor
+   and let the label's own padding size the pill. */
+.md-typeset .tabbed-labels > label > a {
+  padding: 0;
+  line-height: inherit;
+  color: inherit;
+}
 .md-typeset .tabbed-labels > label {
-  padding: .35rem 1.1rem;
-  border-radius: 6px;
+  padding: .15rem .5rem;
+  border-radius: 4px;
   border-bottom: none !important;
   font-weight: 500;
-  font-size: .8rem;
+  font-size: .62rem;
+  line-height: 1.5;
   color: var(--md-default-fg-color--light);
   transition: background .15s, color .15s;
   white-space: nowrap;
   margin-bottom: 0;
+}
+.md-typeset .tabbed-labels > label:hover {
+  color: var(--md-default-fg-color);
 }
 /* Active tab state — one rule per possible tab position */
 .md-typeset .tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
 .md-typeset .tabbed-alternate input:nth-child(2):checked ~ .tabbed-labels label:nth-child(2),
 .md-typeset .tabbed-alternate input:nth-child(3):checked ~ .tabbed-labels label:nth-child(3),
 .md-typeset .tabbed-alternate input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4) {
-  background: var(--md-primary-fg-color);
-  color: var(--md-primary-bg-color);
+  background: var(--raven-tab-active);
+  color: var(--raven-tab-active-fg);
   font-weight: 600;
 }
 
