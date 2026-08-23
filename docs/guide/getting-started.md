@@ -1,4 +1,4 @@
-# Getting started
+# 1. Getting started
 
 Load a model, find out what is in it, and look at a single reaction, metabolite
 and gene. Every other page in the user guide assumes you can do this.
@@ -14,20 +14,6 @@ and gene. Every other page in the user guide assumes you can do this.
 | `constructEquations` | `Reaction.reaction` <span class="cobrapy-tag">cobrapy</span> | a reaction as a readable string |
 | `getElementalBalance` | `check_mass_balance` <span class="cobrapy-tag">cobrapy</span> | is a reaction balanced |
 
-!!! info "Reading the tabs"
-    Every code block has a **MATLAB** and a **Python** tab. Picking one switches
-    every block on every page of this site, and the choice is remembered.
-
-    Where the Python tab calls **cobrapy** rather than raven-toolbox, it is
-    marked <span class="cobrapy-tag">cobrapy</span> and the import line says so.
-    raven-toolbox is built on cobrapy and does not wrap what cobrapy already
-    does well, so a good part of the Python side of this guide *is* cobrapy —
-    knowing which part matters when you go looking for documentation.
-
-    The Python output below is produced by running the snippets
-    (`scripts/run_examples.py`, re-run in CI). The MATLAB tabs are not executed
-    yet, so they show no output.
-
 ## Setup
 
 The examples use `smallYeast.yml`, a small model of central carbon metabolism in
@@ -35,12 +21,17 @@ yeast that ships with RAVEN. Download it from
 [`docs/data/smallYeast.yml`](../data/smallYeast.yml) and run everything from the
 directory you put it in.
 
-## 1. Load the model
+## 1.1 Load the model
 
 === "MATLAB"
 
     ```matlab
     model = readYAMLmodel('smallYeast.yml');
+    disp(model.id);
+    ```
+
+    ```text title="Output"
+    smallYeast
     ```
 
     A RAVEN model is a MATLAB struct: `model.rxns`, `model.mets`, `model.genes`
@@ -67,12 +58,32 @@ For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
 *Reading and writing models* (a later page in this guide) covers every
 supported format.
 
-## 2. How big is it?
+## 1.2 How big is it?
 
 === "MATLAB"
 
     ```matlab
     printModelStats(model);
+    ```
+
+    ```text title="Output"
+    Network statistics for smallYeast: Central carbon metabolism for yeast
+    Genes*				61
+    	cytosol	52
+    	mitochondria	17
+
+    Reactions*			53
+    	cytosol	45
+    	mitochondria	19
+    Unique reactions**	53
+
+    Metabolites			52
+    	cytosol	35
+    	mitochondria	17
+    Unique metabolites	45
+
+    * Genes and reactions are counted for each compartment if any of the corresponding metabolites are in that compartment. The sum may therefore not add up to the total number.
+    ** Unique reactions are defined as being biochemically unique (no compartmentalization)
     ```
 
 === "Python"
@@ -89,7 +100,7 @@ supported format.
     are attributes of the model, and after a solve `model.summary()` prints an
     overview of the exchange fluxes.
 
-## 3. Look at a reaction
+## 1.3 Look at a reaction
 
 Glucose-6-phosphate isomerase, `PGI`, is a good one to start with — it is
 reversible, it carries a gene association, and it should be mass balanced.
@@ -99,9 +110,17 @@ reversible, it carries a gene association, and it should be mass balanced.
     ```matlab
     idx = getIndexes(model, 'PGI', 'rxns');
     disp(model.rxnNames{idx});
-    disp(constructEquations(model, model.rxns(idx)));
+    eqn = constructEquations(model, model.rxns(idx));
+    fprintf('%s\n', eqn{1});
     fprintf('bounds: [%g %g]\n', model.lb(idx), model.ub(idx));
     disp(model.grRules{idx});
+    ```
+
+    ```text title="Output"
+    Glucose-6-phosphate isomerase
+    alpha-D-glucose 6-phosphate[c] <=> beta-D-fructofuranose 6-phosphate[c]
+    bounds: [-1000 1000]
+    YBR196C
     ```
 
 === "Python"
@@ -126,7 +145,7 @@ bounds, so a reaction is reversible exactly when its lower bound is negative.
 RAVEN keeps an explicit `model.rev` field alongside the bounds, which is the
 subject of the *Model structure and identifiers* page.
 
-## 4. Look at a metabolite
+## 1.4 Look at a metabolite
 
 === "MATLAB"
 
@@ -134,7 +153,12 @@ subject of the *Model structure and identifiers* page.
     idx = getIndexes(model, 'G6P_c', 'mets');
     fprintf('%s (%s) in compartment %s\n', model.metNames{idx}, ...
         model.metFormulas{idx}, model.comps{model.metComps(idx)});
-    fprintf('takes part in %d reactions\n', sum(model.S(idx, :) ~= 0));
+    fprintf('takes part in %d reactions\n', nnz(model.S(idx, :)));
+    ```
+
+    ```text title="Output"
+    alpha-D-glucose 6-phosphate (C6H13O9P) in compartment c
+    takes part in 4 reactions
     ```
 
 === "Python"
@@ -150,13 +174,18 @@ subject of the *Model structure and identifiers* page.
     takes part in 4 reactions
     ```
 
-## 5. Look at a gene
+## 1.5 Look at a gene
 
 === "MATLAB"
 
     ```matlab
     gi = find(strcmp(model.genes, 'YBR196C'));
-    disp(model.rxns(model.rxnGeneMat(:, gi) ~= 0));
+    rxnIds = model.rxns(model.rxnGeneMat(:, gi) ~= 0);
+    fprintf('%s -> %s\n', model.geneShortNames{gi}, strjoin(rxnIds, ', '));
+    ```
+
+    ```text title="Output"
+    PGI1 -> PGI
     ```
 
 === "Python"
@@ -170,7 +199,7 @@ subject of the *Model structure and identifiers* page.
     PGI1 -> ['PGI']
     ```
 
-## 6. Is the reaction balanced?
+## 1.6 Is the reaction balanced?
 
 Draft models routinely contain reactions that do not balance. Checking one
 reaction is the same operation in both toolboxes; doing it for a whole model is
@@ -179,8 +208,12 @@ covered on the *Quality control* page.
 === "MATLAB"
 
     ```matlab
-    balance = getElementalBalance(model, 'PGI');
-    disp(balance.balanceStatus);
+    balance = getElementalBalance(model, 'rxns', {'PGI'});
+    fprintf('elemental %d, charge %d\n', balance.balanceStatus, balance.chargeStatus);
+    ```
+
+    ```text title="Output"
+    elemental 1, charge -1
     ```
 
 === "Python"
@@ -194,8 +227,11 @@ covered on the *Quality control* page.
     ```
 
     `check_mass_balance` is cobrapy's. An empty result means the reaction
-    balances; anything listed is the element and the amount by which it does
-    not.
+    balances; anything listed is the element and the amount by which it does not.
+    `getElementalBalance` answers the same question as a status code: `1`
+    balanced, `0` unbalanced, `-1` not decidable from the information in the
+    model. It reports the charge balance separately, which cobrapy folds into the
+    same dictionary.
 
 !!! warning "What can go wrong"
     - **`KeyError` / empty index.** Identifiers are case-sensitive and carry the

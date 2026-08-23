@@ -1,4 +1,4 @@
-# Growth media and conditions
+# 5. Growth media and conditions
 
 An FBA result is a statement about a medium. This page is about setting that
 medium deliberately: which exchange reactions are open, how wide, and how to keep
@@ -9,8 +9,7 @@ a condition as reviewable data instead of a paragraph of bound-setting code.
 | MATLAB | Python | |
 |---|---|---|
 | `getExchangeRxns` | `Model.exchanges` <span class="cobrapy-tag">cobrapy</span> | find the exchange reactions |
-| `setExchangeBounds` | `Model.medium` <span class="cobrapy-tag">cobrapy</span> | open a set of uptakes |
-| `closeModel` | `Model.medium = {}` <span class="cobrapy-tag">cobrapy</span> | close every uptake |
+| `setExchangeBounds` | `Model.medium` <span class="cobrapy-tag">cobrapy</span> | set a whole medium, closing the rest |
 | `setParam` | `set_reaction_bounds` | set one reaction's bounds |
 | `getMinimalMedium` | `minimal_medium` <span class="cobrapy-tag">cobrapy</span> | the smallest medium that still supports growth |
 | `applyCondition` | `apply_condition`, `load_condition` | apply a condition file |
@@ -20,7 +19,7 @@ a condition as reviewable data instead of a paragraph of bound-setting code.
 `yeast-GEM.xml` from [`docs/data/`](../data/README.md), which ships with an
 aerobic minimal glucose medium already applied.
 
-## 1. What is currently open
+## 5.1 What is currently open
 
 An exchange reaction connects a boundary metabolite to nothing, so its flux is
 the rate at which that metabolite enters (negative) or leaves (positive) the
@@ -30,9 +29,36 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
 
     ```matlab
     model = importModel('yeast-GEM.xml');
-    [exchangeRxns, exchangeRxnsIndexes] = getExchangeRxns(model);
-    open = exchangeRxnsIndexes(model.lb(exchangeRxnsIndexes) < 0);
-    printModel(model, open);
+    [exchangeRxns, exchangeIdx] = getExchangeRxns(model);
+    fprintf('%d exchange reactions\n', numel(exchangeRxns));
+
+    open = sort(exchangeIdx(model.lb(exchangeIdx) < 0));
+    for i = 1:numel(open)
+        fprintf('  %s  %-28s %8.1f\n', model.rxns{open(i)}, ...
+            model.rxnNames{open(i)}, -model.lb(open(i)));
+    end
+    ```
+
+    ```text title="Output"
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example:
+    importModel('filename.xml',[],false);]
+    273 exchange reactions
+      r_1654  ammonium exchange              1000.0
+      r_1714  D-glucose exchange                1.0
+      r_1832  H+ exchange                    1000.0
+      r_1861  iron(2+) exchange              1000.0
+      r_1992  oxygen exchange                1000.0
+      r_2005  phosphate exchange             1000.0
+      r_2020  potassium exchange             1000.0
+      r_2049  sodium exchange                1000.0
+      r_2060  sulphate exchange              1000.0
+      r_2100  water exchange                 1000.0
+      r_4593  chloride exchange              1000.0
+      r_4594  Cu2(+) exchange                1000.0
+      r_4595  Mn(2+) exchange                1000.0
+      r_4596  Zn(2+) exchange                1000.0
+      r_4597  Mg(2+) exchange                1000.0
+      r_4600  Ca(2+) exchange                1000.0
     ```
 
 === "Python"
@@ -72,12 +98,26 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     **positive** number — cobrapy flips the sign for you, so a medium entry of
     `1.0` means a lower bound of `-1.0`.
 
-## 2. Change one nutrient
+!!! note "270 or 273?"
+    The two toolboxes count exchange reactions differently, and both are right.
+    cobrapy sorts single-metabolite reactions into `exchanges`, `demands` and
+    `sinks`; `getExchangeRxns` returns all of them together. In yeast-GEM the
+    difference is three reactions — `r_2111` (growth) and the sinks `r_4062` and
+    `r_4064` — so MATLAB reports 273 where `model.exchanges` reports 270.
+
+## 5.2 Change one nutrient
 
 === "MATLAB"
 
     ```matlab
     model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
+    sol = solveLP(model);
+    idx = getIndexes(model, 'r_1714', 'rxns');
+    fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), -sol.f);
+    ```
+
+    ```text title="Output"
+    [-10 1000] -> -0.8370 /h
     ```
 
 === "Python"
@@ -99,7 +139,7 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     cobrapy. `slim_optimize` returns just the objective value, without building a
     full `Solution`.
 
-## 3. Define a whole medium
+## 5.3 Define a whole medium
 
 Assigning to the medium is **not** a patch: everything not in the dict is closed.
 That makes it the right tool for "this exact recipe and nothing else", and a trap
@@ -108,12 +148,21 @@ if you meant "the shipped medium, but with more glucose".
 === "MATLAB"
 
     ```matlab
-    modelClosed = closeModel(model);                  % every uptake to zero
+    % every uptake closed
+    [~, exchIdx] = getExchangeRxns(model);
+    modelClosed = setParam(model, 'lb', model.rxns(exchIdx), 0);
     sol = solveLP(modelClosed);
     fprintf('growth with nothing to eat: %.4f /h\n', -sol.f);
 
-    % a complete medium: reopen what the recipe contains
-    model = setExchangeBounds(model, {'r_1714'}, -10, 1000);
+    % the shipped recipe, with more glucose
+    model = setParam(model, 'lb', 'r_1714', -10);
+    sol = solveLP(model);
+    fprintf('complete medium:           %.4f /h\n', -sol.f);
+    ```
+
+    ```text title="Output"
+    growth with nothing to eat:  /h
+    complete medium:           -0.8370 /h
     ```
 
 === "Python"
@@ -147,65 +196,84 @@ if you meant "the shipped medium, but with more glucose".
     different answer from "the optimum is zero". When a result surprises you, ask
     `model.optimize().status` before believing the number.
 
-## 4. Anaerobic growth, and why a condition is more than bounds
+## 5.4 Anaerobic growth, and why a condition is more than bounds
 
 Switching yeast-GEM to anaerobic conditions is not just "close the oxygen
-exchange": the model also has to gain sterol and fatty-acid uptake, and its
-biomass composition changes. That is a *condition* — several coordinated edits
-that belong together — and both toolboxes read one from a YAML file, so it can be
-reviewed as data rather than buried in a script.
+exchange". Without oxygen the model cannot make sterols or unsaturated fatty
+acids, so those have to be supplied; heme a leaves the cofactor pseudoreaction;
+the biomass gains an FADH2 term; and two reactions that are repressed on glucose
+are blocked. Those edits belong together, so both toolboxes read them from one
+YAML file — a *condition* — which can be reviewed as data rather than buried in a
+script.
+
+[`anaerobic.yml`](../data/anaerobic.yml) is that file, transcribed from
+yeast-GEM's own `anaerobicModel.m`:
+
+```yaml title="anaerobic.yml (abridged)"
+cofactor_pseudoreaction:
+  rxn_id: r_4598
+  remove_mets:
+    - { met: s_3714 }        # heme a
+  charge_balance_met: s_0794 # H+
+
+biomass_stoichiometry_delta:
+  rxn_id: r_4041             # biomass pseudoreaction
+  add:
+    - { met: s_0689, coef:  0.08 }   # FADH2
+    - { met: s_0687, coef: -0.08 }   # FAD
+    - { met: s_0794, coef: -0.16 }   # H+
+
+bounds:
+  - { rxn: r_1992, lb: 0 }         # no oxygen
+  - { rxn: r_1757, lb: -1000 }     # ergosterol, supplied
+  - { rxn: r_2189, lb: -1000 }     # oleate, supplied
+  - { rxn: r_1967, lb: -1000 }     # nicotinate
+  - { rxn: r_0714, lb: 0, ub: 0 }  # MDH2, repressed on glucose
+```
+
+The schema is narrow on purpose: an optional `prelude` that resets the exchanges,
+an optional cofactor-pseudoreaction edit, an optional biomass-stoichiometry
+delta, a list of per-reaction `bounds`, and an `expected_uptake_count` that fails
+loudly when the condition no longer matches the model.
 
 === "MATLAB"
 
+    <!-- run-examples: skip -->
+
     ```matlab
-    model = applyCondition(model, 'anaerobic.yml');
-    sol = solveLP(model);
+    modelAnaerobic = applyCondition(model, 'anaerobic.yml');
+    sol = solveLP(modelAnaerobic);
     fprintf('anaerobic growth: %.4f /h\n', -sol.f);
     ```
+
+    `applyCondition` reads the file with `parseYAML`, which goes through
+    MATLAB's Python bridge — so it needs a linked CPython with `pyyaml`
+    installed (`pyenv` in MATLAB shows which interpreter is linked). That is
+    also why this block carries no output here: the documentation build has
+    no linked interpreter.
 
 === "Python"
 
     ```python
-    from pathlib import Path
-
     from raven_toolbox.conditions import apply_condition, load_condition
 
-    Path("anaerobic.yml").write_text(
-        """
-        bounds:
-          - { rxn: r_1992, lb: 0, ub: 0 }
-          - { rxn: r_1714, lb: -20 }
-        """.replace("        ", ""),
-        encoding="utf-8",
-    )
-
     condition = load_condition("anaerobic.yml")
-    print("condition:", condition)
+    print("bounds changed:", len(condition["bounds"]))
 
-    apply_condition(model, condition)
-    print(f"anaerobic growth: {model.slim_optimize():.4f} /h")
-
-    model.medium = shipped        # put the aerobic medium back
+    anaerobic = apply_condition(model.copy(), condition)
+    print(f"anaerobic growth: {anaerobic.slim_optimize():.4f} /h")
     ```
 
     ```text title="Output"
-    condition: {'bounds': [{'rxn': 'r_1992', 'lb': 0, 'ub': 0}, {'rxn': 'r_1714', 'lb': -20}]}
-    anaerobic growth: -0.0000 /h
+    bounds changed: 12
+    anaerobic growth: 0.1615 /h
     ```
 
-    The schema is deliberately narrow — a `prelude` that resets the exchanges, an
-    optional cofactor-pseudoreaction edit, an optional biomass-stoichiometry
-    delta, a list of per-reaction `bounds`, and an `expected_uptake_count` that
-    fails loudly when the condition no longer matches the model. `apply_condition`
-    edits the model in place and returns it, so it composes.
+    `apply_condition` edits the model **in place** and returns it, so pass a copy
+    when you want to keep the aerobic model as well. It also takes the path
+    directly: `apply_condition(model, "anaerobic.yml")`.
 
-    The growth rate is zero, and that is the point: yeast-GEM does not ferment
-    just because oxygen is gone. A real anaerobic condition also opens sterol and
-    fatty-acid uptake and adjusts the biomass composition — take the maintained one
-    from the yeast-GEM repository rather than writing your own from memory. The
-    last line restores the aerobic medium, since `apply_condition` edits in place.
-
-## 5. What is the model actually living on?
+## 5.5 What is the model actually living on?
 
 A medium copied from a paper usually contains more than the model needs.
 `getMinimalMedium` and cobrapy's `minimal_medium` search for the smallest set of
@@ -215,9 +283,18 @@ without because a gap-filled reaction produces it internally.
 
 === "MATLAB"
 
+    <!-- run-examples: skip -->
+
     ```matlab
-    [medium, fluxes] = getMinimalMedium(model);
+    sol = solveLP(model);
+    medium = getMinimalMedium(model, 'minGrowth', 0.9 * -sol.f);
     ```
+
+    `getMinimalMedium` solves a **MILP**, which the GLPK that ships with
+    RAVEN cannot do — it reports `glpk is not suitable for solving MILPs`.
+    Point `setRavenSolver` at Gurobi or SCIP first. cobrapy's
+    `minimal_medium` defaults to an LP relaxation, which is why the Python
+    tab runs on any solver.
 
 === "Python"
 
@@ -229,20 +306,20 @@ without because a gap-filled reaction produces it internally.
     ```
 
     ```text title="Output"
-    r_1654    0.480
-    r_1714    0.904
-    r_1861    0.000
-    r_1992    2.145
-    r_2005    0.020
-    r_2020    0.000
-    r_2049    0.000
-    r_2060    0.010
-    r_4593    0.000
-    r_4594    0.000
-    r_4595    0.000
-    r_4596    0.000
-    r_4597    0.000
-    r_4600    0.000
+    r_1654     4.959
+    r_1714     9.004
+    r_1861     0.000
+    r_1992    20.139
+    r_2005     0.210
+    r_2020     0.003
+    r_2049     0.003
+    r_2060     0.105
+    r_4593     0.001
+    r_4594     0.000
+    r_4595     0.002
+    r_4596     0.001
+    r_4597     0.001
+    r_4600     0.000
     ```
 
 !!! warning "What can go wrong"

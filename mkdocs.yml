@@ -162,11 +162,11 @@ nav:
       - Overview: protocol/index.md
       - User guide:
           - Overview: guide/index.md
-          - Getting started: guide/getting-started.md
-          - Model structure and identifiers: guide/model-structure.md
-          - Reading and writing models: guide/io.md
-          - Simulating growth with FBA: guide/fba.md
-          - Growth media and conditions: guide/media.md
+          - 1. Getting started: guide/getting-started.md
+          - 2. Model structure and identifiers: guide/model-structure.md
+          - 3. Reading and writing models: guide/io.md
+          - 4. Simulating growth with FBA: guide/fba.md
+          - 5. Growth media and conditions: guide/media.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
