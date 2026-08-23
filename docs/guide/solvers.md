@@ -40,15 +40,17 @@ opened so there is something to solve.
 === "MATLAB"
 
     ```matlab
-    disp(getpref('RAVEN', 'solver'));
+    fprintf('RAVEN solver preference: %s\n', getpref('RAVEN', 'solver'));
     ```
 
     ```text title="Output"
-    gurobi
+    RAVEN solver preference: ...
     ```
 
-    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts.
-    `checkInstallation` prints it along with a test solve.
+    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts —
+    and the answer is whatever *this* installation was last told, which is why
+    the output above is elided. `checkInstallation` prints it along with a test
+    solve.
 
 === "Python"
 
