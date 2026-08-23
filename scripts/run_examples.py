@@ -317,16 +317,19 @@ end
 ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
 ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
 addpath(genpath('@RAVEN@'));
-try
-    setRavenSolver('@SOLVER@');
-catch ravendocs_err
-    fprintf(2, 'could not select solver: %s\\n', ravendocs_err.message);
-end
 for ravendocs_p = 1:numel(ravendocs_pages)
     ravendocs_dir = fullfile(ravendocs_harness, ravendocs_pages(ravendocs_p).name);
     ravendocs_blocks = dir(fullfile(ravendocs_dir, 'block_*.m'));
     cd(ravendocs_dir);
     clearvars -except ravendocs_*
+    % setRavenSolver writes a MATLAB preference, which outlives the page
+    % that set it -- so reset it per page, or one page choosing Gurobi
+    % silently changes every page after it.
+    try
+        setRavenSolver('@SOLVER@');
+    catch ravendocs_err
+        fprintf(2, 'could not select solver: %s\\n', ravendocs_err.message);
+    end
     for ravendocs_b = 1:numel(ravendocs_blocks)
         [~, ravendocs_name] = fileparts(ravendocs_blocks(ravendocs_b).name);
         ravendocs_entry = struct( ...
