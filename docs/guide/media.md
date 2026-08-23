@@ -112,11 +112,11 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
     sol = solveLP(model);
     idx = getIndexes(model, 'r_1714', 'rxns');
-    fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), -sol.f);
+    fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), sol.f);
     ```
 
     ```text title="Output"
-    [-10 1000] -> -0.8370 /h
+    [-10 1000] -> 0.8370 /h
     ```
 
 === "Python"
@@ -151,17 +151,17 @@ if you meant "the shipped medium, but with more glucose".
     [~, exchIdx] = getExchangeRxns(model);
     modelClosed = setParam(model, 'lb', model.rxns(exchIdx), 0);
     sol = solveLP(modelClosed);
-    fprintf('growth with nothing to eat: %.4f /h\n', -sol.f);
+    fprintf('growth with nothing to eat: %.4f /h\n', sol.f);
 
     % the shipped recipe, with more glucose
     model = setParam(model, 'lb', 'r_1714', -10);
     sol = solveLP(model);
-    fprintf('complete medium:           %.4f /h\n', -sol.f);
+    fprintf('complete medium:           %.4f /h\n', sol.f);
     ```
 
     ```text title="Output"
     growth with nothing to eat:  /h
-    complete medium:           -0.8370 /h
+    complete medium:           0.8370 /h
     ```
 
 === "Python"
@@ -242,7 +242,7 @@ loudly when the condition no longer matches the model.
     ```matlab
     modelAnaerobic = applyCondition(model, 'anaerobic.yml');
     sol = solveLP(modelAnaerobic);
-    fprintf('anaerobic growth: %.4f /h\n', -sol.f);
+    fprintf('anaerobic growth: %.4f /h\n', sol.f);
     ```
 
     `applyCondition` reads the file with `parseYAML`, which goes through
@@ -282,18 +282,40 @@ without because a gap-filled reaction produces it internally.
 
 === "MATLAB"
 
-    <!-- run-examples: skip -->
+    <!-- run-examples: needs-gurobi -->
 
     ```matlab
+    setRavenSolver('gurobi');   % getMinimalMedium solves a MILP
     sol = solveLP(model);
-    medium = getMinimalMedium(model, 'minGrowth', 0.9 * -sol.f);
+    medium = getMinimalMedium(model, 'minGrowth', 0.9 * sol.f);
     ```
 
-    `getMinimalMedium` solves a **MILP**, which the GLPK that ships with
-    RAVEN cannot do — it reports `glpk is not suitable for solving MILPs`.
-    Point `setRavenSolver` at Gurobi or SCIP first. cobrapy's
-    `minimal_medium` defaults to an LP relaxation, which is why the Python
-    tab runs on any solver.
+    ```text title="Output"
+    ==============================================================
+      Minimal medium  (14 of 16 candidate uptake reactions)
+      Target growth: 0.7533
+    --------------------------------------------------------------
+      r_1654                ammonium exchange
+      r_1714                D-glucose exchange
+      r_1861                iron(2+) exchange
+      r_1992                oxygen exchange
+      r_2005                phosphate exchange
+      r_2020                potassium exchange
+      r_2049                sodium exchange
+      r_2060                sulphate exchange
+      r_4593                chloride exchange
+      r_4594                Cu2(+) exchange
+      r_4595                Mn(2+) exchange
+      r_4596                Zn(2+) exchange
+      r_4597                Mg(2+) exchange
+      r_4600                Ca(2+) exchange
+    ==============================================================
+    ```
+
+    `getMinimalMedium` solves a **MILP**, which the GLPK that ships with RAVEN
+    cannot do — with GLPK selected it reports `glpk is not suitable for solving
+    MILPs`. cobrapy's `minimal_medium` defaults to an LP relaxation, which is why
+    the Python tab runs on any solver.
 
 === "Python"
 

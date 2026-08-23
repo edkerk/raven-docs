@@ -32,19 +32,19 @@ arrives with a growth objective and an aerobic glucose medium already set.
     sol = solveLP(model);
     fprintf('objective: %s\n', model.rxns{model.c == 1});
     fprintf('status:    %d\n', sol.stat);
-    fprintf('growth:    %.4f /h\n', -sol.f);
+    fprintf('growth:    %.4f /h\n', sol.f);
     ```
 
     ```text title="Output"
     [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
     objective: r_2111
     status:    1
-    growth:    -0.0809 /h
+    growth:    0.0809 /h
     ```
 
-    `solveLP` **minimises**, so the objective value of a maximisation comes back
-    negated — hence the minus sign. `sol.x` holds the flux vector, in the order of
-    `model.rxns`.
+    `sol.f` is the objective value itself — no sign to undo, whatever RAVEN does
+    internally — and `sol.x` holds the flux vector, in the order of `model.rxns`.
+    `sol.stat` is `1` for an optimal solve.
 
 === "Python"
 
@@ -110,14 +110,14 @@ roughly ten times the growth.
 
     model = setParam(model, 'lb', 'r_1714', -10);
     sol = solveLP(model);
-    fprintf('growth on 10 mmol glucose: %.4f /h\n', -sol.f);
+    fprintf('growth on 10 mmol glucose: %.4f /h\n', sol.f);
 
     model = setParam(model, 'lb', 'r_1714', -1);   % back to the shipped medium
     ```
 
     ```text title="Output"
     shipped bounds: [-1 1000]
-    growth on 10 mmol glucose: -0.8370 /h
+    growth on 10 mmol glucose: 0.8370 /h
     ```
 
 === "Python"
@@ -150,16 +150,16 @@ it go out of scope.
     ```matlab
     modelKO = setParam(model, 'eq', 'r_1992', 0);   % close oxygen uptake
     solKO = solveLP(modelKO);
-    fprintf('anaerobic: %.4f /h\n', -solKO.f);
+    fprintf('anaerobic: %.4f /h\n', solKO.f);
 
     % `model` itself is untouched -- MATLAB copied it on assignment
     sol = solveLP(model);
-    fprintf('back to aerobic: %.4f /h\n', -sol.f);
+    fprintf('back to aerobic: %.4f /h\n', sol.f);
     ```
 
     ```text title="Output"
-    anaerobic: -0.0000 /h
-    back to aerobic: -0.0809 /h
+    anaerobic: 0.0000 /h
+    back to aerobic: 0.0809 /h
     ```
 
 === "Python"
@@ -285,8 +285,10 @@ total flux, which is both more biological and reproducible.
       pseudoreaction.
     - **The same model gives different flux distributions.** Expected — alternative
       optima. Use pFBA, or compare ranges with FVA, rather than one solution.
-    - **`solveLP` returns a positive `f` for a maximisation.** It minimises
-      internally; negate it, as above.
+    - **Reading `sol.f` as a negated objective.** RAVEN minimises `-c'x`
+      internally, but `solveLP` hands back the objective value itself, so
+      `sol.f` is the growth rate, not its negative. Compare against the Python
+      tab if you are unsure: the two agree to four decimals.
 
 ## See also
 

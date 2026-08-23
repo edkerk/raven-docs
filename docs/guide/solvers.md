@@ -44,7 +44,7 @@ opened so there is something to solve.
     ```
 
     ```text title="Output"
-    glpk
+    gurobi
     ```
 
     RAVEN keeps the choice in MATLAB's preferences, so it survives restarts.
@@ -95,13 +95,11 @@ gap-filling and `getMinimalMedium` solve; it is free for academic use.
 
 ## 6.3 What comes back
 
-The two solution objects carry the same information under different names, with
-one trap: **`solveLP` minimises**, so a maximisation objective comes back
-negated.
+The two solution objects carry the same information under different names.
 
 | MATLAB `solveLP` | cobrapy `Solution` | |
 |---|---|---|
-| `sol.f` | `solution.objective_value` | objective value (negate `sol.f`) |
+| `sol.f` | `solution.objective_value` | objective value, same sign in both |
 | `sol.x` | `solution.fluxes` | fluxes — a vector in `model.rxns` order, or a Series by id |
 | `sol.stat` | `solution.status` | `1` optimal, `0` feasible, `-1` infeasible |
 | `sol.msg` | `solution.status` | what the solver said |
@@ -113,12 +111,12 @@ negated.
     model = setParam(model, 'obj', 'biomassOUT', 1);
     sol = solveLP(model);
     fprintf('stat %d: %s\n', sol.stat, sol.msg);
-    fprintf('growth %.4f /h\n', -sol.f);
+    fprintf('growth %.4f /h\n', sol.f);
     ```
 
     ```text title="Output"
     stat 1: Optimal solution found
-    growth 0.0000 /h
+    growth -0.0000 /h
     ```
 
 === "Python"

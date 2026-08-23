@@ -39,6 +39,10 @@ Page-level control, written as HTML comments in the markdown:
 ``<!-- run-examples: skip -->``
     immediately before a ```python block -- that one block is neither executed
     nor checked, but the ones after it still run.
+``<!-- run-examples: needs-gurobi -->``
+    the block needs a MILP solver: it runs where Gurobi is available (``--gurobi``
+    or ``RAVEN_DOCS_GUROBI=1``, which CI sets when a licence is configured) and is
+    skipped everywhere else.
 
 An expected-output block consisting of a single ``...`` matches anything, and
 ``...`` inside a block matches any run of characters -- the same convention as
@@ -82,6 +86,13 @@ LANGUAGES = ("python", "matlab")
 
 SKIP_FILE = "run-examples: skip-file"
 SKIP_BLOCK = "run-examples: skip"
+NEEDS_GUROBI = "run-examples: needs-gurobi"
+
+# Examples that need a MILP solver run only where Gurobi is available: on a
+# machine with a licence, and in CI when the workflow has one configured. They
+# are skipped everywhere else rather than failing, so a reader without Gurobi
+# still gets a green run.
+GUROBI_ENABLED = os.environ.get("RAVEN_DOCS_GUROBI", "") not in ("", "0")
 
 _FENCE_OPEN = re.compile(r"^(?P<indent>[ \t]*)(?P<ticks>`{3,})(?P<info>.*)$")
 _HTML_COMMENT = re.compile(r"<!--(?P<body>.*?)-->")
@@ -169,16 +180,26 @@ def scan_fences(lines: list[str]) -> list[Fence]:
     return fences
 
 
-def _preceding_comment_marks_skip(lines: list[str], fence: Fence) -> bool:
-    """True when ``<!-- run-examples: skip -->`` sits just above the block."""
+def _marker_above(lines: list[str], fence: Fence) -> str | None:
+    """The ``<!-- run-examples: ... -->`` marker just above the block, if any."""
     k = fence.start - 1
     while k >= 0 and not lines[k].strip():
         k -= 1
     if k < 0:
-        return False
+        return None
     for comment in _HTML_COMMENT.finditer(lines[k]):
-        if comment.group("body").strip() == SKIP_BLOCK:
-            return True
+        body = comment.group("body").strip()
+        if body in (SKIP_BLOCK, NEEDS_GUROBI):
+            return body
+    return None
+
+
+def _block_is_skipped(lines: list[str], fence: Fence) -> bool:
+    marker = _marker_above(lines, fence)
+    if marker == SKIP_BLOCK:
+        return True
+    if marker == NEEDS_GUROBI:
+        return not GUROBI_ENABLED
     return False
 
 
@@ -206,7 +227,7 @@ def collect_examples(page: Path, language: str = "python") -> PageResult:
                 number=len(result.examples) + 1,
                 code_fence=fence,
                 output_fence=output,
-                skip=_preceding_comment_marks_skip(lines, fence),
+                skip=_block_is_skipped(lines, fence),
             )
         )
     return result
@@ -290,6 +311,9 @@ _MATLAB_DRIVER = """function ravendocs_run(ravendocs_harness)
 % captured text is stable.
 feature('hotlinks', 'off');
 warning('off', 'backtrace');
+if ~isempty(getenv('GUROBI_HOME'))
+    addpath(fullfile(getenv('GUROBI_HOME'), 'matlab'));
+end
 ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
 ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
 addpath(genpath('@RAVEN@'));
@@ -625,6 +649,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--solver", default=DEFAULT_SOLVER, help=f"cobrapy solver to pin (default: {DEFAULT_SOLVER}; '' to leave alone)")
     parser.add_argument(
+        "--gurobi", action="store_true",
+        help="run the examples marked needs-gurobi as well (also RAVEN_DOCS_GUROBI=1)",
+    )
+    parser.add_argument(
         "--matlab-prepare", metavar="DIR",
         help="write the MATLAB harness to DIR and stop, for a runner that has to "
              "start MATLAB itself (see .github/workflows/examples.yml)",
@@ -634,6 +662,9 @@ def main(argv: list[str] | None = None) -> int:
         help="check the output MATLAB left in DIR after --matlab-prepare",
     )
     args = parser.parse_args(argv)
+
+    if args.gurobi:
+        globals()["GUROBI_ENABLED"] = True
 
     pages = gather_pages(args.targets)
     if not pages:
