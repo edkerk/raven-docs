@@ -32,6 +32,7 @@ minimal_medium
 load_workbook               # openpyxl, used by the Excel example
 
 # -- RAVEN model struct fields and function arguments -----------------------
+minFlux                       # solveLP argument
 removePrefix                  # importModel argument
 sortIds                       # exportToExcelFormat / writeYAMLmodel argument
 sort_ids                      # the raven-toolbox spelling of the same argument

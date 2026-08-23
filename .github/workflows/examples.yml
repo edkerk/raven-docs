@@ -60,17 +60,31 @@ jobs:
           python -c "import cobra, raven_toolbox, optlang; print('cobra', cobra.__version__); print('raven_toolbox', raven_toolbox.__version__); print('solvers', sorted(optlang.available_solvers))"
 
       - name: Run guide examples
-        run: python scripts/run_examples.py
+        run: python scripts/run_examples.py --language python
 
-  # MATLAB tabs are not executed yet. When we want them checked too, MathWorks'
-  # actions run MATLAB on GitHub-hosted runners free of charge for public
-  # repositories:
-  #
-  #   - uses: matlab-actions/setup-matlab@v2
-  #     with: { products: 'Optimization_Toolbox' }
-  #   - uses: matlab-actions/run-command@v2
-  #     with: { command: "addpath(genpath('RAVEN')); checkInstallation" }
-  #
-  # That needs a MATLAB harness equivalent to run_examples.py (extract the
-  # `=== "MATLAB"` blocks, run them, diff the output). Until then the MATLAB
-  # snippets are only name-checked, by scripts/check_names.py at build time.
+  matlab:
+    name: MATLAB examples
+    runs-on: ubuntu-latest
+    # MATLAB starts slowly and importModel takes about 80 s on yeast-GEM, so this
+    # job is minutes rather than seconds.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # RAVEN comes from the submodule, together with the GLPK and libSBML
+          # mex files it bundles -- nothing else has to be installed.
+          submodules: recursive
+
+      # Free of charge on GitHub-hosted runners for public repositories.
+      - uses: matlab-actions/setup-matlab@v2
+        with:
+          release: R2024b
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run guide examples (MATLAB tabs)
+        # setup-matlab puts matlab on the PATH; run_examples drives it, so both
+        # languages are checked by the same tool against the same pages.
+        run: python scripts/run_examples.py --language matlab
