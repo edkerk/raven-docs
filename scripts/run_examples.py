@@ -326,21 +326,20 @@ end
 """
 
 
-def run_matlab(results: list[PageResult], matlab: str) -> None:
-    """Run every page's MATLAB blocks in one MATLAB session.
+def prepare_matlab(results: list[PageResult], harness: Path) -> dict[str, PageResult]:
+    """Write the MATLAB harness: one directory per page, plus the driver.
 
-    MATLAB takes tens of seconds to start, so all the pages share one process;
-    each still gets its own directory and a cleared workspace.
+    Split out from running it, because on GitHub-hosted runners MATLAB is only
+    licensed when it is started by ``matlab-actions/run-command`` -- so CI
+    prepares the harness, lets that action run the driver, and collects the
+    results afterwards. Locally, :func:`run_matlab` does all three in one go.
     """
-    runnable = [r for r in results if not r.skipped_page and r.examples]
-    if not runnable:
-        return
-
-    harness = Path(tempfile.mkdtemp(prefix="raven-docs-matlab-"))
+    harness.mkdir(parents=True, exist_ok=True)
     page_dirs: dict[str, PageResult] = {}
+    runnable = [r for r in results if not r.skipped_page and r.examples]
     for index, result in enumerate(runnable, start=1):
         page_dir = harness / f"page_{index:02d}"
-        page_dir.mkdir()
+        page_dir.mkdir(exist_ok=True)
         page_dirs[page_dir.name] = result
         if DATA_DIR.is_dir():
             for item in DATA_DIR.iterdir():
@@ -358,24 +357,22 @@ def run_matlab(results: list[PageResult], matlab: str) -> None:
         "@SOLVER@", MATLAB_SOLVER
     )
     (harness / "ravendocs_run.m").write_text(driver, encoding="utf-8")
+    return page_dirs
 
-    command = [
-        matlab, "-batch",
-        f"addpath('{harness.as_posix()}'); ravendocs_run('{harness.as_posix()}')",
-    ]
-    completed = subprocess.run(  # noqa: S603 -- our own generated script
-        command, cwd=str(ROOT), capture_output=True, text=True
-    )
+
+def collect_matlab(
+    page_dirs: dict[str, PageResult], harness: Path, diagnostics: str = ""
+) -> None:
+    """Read what MATLAB captured and attach it to the examples."""
     results_file = harness / "results.json"
     if not results_file.exists():
-        for result in runnable:
+        for result in page_dirs.values():
             for example in result.examples:
                 if example.status != "skipped":
                     example.status = "error"
-                    example.error = "MATLAB produced no results. " + (
-                        completed.stderr or completed.stdout or ""
-                    ).strip()
-        shutil.rmtree(harness, ignore_errors=True)
+                    example.error = (
+                        "MATLAB produced no results. " + diagnostics.strip()
+                    )
         return
 
     raw = json.loads(results_file.read_text(encoding="utf-8") or "[]")
@@ -396,7 +393,31 @@ def run_matlab(results: list[PageResult], matlab: str) -> None:
             else:
                 example.actual = entry.get("output", "")
                 example.status = "ok"
-    shutil.rmtree(harness, ignore_errors=True)
+
+
+def run_matlab(results: list[PageResult], matlab: str) -> None:
+    """Prepare, run and collect in one go, with a locally licensed MATLAB.
+
+    MATLAB takes tens of seconds to start, so all the pages share one process;
+    each still gets its own directory and a cleared workspace.
+    """
+    if not [r for r in results if not r.skipped_page and r.examples]:
+        return
+    harness = Path(tempfile.mkdtemp(prefix="raven-docs-matlab-"))
+    try:
+        page_dirs = prepare_matlab(results, harness)
+        command = [
+            matlab, "-batch",
+            f"addpath('{harness.as_posix()}'); ravendocs_run('{harness.as_posix()}')",
+        ]
+        completed = subprocess.run(  # noqa: S603 -- our own generated script
+            command, cwd=str(ROOT), capture_output=True, text=True
+        )
+        collect_matlab(
+            page_dirs, harness, completed.stderr or completed.stdout or ""
+        )
+    finally:
+        shutil.rmtree(harness, ignore_errors=True)
 
 
 def _pin_solver(solver: str) -> None:
@@ -591,6 +612,15 @@ def main(argv: list[str] | None = None) -> int:
         help="which tabs to run (default: both; MATLAB is skipped when no MATLAB is installed)",
     )
     parser.add_argument("--solver", default=DEFAULT_SOLVER, help=f"cobrapy solver to pin (default: {DEFAULT_SOLVER}; '' to leave alone)")
+    parser.add_argument(
+        "--matlab-prepare", metavar="DIR",
+        help="write the MATLAB harness to DIR and stop, for a runner that has to "
+             "start MATLAB itself (see .github/workflows/examples.yml)",
+    )
+    parser.add_argument(
+        "--matlab-collect", metavar="DIR",
+        help="check the output MATLAB left in DIR after --matlab-prepare",
+    )
     args = parser.parse_args(argv)
 
     pages = gather_pages(args.targets)
@@ -599,6 +629,25 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     os.environ.setdefault("MPLBACKEND", "Agg")
+
+    if args.matlab_prepare or args.matlab_collect:
+        harness = Path(args.matlab_prepare or args.matlab_collect)
+        collected = [collect_examples(page, "matlab") for page in pages]
+        page_dirs = prepare_matlab(collected, harness)
+        if args.matlab_prepare:
+            print(f"run_examples: MATLAB harness written to {harness}")
+            print(f"    run: addpath('{harness.as_posix()}'); ravendocs_run('{harness.as_posix()}')")
+            return 0
+        collect_matlab(page_dirs, harness)
+        for result in collected:
+            compare(result)
+        print(f"run_examples: {sum(len(r.examples) for r in collected)} MATLAB example(s)")
+        failures = report(collected)
+        if failures:
+            print(f"run_examples: {failures} failing example(s).")
+            return 1
+        print("run_examples: all examples match their documented output.")
+        return 0
 
     languages = list(LANGUAGES) if args.language == "both" else [args.language]
     matlab = find_matlab() if "matlab" in languages else None

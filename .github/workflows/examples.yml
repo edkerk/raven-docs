@@ -84,7 +84,23 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run guide examples (MATLAB tabs)
-        # setup-matlab puts matlab on the PATH; run_examples drives it, so both
-        # languages are checked by the same tool against the same pages.
-        run: python scripts/run_examples.py --language matlab
+      # MATLAB on a GitHub-hosted runner is licensed only when one of the
+      # matlab-actions run-* actions starts it -- starting matlab ourselves fails
+      # the license checkout. So the harness is prepared here, run by the action,
+      # and its output checked afterwards: the same tool, the same pages, in
+      # three steps instead of one.
+      - name: Prepare the MATLAB harness
+        run: >
+          python scripts/run_examples.py --language matlab
+          --matlab-prepare "${{ runner.temp }}/matlab-harness"
+
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: >
+            addpath('${{ runner.temp }}/matlab-harness');
+            ravendocs_run('${{ runner.temp }}/matlab-harness')
+
+      - name: Check the MATLAB output
+        run: >
+          python scripts/run_examples.py --language matlab
+          --matlab-collect "${{ runner.temp }}/matlab-harness"

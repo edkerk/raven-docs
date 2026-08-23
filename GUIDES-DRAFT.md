@@ -348,9 +348,14 @@ blocks build on each other), captures `evalc` output and diffs it exactly like
 the Python half. RAVEN comes from the submodule with its bundled GLPK and
 libSBML mex files, so nothing else is installed; `feature('hotlinks','off')` and
 `warning('off','backtrace')` keep warning text stable, since the links and stack
-traces name temporary paths that change every run. The `MATLAB examples` CI job
-uses `matlab-actions/setup-matlab@v2`, free on GitHub-hosted runners for public
-repositories.
+traces name temporary paths that change every run.
+
+In CI it runs in three steps rather than one: **MATLAB on a GitHub-hosted runner
+is licensed only when a `matlab-actions` run-* action starts it**, and starting
+`matlab` ourselves fails the license checkout. So `--matlab-prepare` writes the
+harness, `matlab-actions/run-command@v2` runs the driver, and `--matlab-collect`
+checks what it captured. Locally, where MATLAB has its own licence, the single
+`--language matlab` command still does all three.
 
 Two things the MATLAB half cannot do:
 
