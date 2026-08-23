@@ -22,6 +22,7 @@ reconstruction protocol and the legacy tutorials.
 |---|---|
 | [`smallYeast.yml`](../data/smallYeast.yml) | central carbon metabolism in yeast; the default example |
 | [`smallYeastBad.yml`](../data/smallYeastBad.yml) | the same model with deliberate errors, for the curation pages |
+| [`empty.xml`](../data/empty.xml) | an empty model with compartments, for building one from scratch |
 | [`yeast-GEM.yml`](../data/yeast-GEM.yml) | yeast-GEM v9.1.0, the consensus *S. cerevisiae* model, for pages that need a genome-scale one |
 | [`yeast-GEM.xml`](../data/yeast-GEM.xml) | the same model as SBML |
 | [`anaerobic.yml`](../data/anaerobic.yml) | a condition file: yeast-GEM under anaerobic conditions |
@@ -42,9 +43,19 @@ reconstruction protocol and the legacy tutorials.
    fluxes.
 5. [Growth media and conditions](media.md) — define a medium, keep a condition as
    data.
+6. [Solvers and configuration](solvers.md) — which solver, and how to read what
+   it returns.
 
-**Planned** — solvers and configuration; building, editing, combining models;
-flux variability, deletions, sampling, phenotype exploration, engineering
-targets; quality control, gap-filling, metabolic tasks, biomass, annotation;
-reconstruction from homology, KEGG, tINIT/ftINIT, localization; comparison and
-table-driven curation.
+**Building and curating**
+
+7. [Building a model from scratch](building.md) — metabolites, reactions, genes,
+   exchanges.
+8. [Editing an existing model](editing.md) — stoichiometry, GPRs, bounds,
+   deletions.
+9. [Quality control](quality-control.md) — structure, mass balance, blocked
+   reactions, mass from nothing.
+
+**Planned** — combining and simplifying models; flux variability, deletions,
+sampling, phenotype exploration, engineering targets; gap-filling, metabolic
+tasks, biomass, annotation; reconstruction from homology, KEGG, tINIT/ftINIT,
+localization; comparison and table-driven curation.

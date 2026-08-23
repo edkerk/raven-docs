@@ -167,6 +167,10 @@ nav:
           - 3. Reading and writing models: guide/io.md
           - 4. Simulating growth with FBA: guide/fba.md
           - 5. Growth media and conditions: guide/media.md
+          - 6. Solvers and configuration: guide/solvers.md
+          - 7. Building a model from scratch: guide/building.md
+          - 8. Editing an existing model: guide/editing.md
+          - 9. Quality control: guide/quality-control.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
