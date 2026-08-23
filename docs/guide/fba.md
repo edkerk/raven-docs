@@ -1,4 +1,4 @@
-# Simulating growth with FBA
+# 4. Simulating growth with FBA
 
 Set an objective, constrain the uptake rates, solve, and read the fluxes back.
 This is the loop every other analysis on this site is built from.
@@ -10,28 +10,36 @@ This is the loop every other analysis on this site is built from.
 | `setParam` | `Reaction.bounds`, `Model.objective` <span class="cobrapy-tag">cobrapy</span> | set bounds and the objective |
 | `solveLP` | `Model.optimize` <span class="cobrapy-tag">cobrapy</span> | solve the LP |
 | `printFluxes` | `Model.summary` <span class="cobrapy-tag">cobrapy</span> | show the interesting fluxes |
-| `getMinNrFluxes` | `pfba` <span class="cobrapy-tag">cobrapy</span> | pick a parsimonious solution among the optima |
+| `solveLP` (`minFlux`) | `pfba` <span class="cobrapy-tag">cobrapy</span> | pick a parsimonious solution among the optima |
 | `haveFlux` | `Solution.fluxes` <span class="cobrapy-tag">cobrapy</span> | which reactions can carry flux |
 
-!!! info "Simulation is cobrapy's job"
-    Almost every Python step here is cobrapy: raven-toolbox deliberately does not
-    re-implement FBA, and adds reconstruction and curation on top of it instead.
-    In MATLAB, RAVEN's `solveLP` is self-contained and needs neither COBRA
-    Toolbox nor cobrapy. The concepts are identical; only the spelling differs.
+!!! info "Where the Python functions come from"
+    Every simulation step on this page is cobrapy, marked
+    <span class="cobrapy-tag">cobrapy</span> in the table above. In MATLAB,
+    `solveLP` needs neither the COBRA Toolbox nor anything else outside RAVEN.
 
 ## Setup
 
 `yeast-GEM.xml` from [`docs/data/`](../data/README.md) — yeast-GEM v9.1.0, which
 arrives with a growth objective and an aerobic glucose medium already set.
 
-## 1. Solve
+## 4.1 Solve
 
 === "MATLAB"
 
     ```matlab
     model = importModel('yeast-GEM.xml');
     sol = solveLP(model);
-    fprintf('growth: %.4f /h\n', -sol.f);
+    fprintf('objective: %s\n', model.rxns{model.c == 1});
+    fprintf('status:    %d\n', sol.stat);
+    fprintf('growth:    %.4f /h\n', -sol.f);
+    ```
+
+    ```text title="Output"
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+    objective: r_2111
+    status:    1
+    growth:    -0.0809 /h
     ```
 
     `solveLP` **minimises**, so the objective value of a maximisation comes back
@@ -60,7 +68,7 @@ arrives with a growth objective and an aerobic glucose medium already set.
     `optimize` maximises by default and returns a `Solution` whose `fluxes` is a
     pandas Series indexed by reaction id.
 
-## 2. Change the objective
+## 4.2 Change the objective
 
 The objective is a reaction to maximise — growth, a product exchange, an ATP
 demand.
@@ -69,6 +77,11 @@ demand.
 
     ```matlab
     model = setParam(model, 'obj', 'r_2111', 1);   % growth
+    disp(model.rxnNames{getIndexes(model, 'r_2111', 'rxns')});
+    ```
+
+    ```text title="Output"
+    growth
     ```
 
 === "Python"
@@ -82,7 +95,7 @@ demand.
     growth
     ```
 
-## 3. Constrain an uptake rate
+## 4.3 Constrain an uptake rate
 
 Uptake is a **negative** flux through an exchange reaction, so the lower bound is
 what limits it. yeast-GEM ships with glucose already capped at 1 mmol/gDW/h,
@@ -92,9 +105,19 @@ roughly ten times the growth.
 === "MATLAB"
 
     ```matlab
-    model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
+    idx = getIndexes(model, 'r_1714', 'rxns');     % D-glucose exchange
+    fprintf('shipped bounds: [%g %g]\n', model.lb(idx), model.ub(idx));
+
+    model = setParam(model, 'lb', 'r_1714', -10);
     sol = solveLP(model);
     fprintf('growth on 10 mmol glucose: %.4f /h\n', -sol.f);
+
+    model = setParam(model, 'lb', 'r_1714', -1);   % back to the shipped medium
+    ```
+
+    ```text title="Output"
+    shipped bounds: [-1 1000]
+    growth on 10 mmol glucose: -0.8370 /h
     ```
 
 === "Python"
@@ -115,7 +138,7 @@ roughly ten times the growth.
     growth on 10 mmol glucose: 0.8370 /h
     ```
 
-## 4. Try something without keeping it
+## 4.4 Try something without keeping it
 
 A knockout or a tighter bound is usually a question, not a decision. cobrapy's
 model is a context manager: changes made inside `with model:` are rolled back on
@@ -128,7 +151,15 @@ it go out of scope.
     modelKO = setParam(model, 'eq', 'r_1992', 0);   % close oxygen uptake
     solKO = solveLP(modelKO);
     fprintf('anaerobic: %.4f /h\n', -solKO.f);
+
     % `model` itself is untouched -- MATLAB copied it on assignment
+    sol = solveLP(model);
+    fprintf('back to aerobic: %.4f /h\n', -sol.f);
+    ```
+
+    ```text title="Output"
+    anaerobic: -0.0000 /h
+    back to aerobic: -0.0809 /h
     ```
 
 === "Python"
@@ -157,7 +188,7 @@ it go out of scope.
     sign on that zero is solver noise, not a negative growth rate; compare against
     a tolerance rather than to `0`.
 
-## 5. Look at the fluxes
+## 4.5 Look at the fluxes
 
 An FBA solution has thousands of numbers, most of them zero and most of the rest
 uninteresting. Both toolboxes offer a filtered view.
@@ -165,7 +196,19 @@ uninteresting. Both toolboxes offer a filtered view.
 === "MATLAB"
 
     ```matlab
-    printFluxes(model, sol.x, true);    % true = only exchange reactions
+    exchanges = {'r_1714', 'r_1992', 'r_1672', 'r_1761'};
+    labels = {'glucose', 'oxygen', 'CO2', 'ethanol'};
+    for i = 1:numel(exchanges)
+        idx = getIndexes(model, exchanges{i}, 'rxns');
+        fprintf('%8s: %9.4f\n', labels{i}, sol.x(idx));
+    end
+    ```
+
+    ```text title="Output"
+     glucose:   -1.0000
+      oxygen:   -2.3592
+         CO2:    2.6597
+     ethanol:    0.0000
     ```
 
 === "Python"
@@ -193,7 +236,7 @@ uninteresting. Both toolboxes offer a filtered view.
     objective — as a table, and `solution.fluxes` is a pandas Series, so the usual
     filtering works: `solution.fluxes[solution.fluxes.abs() > 1e-6]`.
 
-## 6. Pick a parsimonious solution
+## 4.6 Pick a parsimonious solution
 
 An FBA optimum is rarely unique: many flux distributions reach the same growth
 rate, and a plain solve returns an arbitrary one, often with pointless internal
@@ -203,7 +246,14 @@ total flux, which is both more biological and reproducible.
 === "MATLAB"
 
     ```matlab
-    [~, sol] = getMinNrFluxes(model);
+    solPars = solveLP(model, 'minFlux', 1);   % minimise sum(abs(fluxes))
+    fprintf('growth:     %.4f /h\n', solPars.x(getIndexes(model, 'r_2111', 'rxns')));
+    fprintf('total flux: %.1f\n', sum(abs(solPars.x)));
+    ```
+
+    ```text title="Output"
+    growth:     0.0809 /h
+    total flux: 100.6
     ```
 
 === "Python"

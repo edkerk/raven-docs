@@ -216,6 +216,12 @@ Every page follows one skeleton so the set reads as a single document:
 2. **Functions on this page** — a three-column table (MATLAB | Python | note),
    every name linking into the API reference, cobrapy entries badged. This is the
    "clearly demonstrated" contract: the reader sees the scope before reading.
+
+   Pages are **numbered** (`1. Getting started`, `2. Model structure and
+   identifiers`, …) in the nav and in the page title, and their steps carry the
+   page number (`4.1`, `4.2`), matching the protocol section's scheme. The
+   how-to-read boilerplate lives once on the user-guide overview, not on every
+   page; only the cobrapy clarification is repeated where it matters.
 3. **Setup** — the model and data files used, in tabs. Always the same small
    example unless the topic demands otherwise (§7).
 4. **Two to five numbered steps.** Each: one or two sentences of *why*, one tabbed
@@ -336,13 +342,28 @@ Cost is zero for a public repository. If it ever gets slow, the pages that need
 downloads or long solves carry `skip-file` and are checked by a separate,
 manually-triggered job.
 
-**MATLAB is not executed yet.** The MATLAB tabs are still name-checked only. The
-follow-up is a `.m` harness equivalent to the Python one; MathWorks'
-`matlab-actions/setup-matlab@v2` + `run-command@v2` run MATLAB on GitHub-hosted
-runners free of charge for public repositories, so this is possible rather than
-hypothetical — the sketch is in a comment at the bottom of the workflow. Until
-then, **MATLAB output blocks must be pasted by a maintainer with MATLAB**, and a
-page should carry no MATLAB output block rather than an invented one.
+**MATLAB runs too.** `--language matlab` writes each page's MATLAB blocks to
+files, runs them in one MATLAB session per page (one workspace per page, so the
+blocks build on each other), captures `evalc` output and diffs it exactly like
+the Python half. RAVEN comes from the submodule with its bundled GLPK and
+libSBML mex files, so nothing else is installed; `feature('hotlinks','off')` and
+`warning('off','backtrace')` keep warning text stable, since the links and stack
+traces name temporary paths that change every run.
+
+In CI it runs in three steps rather than one: **MATLAB on a GitHub-hosted runner
+is licensed only when a `matlab-actions` run-* action starts it**, and starting
+`matlab` ourselves fails the license checkout. So `--matlab-prepare` writes the
+harness, `matlab-actions/run-command@v2` runs the driver, and `--matlab-collect`
+checks what it captured. Locally, where MATLAB has its own licence, the single
+`--language matlab` command still does all three.
+
+Two things the MATLAB half cannot do:
+
+- `applyCondition` parses YAML through MATLAB's Python bridge, so it needs a
+  linked CPython with `pyyaml`. That block carries a `skip` marker and the page
+  says why.
+- MATLAB is slower on the big model: `importModel` on yeast-GEM takes ~80 s, so
+  the MATLAB job runs in minutes where the Python one runs in seconds.
 
 ## 7. Example data — copied into `docs/data/`
 

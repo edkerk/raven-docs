@@ -6,27 +6,30 @@ verifies that the *names* in a page exist, so a page can name real functions,
 call them with arguments that no longer work, and show output that was correct
 two releases ago.
 
-This script closes that gap for the Python half of the guide. For every page it
+This script closes that gap, for **both** language tabs. For every page it
 
-* collects the ```python blocks in order (including the ones nested inside
-  ``=== "Python"`` content tabs),
-* runs a page's blocks in one namespace, in a scratch directory seeded with a
-  copy of ``docs/data/``, so the snippets can use the short relative paths the
-  reader sees,
+* collects the ```python (or ```matlab) blocks in order -- including the ones
+  nested inside ``=== "Python"`` / ``=== "MATLAB"`` content tabs,
+* runs a page's blocks in one namespace (one Python namespace, or one MATLAB
+  workspace), in a scratch directory seeded with a copy of ``docs/data/``, so the
+  snippets can use the short relative paths the reader sees,
 * captures what the block prints -- plus the repr of a trailing expression, the
   way a notebook or the REPL would -- and compares it with the ``title="Output"``
   block that follows,
 * reports every mismatch as a unified diff and exits non-zero.
 
-The MATLAB tabs are *not* executed here; they need a MATLAB runtime (see
-``.github/workflows/examples.yml`` for the intended follow-up).
+MATLAB needs a MATLAB runtime on the PATH (or ``RAVEN_DOCS_MATLAB`` pointing at
+one); RAVEN itself comes from the submodule, and the bundled GLPK is used so no
+solver licence is involved. When MATLAB is missing, its half is skipped with a
+notice rather than failing -- unless it was asked for explicitly.
 
 Usage::
 
-    python scripts/run_examples.py                # check docs/guide
+    python scripts/run_examples.py                     # both languages, docs/guide
+    python scripts/run_examples.py --language python   # one language
     python scripts/run_examples.py docs/guide/fba.md
-    python scripts/run_examples.py --update       # rewrite output blocks in place
-    python scripts/run_examples.py --list         # show what would run
+    python scripts/run_examples.py --update            # rewrite output blocks in place
+    python scripts/run_examples.py --list              # show what would run
 
 Page-level control, written as HTML comments in the markdown:
 
@@ -50,8 +53,10 @@ import contextlib
 import difflib
 import io
 import os
+import json
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import traceback
@@ -67,6 +72,13 @@ DATA_DIR = ROOT / "docs" / "data"
 # wheel, so it is the one solver every reader and every CI runner is guaranteed
 # to have; pinning it keeps the output blocks reproducible.
 DEFAULT_SOLVER = "glpk"
+
+# RAVEN, for the MATLAB half: the submodule checkout, and whatever MATLAB the
+# machine has. RAVEN bundles GLPK and libSBML mex files for Windows, macOS and
+# Linux, so nothing else has to be installed.
+RAVEN_DIR = Path(os.environ.get("RAVEN_DOCS_RAVEN_SRC", ROOT / "RAVEN"))
+MATLAB_SOLVER = "glpk"
+LANGUAGES = ("python", "matlab")
 
 SKIP_FILE = "run-examples: skip-file"
 SKIP_BLOCK = "run-examples: skip"
@@ -117,6 +129,7 @@ class Example:
 @dataclass
 class PageResult:
     page: Path
+    language: str = "python"
     examples: list[Example] = field(default_factory=list)
     skipped_page: bool = False
     # The page as it was when the examples were collected. --update rewrites
@@ -169,17 +182,17 @@ def _preceding_comment_marks_skip(lines: list[str], fence: Fence) -> bool:
     return False
 
 
-def collect_examples(page: Path) -> PageResult:
+def collect_examples(page: Path, language: str = "python") -> PageResult:
     source = page.read_text(encoding="utf-8")
     lines = source.splitlines()
-    result = PageResult(page=page, source=source)
+    result = PageResult(page=page, language=language, source=source)
     if any(SKIP_FILE in line for line in lines):
         result.skipped_page = True
         return result
 
     fences = scan_fences(lines)
     for index, fence in enumerate(fences):
-        if fence.language != "python":
+        if fence.language != language:
             continue
         output = None
         if index + 1 < len(fences):
@@ -258,6 +271,165 @@ def run_page(result: PageResult, solver: str | None) -> None:
     finally:
         os.chdir(previous_cwd)
         shutil.rmtree(workdir, ignore_errors=True)
+
+
+def find_matlab() -> str | None:
+    """The MATLAB executable, from RAVEN_DOCS_MATLAB or the PATH."""
+    explicit = os.environ.get("RAVEN_DOCS_MATLAB")
+    if explicit:
+        return explicit if Path(explicit).exists() else None
+    return shutil.which("matlab")
+
+
+_MATLAB_DRIVER = """function ravendocs_run(ravendocs_harness)
+% Run every block of every page and write the captured output as JSON.
+% One workspace per page, so a page's blocks build on each other exactly as the
+% reader's session would.
+% Warnings are part of what a reader sees, but their HTML links and stack
+% traces name temporary paths that change every run -- turn both off so the
+% captured text is stable.
+feature('hotlinks', 'off');
+warning('off', 'backtrace');
+ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
+ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
+addpath(genpath('@RAVEN@'));
+try
+    setRavenSolver('@SOLVER@');
+catch ravendocs_err
+    fprintf(2, 'could not select solver: %s\\n', ravendocs_err.message);
+end
+for ravendocs_p = 1:numel(ravendocs_pages)
+    ravendocs_dir = fullfile(ravendocs_harness, ravendocs_pages(ravendocs_p).name);
+    ravendocs_blocks = dir(fullfile(ravendocs_dir, 'block_*.m'));
+    cd(ravendocs_dir);
+    clearvars -except ravendocs_*
+    for ravendocs_b = 1:numel(ravendocs_blocks)
+        [~, ravendocs_name] = fileparts(ravendocs_blocks(ravendocs_b).name);
+        ravendocs_entry = struct( ...
+            'page', ravendocs_pages(ravendocs_p).name, ...
+            'block', ravendocs_name, 'output', '', 'error', '');
+        try
+            ravendocs_entry.output = evalc(ravendocs_name);
+        catch ravendocs_err
+            ravendocs_entry.error = ravendocs_err.message;
+        end
+        ravendocs_out(end + 1) = ravendocs_entry; %#ok<AGROW>
+        if ~isempty(ravendocs_entry.error)
+            break   % later blocks depend on this one
+        end
+    end
+end
+ravendocs_fid = fopen(fullfile(ravendocs_harness, 'results.json'), 'w');
+fwrite(ravendocs_fid, jsonencode(ravendocs_out));
+fclose(ravendocs_fid);
+end
+"""
+
+
+def prepare_matlab(results: list[PageResult], harness: Path) -> dict[str, PageResult]:
+    """Write the MATLAB harness: one directory per page, plus the driver.
+
+    Split out from running it, because on GitHub-hosted runners MATLAB is only
+    licensed when it is started by ``matlab-actions/run-command`` -- so CI
+    prepares the harness, lets that action run the driver, and collects the
+    results afterwards. Locally, :func:`run_matlab` does all three in one go.
+    """
+    harness.mkdir(parents=True, exist_ok=True)
+    page_dirs: dict[str, PageResult] = {}
+    runnable = [r for r in results if not r.skipped_page and r.examples]
+    for index, result in enumerate(runnable, start=1):
+        page_dir = harness / f"page_{index:02d}"
+        page_dir.mkdir(exist_ok=True)
+        page_dirs[page_dir.name] = result
+        if DATA_DIR.is_dir():
+            for item in DATA_DIR.iterdir():
+                if item.is_file() and item.name != "README.md":
+                    shutil.copy2(item, page_dir / item.name)
+        for example in result.examples:
+            if example.skip:
+                example.status = "skipped"
+                continue
+            (page_dir / f"block_{example.number:02d}.m").write_text(
+                example.code_fence.code + chr(10), encoding="utf-8"
+            )
+
+    driver = _MATLAB_DRIVER.replace("@RAVEN@", RAVEN_DIR.as_posix()).replace(
+        "@SOLVER@", MATLAB_SOLVER
+    )
+    (harness / "ravendocs_run.m").write_text(driver, encoding="utf-8")
+    return page_dirs
+
+
+# MATLAB wraps warning text to the width of the command window, which differs
+# between a developer's machine and a CI runner, and pads it with backspace
+# characters once hotlinks are off. Flatten each warning to one line so the same
+# warning compares equal everywhere.
+_MATLAB_WARNING = re.compile(r"\[Warning:.*?\]", re.S)
+
+
+def tidy_matlab(text: str) -> str:
+    text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
+    return _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+
+
+def collect_matlab(
+    page_dirs: dict[str, PageResult], harness: Path, diagnostics: str = ""
+) -> None:
+    """Read what MATLAB captured and attach it to the examples."""
+    results_file = harness / "results.json"
+    if not results_file.exists():
+        for result in page_dirs.values():
+            for example in result.examples:
+                if example.status != "skipped":
+                    example.status = "error"
+                    example.error = (
+                        "MATLAB produced no results. " + diagnostics.strip()
+                    )
+        return
+
+    raw = json.loads(results_file.read_text(encoding="utf-8") or "[]")
+    if isinstance(raw, dict):  # jsonencode collapses a one-element struct array
+        raw = [raw]
+    captured = {(entry["page"], entry["block"]): entry for entry in raw}
+    for page_name, result in page_dirs.items():
+        for example in result.examples:
+            if example.status == "skipped":
+                continue
+            entry = captured.get((page_name, f"block_{example.number:02d}"))
+            if entry is None:
+                example.status = "error"
+                example.error = "not reached (an earlier block on this page failed)"
+            elif entry.get("error"):
+                example.status = "error"
+                example.error = entry["error"]
+            else:
+                example.actual = tidy_matlab(entry.get("output", ""))
+                example.status = "ok"
+
+
+def run_matlab(results: list[PageResult], matlab: str) -> None:
+    """Prepare, run and collect in one go, with a locally licensed MATLAB.
+
+    MATLAB takes tens of seconds to start, so all the pages share one process;
+    each still gets its own directory and a cleared workspace.
+    """
+    if not [r for r in results if not r.skipped_page and r.examples]:
+        return
+    harness = Path(tempfile.mkdtemp(prefix="raven-docs-matlab-"))
+    try:
+        page_dirs = prepare_matlab(results, harness)
+        command = [
+            matlab, "-batch",
+            f"addpath('{harness.as_posix()}'); ravendocs_run('{harness.as_posix()}')",
+        ]
+        completed = subprocess.run(  # noqa: S603 -- our own generated script
+            command, cwd=str(ROOT), capture_output=True, text=True
+        )
+        collect_matlab(
+            page_dirs, harness, completed.stderr or completed.stdout or ""
+        )
+    finally:
+        shutil.rmtree(harness, ignore_errors=True)
 
 
 def _pin_solver(solver: str) -> None:
@@ -387,7 +559,7 @@ def rel(path: Path) -> str:
 def report(results: list[PageResult]) -> int:
     failures = 0
     for result in results:
-        page = rel(result.page)
+        page = f"{rel(result.page)} [{result.language}]"
         if result.skipped_page:
             print(f"  skip  {page}  (skip-file)")
             continue
@@ -447,7 +619,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("targets", nargs="*", help="markdown files or directories (default: docs/guide)")
     parser.add_argument("--update", action="store_true", help="rewrite output blocks to the actual output")
     parser.add_argument("--list", action="store_true", help="list the examples without running them")
+    parser.add_argument(
+        "--language", choices=[*LANGUAGES, "both"], default="both",
+        help="which tabs to run (default: both; MATLAB is skipped when no MATLAB is installed)",
+    )
     parser.add_argument("--solver", default=DEFAULT_SOLVER, help=f"cobrapy solver to pin (default: {DEFAULT_SOLVER}; '' to leave alone)")
+    parser.add_argument(
+        "--matlab-prepare", metavar="DIR",
+        help="write the MATLAB harness to DIR and stop, for a runner that has to "
+             "start MATLAB itself (see .github/workflows/examples.yml)",
+    )
+    parser.add_argument(
+        "--matlab-collect", metavar="DIR",
+        help="check the output MATLAB left in DIR after --matlab-prepare",
+    )
     args = parser.parse_args(argv)
 
     pages = gather_pages(args.targets)
@@ -457,40 +642,75 @@ def main(argv: list[str] | None = None) -> int:
 
     os.environ.setdefault("MPLBACKEND", "Agg")
 
-    results = [collect_examples(page) for page in pages]
-
-    if args.list:
-        for result in results:
-            page = rel(result.page)
-            if result.skipped_page:
-                print(f"{page}: skipped (skip-file)")
-                continue
-            for example in result.examples:
-                mark = " (skip)" if example.skip else ""
-                has_output = " +output" if example.output_fence else ""
-                print(f"{page}:{example.code_fence.start + 1}  example {example.number}{mark}{has_output}")
+    if args.matlab_prepare or args.matlab_collect:
+        harness = Path(args.matlab_prepare or args.matlab_collect)
+        collected = [collect_examples(page, "matlab") for page in pages]
+        page_dirs = prepare_matlab(collected, harness)
+        if args.matlab_prepare:
+            print(f"run_examples: MATLAB harness written to {harness}")
+            print(f"    run: addpath('{harness.as_posix()}'); ravendocs_run('{harness.as_posix()}')")
+            return 0
+        collect_matlab(page_dirs, harness)
+        for result in collected:
+            compare(result)
+        print(f"run_examples: {sum(len(r.examples) for r in collected)} MATLAB example(s)")
+        failures = report(collected)
+        if failures:
+            print(f"run_examples: {failures} failing example(s).")
+            return 1
+        print("run_examples: all examples match their documented output.")
         return 0
 
-    for result in results:
-        if result.skipped_page or not result.examples:
-            continue
-        run_page(result, args.solver or None)
-        compare(result)
+    languages = list(LANGUAGES) if args.language == "both" else [args.language]
+    matlab = find_matlab() if "matlab" in languages else None
+    if "matlab" in languages and matlab is None:
+        if args.language == "matlab":
+            print(
+                "run_examples: no MATLAB found. Install one, or point "
+                "RAVEN_DOCS_MATLAB at the executable."
+            )
+            return 1
+        print("run_examples: no MATLAB found -- skipping the MATLAB tabs.")
+        languages.remove("matlab")
 
-    if args.update:
-        for result in results:
-            if update_page(result):
-                print(f"  updated  {rel(result.page)}")
-        # Re-check so the exit status reflects the updated files.
-        results = [collect_examples(page) for page in pages]
-        for result in results:
-            if result.skipped_page or not result.examples:
-                continue
-            run_page(result, args.solver or None)
+    if args.list:
+        for language in languages:
+            for result in [collect_examples(page, language) for page in pages]:
+                page = f"{rel(result.page)} [{language}]"
+                if result.skipped_page:
+                    print(f"{page}: skipped (skip-file)")
+                    continue
+                for example in result.examples:
+                    mark = " (skip)" if example.skip else ""
+                    has_output = " +output" if example.output_fence else ""
+                    print(f"{page}:{example.code_fence.start + 1}  example {example.number}{mark}{has_output}")
+        return 0
+
+    def run_all(language: str) -> list[PageResult]:
+        collected = [collect_examples(page, language) for page in pages]
+        if language == "python":
+            for result in collected:
+                if not result.skipped_page and result.examples:
+                    run_page(result, args.solver or None)
+        else:
+            run_matlab(collected, matlab)
+        for result in collected:
             compare(result)
+        return collected
+
+    results: list[PageResult] = []
+    for language in languages:
+        collected = run_all(language)
+        if args.update:
+            for result in collected:
+                if update_page(result):
+                    print(f"  updated  {rel(result.page)} [{language}]")
+            # Re-check, so the exit status reflects the updated files.
+            collected = run_all(language)
+        results.extend(collected)
 
     total = sum(len(r.examples) for r in results)
-    print(f"run_examples: {total} example(s) in {len(pages)} page(s)")
+    print(f"run_examples: {total} example(s) in {len(pages)} page(s), {'+'.join(languages)}")
     failures = report(results)
     if failures:
         print(f"\nrun_examples: {failures} failing example(s).")

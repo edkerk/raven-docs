@@ -1,4 +1,4 @@
-# Model structure and identifiers
+# 2. Model structure and identifiers
 
 The same model is a **struct of parallel arrays** in MATLAB and a **graph of
 objects** in Python. Knowing which field corresponds to which attribute is most
@@ -41,13 +41,23 @@ object holds its own links, so `model.remove_reactions([...])` is enough.
 
 ## Setup
 
-```python
-from raven_toolbox.io import read_yaml_model
+`smallYeast.yml` from [`docs/data/`](../data/README.md).
 
-model = read_yaml_model("smallYeast.yml")
-```
+=== "MATLAB"
 
-## 1. The same lookup, two ways
+    ```matlab
+    model = readYAMLmodel('smallYeast.yml');
+    ```
+
+=== "Python"
+
+    ```python
+    from raven_toolbox.io import read_yaml_model
+
+    model = read_yaml_model("smallYeast.yml")
+    ```
+
+## 2.1 The same lookup, two ways
 
 === "MATLAB"
 
@@ -55,6 +65,11 @@ model = read_yaml_model("smallYeast.yml")
     idx = getIndexes(model, 'PGI', 'rxns');
     fprintf('%s: %s\n', model.rxns{idx}, model.rxnNames{idx});
     fprintf('genes: %s\n', model.grRules{idx});
+    ```
+
+    ```text title="Output"
+    PGI: Glucose-6-phosphate isomerase
+    genes: YBR196C
     ```
 
     Indices are the currency: nearly every RAVEN function takes or returns them,
@@ -78,7 +93,7 @@ model = read_yaml_model("smallYeast.yml")
     There is no index to carry around: `DictList` looks up by id, and the object
     is the handle.
 
-## 2. Compartments
+## 2.2 Compartments
 
 === "MATLAB"
 
@@ -86,6 +101,13 @@ model = read_yaml_model("smallYeast.yml")
     disp(model.comps);                       % compartment ids
     i = getIndexes(model, 'G6P_c', 'mets');
     disp(model.comps{model.metComps(i)});    % the compartment of one metabolite
+    ```
+
+    ```text title="Output"
+        {'c'}
+        {'m'}
+
+    c
     ```
 
 === "Python"
@@ -127,7 +149,7 @@ which re-exports only the curation helpers.
     ('ATP', None)
     ```
 
-## 3. Subsystems
+## 2.3 Subsystems
 
 RAVEN lets a reaction belong to several subsystems, so `model.subSystems` is a
 cell array of cell arrays; cobrapy stores one string. A model that came through
@@ -137,7 +159,13 @@ RAVEN can therefore carry a list where cobrapy expects text, and
 === "MATLAB"
 
     ```matlab
-    disp(model.subSystems{idx});   % a cell array, possibly with several entries
+    % a cell array, so a reaction can be in several subsystems
+    model.subSystems{idx} = {'Glycolysis', 'Pentose phosphate pathway'};
+    fprintf('%s\n', strjoin(model.subSystems{idx}, '; '));
+    ```
+
+    ```text title="Output"
+    Glycolysis; Pentose phosphate pathway
     ```
 
 === "Python"
@@ -155,7 +183,7 @@ RAVEN can therefore carry a list where cobrapy expects text, and
     Glycolysis
     ```
 
-## 4. Check the model is structurally sound
+## 2.4 Check the model is structurally sound
 
 Before trusting anything a model tells you, ask whether it is put together
 correctly: metabolites nothing consumes, reactions with no metabolites, genes no
@@ -164,7 +192,12 @@ reaction uses, a missing objective.
 === "MATLAB"
 
     ```matlab
-    checkModelStruct(model, true);   % true = print the problems found
+    issues = checkModelStruct(model, 'throwErrors', false);
+    fprintf('%d issue(s)\n', numel(issues));
+    ```
+
+    ```text title="Output"
+    1 issue(s)
     ```
 
 === "Python"
@@ -185,7 +218,7 @@ reaction uses, a missing objective.
     `check_model` returns the issues instead of printing them, so you can filter
     by `category` or fail a test on the ones you care about.
 
-## 5. Sort the identifiers before you commit
+## 2.5 Sort the identifiers before you commit
 
 Sorting makes the diff between two versions of a model readable — the reason
 `exportForGit` and `export_for_git` offer it too.
@@ -193,7 +226,12 @@ Sorting makes the diff between two versions of a model readable — the reason
 === "MATLAB"
 
     ```matlab
-    model = sortIdentifiers(model);
+    sortedModel = sortIdentifiers(model);
+    fprintf('%s\n', strjoin(sortedModel.rxns(1:5)', ', '));
+    ```
+
+    ```text title="Output"
+    ACO, ACS, ADH1, ALD6, ATPX
     ```
 
 === "Python"

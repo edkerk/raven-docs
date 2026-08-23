@@ -1,0 +1,52 @@
+# Anaerobic conditions for yeast-GEM v9.1.0, as a condition file.
+#
+# Transcribed from yeast-GEM's own code/otherChanges/anaerobicModel.m so that
+# the same changes can be applied with applyCondition (MATLAB) or
+# apply_condition (Python) instead of a script. Reaction and metabolite ids are
+# yeast-GEM's; the comments name what they are.
+#
+# One step of anaerobicModel.m is deliberately not here: the amino-acid ratio
+# change (changeAminoAcidRatio), which rewrites a protein pseudoreaction from a
+# side-car table. That is project-specific and belongs to the caller, so a model
+# made anaerobic with this file is close to, but not identical to, yeast-GEM's
+# published anaerobic model.
+
+# Heme a is not made without oxygen, so it leaves the cofactor pseudoreaction,
+# and the proton coefficient is recomputed to keep the reaction charge balanced.
+cofactor_pseudoreaction:
+  rxn_id: r_4598
+  remove_mets:
+    - { met: s_3714 }        # heme a
+  charge_balance_met: s_0794 # H+ [cytoplasm]
+
+# Fumarate reductase recycles the FADH2 produced by disulphide-bond formation
+# through Ero1 during anaerobic growth.
+biomass_stoichiometry_delta:
+  rxn_id: r_4041             # biomass pseudoreaction
+  add:
+    - { met: s_0689, coef:  0.08 }   # FADH2
+    - { met: s_0687, coef: -0.08 }   # FAD
+    - { met: s_0794, coef: -0.16 }   # H+
+
+bounds:
+  # No oxygen.
+  - { rxn: r_1992, lb: 0 }         # oxygen exchange
+
+  # Sterols and unsaturated fatty acids cannot be made without oxygen, so they
+  # have to be supplied -- the anaerobic supplements of a real fermentation.
+  - { rxn: r_1757, lb: -1000 }     # ergosterol exchange
+  - { rxn: r_1915, lb: -1000 }     # lanosterol exchange
+  - { rxn: r_2106, lb: -1000 }     # zymosterol exchange
+  - { rxn: r_2134, lb: -1000 }     # 14-demethyllanosterol exchange
+  - { rxn: r_1994, lb: -1000 }     # palmitoleate exchange
+  - { rxn: r_2189, lb: -1000 }     # oleate exchange
+  - { rxn: r_2137, lb: 0 }         # ergosta-5,7,22,24(28)-tetraen-3beta-ol: kept
+                                   # closed, it would recycle NADH
+
+  # Vitamins for NAD(P)H and CoA synthesis.
+  - { rxn: r_1967, lb: -1000 }     # nicotinate exchange
+  - { rxn: r_1548, lb: -1000 }     # (R)-pantothenate exchange
+
+  # Two reactions that are repressed on glucose and not seen in the proteome.
+  - { rxn: r_0714, lb: 0, ub: 0 }  # malate dehydrogenase, MDH2
+  - { rxn: r_0659, lb: 0, ub: 0 }  # isocitrate dehydrogenase, IDP2
