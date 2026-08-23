@@ -22,16 +22,22 @@ get_by_id
 summary
 Configuration
 read_sbml_model
+add_boundary
 write_sbml_model
 flux_variability_analysis
 single_gene_deletion
 find_blocked_reactions
 check_mass_balance
+Metabolite                    # cobra.Metabolite, constructed in the building page
+repr
 pfba
 minimal_medium
 load_workbook               # openpyxl, used by the Excel example
 
 # -- RAVEN model struct fields and function arguments -----------------------
+allowExcretion                # findLeakMetabolite argument
+allowNewGenes                 # addRxns argument
+eqnType                       # addRxns argument
 minFlux                       # solveLP argument
 removePrefix                  # importModel argument
 sortIds                       # exportToExcelFormat / writeYAMLmodel argument
@@ -49,6 +55,8 @@ useModelConstraints
 
 # -- variables and identifiers used in worked examples ----------------------
 iAL1006                       # model name in legacy tutorial 1
+modelA                        # a stand-in model name in prose
+modelB
 bmOUT
 acOUT
 glyOUT
