@@ -36,8 +36,7 @@ arrives with a growth objective and an aerobic glucose medium already set.
     ```
 
     ```text title="Output"
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example:
-    importModel('filename.xml',[],false);]
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
     objective: r_2111
     status:    1
     growth:    -0.0809 /h

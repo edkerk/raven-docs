@@ -360,6 +360,18 @@ def prepare_matlab(results: list[PageResult], harness: Path) -> dict[str, PageRe
     return page_dirs
 
 
+# MATLAB wraps warning text to the width of the command window, which differs
+# between a developer's machine and a CI runner, and pads it with backspace
+# characters once hotlinks are off. Flatten each warning to one line so the same
+# warning compares equal everywhere.
+_MATLAB_WARNING = re.compile(r"\[Warning:.*?\]", re.S)
+
+
+def tidy_matlab(text: str) -> str:
+    text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
+    return _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+
+
 def collect_matlab(
     page_dirs: dict[str, PageResult], harness: Path, diagnostics: str = ""
 ) -> None:
@@ -391,7 +403,7 @@ def collect_matlab(
                 example.status = "error"
                 example.error = entry["error"]
             else:
-                example.actual = entry.get("output", "")
+                example.actual = tidy_matlab(entry.get("output", ""))
                 example.status = "ok"
 
 

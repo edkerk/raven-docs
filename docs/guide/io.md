@@ -35,8 +35,7 @@ Which function you need depends on the file format, not on the model.
     ```
 
     ```text title="Output"
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example:
-    importModel('filename.xml',[],false);]
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
     smallYeast 53 reactions
     yeastGEM_v9.1.0 4102 reactions
     ```
@@ -130,11 +129,9 @@ necessarily report the same id.
     ```
 
     ```text title="Output"
-    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those
-    fields:]
+    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
     Document written
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example:
-    importModel('filename.xml',[],false);]
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
     53 52 61
     ```
 
@@ -217,8 +214,7 @@ request. Both toolboxes write that layout directly.
     ```
 
     ```text title="Output"
-    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those
-    fields:]
+    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
     Document written
     dependencies.txt, smallYeast.xml, smallYeast.yml
     ```
