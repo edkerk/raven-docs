@@ -369,6 +369,23 @@ Two things the MATLAB half cannot do:
 - MATLAB is slower on the big model: `importModel` on yeast-GEM takes ~80 s, so
   the MATLAB job runs in minutes where the Python one runs in seconds.
 
+**Examples that need a MILP solver** carry `<!-- run-examples: needs-gurobi -->`.
+They run where Gurobi is available — a developer machine with a licence, and CI
+when the `GUROBI_WLS*` secrets are set — and are skipped everywhere else, so a
+reader without Gurobi still gets a green run. The workflow writes a Web License
+Service licence file from the secrets; without them both licence steps are
+no-ops.
+
+**What the runner cannot catch.** It checks that a block still prints what the
+page says it prints — not that the page says the right thing. A snippet that runs
+cleanly and prints a *wrong* number passes: `fba.md` shipped
+`growth: -0.0809 /h` in the MATLAB tab next to `0.0809` in the Python tab,
+because the prose claimed `solveLP` returns a negated objective and the runner
+faithfully recorded the negative number. `sol.f` is the objective value itself,
+identical under GLPK and Gurobi. The obvious next check is a **cross-tab
+comparison** — where both tabs print the same quantity, the numbers should agree —
+which is what a reader does by eye and nothing does automatically.
+
 ## 7. Example data — copied into `docs/data/`
 
 **Done.** cobrapy can lean on `cobra.io.load_model("textbook")`; we need a model
