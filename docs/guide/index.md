@@ -55,6 +55,11 @@ reconstruction protocol and the legacy tutorials.
 9. [Quality control](quality-control.md) — structure, mass balance, blocked
    reactions, mass from nothing.
 
+**Reconstruction**
+
+10. [Context-specific models (tINIT / ftINIT)](init.md) — the pipeline and the
+    function mapping; the worked example lives in the Human-GEM guide.
+
 **Planned** — combining and simplifying models; flux variability, deletions,
 sampling, phenotype exploration, engineering targets; gap-filling, metabolic
 tasks, biomass, annotation; reconstruction from homology, KEGG, tINIT/ftINIT,

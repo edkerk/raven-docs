@@ -25,10 +25,11 @@
 > | `docs/guide/building.md` | §4.2 #5 |
 > | `docs/guide/editing.md` | §4.2 #6 |
 > | `docs/guide/quality-control.md` | §4.4 #16 |
+> | `docs/guide/init.md` | §4.5 #23 — orientation only; the worked example stays in the Human-GEM guide |
 >
-> Both languages are executed and re-checked in CI. **9 of the 13 P1 pages are
-> written**; the remainder are deletions and essentiality, gap-filling, metabolic
-> tasks, and tINIT/ftINIT.
+> Both languages are executed and re-checked in CI. **10 of the 13 P1 pages are
+> written**; the remainder are deletions and essentiality, gap-filling, and
+> metabolic tasks.
 >
 > Everything else below is still a plan.
 
@@ -198,7 +199,7 @@ the tracked branches.
 |---|---|---|---|---|
 | 21 | **Draft models from homology** — BLAST/DIAMOND a proteome against templates, transfer reactions | `getBlast`, `getDiamond`, `getModelFromHomology`, `makeFakeBlastStructure` | `run_blast`, `run_diamond`, `blast_from_table`, `make_ortholog_hits`, `validate_hits`, `get_model_from_homology` | P2 |
 | 22 | **Draft models from KEGG** — from a KEGG organism id, or from sequences via HMMs | `getKEGGModelForOrganism`, `getModelFromKEGG`, `getPhylDist` | `get_kegg_model_for_organism`, `get_kegg_model_from_sequences`, `build_hmm_library`, `phyl_dist` | P2 |
-| 23 | **Context-specific models (tINIT / ftINIT)** — expression → reaction scores → extracted model | `getINITModel`, `ftINIT`, `prepINITModel`, `getINITSteps`, `scoreComplexModel`, `removeLowScoreGenes`, `parseHPA`, `parseHPArna`, `scoreModel` | `get_init_model`, `run_ftinit`, `prep_init_model`, `get_init_steps`, `gene_scores_from_expression`, `score_reactions_from_genes`, `remove_low_score_genes`, `parse_hpa`, `hpa_gene_scores`, `rna_gene_scores` | P1 |
+| 23 | **Context-specific models (tINIT / ftINIT)** — the pipeline and the function mapping. **Written as orientation, not a walkthrough:** ftINIT's subject is Human-GEM, whose guide already documents the workflow and whose preparation step takes 1–2 hours, so this page maps the functions, demonstrates the scoring rule, and links out rather than duplicating it | `getINITModel`, `ftINIT`, `prepINITModel`, `getINITSteps`, `scoreComplexModel`, `removeLowScoreGenes`, `parseHPA`, `parseHPArna`, `scoreModel` | `get_init_model`, `run_ftinit`, `prep_init_model`, `get_init_steps`, `gene_scores_from_expression`, `score_reactions_from_genes`, `remove_low_score_genes`, `parse_hpa`, `hpa_gene_scores`, `rna_gene_scores` | P1 |
 | 24 | **Subcellular localization** — predictor scores → compartmentalised model | `predictLocalization`, `getUniProtScores`, `parseScores`, `assignCompartments`, `mapCompartments` | `predict_localization`, `apply_localization`, `load_wolfpsort`, `load_deeploc` | P3 |
 
 ### 4.6 Working with several models

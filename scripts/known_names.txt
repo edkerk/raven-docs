@@ -37,6 +37,9 @@ load_workbook               # openpyxl, used by the Excel example
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument
 allowNewGenes                 # addRxns argument
+arrayData                     # the expression struct ftINIT and scoreComplexModel take
+convertGenes                  # prepINITModel argument
+essential_cache_path          # prep_init_model argument
 eqnType                       # addRxns argument
 minFlux                       # solveLP argument
 removePrefix                  # importModel argument
@@ -77,6 +80,7 @@ upper_bound
 
 # -- helpers that live in a model repository, not in RAVEN ------------------
 # hanpo-GEM ships these alongside the reconstruction protocol.
+prepHumanModelForftINIT       # Human-GEM, code/tINIT/
 newCommit
 newRelease
 addLipidReactions             # SLIMEr

@@ -171,6 +171,7 @@ nav:
           - 7. Building a model from scratch: guide/building.md
           - 8. Editing an existing model: guide/editing.md
           - 9. Quality control: guide/quality-control.md
+          - 10. Context-specific models (tINIT / ftINIT): guide/init.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
