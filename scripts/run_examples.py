@@ -393,7 +393,11 @@ def prepare_matlab(results: list[PageResult], harness: Path) -> dict[str, PageRe
 # between a developer's machine and a CI runner, and pads it with backspace
 # characters once hotlinks are off. Flatten each warning to one line so the same
 # warning compares equal everywhere.
-_MATLAB_WARNING = re.compile(r"\[Warning:.*?\]", re.S)
+# A warning ends at a "]" that closes the line -- not at the first "]" in the
+# text, which may well be part of a quoted task or reaction id.
+_MATLAB_WARNING = re.compile(
+    r"\[Warning:.*?\](?=[ \t]*(?:\r?\n|$))", re.S
+)
 
 
 def tidy_matlab(text: str) -> str:

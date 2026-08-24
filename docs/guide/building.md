@@ -37,9 +37,7 @@ sucrose into glucose and fructose. Everything is in one compartment, `e`.
     ```text title="Output"
     The model contains 0 errors and 1 warnings.
 
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);
-    model.rxns (R_ prefix)
-    model.mets (M_ prefix)]
+    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false); model.rxns (R_ prefix) model.mets (M_ prefix)]
     1 reactions, 4 metabolites
     sucrose[e] + H2O[e] => glucose[e] + fructose[e]
     ```
