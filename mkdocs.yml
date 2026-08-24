@@ -172,6 +172,9 @@ nav:
           - 8. Editing an existing model: guide/editing.md
           - 9. Quality control: guide/quality-control.md
           - 10. Context-specific models (tINIT / ftINIT): guide/init.md
+          - 11. Deletions and essentiality: guide/deletions.md
+          - 12. Metabolic tasks: guide/tasks.md
+          - 13. Gap-filling: guide/gap-filling.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md

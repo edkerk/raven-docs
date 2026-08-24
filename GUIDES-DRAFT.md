@@ -25,11 +25,16 @@
 > | `docs/guide/building.md` | §4.2 #5 |
 > | `docs/guide/editing.md` | §4.2 #6 |
 > | `docs/guide/quality-control.md` | §4.4 #16 |
-> | `docs/guide/init.md` | §4.5 #23 — orientation only; the worked example stays in the Human-GEM guide |
+> | `docs/guide/init.md` | §4.5 #23 — the full Human-GEM walkthrough; not re-executed by the build |
+> | `docs/guide/deletions.md` | §4.3 #12 |
+> | `docs/guide/tasks.md` | §4.4 #18 |
+> | `docs/guide/gap-filling.md` | §4.4 #17 |
 >
-> Both languages are executed and re-checked in CI. **10 of the 13 P1 pages are
-> written**; the remainder are deletions and essentiality, gap-filling, and
-> metabolic tasks.
+> Both languages are executed and re-checked in CI. **The 13-page first wave is
+> complete.** Everything from here is P2/P3: combining and simplifying models,
+> flux variability, sampling, phenotype exploration, engineering targets, biomass,
+> annotation, homology and KEGG reconstruction, localization, comparison, and
+> table-driven curation.
 >
 > Everything else below is still a plan.
 

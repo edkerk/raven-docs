@@ -64,10 +64,18 @@ reconstruction protocol and the legacy tutorials.
 
 **Reconstruction**
 
-10. [Context-specific models (tINIT / ftINIT)](init.md) — the pipeline and the
-    function mapping; the worked example lives in the Human-GEM guide.
+10. [Context-specific models (tINIT / ftINIT)](init.md) — extracting a cell-line
+    model from Human-GEM and RNA-seq, end to end.
 
-**Planned** — combining and simplifying models; flux variability, deletions,
-sampling, phenotype exploration, engineering targets; gap-filling, metabolic
-tasks, biomass, annotation; reconstruction from homology, KEGG, tINIT/ftINIT,
-localization; comparison and table-driven curation.
+**Analysis and repair**
+
+11. [Deletions and essentiality](deletions.md) — knockouts, essential genes and
+    reactions, MOMA.
+12. [Metabolic tasks](tasks.md) — saying what a model must be able to do, and
+    checking that it still can.
+13. [Gap-filling](gap-filling.md) — closing the holes a draft model has.
+
+**Planned** — combining and simplifying models; flux variability, sampling,
+phenotype exploration, engineering targets; biomass composition and annotation;
+reconstruction from homology and KEGG; localization; comparison and
+table-driven curation.

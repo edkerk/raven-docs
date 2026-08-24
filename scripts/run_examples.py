@@ -283,7 +283,9 @@ def run_page(result: PageResult, solver: str | None) -> None:
                 example.status = "skipped"
                 continue
             try:
-                example.actual = _exec_block(example.code_fence.code, namespace)
+                example.actual = tidy_python(
+                    _exec_block(example.code_fence.code, namespace)
+                )
                 example.status = "ok"  # provisional; compared below
             except BaseException:  # noqa: BLE001 -- a failing snippet is a finding
                 example.error = traceback.format_exc(limit=3)
@@ -397,6 +399,22 @@ _MATLAB_WARNING = re.compile(r"\[Warning:.*?\]", re.S)
 def tidy_matlab(text: str) -> str:
     text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
     return _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+
+
+# Solver chatter that is not the example's output: Gurobi's start-up banner --
+# which names the machine's licence -- and the LP files optlang writes to a
+# temporary path that changes every run. Neither belongs in a documentation page,
+# and the licence line must never be written into one.
+_SOLVER_NOISE = re.compile(
+    r"^(Set parameter .*|Academic license.*|Restricted license.*|"
+    r"Read LP format model from file .*|Reading time = .*|"
+    r": \d+ rows, \d+ columns, \d+ nonzeros)$"
+)
+
+
+def tidy_python(text: str) -> str:
+    keep = [line for line in text.split(chr(10)) if not _SOLVER_NOISE.match(line.strip())]
+    return chr(10).join(keep)
 
 
 def collect_matlab(
