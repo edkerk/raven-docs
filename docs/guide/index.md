@@ -16,6 +16,13 @@ reconstruction protocol and the legacy tutorials.
     the cobrapy documentation. [MATLAB vs Python](../differences.md) lists every
     such function.
 
+!!! info "Executed examples"
+    Every snippet on these pages is run on each commit and checked against the
+    output shown beneath it, in both languages. The one exception is
+    [10. Context-specific models](init.md), whose steps take hours on Human-GEM:
+    that page says so at the top and quotes the wall-clock of the run its numbers
+    came from.
+
 ## Example data
 
 | File | What it is |
