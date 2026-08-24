@@ -12,8 +12,9 @@ ships, in both toolboxes.
 
 !!! warning "The outputs on this page were produced by hand, not by the build"
     Every other page in this guide is re-executed on every commit. This one is
-    not: preparing Human-GEM took **113 minutes** and produced a **159 MB**
-    artefact, which no documentation build should attempt. The numbers below come
+    not: preparing Human-GEM took **113 minutes** in MATLAB and **126 minutes**
+    in Python, the MATLAB run producing a **159 MB** artefact — which no
+    documentation build should attempt. The numbers below come
     from one real run — Human-GEM `main`, RAVEN `develop3`, Gurobi 13.0.2 — and
     are quoted with their wall-clock so you can plan around them.
 
@@ -103,9 +104,14 @@ reused for every sample.
     prep = prep_init_model(model, tasks, ext_comp="e")
     ```
 
+    ```text title="Output — 126 minutes"
+    load 115s
+    prep_init_model 7552s
+    ```
+
     Reading Human-GEM from SBML alone takes about **two minutes**, and the
-    preparation is in the same hours-long class as MATLAB's. Two things worth
-    knowing before starting it:
+    preparation itself **126 minutes** — the same order as MATLAB's 113, on the
+    same machine and solver. Two things worth knowing before starting it:
 
     - `prep_init_model` runs cobrapy's FVA, which spawns worker processes. Where
       that is not permitted — a locked-down Windows machine, some CI runners — it
