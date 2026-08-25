@@ -44,9 +44,18 @@ Page-level control, written as HTML comments in the markdown:
     or ``RAVEN_DOCS_GUROBI=1``, which CI sets when a licence is configured) and is
     skipped everywhere else.
 
+``<!-- run-examples: tabs-differ -->``
+    anywhere in the page -- the cross-tab check below is not applied to it,
+    because the two tabs genuinely print different things.
+
 An expected-output block consisting of a single ``...`` matches anything, and
 ``...`` inside a block matches any run of characters -- the same convention as
 doctest's ELLIPSIS. Use it for timings, paths and long tables.
+
+When both languages run, the tabs of each section are compared: a value printed
+under the same label with the opposite sign in the other tab is reported. That is
+the one thing the per-block check cannot see, since a block that runs cleanly and
+prints a wrong number still matches the wrong number written beneath it.
 """
 
 from __future__ import annotations
@@ -130,6 +139,8 @@ class Example:
     page: Path
     number: int
     code_fence: Fence
+    section: str = ""
+    section_index: int = 0
     output_fence: Fence | None = None
     skip: bool = False
     actual: str | None = None
@@ -211,10 +222,28 @@ def collect_examples(page: Path, language: str = "python") -> PageResult:
         result.skipped_page = True
         return result
 
+    headings = [
+        (i, line.lstrip("#").strip())
+        for i, line in enumerate(lines)
+        if line.startswith("#")
+    ]
+
+    def section_of(line_no: int) -> str:
+        title = ""
+        for start, text in headings:
+            if start < line_no:
+                title = text
+            else:
+                break
+        return title
+
+    seen_per_section: dict[str, int] = {}
     fences = scan_fences(lines)
     for index, fence in enumerate(fences):
         if fence.language != language:
             continue
+        section = section_of(fence.start)
+        seen_per_section[section] = seen_per_section.get(section, 0) + 1
         output = None
         if index + 1 < len(fences):
             nxt = fences[index + 1]
@@ -228,6 +257,8 @@ def collect_examples(page: Path, language: str = "python") -> PageResult:
                 code_fence=fence,
                 output_fence=output,
                 skip=_block_is_skipped(lines, fence),
+                section=section,
+                section_index=seen_per_section[section],
             )
         )
     return result
@@ -530,6 +561,83 @@ def compare(result: PageResult) -> None:
 
 
 # --------------------------------------------------------------------------
+# Cross-tab check
+# --------------------------------------------------------------------------
+
+# A labelled value: "growth:    0.0809 /h" -> ("growth", 0.0809). Comparing
+# labels rather than loose numbers is what makes this precise: the two tabs of a
+# step print the same labels by convention, while the rest of their output --
+# counts, dicts, warnings -- is free to differ.
+_LABELLED = re.compile(
+    r"^(?P<label>[A-Za-z][A-Za-z0-9 _()/-]*?)[:=]\s*"
+    r"(?P<value>[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)\b"
+)
+TABS_DIFFER = "run-examples: tabs-differ"
+
+
+def labelled_values(text: str) -> dict[str, float]:
+    """``{label: value}`` for every ``label: number`` line in the output."""
+    found: dict[str, float] = {}
+    for line in (text or "").split("\n"):
+        match = _LABELLED.match(line.strip())
+        if match:
+            found[match.group("label").strip().lower()] = float(match.group("value"))
+    return found
+
+
+def cross_check(results: list[PageResult], tolerance: float = 1e-6) -> list[str]:
+    """Report a labelled value whose sign differs between the two tabs.
+
+    The runner checks that a block still prints what the page says it prints --
+    not that the page says something true. A bug shipped that way: a MATLAB tab
+    printing ``growth: -0.0809 /h`` beside a Python tab printing ``0.0809``,
+    because the prose claimed ``solveLP`` returns a negated objective. Comparing
+    the two tabs is what a reader does by eye; this does it automatically.
+
+    Only **sign flips on the same label** are reported. Tabs legitimately print
+    different counts, orderings and warnings -- section 9.2 of the quality-control
+    page prints per-element imbalances on one side and totals on the other -- so a
+    looser comparison is noise, and noise gets switched off.
+
+    It cannot catch a page where *both* tabs are wrong in the same way: the
+    solvers page once opened an uptake in the wrong direction, and both tabs
+    agreed on a growth rate of zero. Only reading the page catches that.
+    """
+    by_page: dict[Path, dict[str, dict[tuple[str, int], Example]]] = {}
+    for result in results:
+        if result.skipped_page:
+            continue
+        for example in result.examples:
+            if example.status != "ok" or example.actual is None:
+                continue
+            key = (example.section, example.section_index)
+            by_page.setdefault(result.page, {}).setdefault(result.language, {})[key] = example
+
+    findings: list[str] = []
+    for page, languages in by_page.items():
+        if TABS_DIFFER in page.read_text(encoding="utf-8"):
+            continue
+        python, matlab = languages.get("python", {}), languages.get("matlab", {})
+        for key, py_example in python.items():
+            ml_example = matlab.get(key)
+            if ml_example is None:
+                continue
+            py_values = labelled_values(py_example.actual)
+            ml_values = labelled_values(ml_example.actual)
+            for label, value in py_values.items():
+                other = ml_values.get(label)
+                if other is None or abs(value) <= tolerance:
+                    continue
+                scale = tolerance * max(1.0, abs(value))
+                if abs(value - other) > scale and abs(value + other) <= scale:
+                    findings.append(
+                        f"{rel(page)}: section {key[0]!r} prints {label!r} as "
+                        f"{value:g} in the Python tab and {other:g} in the MATLAB tab"
+                    )
+    return findings
+
+
+# --------------------------------------------------------------------------
 # --update
 # --------------------------------------------------------------------------
 
@@ -768,6 +876,17 @@ def main(argv: list[str] | None = None) -> int:
     total = sum(len(r.examples) for r in results)
     print(f"run_examples: {total} example(s) in {len(pages)} page(s), {'+'.join(languages)}")
     failures = report(results)
+
+    if len(languages) > 1:
+        disagreements = cross_check(results)
+        for finding in disagreements:
+            print(f"  TABS  {finding}")
+        if disagreements:
+            print()
+            print(f"run_examples: {len(disagreements)} sign flip(s) between the "
+                  f"MATLAB and Python tabs. Fix the page, or mark it "
+                  f"<!-- {TABS_DIFFER} --> if the two really do differ.")
+            failures += len(disagreements)
     if failures:
         print(f"\nrun_examples: {failures} failing example(s).")
         print("Fix the snippet, or re-generate the output blocks with:")
