@@ -347,6 +347,29 @@ warning('off', 'backtrace');
 if ~isempty(getenv('GUROBI_HOME'))
     addpath(fullfile(getenv('GUROBI_HOME'), 'matlab'));
 end
+% RAVEN keeps the solver and the progress backend as MATLAB preferences, which
+% outlive this process -- so remember whatever the machine had and put it back
+% at the end. Without this, running the harness locally silently rewrites the
+% reader's own RAVEN settings.
+ravendocs_keys = {'solver', 'progressBar'};
+ravendocs_prefs = struct('name', {}, 'value', {}, 'had', {});
+for ravendocs_k = 1:numel(ravendocs_keys)
+    ravendocs_key = ravendocs_keys{ravendocs_k};
+    ravendocs_had = ispref('RAVEN', ravendocs_key);
+    ravendocs_val = [];
+    if ravendocs_had
+        ravendocs_val = getpref('RAVEN', ravendocs_key);
+    end
+    ravendocs_prefs(end + 1) = struct( ...
+        'name', ravendocs_key, 'value', {ravendocs_val}, 'had', ravendocs_had); %#ok<AGROW>
+end
+% Progress bars redraw with carriage returns and pick their milestones from the
+% terminal width, so the captured text would differ from machine to machine.
+try
+    setRavenProgress('none');
+catch
+    % older RAVEN: no progress reporting to silence
+end
 ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
 ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
 addpath(genpath('@RAVEN@'));
@@ -377,6 +400,14 @@ for ravendocs_p = 1:numel(ravendocs_pages)
         if ~isempty(ravendocs_entry.error)
             break   % later blocks depend on this one
         end
+    end
+end
+for ravendocs_k = 1:numel(ravendocs_prefs)
+    if ravendocs_prefs(ravendocs_k).had
+        setpref('RAVEN', ravendocs_prefs(ravendocs_k).name, ...
+            ravendocs_prefs(ravendocs_k).value);
+    elseif ispref('RAVEN', ravendocs_prefs(ravendocs_k).name)
+        rmpref('RAVEN', ravendocs_prefs(ravendocs_k).name);
     end
 end
 ravendocs_fid = fopen(fullfile(ravendocs_harness, 'results.json'), 'w');
