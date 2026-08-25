@@ -123,24 +123,83 @@ Then a **mapping table**: MATLAB function name (left) ↔ Python function name
 | `solveLP` | `solve_lp` |
 | … | … (cobrapy) :material-link-variant: |
 
-### 4.4 Protocols
+### 4.4 Guides
 
-A curated, growing collection of worked protocols. Each is available in **both
-MATLAB and Python**, and **every code block has two tabs** (MATLAB / Python) so
-the reader can switch language quickly.
+Three sets of worked material, kept distinct because they serve different
+readers. `docs/protocol/index.md` is the landing page and says which is which.
 
-- **Default tab: MATLAB.** Tabs are **persistent/linked** (Material linked
-  content tabs), so selecting a language applies across the whole page and is
-  remembered site-wide — effectively the "open all MATLAB / all Python" switch.
+#### 4.4.1 User guide (`docs/guide/`)
 
-Protocols to include:
+Short, task-focused pages modelled on the cobrapy documentation: **one job per
+page**, three to eight functions, numbered so they can be referred to. Both
+languages live on **one page** in linked MATLAB/Python tabs — the prose is
+identical, and side by side a reader sees where raven-toolbox has no counterpart
+because cobrapy already covers it. Two parallel trees would double the
+maintenance and drift.
 
-- **GEM reconstruction** — homology-based reconstruction of a model for
-  *Hansenula polymorpha* (`hanpo-GEM`).
-- **GEM extraction** — from
-  <https://sysbiochalmers.github.io/Human-GEM-guide/gem_extraction/>.
-- **GEM comparison** — from
-  <https://sysbiochalmers.github.io/Human-GEM-guide/gem_comparison/>.
+The first wave of 13 pages is written: getting started, model structure, I/O,
+FBA, media and conditions, solvers, building, editing, quality control,
+tINIT/ftINIT, deletions, tasks, gap-filling. Planned next: flux variability,
+sampling, combining and simplifying, homology and KEGG reconstruction,
+comparison, biomass, annotation, localization, table-driven curation.
+
+Conventions:
+
+- **Page anatomy.** Title and one-paragraph statement of the task; a
+  "Functions on this page" table (MATLAB | Python | note) linking into the API
+  reference; setup; two to five numbered steps, each with a tabbed code block and
+  its real output; "What can go wrong"; "See also".
+- **cobrapy is marked, three ways** — a badge in the function table linking to
+  cobrapy's docs, an explicit import in the snippet
+  (`from cobra.io import read_sbml_model`), and a line of prose wherever the
+  MATLAB tab would make a cobrapy call look like RAVEN's. A reader who thinks
+  `get_by_id` is raven-toolbox's searches the wrong reference.
+- **Never fake a pairing.** Where nothing equivalent exists, the tab says so.
+  `scripts/check_names.py` fails the build on an invented name.
+- **Differences are the content.** Where the two toolboxes genuinely disagree —
+  `getExchangeRxns` counting 273 exchanges where `model.exchanges` counts 270,
+  `fillGaps` being a MILP where `connect_blocked_reactions` is an LP — say so on
+  the page.
+
+#### 4.4.2 Protocols
+
+Published pipelines followed end to end. Currently the homology-based
+reconstruction of *H. polymorpha* (`hanpo-GEM`), MATLAB only.
+
+#### 4.4.3 Legacy tutorials
+
+See §4.5.
+
+#### 4.4.4 Executed examples
+
+Every snippet in the user guide is run on each commit and compared with the
+output printed beneath it, in **both** languages (`scripts/run_examples.py`,
+`.github/workflows/examples.yml`).
+
+- Python runs in-process; MATLAB runs one session per page, driven by
+  `matlab-actions/run-command` because that is what licenses MATLAB on a
+  GitHub-hosted runner.
+- **GLPK is the documented default**, since it ships with both toolboxes. Blocks
+  needing a MILP carry `<!-- run-examples: needs-gurobi -->` and run where a
+  Gurobi WLS licence is configured (`GUROBI_WLS*` secrets), skipped elsewhere.
+- `<!-- run-examples: skip -->` and `skip-file` opt out, and the page states why
+  — a missing toolbox, an hour-long preparation, a KEGG download.
+- Output is normalised before comparison: MATLAB warnings are flattened (the
+  runner's terminal is narrower than a developer's), and solver chatter is
+  stripped — Gurobi's banner names the machine's licence.
+- **The tabs are compared to each other.** A value printed under the same label
+  with the opposite sign in the other tab is reported. This is the one thing the
+  per-block check cannot see: a snippet that runs cleanly and prints a wrong
+  number still matches the wrong number written beneath it, which is how
+  `growth: -0.0809 /h` once shipped beside `0.0809`.
+- **What none of it catches:** a page where both tabs are wrong the same way. The
+  solvers page once opened an uptake in the wrong direction and both tabs agreed
+  on zero growth. Only reading catches that.
+
+Data lives in `docs/data/` with provenance in its README: the two small yeast
+models from `RAVEN/tutorial`, yeast-GEM v9.1.0 pinned in both formats, RAVEN's
+starter model, a condition file and a task list. Pages needing Human-GEM clone it
+rather than vendoring 43 MB.
 
 ### 4.5 Legacy tutorials
 
@@ -201,6 +260,15 @@ into the relevant section above.)*
   MATLAB/Python switch in the hero. Palette **navy** (`#16335C` hero /
   `#2E6FB8` accent). Logo: the **RAVEN raven silhouette only** (no wordmark),
   white on the navy header/hero; navy version as favicon.
+- **User guide:** a cobrapy-style set of short task pages, both languages on one
+  page in linked tabs, replacing the earlier plan of protocol-only content. 13
+  pages written; the numbering is stable and pages are appended, not renumbered.
+- **Examples are executed in CI, in both languages**, and the two tabs are
+  compared to each other. GLPK is the documented default; Gurobi-only examples
+  are marked and skipped where no licence is configured.
+- **The ftINIT page is a full Human-GEM walkthrough but is not re-executed** by
+  the build: preparation takes ~2 hours and 159 MB. It states the versions its
+  numbers came from.
 - **Versioning:** versioned per release via Read the Docs' native version
   management (tag `raven-docs` releases and activate them in the RTD project;
   RTD shows the version selector). Not mike/gh-pages.
