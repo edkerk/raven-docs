@@ -347,9 +347,35 @@ warning('off', 'backtrace');
 if ~isempty(getenv('GUROBI_HOME'))
     addpath(fullfile(getenv('GUROBI_HOME'), 'matlab'));
 end
+% RAVEN keeps the solver and the progress backend as MATLAB preferences, which
+% outlive this process -- so remember whatever the machine had and put it back
+% at the end. Without this, running the harness locally silently rewrites the
+% reader's own RAVEN settings.
+ravendocs_keys = {'solver', 'progressBar'};
+ravendocs_prefs = struct('name', {}, 'value', {}, 'had', {});
+for ravendocs_k = 1:numel(ravendocs_keys)
+    ravendocs_key = ravendocs_keys{ravendocs_k};
+    ravendocs_had = ispref('RAVEN', ravendocs_key);
+    ravendocs_val = [];
+    if ravendocs_had
+        ravendocs_val = getpref('RAVEN', ravendocs_key);
+    end
+    ravendocs_prefs(end + 1) = struct( ...
+        'name', ravendocs_key, 'value', {ravendocs_val}, 'had', ravendocs_had); %#ok<AGROW>
+end
 ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
 ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
 addpath(genpath('@RAVEN@'));
+% Progress bars redraw with carriage returns and pick their milestones from the
+% terminal width, so the captured text would differ from machine to machine.
+% This has to come after the addpath above: on a machine where RAVEN is not
+% already on the saved path -- a CI runner, say -- setRavenProgress does not
+% exist yet, and the progress lines end up in the documented output.
+try
+    setRavenProgress('none');
+catch ravendocs_err
+    fprintf(2, 'could not silence progress reporting: %s\\n', ravendocs_err.message);
+end
 for ravendocs_p = 1:numel(ravendocs_pages)
     ravendocs_dir = fullfile(ravendocs_harness, ravendocs_pages(ravendocs_p).name);
     ravendocs_blocks = dir(fullfile(ravendocs_dir, 'block_*.m'));
@@ -377,6 +403,14 @@ for ravendocs_p = 1:numel(ravendocs_pages)
         if ~isempty(ravendocs_entry.error)
             break   % later blocks depend on this one
         end
+    end
+end
+for ravendocs_k = 1:numel(ravendocs_prefs)
+    if ravendocs_prefs(ravendocs_k).had
+        setpref('RAVEN', ravendocs_prefs(ravendocs_k).name, ...
+            ravendocs_prefs(ravendocs_k).value);
+    elseif ispref('RAVEN', ravendocs_prefs(ravendocs_k).name)
+        rmpref('RAVEN', ravendocs_prefs(ravendocs_k).name);
     end
 end
 ravendocs_fid = fopen(fullfile(ravendocs_harness, 'results.json'), 'w');
@@ -431,9 +465,21 @@ _MATLAB_WARNING = re.compile(
 )
 
 
+# Parallel Computing Toolbox chatter. Functions such as getAllowedBounds run in
+# parallel, so the first one to be called opens a pool and says so -- naming a
+# worker count that is a property of the machine, and only when no pool happens
+# to be open already. Neither belongs in a documentation page.
+_MATLAB_PARPOOL = re.compile(
+    r"^(Starting parallel pool \(parpool\).*|Connected to parallel pool.*|"
+    r"Parallel pool using the .* is shutting down\.)$"
+)
+
+
 def tidy_matlab(text: str) -> str:
     text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
-    return _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+    text = _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+    keep = [line for line in text.split(chr(10)) if not _MATLAB_PARPOOL.match(line.strip())]
+    return chr(10).join(keep)
 
 
 # Solver chatter that is not the example's output: Gurobi's start-up banner --
