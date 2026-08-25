@@ -363,16 +363,19 @@ for ravendocs_k = 1:numel(ravendocs_keys)
     ravendocs_prefs(end + 1) = struct( ...
         'name', ravendocs_key, 'value', {ravendocs_val}, 'had', ravendocs_had); %#ok<AGROW>
 end
-% Progress bars redraw with carriage returns and pick their milestones from the
-% terminal width, so the captured text would differ from machine to machine.
-try
-    setRavenProgress('none');
-catch
-    % older RAVEN: no progress reporting to silence
-end
 ravendocs_pages = dir(fullfile(ravendocs_harness, 'page_*'));
 ravendocs_out = struct('page', {}, 'block', {}, 'output', {}, 'error', {});
 addpath(genpath('@RAVEN@'));
+% Progress bars redraw with carriage returns and pick their milestones from the
+% terminal width, so the captured text would differ from machine to machine.
+% This has to come after the addpath above: on a machine where RAVEN is not
+% already on the saved path -- a CI runner, say -- setRavenProgress does not
+% exist yet, and the progress lines end up in the documented output.
+try
+    setRavenProgress('none');
+catch ravendocs_err
+    fprintf(2, 'could not silence progress reporting: %s\\n', ravendocs_err.message);
+end
 for ravendocs_p = 1:numel(ravendocs_pages)
     ravendocs_dir = fullfile(ravendocs_harness, ravendocs_pages(ravendocs_p).name);
     ravendocs_blocks = dir(fullfile(ravendocs_dir, 'block_*.m'));
