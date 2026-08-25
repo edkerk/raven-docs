@@ -53,6 +53,14 @@ the two pages can be read against each other.
 Both toolboxes take a `seed`, and you should always set one: without it a chain
 is different every run and nothing you report can be reproduced.
 
+A seed is not quite a guarantee of identical numbers, though. The Python chain
+here reproduces exactly across operating systems; the MATLAB one does not. Its
+samplers take a nullspace basis from `null`, which comes from LAPACK, so the
+same seed on Linux and on Windows explores the same *distribution* along a
+slightly different walk -- running this page on both put `FRDS2`'s sampled
+minimum at 19.0 and at 18.8. That is why the numbers below are printed to two
+decimals: the distribution is the result, the individual draws are not.
+
 === "MATLAB"
 
     ```matlab
@@ -96,15 +104,15 @@ the space the cycle occupies.
 
     ```matlab
     idx = getIndexes(model, {'FRDS2', 'biomassOUT'}, 'rxns');
-    fprintf('FRDS2  sampled %.1f to %.1f\n', ...
+    fprintf('FRDS2  sampled %.0f to %.0f\n', ...
         min(solutions(idx(1), :)), max(solutions(idx(1), :)));
-    fprintf('growth sampled %.4f to %.4f, mean %.4f\n', ...
+    fprintf('growth sampled %.2f to %.2f, mean %.2f\n', ...
         min(solutions(idx(2), :)), max(solutions(idx(2), :)), mean(solutions(idx(2), :)));
     ```
 
     ```text title="Output"
-    FRDS2  sampled 19.0 to 999.9
-    growth sampled 0.0084 to 0.0964, mean 0.0496
+    FRDS2  sampled 19 to 1000
+    growth sampled 0.01 to 0.10, mean 0.05
     ```
 
 === "Python"
@@ -112,14 +120,14 @@ the space the cycle occupies.
     ```python
     frds2 = result.samples["FRDS2"]
     growth = result.samples["biomassOUT"]
-    print(f"FRDS2  sampled {frds2.min():.1f} to {frds2.max():.1f}")
-    print(f"growth sampled {growth.min():.4f} to {growth.max():.4f}, "
-          f"mean {growth.mean():.4f}")
+    print(f"FRDS2  sampled {frds2.min():.0f} to {frds2.max():.0f}")
+    print(f"growth sampled {growth.min():.2f} to {growth.max():.2f}, "
+          f"mean {growth.mean():.2f}")
     ```
 
     ```text title="Output"
-    FRDS2  sampled 0.6 to 998.4
-    growth sampled 0.0098 to 0.0911, mean 0.0534
+    FRDS2  sampled 1 to 998
+    growth sampled 0.01 to 0.09, mean 0.05
     ```
 
 The two tabs are separate implementations with separate random number
@@ -129,7 +137,7 @@ describe the same distribution, and that agreement is the check worth making.
 `FRDS2` is sampled across nearly its whole 1000-unit range, so the loop is not
 some rare corner of the space: it is most of it, and most of the draws are spent
 there. Growth is the opposite. Its range runs from 0 to 0.1222, but the samples
-sit between roughly 0.01 and 0.09 and average about 0.05 -- near-uniform
+sit between about 0.01 and 0.1 and average about 0.05 -- near-uniform
 sampling almost never lands on a vertex, and the optimum is a corner with no
 volume around it.
 
@@ -261,7 +269,9 @@ both toolboxes screen them out with a loopless FVA first — the same test
     which is worth doing on a genome-scale model — it is the expensive part.
 
 !!! warning "What can go wrong"
-    - **No seed.** The numbers change every run. Set one, and report it.
+    - **No seed.** The numbers change every run. Set one, and report it -- and do
+      not expect a seed alone to reproduce a MATLAB chain on another machine
+      (see 15.1). Report the distribution, not the draws.
     - **Too little thinning.** Consecutive MCMC steps are correlated; the default
       of 100 steps between recorded samples exists for that reason. Lowering it
       buys speed and costs independence.
