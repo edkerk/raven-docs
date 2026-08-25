@@ -235,7 +235,7 @@ first thing to re-check, and the cheapest.
     from raven_toolbox.tasks import check_tasks
 
     report = check_tasks(context, tasks)
-    print(sum(1 for result in report if result.ok), "of", len(report), "tasks pass")
+    print(sum(1 for result in report if result.passed), "of", len(report), "tasks pass")
     ```
 
 Then compare the result against the template and against the other samples:

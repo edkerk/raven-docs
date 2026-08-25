@@ -18,11 +18,16 @@ read what it gives back.
 `smallYeast.yml` from [`docs/data/`](../data/README.md), with glucose and oxygen
 opened so there is something to solve.
 
+In this model the uptake reactions are written as `=> metabolite` and shipped
+shut at `[0 0]`, so uptake is a **positive** flux and opening one means raising
+its *upper* bound. Reverse that and you get a model that solves, reports success,
+and grows at exactly zero.
+
 === "MATLAB"
 
     ```matlab
     model = readYAMLmodel('smallYeast.yml');
-    model = setParam(model, 'lb', {'glcIN', 'o2IN'}, [-1 -1000]);
+    model = setParam(model, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
     ```
 
 === "Python"
@@ -31,8 +36,8 @@ opened so there is something to solve.
     from raven_toolbox.io import read_yaml_model
 
     model = read_yaml_model("smallYeast.yml")
-    model.reactions.get_by_id("glcIN").lower_bound = -1.0
-    model.reactions.get_by_id("o2IN").lower_bound = -1000.0
+    model.reactions.get_by_id("glcIN").upper_bound = 1.0
+    model.reactions.get_by_id("o2IN").upper_bound = 1000.0
     ```
 
 ## 6.1 Which solver is in use
@@ -118,7 +123,7 @@ The two solution objects carry the same information under different names.
 
     ```text title="Output"
     stat 1: Optimal solution found
-    growth -0.0000 /h
+    growth 0.1222 /h
     ```
 
 === "Python"
@@ -132,7 +137,7 @@ The two solution objects carry the same information under different names.
 
     ```text title="Output"
     status optimal
-    growth 0.0000 /h
+    growth 0.1222 /h
     ```
 
 ## 6.4 When the solve fails

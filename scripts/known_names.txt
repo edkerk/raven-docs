@@ -26,6 +26,12 @@ add_boundary
 write_sbml_model
 flux_variability_analysis
 single_gene_deletion
+single_reaction_deletion
+double_gene_deletion
+knock_out_model_genes
+moma
+next
+iter
 find_blocked_reactions
 check_mass_balance
 Metabolite                    # cobra.Metabolite, constructed in the building page
@@ -60,6 +66,7 @@ rxnGeneMat
 rxnsToAdd
 stoichCoeffs
 allowNetProduction
+allow_net_production          # connect_blocked_reactions argument
 useModelConstraints
 
 # -- variables and identifiers used in worked examples ----------------------
@@ -70,6 +77,8 @@ bmOUT
 acOUT
 glyOUT
 biomassOUT
+smallYeast                    # the example model, named in prose
+getEssential                  # checkTasks argument
 glcIN                         # smallYeast.yml, docs/data/
 ethIN
 o2IN
