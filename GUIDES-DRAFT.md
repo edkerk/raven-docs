@@ -390,7 +390,19 @@ because the prose claimed `solveLP` returns a negated objective and the runner
 faithfully recorded the negative number. `sol.f` is the objective value itself,
 identical under GLPK and Gurobi. The obvious next check is a **cross-tab
 comparison** — where both tabs print the same quantity, the numbers should agree —
-which is what a reader does by eye and nothing does automatically.
+which is what a reader does by eye and nothing did automatically.
+
+**Built.** `run_examples.py` now compares the two tabs of each section and
+reports a value printed under the same label with the opposite sign. It is
+deliberately narrow: a first version compared loose numbers and produced six
+false positives on the quality-control page, where one tab prints per-element
+imbalances and the other prints totals. A check that cries wolf gets switched
+off. `<!-- run-examples: tabs-differ -->` exempts a page whose tabs really do
+differ.
+
+It still cannot catch a page where **both** tabs are wrong the same way — the
+solvers page opened an uptake in the wrong direction and both tabs agreed on a
+growth rate of zero. Nothing but reading catches that.
 
 ## 7. Example data — copied into `docs/data/`
 
