@@ -74,6 +74,8 @@ reconstruction protocol and the legacy tutorials.
 12. [Metabolic tasks](tasks.md) — saying what a model must be able to do, and
     checking that it still can.
 13. [Gap-filling](gap-filling.md) — closing the holes a draft model has.
+14. [Flux variability](fva.md) — how much each flux can still move, and
+    which predictions the model has no choice about.
 
 **Planned** — combining and simplifying models; flux variability, sampling,
 phenotype exploration, engineering targets; biomass composition and annotation;

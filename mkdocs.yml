@@ -175,6 +175,7 @@ nav:
           - 11. Deletions and essentiality: guide/deletions.md
           - 12. Metabolic tasks: guide/tasks.md
           - 13. Gap-filling: guide/gap-filling.md
+          - 14. Flux variability: guide/fva.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md

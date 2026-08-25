@@ -25,6 +25,9 @@ read_sbml_model
 add_boundary
 write_sbml_model
 flux_variability_analysis
+loopless_solution
+fraction_of_optimum          # flux_variability_analysis argument
+runParallel                  # getAllowedBounds argument
 single_gene_deletion
 single_reaction_deletion
 double_gene_deletion
@@ -112,3 +115,4 @@ drawMap                       # plotting/ dropped in RAVEN/#614
 drawPathway                   # plotting/ dropped in RAVEN/#614
 setOmicDataToRxns             # plotting/ dropped in RAVEN/#614
 getMetaCycModelForOrganism    # external/metacyc dropped in RAVEN/#614
+add_loopless
