@@ -76,8 +76,9 @@ reconstruction protocol and the legacy tutorials.
 13. [Gap-filling](gap-filling.md) — closing the holes a draft model has.
 14. [Flux variability](fva.md) — how much each flux can still move, and
     which predictions the model has no choice about.
+15. [Random sampling](sampling.md) — the distribution behind those ranges, and
+    how to condition it on a state worth asking about.
 
-**Planned** — combining and simplifying models; flux variability, sampling,
-phenotype exploration, engineering targets; biomass composition and annotation;
-reconstruction from homology and KEGG; localization; comparison and
-table-driven curation.
+**Planned** — combining and simplifying models; phenotype exploration,
+engineering targets; biomass composition and annotation; reconstruction from
+homology and KEGG; localization; comparison and table-driven curation.
