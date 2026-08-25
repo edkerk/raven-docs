@@ -465,9 +465,21 @@ _MATLAB_WARNING = re.compile(
 )
 
 
+# Parallel Computing Toolbox chatter. Functions such as getAllowedBounds run in
+# parallel, so the first one to be called opens a pool and says so -- naming a
+# worker count that is a property of the machine, and only when no pool happens
+# to be open already. Neither belongs in a documentation page.
+_MATLAB_PARPOOL = re.compile(
+    r"^(Starting parallel pool \(parpool\).*|Connected to parallel pool.*|"
+    r"Parallel pool using the .* is shutting down\.)$"
+)
+
+
 def tidy_matlab(text: str) -> str:
     text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
-    return _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+    text = _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
+    keep = [line for line in text.split(chr(10)) if not _MATLAB_PARPOOL.match(line.strip())]
+    return chr(10).join(keep)
 
 
 # Solver chatter that is not the example's output: Gurobi's start-up banner --

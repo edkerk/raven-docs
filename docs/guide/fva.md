@@ -69,6 +69,12 @@ feasible space — the objective is free.
     53 reactions, 1 fixed, widest span 1000.0
     ```
 
+    `getAllowedBounds` solves two LPs per reaction and runs them in parallel, so
+    the first call in a session opens a parallel pool and reports how many
+    workers it got. Pass `'runParallel', false` to keep it in the one process --
+    quicker on a model this size, and the only option without the Parallel
+    Computing Toolbox.
+
 === "Python"
 
     ```python
