@@ -155,8 +155,6 @@ alternative optima rather than to describe the space.
 
 === "MATLAB"
 
-    <!-- run-examples: skip -->
-
     ```matlab
     [chrrSolutions, ~, info] = randomSampling(model, 200, 'method', 'chrr', 'seed', 1);
     fprintf('chrr: %d dimensions, MVE converged: %d, %d fixed\n', ...
@@ -169,11 +167,10 @@ alternative optima rather than to describe the space.
     ```
 
     On RAVEN before [#696](https://github.com/SysBioChalmers/RAVEN/pull/696) this
-    call fails on `smallYeast` with `sampleChebyshevCenter: LP infeasible - flux
-    polytope has empty interior`. The polytope is fine; the equality system is
-    square and rank-deficient, so the particular solution came back `NaN`. The
-    output above is from a patched RAVEN, and the example runner skips this block
-    until the fix is released.
+    call failed on `smallYeast` with `sampleChebyshevCenter: LP infeasible - flux
+    polytope has empty interior`. The polytope was fine; the equality system is
+    square and rank-deficient there, and the particular solution came back `NaN`.
+    If you see that error, update RAVEN.
 
 === "Python"
 
