@@ -116,3 +116,5 @@ drawPathway                   # plotting/ dropped in RAVEN/#614
 setOmicDataToRxns             # plotting/ dropped in RAVEN/#614
 getMetaCycModelForOrganism    # external/metacyc dropped in RAVEN/#614
 add_loopless
+randomObjective              # randomSampling 'method' value, not a function
+random_objective             # random_sampling method= value, not a function
