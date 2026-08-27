@@ -118,3 +118,6 @@ getMetaCycModelForOrganism    # external/metacyc dropped in RAVEN/#614
 add_loopless
 randomObjective              # randomSampling 'method' value, not a function
 random_objective             # random_sampling method= value, not a function
+deleteUnconstrained          # simplifyModel argument, not a function
+drop_single_metabolite_reactions  # merge_compartments argument
+deleteRxnsWithOneMet         # mergeCompartments argument

@@ -177,6 +177,7 @@ nav:
           - 13. Gap-filling: guide/gap-filling.md
           - 14. Flux variability: guide/fva.md
           - 15. Random sampling: guide/sampling.md
+          - 16. Combining and simplifying: guide/combining.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
