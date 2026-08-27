@@ -6,7 +6,7 @@ Three sets of worked material, for three different purposes.
 
 -   :material-book-open-variant: **[User guide](../guide/index.md)**
 
-    Fifteen short, task-focused pages — load a model, simulate growth, define a
+    Sixteen short, task-focused pages — load a model, simulate growth, define a
     medium, edit, check, gap-fill, extract a context-specific model. **MATLAB and
     Python side by side**, every example executed and checked on each commit.
 
@@ -42,12 +42,12 @@ Three sets of worked material, for three different purposes.
 |---|---|
 | **Foundations** | [1. Getting started](../guide/getting-started.md) · [2. Model structure and identifiers](../guide/model-structure.md) · [3. Reading and writing models](../guide/io.md) |
 | **Simulation** | [4. Simulating growth with FBA](../guide/fba.md) · [5. Growth media and conditions](../guide/media.md) · [6. Solvers and configuration](../guide/solvers.md) |
-| **Building and curating** | [7. Building a model from scratch](../guide/building.md) · [8. Editing an existing model](../guide/editing.md) · [9. Quality control](../guide/quality-control.md) |
+| **Building and curating** | [7. Building a model from scratch](../guide/building.md) · [8. Editing an existing model](../guide/editing.md) · [9. Quality control](../guide/quality-control.md) · [16. Combining and simplifying](../guide/combining.md) |
 | **Reconstruction** | [10. Context-specific models (tINIT / ftINIT)](../guide/init.md) |
 | **Analysis and repair** | [11. Deletions and essentiality](../guide/deletions.md) · [12. Metabolic tasks](../guide/tasks.md) · [13. Gap-filling](../guide/gap-filling.md) · [14. Flux variability](../guide/fva.md) · [15. Random sampling](../guide/sampling.md) |
 
-More pages are being added — combining and simplifying models, reconstruction
-from homology and KEGG, model comparison.
+More pages are being added — reconstruction from homology and KEGG, model
+comparison.
 
 ## Legacy tutorials
 

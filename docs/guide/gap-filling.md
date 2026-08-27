@@ -108,12 +108,11 @@ connectivity.
     setRavenSolver('gurobi');   % fillGaps is a MILP
     [newConnected, cannotConnect, addedRxns] = fillGaps(draft, {template}, ...
         'allowNetProduction', true, 'useModelConstraints', false);
-    fprintf('%d added, %d newly connected, %d still unconnectable\n', ...
-        numel(addedRxns), numel(newConnected), numel(cannotConnect));
+    fprintf('%d added: %s\n', numel(addedRxns), strjoin(addedRxns, ', '));
     ```
 
     ```text title="Output"
-    1 added, 11 newly connected, 23 still unconnectable
+    1 added: ADH1
     ```
 
 === "Python"
@@ -122,14 +121,20 @@ connectivity.
     from raven_toolbox.gapfilling import connect_blocked_reactions
 
     result = connect_blocked_reactions(draft, template, allow_net_production=True)
-    print(f"{len(result.added_reactions)} added, "
-          f"{len(result.newly_connected)} newly connected, "
-          f"{len(result.cannot_connect)} still unconnectable")
+    print(f"{len(result.added_reactions)} added: "
+          f"{', '.join(sorted(result.added_reactions))}")
     ```
 
     ```text title="Output"
-    1 added, 1 newly connected, 1 still unconnectable
+    1 added: ADH1
     ```
+
+    The reaction that comes back is the one that was taken out — in both
+    toolboxes. That identity is the result worth reporting. `fillGaps` also
+    returns counts of *newly connected* and *still unconnectable* reactions, and
+    those are not stable: it solves a MILP, several solutions are equally
+    optimal, and which one comes back can change with the machine or the thread
+    count. Two CI runs on identical input reported 11 and 9 newly connected.
 
     **The two are not the same algorithm.** RAVEN's `fillGaps` solves a MILP, so
     it needs Gurobi and reports `glpk is not suitable for solving MILPs`
