@@ -179,6 +179,7 @@ nav:
           - 15. Random sampling: guide/sampling.md
           - 16. Combining and simplifying: guide/combining.md
           - 17. Comparing models: guide/comparing.md
+          - 18. Reconstruction from homology: guide/homology.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md

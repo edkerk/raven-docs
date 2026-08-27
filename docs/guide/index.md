@@ -82,7 +82,9 @@ reconstruction protocol and the legacy tutorials.
     metabolite names, and taking one apart again.
 17. [Comparing models](comparing.md) — what changed between two models, and how
     much that difference costs.
+18. [Reconstruction from homology](homology.md) — BLAST a proteome against a
+    template model's genes, and what the cut-offs decide for you.
 
-**Planned** — phenotype exploration,
+**Planned** — reconstruction from KEGG; phenotype exploration,
 engineering targets; biomass composition and annotation; reconstruction from
 homology and KEGG; localization; table-driven curation.
