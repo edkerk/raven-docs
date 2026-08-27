@@ -80,7 +80,9 @@ reconstruction protocol and the legacy tutorials.
     how to condition it on a state worth asking about.
 16. [Combining and simplifying models](combining.md) — merging models on
     metabolite names, and taking one apart again.
+17. [Comparing models](comparing.md) — what changed between two models, and how
+    much that difference costs.
 
 **Planned** — phenotype exploration,
 engineering targets; biomass composition and annotation; reconstruction from
-homology and KEGG; localization; comparison and table-driven curation.
+homology and KEGG; localization; table-driven curation.
