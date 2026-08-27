@@ -121,3 +121,5 @@ random_objective             # random_sampling method= value, not a function
 deleteUnconstrained          # simplifyModel argument, not a function
 drop_single_metabolite_reactions  # merge_compartments argument
 deleteRxnsWithOneMet         # mergeCompartments argument
+nElements                    # compareRxnsGenesMetsComps struct field
+smallYeastBad                 # the deliberately broken example model, docs/data/
