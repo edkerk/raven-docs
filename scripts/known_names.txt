@@ -123,3 +123,9 @@ drop_single_metabolite_reactions  # merge_compartments argument
 deleteRxnsWithOneMet         # mergeCompartments argument
 nElements                    # compareRxnsGenesMetsComps struct field
 smallYeastBad                 # the deliberately broken example model, docs/data/
+maxE                         # getModelFromHomology argument
+minLen                       # getModelFromHomology argument
+preferredOrder               # getModelFromHomology argument
+review_identity              # get_model_from_homology argument
+min_align_len                # get_model_from_homology argument
+max_evalue                   # get_model_from_homology argument

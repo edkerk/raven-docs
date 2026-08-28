@@ -475,10 +475,21 @@ _MATLAB_PARPOOL = re.compile(
 )
 
 
+# Both toolboxes fetch third-party binaries (BLAST+, DIAMOND, hmmer) from
+# raven-data the first time a function needs one, and say so. Whether the line
+# appears depends on what the machine has cached, not on the example.
+_BINARY_DOWNLOAD = re.compile(r"^Downloading .* from raven-data.*$")
+
+
 def tidy_matlab(text: str) -> str:
     text = text.replace(chr(8), "")  # backspaces left behind by hotlink removal
     text = _MATLAB_WARNING.sub(lambda m: " ".join(m.group(0).split()), text)
-    keep = [line for line in text.split(chr(10)) if not _MATLAB_PARPOOL.match(line.strip())]
+    keep = [
+        line
+        for line in text.split(chr(10))
+        if not _MATLAB_PARPOOL.match(line.strip())
+        and not _BINARY_DOWNLOAD.match(line.strip())
+    ]
     return chr(10).join(keep)
 
 
@@ -494,7 +505,12 @@ _SOLVER_NOISE = re.compile(
 
 
 def tidy_python(text: str) -> str:
-    keep = [line for line in text.split(chr(10)) if not _SOLVER_NOISE.match(line.strip())]
+    keep = [
+        line
+        for line in text.split(chr(10))
+        if not _SOLVER_NOISE.match(line.strip())
+        and not _BINARY_DOWNLOAD.match(line.strip())
+    ]
     return chr(10).join(keep)
 
 

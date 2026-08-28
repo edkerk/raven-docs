@@ -49,3 +49,36 @@ python scripts/run_examples.py --update
 
 Do not edit the files in place: any change here silently makes the guide's
 numbers unreproducible for a reader who takes the model from RAVEN instead.
+
+## Proteomes, for the homology page
+
+`hanpo.faa` and `sce-template.faa` back [18. Reconstruction from
+homology](../guide/homology.md).
+
+| file | what it is |
+|---|---|
+| `hanpo.faa` | the *Hansenula polymorpha* proteome, 5177 sequences, copied unchanged from the `hanpo-GEM` submodule (`data/genomes/hanpo.faa`) |
+| `sce-template.faa` | 61 *S. cerevisiae* sequences — exactly the genes of `smallYeast.yml` — extracted from the same submodule's `data/genomes/sce.faa` |
+
+The template proteome is cut down to the model's own genes on purpose: BLAST
+against 61 subjects instead of a whole proteome is what keeps the page's example
+to about fifteen seconds per language, and a template protein that no reaction
+uses could not have contributed to the draft anyway.
+
+Regenerate `sce-template.faa` after a change to `smallYeast.yml`:
+
+```bash
+python - <<'EOF'
+from pathlib import Path
+from raven_toolbox.io import read_yaml_model
+ids = {g.id for g in read_yaml_model("docs/data/smallYeast.yml").genes}
+out, keep = [], False
+for line in Path("hanpo-GEM/data/genomes/sce.faa").read_text().splitlines():
+    if line.startswith(">"):
+        keep = line[1:].strip().split()[0] in ids
+    if keep:
+        out.append(line)
+Path("docs/data/sce-template.faa").write_text("\n".join(out) + "\n")
+EOF
+python scripts/run_examples.py docs/guide/homology.md --update
+```
