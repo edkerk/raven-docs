@@ -71,6 +71,9 @@ stoichCoeffs
 allowNetProduction
 allow_net_production          # connect_blocked_reactions argument
 useModelConstraints
+maxTime                        # predictLocalization argument
+time_limit                     # predict_localization / run_init / run_ftinit argument
+flux_eps                       # fseof argument
 
 # -- variables and identifiers used in worked examples ----------------------
 iAL1006                       # model name in legacy tutorial 1

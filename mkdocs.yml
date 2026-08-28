@@ -157,6 +157,7 @@ nav:
       - Only in RAVEN: matlab-only.md
       - Same function, different answer: behaviour.md
       - What identical results means: parity.md
+      - Tuned parameter defaults: tuned-parameters.md
       - Changes from RAVEN 2: raven2-changes.md
   - Guides:
       - Overview: protocol/index.md

@@ -42,6 +42,12 @@ functions answer the same question differently.
     Which functions can match exactly, which can only be compared for overlap,
     and which are statistical by nature.
 
+-   :material-tune-variant: **[Tuned parameter defaults](tuned-parameters.md)**
+
+    Which non-obvious defaults have actually been measured, where the two
+    sides still disagree, and a couple of assumptions that turned out wrong on
+    inspection.
+
 </div>
 
 ## Naming
