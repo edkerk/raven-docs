@@ -477,8 +477,11 @@ _MATLAB_PARPOOL = re.compile(
 
 # Both toolboxes fetch third-party binaries (BLAST+, DIAMOND, hmmer) from
 # raven-data the first time a function needs one, and say so. Whether the line
-# appears depends on what the machine has cached, not on the example.
-_BINARY_DOWNLOAD = re.compile(r"^Downloading .* from raven-data.*$")
+# appears -- and its exact wording, which has drifted between toolbox versions
+# ("Downloading blast+ from raven-data ...", "Downloading blast-2.17.0-...zip...
+# COMPLETE") -- depends on what the machine has cached and which binary-fetch
+# code is current, not on the example. Match on the leading word alone.
+_BINARY_DOWNLOAD = re.compile(r"^Downloading .*$")
 
 
 def tidy_matlab(text: str) -> str:
