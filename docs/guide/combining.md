@@ -215,18 +215,13 @@ localisation, or a comparison against a model that has none.
     ```
 
     ```text title="Output"
-    2 compartments -> 1, 52 -> 45 mets, 53 -> 42 rxns
-    11 transport reactions dropped
+    2 compartments -> 1, 52 -> 45 mets, 53 -> 50 rxns
+    3 transport reactions dropped
     ```
 
 Seven metabolites in this model exist in both compartments, so 52 collapse to
-45; the eleven reactions that merely moved something across the mitochondrial
+45; the three reactions that merely moved something across the mitochondrial
 membrane become `A -> A`, carry no information, and are dropped.
-
-!!! danger "The two tabs disagree, and the Python one is wrong today"
-    RAVEN keeps 50 reactions here; raven-toolbox keeps 42. The difference is not
-    a tuning parameter — it is a bug, filed as
-    [raven-toolbox#96](https://github.com/SysBioChalmers/raven-toolbox/pull/96).
 
     A reaction that is left holding a single metabolite after merging carries no
     information and should go. But an **exchange** reaction had a single

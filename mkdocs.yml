@@ -158,7 +158,31 @@ nav:
       - Same function, different answer: behaviour.md
       - What identical results means: parity.md
       - Tuned parameter defaults: tuned-parameters.md
+      - Model file format (YAML): yaml-format.md
       - Changes from RAVEN 2: raven2-changes.md
+  - Parameter tuning:
+      - Overview: parameter-tuning/index.md
+      - Flux sampling algorithms: parameter-tuning/flux-sampling-algorithms.md
+      - Studies:
+          - Homology cut-off calibration: parameter-tuning/studies/homology-cutoff-calibration.md
+          - KEGG HMM cut-off calibration: parameter-tuning/studies/kegg-hmm-cutoff-calibration.md
+          - Sampling convergence calibration: parameter-tuning/studies/sampling-convergence-calibration.md
+          - INIT parameter calibration: parameter-tuning/studies/init-param-calibration.md
+          - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
+          - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
+          - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md
+          - predictLocalization head-to-head: parameter-tuning/studies/predictlocalization-comparison.md
+      - Benchmarks:
+          - Master index: parameter-tuning/benchmarks/index.md
+          - Flux sampling: parameter-tuning/benchmarks/sampling.md
+          - FSEOF: parameter-tuning/benchmarks/fseof.md
+          - INIT / ftINIT: parameter-tuning/benchmarks/init.md
+          - Gap-filling: parameter-tuning/benchmarks/gapfilling.md
+          - Homology-based reconstruction: parameter-tuning/benchmarks/reconstruction-homology.md
+          - KEGG-based reconstruction: parameter-tuning/benchmarks/reconstruction-kegg.md
+          - Sub-cellular localisation: parameter-tuning/benchmarks/localization.md
+          - Model manipulation: parameter-tuning/benchmarks/manipulation.md
+          - Tasks: parameter-tuning/benchmarks/tasks.md
   - Guides:
       - Overview: protocol/index.md
       - User guide:

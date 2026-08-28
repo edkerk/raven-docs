@@ -88,5 +88,5 @@ reconstruction protocol and the legacy tutorials.
     and what such a draft is missing.
 
 **Planned** — phenotype exploration,
-engineering targets; biomass composition and annotation; reconstruction from
-homology and KEGG; localization; table-driven curation.
+engineering targets; biomass composition and annotation; omics integration;
+localization; FSEOF and reporter metabolites; table-driven curation.
