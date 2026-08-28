@@ -96,9 +96,9 @@ e_coli_core 95 rxns, synthetic toy models. Binaries: BLAST 2.17.0.
 
 | Function | Parameter | Python | MATLAB | Action |
 |---|---|---|---|---|
-| `run_blast` | `evalue` | `1e-4` | `1e-4` | ✓ implemented — unified with MATLAB |
+| `run_blast` | `evalue` | `1e-4` | `1e-4` | ✓ implemented — matches `getBlast`'s explicit `-evalue 10e-5` |
 | `run_blast` | `threads` | `max(1, cpu_count-1)` | all cores | ✓ implemented (BLAST deterministic across threads; ~1.9–4× speedup measured) |
-| `run_diamond` | `evalue` | `1e-4` | `1e-4` | ✓ implemented — unified with MATLAB |
+| `run_diamond` | `evalue` | `1e-3` | `1e-3` (implicit) | ✓ keep — matches DIAMOND's own default, which is what `getDiamond` inherits by passing no `-evalue` flag; deliberately *not* unified with `run_blast` |
 | `run_diamond` | `threads` | `max(1, cpu_count-1)` | all cores | ✓ implemented (same change, applied) |
 | `run_diamond` | `sensitivity` | `'--more-sensitive'` | `'--more-sensitive'` | ✓ keep |
 | `get_model_from_homology` | `bidirectional` | `True` | `true` | ✓ keep |
@@ -195,7 +195,7 @@ change, or explains why it stays split.
 
 | Parameter | Python now | MATLAB now | Unify at | Side that changes | Confidence | Evidence |
 |---|---|---|---|---|---|---|
-| `run_blast`/`run_diamond` `evalue` | `1e-4` ✓ done | `1e-4` | **`1e-4`** | ~~Python~~ done | High | No downstream effect measured either way (`get_model_from_homology`'s `1e-30` dominates); matches `develop`'s independent PR #91 call |
+| `run_blast.evalue` | `1e-4` ✓ done | `1e-4` | **`1e-4`** | ~~Python~~ done | High | No downstream effect measured either way (`get_model_from_homology`'s `1e-30` dominates); matches `develop`'s independent PR #91 call |
 | `get_model_from_homology.min_align_len` | `100` ✓ done | `200` | **`100`** | Python done; MATLAB pending | High | Directly measured — [homology cut-off calibration study](../studies/homology-cutoff-calibration.md) |
 | `assign_kos.cutoff` | `1e-30` | `1e-50` | **`1e-30`** | MATLAB | High | Directly measured — [KEGG HMM cut-off calibration study](../studies/kegg-hmm-cutoff-calibration.md) |
 | `assign_kos.min_score_ratio_g` | `0.9` | `0.8` | **`0.9`** | MATLAB | High | Directly measured, same study |
@@ -243,6 +243,7 @@ measured on, and the only one a `time_limit` value does anything on today.
 | `random_sampling.replace_max_bound` | `False` | `True` | Applying MATLAB's `True` inside cobrapy/optlang makes the sampler unbounded on standard RAVEN-convention models (measured — see `sampling.md`). Whether MATLAB's own solver path handles `True` safely wasn't tested here; either way this is a solver-stack constraint, not a preference. |
 | `random_sampling.loopless_good_reactions` | `True` (loopless FVA) | heuristic (exclude FVA ≥ 999) | Different techniques, not a value. Python's is more correct; MATLAB's heuristic over-excludes reactions that legitimately reach capacity. Porting the proper technique to MATLAB is a bigger project than a default flip. |
 | `merge_models.match_by` | `'name'` | `'metNames'` | Same semantic field (metabolite display name), different field name — an artifact of cobrapy vs COBRA Toolbox schemas, not a tunable behaviour. |
+| `run_diamond.evalue` | `1e-3` | `1e-3` (implicit) | Not actually different — both already agree at `1e-3`, matching DIAMOND's own default. `getDiamond` passes no `-evalue` flag at all, so it inherits DIAMOND's default rather than following `getBlast`'s explicit `1e-4`. `run_blast` and `run_diamond` deliberately stay unpaired: each tracks its own aligner's MATLAB call, not each other. |
 | `predict_localization.time_limit` | `None` | `maxTime=15` (minutes) | Confirmed by reading `core/predictLocalization.m` directly (2026-08-28): MATLAB solves the problem with simulated annealing (`maxTime` is its search budget — more time generally improves the heuristic answer, no optimality guarantee either way), while Python solves a deterministic MILP (`time_limit` is a solver cutoff — returns a proven-bounded incumbent). The same number plays a structurally different role in each; not a value to unify. Previously listed as a tentative unify-at-`None` candidate, which assumed both sides were solving the same kind of problem. |
 | `predict_localization.default_compartment` | `'c'` | required arg (no default) | MATLAB has no default at all; Python's `'c'` is a convenience default for the near-universal correct choice, produces no output difference (a MATLAB user must already supply `'c'` explicitly in the common case). Optional, low-priority: MATLAB could add the same default. |
 | `run_blast`/`run_diamond`/`run_hmmsearch`/`build_ko_hmm` `threads` | `max(1, cpu_count-1)` | all cores | Confirmed deterministic regardless of thread count — doesn't affect output, so this is a resource-policy choice (leave one core free), not a correctness-relevant value. Both are dynamic ("use available cores") in spirit. |
@@ -255,7 +256,8 @@ measured on, and the only one a `time_limit` value does anything on today.
 |---|---|---|
 | ~~`get_init_model` `allow_excretion` default: `True` → `False`~~ | `src/raven_toolbox/init/build.py` | **Done** 2026-06-20 |
 | ~~`get_model_from_homology` `min_align_len` default: `200` → `100`~~ | `src/raven_toolbox/reconstruction/homology/homology.py` | **Done** 2026-08-26 |
-| ~~`run_blast`/`run_diamond` `evalue` default: `1e-5` → `1e-4`~~ | `src/raven_toolbox/reconstruction/homology/blast.py` | **Done** 2026-08-26 |
+| ~~`run_blast` `evalue` default: `1e-5` → `1e-4`~~ | `src/raven_toolbox/reconstruction/homology/blast.py` | **Done** 2026-08-26 |
+| ~~`run_diamond` `evalue`: correct to `1e-3`, matching DIAMOND's own default (not `1e-4`, which was a mistaken generalisation from `run_blast`)~~ | `src/raven_toolbox/reconstruction/homology/blast.py` | **Done** on `develop`, reconciled here 2026-08-29 |
 | ~~Docstring: `time_limit` note in `predict_localization`~~ | `src/raven_toolbox/localization/predict.py` | **Done** 2026-06-20, `f06faa4` |
 | ~~Docstring: `mip_gap`/`time_limit` note in INIT functions~~ | `src/raven_toolbox/init/init.py`, `ftinit.py` | **Done** 2026-08-26 — updated with measured genome-scale values instead of untested MATLAB ones |
 

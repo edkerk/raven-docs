@@ -130,9 +130,15 @@ retired" section for the full account.
 
 **Done on this branch (2026-08-26):** `min_align_len` in
 [`homology.py`](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/src/raven_toolbox/reconstruction/homology/homology.py)
-changed `200` → `100`, matching the measured optimum. `run_blast`/`run_diamond`
-`evalue` also changed `1e-5` → `1e-4` in the same pass (unifying with MATLAB;
-no measured downstream effect either way — see the "Cross-toolbox parity
+changed `200` → `100`, matching the measured optimum. `run_blast`'s `evalue`
+also changed `1e-5` → `1e-4` in the same pass, matching MATLAB's `getBlast`
+(which hardcodes `-evalue 10e-5`, i.e. `1e-4`); no measured downstream effect
+either way. **`run_diamond`'s `evalue` was corrected separately** (`develop`,
+after this branch forked) to `1e-3`, not `1e-4` — MATLAB's `getDiamond` passes
+no `-evalue` flag at all, so it inherits DIAMOND's own native default (`1e-3`),
+not BLAST's. The two aligners are deliberately *not* unified: `run_blast` tracks
+`getBlast`'s explicit value, `run_diamond` tracks `getDiamond`'s implicit one —
+see the "Cross-toolbox parity
 decisions" section of [index.md](index.md)).
 
 **Still `develop`-only, not ported here:** `min_align_len=200` remains MATLAB

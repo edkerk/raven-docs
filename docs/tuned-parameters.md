@@ -113,7 +113,8 @@ RAVEN MATLAB: `getModelFromHomology`, `getBlast`, `getDiamond`. raven-toolbox:
 
 | Parameter | Default | How determined |
 |---|---|---|
-| `evalue` (both aligners) | `1e-4` | Matches the MATLAB value; measured to have no effect on the final model either way, since `get_model_from_homology`'s much stricter filters dominate downstream. |
+| `evalue` (`run_blast`) | `1e-4` | Matches MATLAB's `getBlast` (hardcodes `-evalue 10e-5`); measured to have no effect on the final model either way, since `get_model_from_homology`'s much stricter filters dominate downstream. |
+| `evalue` (`run_diamond`) | `1e-3` | Matches MATLAB's `getDiamond`, which passes no `-evalue` flag and so inherits DIAMOND's own default. Deliberately *not* the same value as `run_blast` — each aligner tracks its own MATLAB call, not the other Python aligner. |
 | `threads` | `max(1, cpu_count-1)` (Python); dynamic "all cores" (MATLAB) | Measured deterministic across thread counts — pure performance change, ~1.9–4× speedup. Not treated as a "value" that needs unifying, since both sides already mean "use the available cores". |
 | `max_evalue` | `1e-30` | Measured **inert** from `1e-4` to `1e-50` — identity and alignment-length have already excluded whatever a looser e-value would admit. |
 | `min_align_len` | `100` on the Python side; MATLAB still uses `200` | Measured against independent KEGG and OMA ortholog references across a 4-organism relatedness series: recovers 3–4 points of recall over `200` for ≤0.6 points of precision cost. A MATLAB back-port is proposed but not yet done. |
@@ -168,6 +169,8 @@ a heuristic's search budget than in a solver's optimality gap.
 
 **Full detail:** [yeast-GEM localisation benchmark](parameter-tuning/studies/yeast-localization-benchmark.md)
 (the primary measurement, real yeast-GEM data with a predictor-noise sweep) ·
+[predictLocalization head-to-head](parameter-tuning/studies/predictlocalization-comparison.md)
+(MATLAB vs Python, same inputs — accuracy, determinism, runtime) ·
 [localization.md](parameter-tuning/benchmarks/localization.md)
 (quick-reference benchmark notes)
 

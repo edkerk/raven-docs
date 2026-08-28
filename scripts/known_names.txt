@@ -51,6 +51,8 @@ save_yaml_model               # cobra.io.save_yaml_model, named in yaml-format.m
 chrrSampler
 sampleCbModel
 mve_solver
+transportCost                 # predictLocalization's own transport-cost argument, named in predictlocalization-comparison.md
+geneScore                     # predictLocalization internal variable, named in predictlocalization-comparison.md
 
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument

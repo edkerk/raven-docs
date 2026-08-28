@@ -84,6 +84,7 @@ reasoning behind each conclusion.
 | [INIT solver benchmark](studies/init-solver-benchmark.md) | Solver-backend behaviour (Gurobi / GLPK / HiGHS) for the INIT/ftINIT MILP |
 | [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
 | [Yeast-GEM localisation benchmark](studies/yeast-localization-benchmark.md) | `time_limit`, `transport_cost` in sub-cellular localisation prediction, measured on real yeast-GEM data with a predictor-noise sweep |
+| [predictLocalization head-to-head](studies/predictlocalization-comparison.md) | `predict_localization` (deterministic MILP) vs MATLAB RAVEN's `predictLocalization` (stochastic simulated annealing) on identical inputs — accuracy, determinism, and runtime |
 
 ## Benchmarks
 

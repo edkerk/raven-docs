@@ -171,6 +171,7 @@ nav:
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
           - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md
+          - predictLocalization head-to-head: parameter-tuning/studies/predictlocalization-comparison.md
       - Benchmarks:
           - Master index: parameter-tuning/benchmarks/index.md
           - Flux sampling: parameter-tuning/benchmarks/sampling.md
