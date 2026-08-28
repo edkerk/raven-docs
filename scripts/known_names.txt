@@ -42,6 +42,15 @@ repr
 pfba
 minimal_medium
 load_workbook               # openpyxl, used by the Excel example
+objective_coefficient        # cobra.Reaction attribute, named in yaml-format.md
+save_yaml_model               # cobra.io.save_yaml_model, named in yaml-format.md
+
+# -- COBRA Toolbox (MATLAB) / cobrapy names mentioned only for comparison ---
+# Named in flux-sampling-algorithms.md to explain what raven-toolbox/RAVEN's own
+# sampler filenames were chosen to avoid clashing with -- not RAVEN functions.
+chrrSampler
+sampleCbModel
+mve_solver
 
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument
@@ -74,6 +83,20 @@ useModelConstraints
 maxTime                        # predictLocalization argument
 time_limit                     # predict_localization / run_init / run_ftinit argument
 flux_eps                       # fseof argument
+metaData                       # RAVEN YAML/model struct field, named in yaml-format.md
+givenName                      # metaData field
+familyName                     # metaData field
+sourceUrl                      # metaData field
+defaultLB                      # metaData field
+defaultUB                      # metaData field
+geckoLight                     # legacy metaData field spelling for gecko_light
+gecko_light                    # top-level YAML key, not a function
+deltaG                         # RAVEN model struct field / YAML field
+metFrom                        # RAVEN model struct field / YAML field
+rxnNotes                       # legacy RAVEN YAML reaction-notes field name
+rxnMiriams                     # RAVEN model struct field
+geneMiriams                    # RAVEN model struct field
+yaml_roundtrip_smallyeast      # raven-gecko-parity scenario name, not a function
 
 # -- tuned-parameters.md: raven-toolbox arguments named across the reference table --
 replace_max_bound              # random_sampling argument
@@ -104,6 +127,15 @@ mets_by                        # add_reactions_from_equations argument
 ignore_direction                # find_duplicate_reactions argument
 only_to_existing                # add_transport_reactions argument
 close_boundaries                # check_tasks / find_task_essential_reactions argument
+isozyme_scoring                 # score_reactions_from_genes argument
+complex_scoring                 # score_reactions_from_genes argument
+no_gene_score                   # score_reactions_from_genes argument
+ext_comp                        # classify_reactions argument
+max_stoich_diff                 # classify_reactions argument
+graph_type                      # export_model_to_sif argument
+cutOff                          # getKEGGModelForOrganism argument (MATLAB)
+minScoreRatioG                  # getKEGGModelForOrganism argument (MATLAB)
+removeBlockedRxns               # removeGenes argument (MATLAB)
 
 # -- variables and identifiers used in worked examples ----------------------
 iAL1006                       # model name in legacy tutorial 1
@@ -121,6 +153,14 @@ o2IN
 newConnected
 addedRxns
 euk90_kegg105                 # KEGG HMM library artefact
+rxn_novel                     # variable name, parameter-tuning KEGG/homology studies
+rxn_rec                       # variable name, kegg-hmm-cutoff-calibration.md
+essential_rxns                # variable name, init-param-calibration.md
+organism_gene_ko              # KEGG relational table name
+ko_reaction                   # KEGG relational table name
+gene_id                       # column name, yeast-localization-benchmark.md
+lp_method                     # solver config variable, init-solver-benchmark.md
+hybrid_interface               # optlang.hybrid_interface module, named in init-solver-benchmark.md
 
 # -- cobrapy attributes named in the guide ----------------------------------
 # Attributes, not functions, so they resolve nowhere; the guide names them when

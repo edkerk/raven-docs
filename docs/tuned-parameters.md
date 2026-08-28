@@ -17,7 +17,7 @@ and methodology, follow the linked study.
     the two disagreed, the answer was to measure, not to defer to whichever
     came first. Every row below states today's actual value(s); where the two
     genuinely still differ, both are given, with which side is pending. See
-    [the master parameter index](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/index.md#cross-toolbox-parity-decisions)
+    [the master parameter index](parameter-tuning/benchmarks/index.md#cross-toolbox-parity-decisions)
     for the full cross-implementation accounting, including the cases that are
     *deliberately* kept different because the two implementations rest on
     different solvers or algorithms.
@@ -32,7 +32,7 @@ Both implementations expose all three sampling methods through one entry point.
 | Parameter | Default | How determined |
 |---|---|---|
 | `method` | `'achr'` (Python) / `'random_objective'` (MATLAB) | Literature: ACHR gives near-uniform interior sampling; the random-objective method draws polytope vertices instead. Both algorithms are implemented and selectable on both sides — only which one is the *default* differs. |
-| `thinning` | `100` | Upstream convention (cobrapy's own ACHR default, which RAVEN's Python side inherited). **Measured insufficient at genome scale**: yeast-GEM gives only ~12 effective samples from 300 stored (ESS), and independent chains frequently disagree entirely (median Gelman-Rubin R-hat fails the convergence threshold). No cheap fix found — see the [convergence study](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/sampling_convergence_calibration.md). |
+| `thinning` | `100` | Upstream convention (cobrapy's own ACHR default, which RAVEN's Python side inherited). **Measured insufficient at genome scale**: yeast-GEM gives only ~12 effective samples from 300 stored (ESS), and independent chains frequently disagree entirely (median Gelman-Rubin R-hat fails the convergence threshold). No cheap fix found — see the [convergence study](parameter-tuning/studies/sampling-convergence-calibration.md). |
 | `warmup` | `1000` | Upstream convention (cobrapy). |
 | `n_objectives` | `2` | Literature: [Bordel et al. 2010](https://doi.org/10.1371/journal.pcbi.1000859). |
 | `replace_max_bound` | `False` | Measured: applying the alternative (`True`) inside the Python/cobrapy solver stack makes the sampler unbounded on standard RAVEN-convention models (±1000 bounds). Kept different by design between implementations — a solver-stack constraint, not a preference; whether MATLAB's own solver path handles it safely wasn't tested here. |
@@ -42,9 +42,11 @@ Both implementations expose all three sampling methods through one entry point.
 | `maxiter` (in `max_volume_ellipsoid`) | `150` | Literature: [Zhang & Gao 2003](https://doi.org/10.1137/S1052623401397230). |
 | `tol`, `reg` (in `max_volume_ellipsoid`) | `1e-6`, `1e-8` | Same on both sides. |
 
-**Full detail:** [sampling.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/sampling.md) ·
-[sampling convergence study](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/sampling_convergence_calibration.md) ·
-[CHRR/ACHR algorithm reference](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/reference/flux_sampling_algorithms.md)
+**Full detail:** [sampling convergence study](parameter-tuning/studies/sampling-convergence-calibration.md)
+(the primary measurement) ·
+[CHRR/ACHR algorithm reference](parameter-tuning/flux-sampling-algorithms.md) ·
+[sampling.md](parameter-tuning/benchmarks/sampling.md)
+(quick-reference benchmark notes)
 
 ## FSEOF
 
@@ -57,7 +59,7 @@ RAVEN MATLAB: `FSEOF`. raven-toolbox: `fseof`.
 | `correlation_threshold` | `0.9` | Literature: [Choi et al. 2010](https://doi.org/10.1128/AEM.00115-10); measured — 0.7 adds 4 spurious amplification targets on iJO1366. |
 | `flux_eps` | `1e-6` on the Python side; MATLAB has no threshold at all | Measured: an explicit `1e-6` floor avoids classifying accumulated solver noise as a false-positive knockdown target on genome-scale models. MATLAB's target classification is a bare float comparison with no tolerance whatsoever, stricter than any fixed floor — real solver noise there is expected to produce at least as many spurious classifications as measured here, likely more. |
 
-**Full detail:** [fseof.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/fseof.md)
+**Full detail:** [fseof.md](parameter-tuning/benchmarks/fseof.md)
 
 ## INIT / ftINIT
 
@@ -80,9 +82,13 @@ RAVEN MATLAB: `runINIT`, `scoreComplexModel`, `getINITModel`, `ftINIT`, `prepINI
 | `factor`, `max_score`, `min_score` (in `gene_scores_from_expression`) | `5.0`, `10.0`, `-5.0` | RAVEN's own formula; previously attributed to "Wang et al. 2012" here, which was checked and could not be confirmed — no source in either implementation cites a paper for it. |
 | `score_reactions_from_genes` / `classify_reactions` arguments | various | Same on both sides / standard practice. |
 
-**Full detail:** [init.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/init.md) ·
-[INIT parameter calibration study](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/init_param_calibration.md) ·
-[INIT solver benchmark](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/init_solver_benchmark.md)
+**Full detail:** [INIT parameter calibration study](parameter-tuning/studies/init-param-calibration.md)
+(the primary measurement, genome-scale Human-GEM) ·
+[INIT solver benchmark](parameter-tuning/studies/init-solver-benchmark.md) ·
+[Human-GEM validation vs MATLAB RAVEN](parameter-tuning/studies/humangem-validation.md)
+(Jaccard 0.975–0.980 across 5 cell lines) ·
+[init.md](parameter-tuning/benchmarks/init.md)
+(quick-reference benchmark notes)
 
 ## Gap-filling
 
@@ -98,7 +104,7 @@ methods added to the Python implementation, with no MATLAB RAVEN counterpart.
 | `weights` (in `fill_gaps_kumar_milp`) | `(1.0, 2.0)` | Literature: [Kumar et al. 2007](https://doi.org/10.1186/1471-2105-8-212); measured — confirms reversal is preferred over adding a new reaction at the intended 2:1 ratio. |
 | `big_m` (in `fill_gaps_kumar_milp`) | `1000.0` | Measured: matches RAVEN's ±1000 bound convention; a smaller value artificially caps reversed-reaction flux. |
 
-**Full detail:** [gapfilling.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/gapfilling.md)
+**Full detail:** [gapfilling.md](parameter-tuning/benchmarks/gapfilling.md)
 
 ## Homology-based reconstruction
 
@@ -119,8 +125,10 @@ rhto-GEM) built by this same reconstruction method, and was retired once it show
 the obvious circularity directly: agreement with the curated model peaked exactly
 at that model's own build settings and collapsed one step past them.
 
-**Full detail:** [reconstruction_homology.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/reconstruction_homology.md) ·
-[homology cut-off calibration study](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/homology_cutoff_calibration.md)
+**Full detail:** [homology cut-off calibration study](parameter-tuning/studies/homology-cutoff-calibration.md)
+(the primary measurement, including the retired curated-GEM arm) ·
+[reconstruction-homology.md](parameter-tuning/benchmarks/reconstruction-homology.md)
+(quick-reference benchmark notes)
 
 ## KEGG-based reconstruction
 
@@ -137,8 +145,10 @@ name hasn't been independently confirmed). raven-toolbox: `assign_kos`,
 | `threads` (`run_hmmsearch`, `build_ko_hmm`) | `max(1, cpu_count-1)` | Performance-only; HMMER is deterministic (to within insignificant float noise) across thread counts. |
 | `keep_spontaneous`, `keep_undefined_stoich`, `keep_incomplete`, `keep_general` (`get_kegg_model_*`) | `True`, `True`, `True`, `False` | Same on both sides / standard draft-reconstruction practice. |
 
-**Full detail:** [reconstruction_kegg.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/reconstruction_kegg.md) ·
-[KEGG HMM cut-off calibration study](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/kegg_hmm_cutoff_calibration.md)
+**Full detail:** [KEGG HMM cut-off calibration study](parameter-tuning/studies/kegg-hmm-cutoff-calibration.md)
+(the primary measurement, 4 organisms against real KEGG annotations) ·
+[reconstruction-kegg.md](parameter-tuning/benchmarks/reconstruction-kegg.md)
+(quick-reference benchmark notes)
 
 ## Sub-cellular localisation
 
@@ -156,8 +166,10 @@ a heuristic's search budget than in a solver's optimality gap.
 | `time_limit` (Python) / `maxTime` (MATLAB) | `None` (uncapped) on the Python side; MATLAB's `maxTime` defaults to `15` minutes | Not a value to unify: MATLAB's number is a simulated-annealing search budget (more time generally means a better heuristic answer, not a proof of optimality), while Python's is a MILP solver cutoff (returns a proven-bounded incumbent). Python's `None` was validated at ~2.5 minutes on yeast-GEM, the primary development-scale model. Whether the MILP needs a cap at all for harder cases hasn't been stress-tested. |
 | `mip_gap` | `None` | Python-side-only — MATLAB's heuristic has no analogous optimality-gap concept. |
 
-**Full detail:** [localization.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/localization.md) ·
-[yeast-GEM localisation benchmark](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/studies/yeast_localization_benchmark.md)
+**Full detail:** [yeast-GEM localisation benchmark](parameter-tuning/studies/yeast-localization-benchmark.md)
+(the primary measurement, real yeast-GEM data with a predictor-noise sweep) ·
+[localization.md](parameter-tuning/benchmarks/localization.md)
+(quick-reference benchmark notes)
 
 ## Model manipulation
 
@@ -173,7 +185,7 @@ RAVEN MATLAB: `removeGenes`, `mergeModels`, `addRxns`, `addTransport`, `simplify
 | `match_by` (in `merge_models`) | `'name'` (Python) / `'metNames'` (MATLAB) | Same semantic field (metabolite display name), different schema field name — not a value disagreement to resolve. |
 | `remove_orphans`, `mets_by`, `ignore_direction`, `reversible`, `only_to_existing` | various | Python-side additions/refinements; sensible defaults, no direct MATLAB equivalent to compare against. |
 
-**Full detail:** [manipulation.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/manipulation.md)
+**Full detail:** [manipulation.md](parameter-tuning/benchmarks/manipulation.md)
 
 ## Tasks
 
@@ -184,7 +196,7 @@ RAVEN MATLAB: `checkTasks`. raven-toolbox: `check_tasks`, `find_task_essential_r
 | `close_boundaries` (both functions) | `True` | Matches RAVEN's implied behaviour. |
 | `tol` (in `find_task_essential_reactions`) | `1e-8` | Python-side-only parameter. |
 
-**Full detail:** [tasks.md](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/tasks.md)
+**Full detail:** [tasks.md](parameter-tuning/benchmarks/tasks.md)
 
 ## Still open
 
@@ -195,7 +207,7 @@ RAVEN MATLAB: `checkTasks`. raven-toolbox: `check_tasks`, `find_task_essential_r
   `min_align_len` in `getModelFromHomology`, the `removeGenes` gene-deletion policy, and
   FSEOF's noise floor (which needs adding to MATLAB rather than changing, since none
   exists there today). Tracked in
-  [the master parameter index](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/docs/maintenance/benchmarks/index.md#changes-needed-in-matlab-raven-for-parity).
+  [the master parameter index](parameter-tuning/benchmarks/index.md#changes-needed-in-matlab-raven-for-parity).
 - The `gene_scores_from_expression` scoring constants (`factor=5.0`, `max_score=10.0`,
   `min_score=-5.0`) have no confirmed literature source on either side — see the
   INIT section above.

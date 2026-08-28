@@ -48,6 +48,12 @@ functions answer the same question differently.
     sides still disagree, and a couple of assumptions that turned out wrong on
     inspection.
 
+-   :material-flask-outline: **[Parameter tuning](parameter-tuning/index.md)**
+
+    The measurement campaigns behind the tuned defaults above — full studies
+    and per-function benchmark notes, for whoever wants the evidence rather
+    than the summary.
+
 </div>
 
 ## Naming
@@ -76,7 +82,8 @@ matrix.
 Models move between the two implementations through **SBML** (`.xml`) and
 **YAML** (`.yml`). raven-toolbox's YAML follows the cobrapy layout plus RAVEN's
 own per-entry fields, so a model written by either side round-trips through the
-other.
+other — see [the YAML format reference](yaml-format.md) for the full field-by-field
+spec and interoperability matrix.
 
 Excel is **export-only** on both sides: raven-toolbox has never had a reader, and
 RAVEN's `importExcelModel` was removed in the RAVEN 3 refactor.
