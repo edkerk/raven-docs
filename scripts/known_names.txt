@@ -129,3 +129,14 @@ preferredOrder               # getModelFromHomology argument
 review_identity              # get_model_from_homology argument
 min_align_len                # get_model_from_homology argument
 max_evalue                   # get_model_from_homology argument
+keepIncomplete               # getKEGGModelForOrganism argument
+keepUndefinedStoich          # getKEGGModelForOrganism argument
+keepGeneral                  # getKEGGModelForOrganism argument
+keepSpontaneous              # getKEGGModelForOrganism argument
+keep_incomplete              # get_kegg_model_for_organism argument
+keep_undefined_stoich        # get_kegg_model_for_organism argument
+keep_general                 # get_kegg_model_for_organism argument
+fastaFile                    # getKEGGModelForOrganism argument
+dataDir                      # getKEGGModelForOrganism argument
+outDir                       # getKEGGModelForOrganism argument
+keggModel                    # RAVEN data artefact, not a function
