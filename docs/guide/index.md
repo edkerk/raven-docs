@@ -84,7 +84,9 @@ reconstruction protocol and the legacy tutorials.
     much that difference costs.
 18. [Reconstruction from homology](homology.md) — BLAST a proteome against a
     template model's genes, and what the cut-offs decide for you.
+19. [Reconstruction from KEGG](kegg.md) — a draft with no template model at all,
+    and what such a draft is missing.
 
-**Planned** — reconstruction from KEGG; phenotype exploration,
+**Planned** — phenotype exploration,
 engineering targets; biomass composition and annotation; reconstruction from
 homology and KEGG; localization; table-driven curation.

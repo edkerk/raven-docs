@@ -180,6 +180,7 @@ nav:
           - 16. Combining and simplifying: guide/combining.md
           - 17. Comparing models: guide/comparing.md
           - 18. Reconstruction from homology: guide/homology.md
+          - 19. Reconstruction from KEGG: guide/kegg.md
       - GEM reconstruction (H. polymorpha):
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
