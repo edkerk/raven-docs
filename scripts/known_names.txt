@@ -75,6 +75,36 @@ maxTime                        # predictLocalization argument
 time_limit                     # predict_localization / run_init / run_ftinit argument
 flux_eps                       # fseof argument
 
+# -- tuned-parameters.md: raven-toolbox arguments named across the reference table --
+replace_max_bound              # random_sampling argument
+loopless_good_reactions        # random_sampling argument
+min_flux                       # random_sampling argument
+max_attempts                   # random_sampling argument
+flux_tol                       # find_good_reactions argument
+max_fraction                   # fseof argument
+correlation_threshold          # fseof argument
+prod_weight                    # run_init / get_init_model argument
+allow_excretion                # run_init / get_init_model / run_ftinit argument
+mip_gap                        # run_init / run_ftinit / predict_localization argument
+force_on                       # run_ftinit argument
+big_m                          # run_ftinit / fill_gaps_kumar_milp argument
+max_score                      # gene_scores_from_expression argument
+min_score                      # gene_scores_from_expression argument
+min_identity                   # get_model_from_homology argument
+min_score_ratio_g              # assign_kos argument
+min_score_ratio_ko             # assign_kos argument
+seq_identity                   # build_ko_hmm argument
+keep_spontaneous               # get_kegg_model_* argument
+default_compartment            # predict_localization argument
+transport_cost                 # predict_localization argument
+blocked_reactions               # remove_genes argument
+match_by                       # merge_models argument
+remove_orphans                 # remove_genes argument
+mets_by                        # add_reactions_from_equations argument
+ignore_direction                # find_duplicate_reactions argument
+only_to_existing                # add_transport_reactions argument
+close_boundaries                # check_tasks / find_task_essential_reactions argument
+
 # -- variables and identifiers used in worked examples ----------------------
 iAL1006                       # model name in legacy tutorial 1
 modelA                        # a stand-in model name in prose
