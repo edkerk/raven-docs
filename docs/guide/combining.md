@@ -223,19 +223,22 @@ Seven metabolites in this model exist in both compartments, so 52 collapse to
 45; the three reactions that merely moved something across the mitochondrial
 membrane become `A -> A`, carry no information, and are dropped.
 
-    A reaction that is left holding a single metabolite after merging carries no
-    information and should go. But an **exchange** reaction had a single
-    metabolite all along (`=> glucose`), and raven-toolbox deletes those too. Of
-    the 11 reactions it drops above, only 3 are genuine transports; the other 8
-    are every boundary reaction in the model, `biomassOUT` included. The merged
-    model also loses its objective, because it is rebuilt from scratch. The two
-    together take this model from growth `0.1222` to `0.0000` with no error and
-    no warning.
+!!! note "The two count the removals differently"
+    Both toolboxes end at 50 reactions, but the second line disagrees: RAVEN
+    reports **0** dropped where raven-toolbox reports **3** (`CAT2`, `CO2TRANS`,
+    `ShuttleX`). The same three reactions go in both cases. RAVEN clears them
+    when it removes reactions the merge left empty, and its `deletedRxns` counts
+    only what the `deleteRxnsWithOneMet` path deleted — which is nothing, since
+    that flag is `false` by default.
 
-    RAVEN avoids this by recording the single-metabolite reactions *before*
-    merging and refusing to delete them. Until the fix ships, treat a flattened
-    model from raven-toolbox as unable to simulate: check `len(flat.boundary)`
-    and re-set the objective.
+    A reaction left holding a single metabolite after merging carries no
+    information and should go; an **exchange** had a single metabolite all along
+    (`=> glucose`) and must be kept. raven-toolbox used to delete those too,
+    along with the objective, taking this model from growth `0.1222` to `0.0000`
+    with no error and no warning. Fixed in
+    [raven-toolbox#96](https://github.com/SysBioChalmers/raven-toolbox/pull/96);
+    if a flattened model comes back with no boundary reactions, update
+    raven-toolbox.
 
 That is a real loss. A model that distinguishes mitochondrial from cytosolic
 acetyl-CoA cannot be recovered from the flattened one, and the flattened model

@@ -218,3 +218,4 @@ fastaFile                    # getKEGGModelForOrganism argument
 dataDir                      # getKEGGModelForOrganism argument
 outDir                       # getKEGGModelForOrganism argument
 keggModel                    # RAVEN data artefact, not a function
+deletedRxns                  # mergeCompartments output variable
