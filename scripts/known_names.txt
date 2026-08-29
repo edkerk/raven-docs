@@ -55,6 +55,7 @@ transportCost                 # predictLocalization's own transport-cost argumen
 geneScore                     # predictLocalization internal variable, named in predictlocalization-comparison.md
 resolve_ties                  # ftinit argument, named in ftinit-determinism.md
 prove_abs_gap                 # ftinit argument, named in ftinit-determinism.md
+reference_reactions           # ftinit/fill_tasks argument, named in ftinit-determinism.md
 
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument

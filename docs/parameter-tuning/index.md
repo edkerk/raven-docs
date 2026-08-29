@@ -82,7 +82,7 @@ reasoning behind each conclusion.
 | [Sampling convergence calibration](studies/sampling-convergence-calibration.md) | Between-chain (Gelman-Rubin R-hat) convergence of ACHR/CHRR flux sampling at genome scale |
 | [INIT parameter calibration](studies/init-param-calibration.md) | `mip_gap`, `time_limit` in INIT/ftINIT, measured on genome-scale Human-GEM (multiple cell lines) |
 | [INIT solver benchmark](studies/init-solver-benchmark.md) | Solver-backend behaviour (Gurobi / GLPK / HiGHS) for the INIT/ftINIT MILP |
-| [ftINIT reproducibility](studies/ftinit-determinism.md) | What the opt-in `resolve_ties`/`prove_abs_gap` parameters buy (and cost) on genome-scale Human-GEM — and the stability gap they don't close |
+| [ftINIT reproducibility](studies/ftinit-determinism.md) | What `resolve_ties`/`prove_abs_gap` buy (and cost) on genome-scale Human-GEM, and how `reference_reactions` closes most of the remaining stability gap (13x less spurious essential-gene drift after a template edit) |
 | [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
 | [Yeast-GEM localisation benchmark](studies/yeast-localization-benchmark.md) | `time_limit`, `transport_cost` in sub-cellular localisation prediction, measured on real yeast-GEM data with a predictor-noise sweep |
 | [predictLocalization head-to-head](studies/predictlocalization-comparison.md) | `predict_localization` (deterministic MILP) vs MATLAB RAVEN's `predictLocalization` (stochastic simulated annealing) on identical inputs — accuracy, determinism, and runtime |
