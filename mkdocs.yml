@@ -201,7 +201,7 @@ nav:
       - Tuned parameter defaults: tuned-parameters.md
       - Model file format (YAML): yaml-format.md
       - Changes from RAVEN 2: raven2-changes.md
-  - Parameter tuning:
+  - Methods & benchmarks:
       - Overview: parameter-tuning/index.md
       - Flux sampling algorithms: parameter-tuning/flux-sampling-algorithms.md
       - Studies:

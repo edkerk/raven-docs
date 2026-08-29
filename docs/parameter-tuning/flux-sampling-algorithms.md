@@ -9,7 +9,7 @@ method. The samplers are **CHRR** (Coordinate Hit-and-Run with Rounding) and **A
 and which to use for enzyme-constrained and tissue-specific models. For how the defaults
 around these samplers (`thinning`, `warmup`, …) were chosen, see the
 [sampling convergence study](studies/sampling-convergence-calibration.md) and
-[benchmark notes](benchmarks/sampling.md) in [Parameter tuning](index.md).
+[benchmark notes](benchmarks/sampling.md) in [Methods & benchmarks](index.md).
 
 ---
 
