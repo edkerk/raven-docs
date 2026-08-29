@@ -169,7 +169,7 @@ nav:
           - Sampling convergence calibration: parameter-tuning/studies/sampling-convergence-calibration.md
           - INIT parameter calibration: parameter-tuning/studies/init-param-calibration.md
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
-          - ftINIT extraction determinism: parameter-tuning/studies/ftinit-determinism.md
+          - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
           - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md
           - predictLocalization head-to-head: parameter-tuning/studies/predictlocalization-comparison.md

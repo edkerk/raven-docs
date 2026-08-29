@@ -53,9 +53,8 @@ sampleCbModel
 mve_solver
 transportCost                 # predictLocalization's own transport-cost argument, named in predictlocalization-comparison.md
 geneScore                     # predictLocalization internal variable, named in predictlocalization-comparison.md
-strict_gap                    # ftinit argument, named in ftinit-determinism.md
-ess_force                     # ftinit internal variable, named in ftinit-determinism.md
-build                         # local helper function defined in ftinit-determinism.md's own example
+resolve_ties                  # ftinit argument, named in ftinit-determinism.md
+prove_abs_gap                 # ftinit argument, named in ftinit-determinism.md
 
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument
