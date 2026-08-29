@@ -79,12 +79,17 @@ RAVEN MATLAB: `runINIT`, `scoreComplexModel`, `getINITModel`, `ftINIT`, `prepINI
 | `force_on` | `0.1` | RAVEN's original value; measured near-insensitive across a 0.02–0.5 range. |
 | `big_m` | `100.0` | RAVEN's original value; confirmed as an intentional LP-relaxation tightener (not a flux cap) — see the linked study for why. |
 | `eps` | `1.0` | Same on both sides. |
+| `resolve_ties`, `prove_abs_gap`, `reference_reactions` | `False`, `None`, `None` (all opt-in, no MATLAB equivalent) | Measured on genome-scale Human-GEM: the MILP is massively degenerate (99.7% of removable reactions tied), so the default escalation is both non-deterministic across seeds and, separately, silently suboptimal (351 kept reactions vs. the true optimum's 349). `resolve_ties=True` halves the seed-to-seed swing in predicted essential genes; `prove_abs_gap=1.0` recovers the true optimum. `reference_reactions` (requires `resolve_ties=True`) anchors a re-extraction to a prior build's kept set, cutting spurious essential-gene drift after a small template edit 13x (13 → 1 flips) in one measured case — the stability lever the other two don't provide. |
 | `factor`, `max_score`, `min_score` (in `gene_scores_from_expression`) | `5.0`, `10.0`, `-5.0` | RAVEN's own formula; previously attributed to "Wang et al. 2012" here, which was checked and could not be confirmed — no source in either implementation cites a paper for it. |
 | `score_reactions_from_genes` / `classify_reactions` arguments | various | Same on both sides / standard practice. |
 
 **Full detail:** [INIT parameter calibration study](parameter-tuning/studies/init-param-calibration.md)
 (the primary measurement, genome-scale Human-GEM) ·
 [INIT solver benchmark](parameter-tuning/studies/init-solver-benchmark.md) ·
+[ftINIT reproducibility](parameter-tuning/studies/ftinit-determinism.md)
+(recommend `resolve_ties=True, prove_abs_gap=1.0` for determinism; add
+`reference_reactions` for stability under a curated template — 13x less spurious
+essential-gene drift, measured) ·
 [Human-GEM validation vs MATLAB RAVEN](parameter-tuning/studies/humangem-validation.md)
 (Jaccard 0.975–0.980 across 5 cell lines) ·
 [init.md](parameter-tuning/benchmarks/init.md)
