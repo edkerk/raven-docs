@@ -146,10 +146,51 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Installation:
-      - Overview: installation/index.md
-      - RAVEN (MATLAB): installation/raven.md
-      - raven-toolbox (Python): installation/python.md
+  - User guide:
+      - Overview: guide/index.md
+      - Install:
+          - Overview: installation/index.md
+          - RAVEN (MATLAB): installation/raven.md
+          - raven-toolbox (Python): installation/python.md
+      - 1. Getting started: guide/getting-started.md
+      - 2. Model structure and identifiers: guide/model-structure.md
+      - 3. Reading and writing models: guide/io.md
+      - 4. Simulating growth with FBA: guide/fba.md
+      - 5. Growth media and conditions: guide/media.md
+      - 6. Solvers and configuration: guide/solvers.md
+      - 7. Building a model from scratch: guide/building.md
+      - 8. Editing an existing model: guide/editing.md
+      - 9. Quality control: guide/quality-control.md
+      - 10. Context-specific models (tINIT / ftINIT): guide/init.md
+      - 11. Deletions and essentiality: guide/deletions.md
+      - 12. Metabolic tasks: guide/tasks.md
+      - 13. Gap-filling: guide/gap-filling.md
+      - 14. Flux variability: guide/fva.md
+      - 15. Random sampling: guide/sampling.md
+      - 16. Combining and simplifying: guide/combining.md
+      - 17. Comparing models: guide/comparing.md
+      - 18. Reconstruction from homology: guide/homology.md
+      - 19. Reconstruction from KEGG: guide/kegg.md
+      - Worked protocol — H. polymorpha (MATLAB):
+          - Overview: protocol/index.md
+          - Introduction: protocol/reconstruction.md
+          - Materials and installation: protocol/materials.md
+          - Import template models: protocol/template-models.md
+          - Draft from homology: protocol/homology.md
+          - Biomass composition: protocol/biomass.md
+          - Curation of lipid reactions: protocol/lipid-curation.md
+          - Gap-filling: protocol/gap-filling.md
+          - Save and simulate: protocol/simulation.md
+          - Manual curation: protocol/manual-curation.md
+          - Anticipated results: protocol/anticipated-results.md
+      - Legacy tutorials (MATLAB):
+          - Overview: tutorials/index.md
+          - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
+          - 2 - Build a small model: tutorials/tutorial2.md
+          - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
+          - 4 - Fix an erroneous model: tutorials/tutorial4.md
+          - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
+  - API reference: api/
   - MATLAB vs Python:
       - Overview: differences.md
       - Function mapping: matlab-vs-python.md
@@ -160,7 +201,7 @@ nav:
       - Tuned parameter defaults: tuned-parameters.md
       - Model file format (YAML): yaml-format.md
       - Changes from RAVEN 2: raven2-changes.md
-  - Parameter tuning:
+  - Methods & benchmarks:
       - Overview: parameter-tuning/index.md
       - Flux sampling algorithms: parameter-tuning/flux-sampling-algorithms.md
       - Studies:
@@ -183,46 +224,4 @@ nav:
           - Sub-cellular localisation: parameter-tuning/benchmarks/localization.md
           - Model manipulation: parameter-tuning/benchmarks/manipulation.md
           - Tasks: parameter-tuning/benchmarks/tasks.md
-  - Guides:
-      - Overview: protocol/index.md
-      - User guide:
-          - Overview: guide/index.md
-          - 1. Getting started: guide/getting-started.md
-          - 2. Model structure and identifiers: guide/model-structure.md
-          - 3. Reading and writing models: guide/io.md
-          - 4. Simulating growth with FBA: guide/fba.md
-          - 5. Growth media and conditions: guide/media.md
-          - 6. Solvers and configuration: guide/solvers.md
-          - 7. Building a model from scratch: guide/building.md
-          - 8. Editing an existing model: guide/editing.md
-          - 9. Quality control: guide/quality-control.md
-          - 10. Context-specific models (tINIT / ftINIT): guide/init.md
-          - 11. Deletions and essentiality: guide/deletions.md
-          - 12. Metabolic tasks: guide/tasks.md
-          - 13. Gap-filling: guide/gap-filling.md
-          - 14. Flux variability: guide/fva.md
-          - 15. Random sampling: guide/sampling.md
-          - 16. Combining and simplifying: guide/combining.md
-          - 17. Comparing models: guide/comparing.md
-          - 18. Reconstruction from homology: guide/homology.md
-          - 19. Reconstruction from KEGG: guide/kegg.md
-      - GEM reconstruction (H. polymorpha):
-          - Introduction: protocol/reconstruction.md
-          - Materials and installation: protocol/materials.md
-          - Import template models: protocol/template-models.md
-          - Draft from homology: protocol/homology.md
-          - Biomass composition: protocol/biomass.md
-          - Curation of lipid reactions: protocol/lipid-curation.md
-          - Gap-filling: protocol/gap-filling.md
-          - Save and simulate: protocol/simulation.md
-          - Manual curation: protocol/manual-curation.md
-          - Anticipated results: protocol/anticipated-results.md
-      - Legacy tutorials:
-          - Overview: tutorials/index.md
-          - 1 - Import a GEM and run FBA: tutorials/tutorial1.md
-          - 2 - Build a small model: tutorials/tutorial2.md
-          - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
-          - 4 - Fix an erroneous model: tutorials/tutorial4.md
-          - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
-  - API documentation: api/
   - References: references.md

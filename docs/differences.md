@@ -48,7 +48,7 @@ functions answer the same question differently.
     sides still disagree, and a couple of assumptions that turned out wrong on
     inspection.
 
--   :material-flask-outline: **[Parameter tuning](parameter-tuning/index.md)**
+-   :material-flask-outline: **[Methods & benchmarks](parameter-tuning/index.md)**
 
     The measurement campaigns behind the tuned defaults above — full studies
     and per-function benchmark notes, for whoever wants the evidence rather

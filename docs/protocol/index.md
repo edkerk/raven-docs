@@ -1,62 +1,37 @@
-# Guides
+# Worked protocol — *Hansenula polymorpha*
 
-Three sets of worked material, for three different purposes.
+A complete homology-based reconstruction of `hanpo-GEM`, followed from start to
+finish: template models in, a growing methylotrophic draft out. This is the
+published pipeline, in order, with the judgement calls left visible.
 
-<div class="grid cards" markdown>
+It is the counterpart to the [user guide](../guide/index.md). The numbered guide
+pages answer "how do I do this one thing"; this protocol answers "what does a
+whole reconstruction look like, and in what order".
 
--   :material-book-open-variant: **[User guide](../guide/index.md)**
+!!! note "MATLAB only, and not executed here"
+    The protocol predates the dual-language guide and its steps are MATLAB. Its
+    commands are also not run by the documentation build, unlike the numbered
+    guide pages — several steps take hours and need data that is not shipped
+    with this site.
 
-    Nineteen short, task-focused pages — load a model, simulate growth, define a
-    medium, edit, check, gap-fill, extract a context-specific model. **MATLAB and
-    Python side by side**, every example executed and checked on each commit.
-
-    Start at [1. Getting started](../guide/getting-started.md).
-
--   :material-flask: **[GEM reconstruction protocol](reconstruction.md)**
-
-    Homology-based reconstruction of a genome-scale model for the yeast
-    *Hansenula polymorpha* (`hanpo-GEM`), end to end — from template models to a
-    growing, methylotrophic draft. A published pipeline, followed from start to
-    finish. MATLAB only.
-
--   :material-school: **[Legacy tutorials](../tutorials/index.md)**
-
-    Five exercises from the original RAVEN paper (Agren et al., 2013), updated to
-    run with current RAVEN but otherwise unchanged. MATLAB only.
-
-</div>
-
-## Which one do I want?
-
-| If you want to… | Go to |
-|---|---|
-| look up how to do one thing, in either language | [User guide](../guide/index.md) |
-| follow a complete reconstruction as it was published | [GEM reconstruction](reconstruction.md) |
-| work through the exercises from the RAVEN paper | [Legacy tutorials](../tutorials/index.md) |
-| extract a context-specific model with ftINIT | [10. Context-specific models](../guide/init.md) |
-| find the Python equivalent of a RAVEN function | [MATLAB vs Python](../matlab-vs-python.md) |
-
-## The user guide
+## The steps
 
 | | |
 |---|---|
-| **Foundations** | [1. Getting started](../guide/getting-started.md) · [2. Model structure and identifiers](../guide/model-structure.md) · [3. Reading and writing models](../guide/io.md) |
-| **Simulation** | [4. Simulating growth with FBA](../guide/fba.md) · [5. Growth media and conditions](../guide/media.md) · [6. Solvers and configuration](../guide/solvers.md) |
-| **Building and curating** | [7. Building a model from scratch](../guide/building.md) · [8. Editing an existing model](../guide/editing.md) · [9. Quality control](../guide/quality-control.md) · [16. Combining and simplifying](../guide/combining.md) · [17. Comparing models](../guide/comparing.md) |
-| **Reconstruction** | [10. Context-specific models (tINIT / ftINIT)](../guide/init.md) · [18. Reconstruction from homology](../guide/homology.md) · [19. Reconstruction from KEGG](../guide/kegg.md) |
-| **Analysis and repair** | [11. Deletions and essentiality](../guide/deletions.md) · [12. Metabolic tasks](../guide/tasks.md) · [13. Gap-filling](../guide/gap-filling.md) · [14. Flux variability](../guide/fva.md) · [15. Random sampling](../guide/sampling.md) |
+| [Introduction](reconstruction.md) | what is being built, and from what |
+| [Materials and installation](materials.md) | software, databases and input files |
+| [Import template models](template-models.md) | the *S. cerevisiae* and *R. toruloides* models the draft is built from |
+| [Draft from homology](homology.md) | BLAST and `getModelFromHomology` — see also [18. Reconstruction from homology](../guide/homology.md) |
+| [Biomass composition](biomass.md) | measuring and assembling the biomass equation |
+| [Curation of lipid reactions](lipid-curation.md) | the part that never generalises |
+| [Gap-filling](gap-filling.md) | closing the holes — see also [13. Gap-filling](../guide/gap-filling.md) |
+| [Save and simulate](simulation.md) | writing the model out and checking it grows |
+| [Manual curation](manual-curation.md) | what no function does for you |
+| [Anticipated results](anticipated-results.md) | what the finished model should look like |
 
-More pages are being added — biomass composition, localisation.
+## Related
 
-## Legacy tutorials
-
-Five hands-on tutorials from the original RAVEN paper (Agren et al., 2013),
-updated to run with current RAVEN. MATLAB only.
-
-| # | Tutorial | Topic |
-|---|---|---|
-| 1 | [Import a GEM and run FBA](../tutorials/tutorial1.md) | Load a model, set constraints, run FBA |
-| 2 | [Build a small model](../tutorials/tutorial2.md) | Build from scratch in Excel |
-| 3 | [Knockouts, MOMA and omics](../tutorials/tutorial3.md) | Gene deletions, MOMA, microarray data |
-| 4 | [Fix an erroneous model](../tutorials/tutorial4.md) | Quality control and curation |
-| 5 | [Reconstruct from KEGG](../tutorials/tutorial5.md) | *De novo* reconstruction from KEGG |
+- [Legacy tutorials](../tutorials/index.md) — five shorter exercises from the
+  original RAVEN paper.
+- [18. Reconstruction from homology](../guide/homology.md) — the same technique
+  at small scale, in both languages, with every example executed.
