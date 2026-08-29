@@ -1,11 +1,5 @@
 # Homology cut-off calibration
 
-*Authored on `develop` (PR #92, 2026-08-25); copied here verbatim while that branch's*
-*`get_model_from_homology`/`run_blast` changes have not yet been ported to this branch.*
-*The reproduction script (`scripts/homology_cutoff_kegg.py`) lives on `develop` only —*
-*see [reconstruction-homology.md](../benchmarks/reconstruction-homology.md)*
-*for how this bears on the current branch's (still-`200`) `min_align_len` default.*
-
 Three settings decide which template reactions transfer to a new organism. None
 of them had ever been measured, in either toolbox. This is what they are worth.
 

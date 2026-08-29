@@ -85,6 +85,8 @@ RAVEN MATLAB: `runINIT`, `scoreComplexModel`, `getINITModel`, `ftINIT`, `prepINI
 **Full detail:** [INIT parameter calibration study](parameter-tuning/studies/init-param-calibration.md)
 (the primary measurement, genome-scale Human-GEM) ·
 [INIT solver benchmark](parameter-tuning/studies/init-solver-benchmark.md) ·
+[ftINIT extraction determinism](parameter-tuning/studies/ftinit-determinism.md)
+(the opt-in `strict_gap`/`canonical` flags — not a fix for gene-essentiality reproducibility) ·
 [Human-GEM validation vs MATLAB RAVEN](parameter-tuning/studies/humangem-validation.md)
 (Jaccard 0.975–0.980 across 5 cell lines) ·
 [init.md](parameter-tuning/benchmarks/init.md)
