@@ -5,9 +5,10 @@ Short, task-focused pages: one job per page, three to eight functions, in
 [Getting started](getting-started.md) and read on, or jump to whichever task you
 have in front of you.
 
-This is one of three sets of worked material on this site — see the
-[Guides overview](../protocol/index.md) for how it relates to the *H. polymorpha*
-reconstruction protocol and the legacy tutorials.
+Two older sets of material sit at the end of this section: a complete
+[reconstruction protocol](../protocol/index.md) for *H. polymorpha*, followed
+start to finish, and the [legacy tutorials](../tutorials/index.md) from the
+original RAVEN paper. Both are MATLAB only.
 
 !!! info "cobrapy"
     Functions that come from cobrapy rather than raven-toolbox carry a
@@ -17,11 +18,15 @@ reconstruction protocol and the legacy tutorials.
     such function.
 
 !!! info "Executed examples"
-    Every snippet on these pages is run on each commit and checked against the
-    output shown beneath it, in both languages. The one exception is
-    [10. Context-specific models](init.md), whose steps take hours on Human-GEM:
-    that page says so at the top and quotes the wall-clock of the run its numbers
-    came from.
+    Every snippet on the nineteen numbered pages is run on each commit and
+    checked against the output shown beneath it, in both languages. Two pages
+    cannot be: [10. Context-specific models](init.md), whose steps take hours on
+    Human-GEM, and [19. Reconstruction from KEGG](kegg.md), which downloads
+    tens of megabytes and takes minutes. Both say so at the top and quote the
+    wall-clock of the run their numbers came from.
+
+    That guarantee covers the numbered pages only. The protocol and the legacy
+    tutorials at the end of this section are MATLAB-only and are not executed.
 
 ## Example data
 
@@ -86,6 +91,16 @@ reconstruction protocol and the legacy tutorials.
     template model's genes, and what the cut-offs decide for you.
 19. [Reconstruction from KEGG](kegg.md) — a draft with no template model at all,
     and what such a draft is missing.
+
+## Also in this section
+
+| | |
+|---|---|
+| [Worked protocol — *H. polymorpha*](../protocol/index.md) | homology-based reconstruction of `hanpo-GEM`, end to end, from template models to a growing methylotrophic draft. A published pipeline followed from start to finish. MATLAB only, not executed here. |
+| [Legacy tutorials](../tutorials/index.md) | five exercises from the original RAVEN paper (Agren et al., 2013), updated to run with current RAVEN but otherwise unchanged. MATLAB only. |
+
+Use the numbered pages to look something up; use the protocol to see a whole
+reconstruction in order.
 
 **Planned** — phenotype exploration,
 engineering targets; biomass composition and annotation; omics integration;

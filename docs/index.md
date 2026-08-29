@@ -106,7 +106,7 @@
 
     % run FBA
     sol = solveLP(model);
-    fprintf('Growth rate: %.4f h-1\n', -sol.f);
+    fprintf('Growth rate: %.4f h-1\n', sol.f);
     ```
 
 <hr class="rh-divider">
@@ -115,23 +115,30 @@
 
 <div class="grid cards rh-docs" markdown>
 
--   :material-download:
+-   :material-book-open-variant:
 
-    **[Installation](installation/index.md)**
+    **[User guide](guide/index.md)**
 
-    Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
-
--   :material-flask:
-
-    **[Guides](protocol/index.md)**
-
-    End-to-end GEM reconstruction protocol and legacy tutorials.
+    Nineteen task-focused pages, MATLAB and Python side by side, every example
+    executed and checked on each commit.
 
 -   :material-api:
 
     **[API reference](api/index.md)**
 
     Complete function reference for both MATLAB and Python.
+
+-   :material-download:
+
+    **[Installation](installation/index.md)**
+
+    Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
+
+-   :material-compare-horizontal:
+
+    **[MATLAB vs Python](differences.md)**
+
+    What the two toolboxes share, where they differ, and why.
 
 </div>
 
