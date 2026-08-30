@@ -76,8 +76,8 @@ theme:
   # Custom icons live under overrides/.icons/ and are referenced as
   # :custom-<name>: in markdown (e.g. :custom-matlab:).
   custom_dir: overrides
-  logo: assets/raven-bird-white.png
-  favicon: assets/raven-bird-navy.png
+  logo: assets/raven-icon-white.png
+  favicon: assets/raven-icon-navy.png
   features:
     - navigation.tabs
     - navigation.tabs.sticky

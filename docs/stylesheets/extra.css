@@ -1,5 +1,9 @@
 /* ===== RAVEN brand palette (navy) ===================================== */
 :root {
+  /* Sampled from RAVEN.png on RAVEN's develop3 branch -- the bird and
+     wordmark are one flat navy, RGB(12, 29, 56). The site icons in
+     docs/assets are cut from that same file; shades below are HSL
+     adjustments of it, not eyeballed. */
   --raven-navy:        #0C1D38;
   --raven-navy-dark:   #07101E;
   --raven-navy-light:  #112840;
@@ -56,6 +60,12 @@
 
 /* ===== Homepage (cobrapy-inspired) ================================== */
 .rh-hero { text-align: center; padding: 2rem 0 1.5rem; }
+/* The wordmark is a single flat navy, so it needs a white counterpart to stay
+   legible in the slate scheme -- swapped here rather than in JS. */
+.rh-hero img.rh-hero-logo { max-width: 420px; width: 100%; height: auto; margin-bottom: .5rem; }
+.rh-hero-logo-dark { display: none; }
+[data-md-color-scheme="slate"] .rh-hero-logo-light { display: none; }
+[data-md-color-scheme="slate"] .rh-hero-logo-dark { display: inline; }
 .rh-tag {
   display: inline-block; font-size: .7rem; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase;

@@ -1,4 +1,6 @@
 <div class="rh-hero">
+  <img class="rh-hero-logo rh-hero-logo-light" src="assets/raven-logo.png" alt="RAVEN">
+  <img class="rh-hero-logo rh-hero-logo-dark" src="assets/raven-logo-white.png" alt="RAVEN">
   <p class="rh-tag">MATLAB &amp; Python</p>
   <h1>Reconstruction, Analysis and Visualization<br>of Metabolic Networks</h1>
   <p class="rh-tagline">A toolkit for building, curating, and simulating genome-scale metabolic models — available as a MATLAB toolbox and a Python package built on cobrapy.</p>
