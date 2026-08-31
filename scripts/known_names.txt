@@ -44,6 +44,8 @@ minimal_medium
 load_workbook               # openpyxl, used by the Excel example
 objective_coefficient        # cobra.Reaction attribute, named in yaml-format.md
 save_yaml_model               # cobra.io.save_yaml_model, named in yaml-format.md
+find_essential_genes          # cobra.flux_analysis.find_essential_genes, named in ftinit-ground-truth-validation.md
+knock_out_model_genes         # cobra.manipulation.delete.knock_out_model_genes, named in ftinit-ground-truth-validation.md
 
 # -- COBRA Toolbox (MATLAB) / cobrapy names mentioned only for comparison ---
 # Named in flux-sampling-algorithms.md to explain what raven-toolbox/RAVEN's own
@@ -56,6 +58,13 @@ geneScore                     # predictLocalization internal variable, named in 
 resolve_ties                  # ftinit argument, named in ftinit-determinism.md
 prove_abs_gap                 # ftinit argument, named in ftinit-determinism.md
 reference_reactions           # ftinit/fill_tasks argument, named in ftinit-determinism.md
+idrank                        # resolve_ties's production phase-2b tie-break, named in ftinit-ground-truth-validation.md
+idrank_desc                   # ad hoc probe-script tie-break criterion label, not a function, named in ftinit-ground-truth-validation.md
+random_seed7                  # ad hoc probe-script tie-break criterion label, not a function, named in ftinit-ground-truth-validation.md
+score_mag                     # ad hoc probe-script tie-break criterion label, not a function, named in ftinit-ground-truth-validation.md
+gene_count                    # ad hoc probe-script tie-break criterion label, not a function, named in ftinit-ground-truth-validation.md
+BF_dld1                       # Hart2015_TableS2.xlsx column name, named in ftinit-ground-truth-validation.md
+BF_hct116                     # Hart2015_TableS2.xlsx column name, named in ftinit-ground-truth-validation.md
 
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument

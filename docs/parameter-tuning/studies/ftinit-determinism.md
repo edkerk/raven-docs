@@ -14,6 +14,12 @@ Two different properties are at stake, and they need separating:
 top of `resolve_ties`) is the parameter that targets stability directly — see the
 dedicated section below for what it buys and what it still doesn't.
 
+Neither determinism nor stability is the same question as *accuracy* — whether the
+essential-gene predictions this whole page measures are actually correct. See
+[ftINIT reproducibility vs ground truth](ftinit-ground-truth-validation.md) for that
+question, checked against real CRISPR-screen data: the short answer is that none of these
+three parameters moves real accuracy in a consistent direction.
+
 ## Why the problem exists
 
 The extraction MILP is massively degenerate. Of the ~6700 negative-score reactions (the
