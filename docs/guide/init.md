@@ -10,6 +10,39 @@ still be able to perform.
 This page walks through it on **Human-GEM**, with the RNA-seq data Human-GEM
 ships, in both toolboxes.
 
+!!! tip "Which one should I use?"
+    **ftINIT.** It is the recommended method, and everything below uses it.
+
+    Reach for tINIT (`getINITModel`) only to reproduce a model that was built
+    with it. It remains supported and is not scheduled for removal, but it
+    issues a `RAVEN:legacyMethod` notice to say it is not what new work should
+    use. Silence that with `warning('off','RAVEN:legacyMethod')` if you mean it.
+
+Despite the shared name, the two are **separate implementations that share no
+algorithm code**, apart from reaction scoring: `scoreModel` is a thin wrapper
+over `scoreComplexModel`. Nothing else carries over from one to the other:
+
+| | tINIT | ftINIT |
+|---|---|---|
+| Entry point | `getINITModel` | `prepINITModel`, then `ftINIT` |
+| Reaction scoring | `scoreModel` | `scoreComplexModel`, `groupRxnScores` |
+| Core MILP | `runINIT` | `ftINITInternalAlg`, scheduled by `getINITSteps` |
+| Task gap-filling | `fitTasks` | `ftINITFillGapsForAllTasks` |
+| Gene pruning | inline in `getINITModel` | `removeLowScoreGenes` |
+
+What they do share is RAVEN's general machinery rather than anything specific to
+the method: `checkTasks` and `getEssentialRxns` decide which tasks are feasible
+and which reactions they need, and beneath that sit `parseTaskList`,
+`simplifyModel`, the solver layer and the model-manipulation and I/O functions.
+
+The two scorers used to differ in more than argument order: `scoreModel`
+reduced over the genes in `rxnGeneMat`, while `scoreComplexModel` evaluated the
+grRule itself, with a configurable operator for `and` and for `or`, so an
+enzyme complex could score by its weakest subunit rather than its strongest.
+`scoreModel` now delegates to `scoreComplexModel`, fixing `dataPrecedence` to
+`'reaction'` and translating an unmeasured gene's score from `NaN` to `-Inf`,
+which is the only behavior that still differs between the two entry points.
+
 !!! warning "The outputs on this page were produced by hand, not by the build"
     Every other page in this guide is re-executed on every commit. This one is
     not: preparing Human-GEM took **113 minutes** in MATLAB and **126 minutes**
@@ -33,7 +66,7 @@ ships, in both toolboxes.
 | `ftINIT` | `ftinit` | the staged extraction |
 | `scoreComplexModel` | `score_reactions_from_genes` | gene scores → reaction scores |
 | — | `gene_scores_from_expression` | expression → gene scores |
-| `runINIT`, `getINITModel` | `run_init`, `get_init_model` | the original tINIT, for comparison |
+| `runINIT`, `getINITModel` | `run_init`, `get_init_model` | the legacy tINIT, for reproducing older models |
 | `removeLowScoreGenes` | `remove_low_score_genes` | prune negative-scoring genes from GPRs |
 | `checkTasks` | `check_tasks` | confirm the result still does what it must |
 

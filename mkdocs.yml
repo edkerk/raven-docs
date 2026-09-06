@@ -51,6 +51,10 @@ plugins:
             - RAVEN/analysis
             - RAVEN/gapfilling
             - RAVEN/INIT
+            # tINIT's entry points sit in their own subfolder; the collector
+            # does not recurse, so without this getINITModel and runINIT drop
+            # out of the API reference entirely
+            - RAVEN/INIT/tINIT
             - RAVEN/annotation
             - RAVEN/biomass
             - RAVEN/curation
