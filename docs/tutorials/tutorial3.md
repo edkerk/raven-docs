@@ -87,7 +87,8 @@ follow the changed fluxes around the redox metabolites:
 ```matlab
 model2 = setParam(model, 'eq', {'ZWF'}, 0);
 sol2 = solveLP(model2);
-followChanged(model, sol2.x, sol.x, 10, 10^-2, 0, {'NADPH' 'NADH' 'NAD' 'NADP'});
+compareFluxes(model, sol.x, sol2.x, 'cutoff', 10^-2, ...
+    'metaboliteList', {'NADPH' 'NADH' 'NAD' 'NADP'});
 ```
 
 ### 5. MOMA

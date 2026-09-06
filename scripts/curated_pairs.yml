@@ -107,8 +107,6 @@ not_ported:
   extractMiriam: >-
     cobra's .annotation is already a {namespace: id} dictionary -- read and
     write it directly.
-  mapCompartments: >-
-    Overlaps compare_models on the reaction-id intersection.
   printFluxes: >-
     No equivalent yet. Use cobra's model.summary(), or the solution's fluxes
     Series directly.
