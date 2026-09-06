@@ -19,7 +19,8 @@ ships, in both toolboxes.
     use. Silence that with `warning('off','RAVEN:legacyMethod')` if you mean it.
 
 Despite the shared name, the two are **separate implementations that share no
-algorithm code**. Nothing carries over from one to the other:
+algorithm code**, apart from reaction scoring: `scoreModel` is a thin wrapper
+over `scoreComplexModel`. Nothing else carries over from one to the other:
 
 | | tINIT | ftINIT |
 |---|---|---|
@@ -34,10 +35,13 @@ the method: `checkTasks` and `getEssentialRxns` decide which tasks are feasible
 and which reactions they need, and beneath that sit `parseTaskList`,
 `simplifyModel`, the solver layer and the model-manipulation and I/O functions.
 
-The two scorers are the pair most easily confused. `scoreModel` reduces over the
-genes in `rxnGeneMat`; `scoreComplexModel` evaluates the grRule itself, with a
-configurable operator for `and` and for `or`, so an enzyme complex can score by
-its weakest subunit rather than its strongest.
+The two scorers used to differ in more than argument order: `scoreModel`
+reduced over the genes in `rxnGeneMat`, while `scoreComplexModel` evaluated the
+grRule itself, with a configurable operator for `and` and for `or`, so an
+enzyme complex could score by its weakest subunit rather than its strongest.
+`scoreModel` now delegates to `scoreComplexModel`, fixing `dataPrecedence` to
+`'reaction'` and translating an unmeasured gene's score from `NaN` to `-Inf`,
+which is the only behavior that still differs between the two entry points.
 
 !!! warning "The outputs on this page were produced by hand, not by the build"
     Every other page in this guide is re-executed on every commit. This one is
