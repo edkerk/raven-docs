@@ -94,16 +94,20 @@ printFluxes(modelETH, solETH.x, true, 10^-7);
 
 ### 6. Investigate the changes
 
-`followChanged` takes two flux distributions and prints the reactions selected
-by the given thresholds. The first call shows reactions that differ by more than
-50%, have a flux higher than 0.5 mmol/gDW/h and an absolute difference higher
-than 0.5 mmol/gDW/h; there are 65 such reactions. The second call restricts the
-view to ATP metabolism.
+`compareFluxes` takes two flux distributions and reports every reaction whose
+flux changed, largest change first, labelling the ones that were turned on,
+turned off or reversed direction. The first call considers changes above
+0.5 mmol/gDW/h; the second restricts the view to ATP metabolism by naming the
+metabolites of interest.
 
 ```matlab
-followChanged(modelETH, sol.x, solETH.x, 50, 0.5, 0.5);
-followChanged(modelETH, sol.x, solETH.x, 30, 0.4, 0.4, {'ATP'});
+res = compareFluxes(modelETH, sol.x, solETH.x, 'cutoff', 0.5);
+compareFluxes(modelETH, sol.x, solETH.x, 'cutoff', 0.4, 'metaboliteList', {'ATP'});
 ```
+
+The printed table is capped at 20 rows, but `res.changed` holds every changed
+reaction and `res.turnedOn` / `res.turnedOff` / `res.flipped` list those that
+switched state.
 
 By drilling down this way you can understand the flux redistributions that give
 rise to different phenotypes — for example, on glucose ATP is generated in
