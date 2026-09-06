@@ -18,6 +18,25 @@ do what the companion study says (control reproducibility and stability), just n
 Two further attempts to buy real accuracy directly — trying other tie-break criteria, and
 anchoring construction toward known-essential genes — both came back negative.
 
+!!! warning "Two things to know before reading the numbers below"
+    **`reference_reactions` has since been removed from raven-toolbox.** It was validated
+    against a real curation, found to invert (help on one cell line, a 5x drift *increase*
+    on another), root-caused, and retired — see [the `reference_reactions`
+    postmortem](ftinit-reference-reactions.md). Every mention of it below (including the
+    known-essential-gene-steering experiment, which reused its tie-break machinery) is
+    historical: accurate as a record of what was tried, not a description of current API.
+
+    **The S1/S2/S3 preps behind every number on this page share the same
+    `close_boundaries` bug** documented in the [companion study's
+    warning](ftinit-determinism.md): `prep_init_model` used the additive boundary default
+    instead of RAVEN's closed one for task-essential-reaction discovery, collapsing the
+    task constraint to ~1 reaction instead of ~206. None of this page's findings have been
+    re-measured since the fix. The core methodological conclusions (essential-gene count is
+    a poor accuracy proxy; no tie-break criterion generalises; gene-steering via reference
+    reactions doesn't reliably work) do not depend on the task layer being correctly
+    constrained, so they are unlikely to reverse — but the exact numbers should be treated
+    as illustrative, not final.
+
 ## Why this page exists
 
 Every prior ftINIT measurement in this project — the companion determinism study, the
@@ -251,8 +270,7 @@ pay off.
   scenario (fixed seed) rather than repeated cross-validation; a negative result this clean
   (identical-to-baseline in 2 of 3 scenarios) is unlikely to be a split-selection artifact,
   but that has not been independently confirmed with a second split.
-* `reference_reactions`'s own headline number in the companion study (13× essential-gene-drift
-  reduction) was measured on a deliberately gentle null-ish edit; the diminishing-returns
-  pattern on more realistic edits (2× on a 15-reaction real edit, 1.5× on a 352-reaction
-  large edit) is noted here for completeness but is a stability, not accuracy, measurement —
-  see the companion study for the full stability writeup.
+* `reference_reactions`'s own headline numbers (13×/2×/1.5× essential-gene-drift reduction
+  across increasingly realistic edits) are retracted — see the warning at the top of this
+  page and [the postmortem](ftinit-reference-reactions.md) for why, and for the corrected,
+  real-curation measurement that replaced them.

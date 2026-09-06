@@ -211,6 +211,7 @@ nav:
           - INIT parameter calibration: parameter-tuning/studies/init-param-calibration.md
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
+          - reference_reactions postmortem: parameter-tuning/studies/ftinit-reference-reactions.md
           - ftINIT reproducibility vs ground truth: parameter-tuning/studies/ftinit-ground-truth-validation.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
           - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md

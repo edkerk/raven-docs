@@ -1,4 +1,4 @@
-# ftINIT reproducibility — `resolve_ties`, `prove_abs_gap`, `reference_reactions`
+# ftINIT reproducibility — `resolve_ties`, `prove_abs_gap`
 
 How reproducible ftINIT is, what raven-toolbox's opt-in parameters fix, and — the reason
 this page exists — what they do and do not fix. Companion to the API documentation in
@@ -10,9 +10,27 @@ Two different properties are at stake, and they need separating:
 * **Stability** — *similar* input (a curated template, a different but comparable sample)
   → *similar* model.
 
-`resolve_ties`/`prove_abs_gap` target determinism only. `reference_reactions` (built on
-top of `resolve_ties`) is the parameter that targets stability directly — see the
-dedicated section below for what it buys and what it still doesn't.
+`resolve_ties`/`prove_abs_gap` target determinism only. Stability was also targeted,
+via a `reference_reactions` parameter that anchored a re-extraction to a prior build —
+implemented, validated against a real curation, found to invert on one of two tested
+cell lines, and removed. See [the `reference_reactions`
+postmortem](ftinit-reference-reactions.md) for the full account; **the confounded
+numbers that motivated it, previously reported here, have been retracted** (see the
+warning below).
+
+!!! warning "This page's own numbers rest on a since-fixed bug"
+    Every Human-GEM `prep_init_model` build behind the seed-to-seed spread numbers
+    below used the *additive* boundary default (`close_boundaries=False`) for
+    task-essential-reaction discovery instead of the *closed* boundary RAVEN's
+    `prepINITModel` always uses for this step — on a model whose exchanges all ship
+    open, that silently drops the task-feasibility constraint from the extraction
+    almost entirely (RAVEN's own ~206 essential reactions collapsed to 1). Fixed in
+    `prep_init_model` (now `close_boundaries=True`, matching RAVEN); not yet
+    re-measured here. The qualitative claims below (`resolve_ties` reduces spread,
+    `prove_abs_gap` fixes a real suboptimality) are independent of the task layer and
+    unlikely to reverse, but treat the exact magnitudes (16 → 8 → 3, etc.) as
+    unconfirmed pending a re-run. Full detail in the [`reference_reactions`
+    postmortem](ftinit-reference-reactions.md#progressively-realistic-synthetic-validation-retracted).
 
 Neither determinism nor stability is the same question as *accuracy* — whether the
 essential-gene predictions this whole page measures are actually correct. See
@@ -181,58 +199,30 @@ That matters for two common workflows:
   reselect within the same tied set and produce two models with reaction-level and
   gene-level differences that look like biology but are not.
 
-### `reference_reactions`: anchoring a re-extraction to a prior build
+### Stability: `reference_reactions` (retired)
 
-`resolve_ties=True` also accepts `reference_reactions`: a set of reaction ids a reference
-build kept. It adds a phase, ahead of parsimony/id-rank, that prefers the tied solution
-closest to the reference — so a re-extraction of a lightly edited template stays close to
-the reference wherever the data does not force a difference, instead of the MILP
-re-deriving the sparsest set from scratch. It can only ever resolve a genuine tie: the
-reference phase runs after the primary score objective is fixed at *this* build's own
-optimum, so a reaction the data actually prefers is never overridden. Applies to both the
-main extraction (translated through merge groups automatically) and the task gap-fill.
-
-**Measured on Human-GEM/DLD1 with a null-ish edit** — 30 reactions removed from the
-template, all of them unused by the reference build M0 (`resolve_ties=True,
-prove_abs_gap=1.0`, 8777 reactions, 112 essential genes, growth 84.716), so a
-perfectly-stable extractor would show zero downstream change outside the edit itself:
-
-| Re-extraction | Reaction symdiff vs M0 | **Essential-gene drift** | Growth |
-|---|---:|---:|---:|
-| Baseline (no reference) | 58 | **13** (112 → 125, all gains) | 84.716 → 72.654 (**−14%**) |
-| `reference_reactions=M0` | 46 | **1** (112 → 111) | 84.716 → 84.706 (−0.01%) |
-
-Anchoring cuts the spurious essential-gene drift **13× (13 → 1)** and leaves growth
-essentially untouched, where the unanchored re-extraction — from an edit that touched
-*nothing* the reference model used — swings growth by 14% and flips 13 genes essential
-that have no relationship to the removed reactions. The reaction-level swing drops less
-dramatically (58 → 46): consistent with the rest of this study, reaction-level movement is
-a poor proxy for what a user actually cares about, and the flags that help most at the
-gene level help least at the reaction level.
-
-**The control that separates a real effect from re-selection noise remains worth using
-alongside anchoring, not instead of it: apply the edit to the *extracted* model as well,
-not only to the template.** Comparing an extraction of the edited template against the
-extracted baseline model with the same edit applied directly gives an exact, causal
-before/after diff for the reactions the edit actually touches; anchoring reduces the noise
-in a *re-extraction* diff but does not eliminate it (46 reactions and 1 gene still moved
-in a template edit that used none of the reference's kept reactions).
+An anchoring parameter that biased a re-extraction toward a prior build's choices was
+implemented and measured here — a 13× reduction in spurious essential-gene drift on a
+null-ish synthetic edit. That measurement is **retracted**: the prep behind it had
+`essential_rxns` collapsed to 1 by the same `close_boundaries` bug in the warning above,
+so the task-feasibility constraint was effectively absent from the build. A later,
+corrected, real-curation test (Human-GEM PR #1028, DLD1 + GBM) found the approach helps
+on one cell line and creates a 5× *increase* in spurious drift on the other, traced to a
+network-topology regime swap the reference-matching objective cannot see coming. The
+parameter has been removed from raven-toolbox. Full account, including the corrected
+measurement and root cause: [the `reference_reactions`
+postmortem](ftinit-reference-reactions.md).
 
 ## Limitations
 
 One cell line, one seed pair for the full-pipeline determinism table (six seeds for the
-single-stage probes), one edit (30 unused reactions removed) for the stability
-measurement, one machine, one Gurobi build. Enough for direction and rough magnitude, not
-for error bars on any number. Cross-Gurobi-version drift — the failure mode
-`resolve_ties`/`prove_abs_gap` are really aimed at — is not measured at all; the seed
-probe stands in for it and is expected to understate it. The stability measurement used a
-"null-ish" edit chosen to touch nothing the reference build used, which isolates
-re-selection noise cleanly but is gentler than a typical real curation (which usually
-removes or changes something the model *does* use, so both baseline and anchored drift
-would likely be larger there — the relative gap between them, which is the actual claim,
-has no particular reason to shrink). Wall-clock figures include some suspend-inflated
-outliers from an overnight run and should be read as approximate; the swing/objective
-columns are set comparisons unaffected by wall-clock noise.
+single-stage probes), one machine, one Gurobi build. Enough for direction and rough
+magnitude, not for error bars on any number, and — per the warning above — not yet
+re-measured since the `close_boundaries` fix. Cross-Gurobi-version drift — the failure
+mode `resolve_ties`/`prove_abs_gap` are really aimed at — is not measured at all; the
+seed probe stands in for it and is expected to understate it. Wall-clock figures include
+some suspend-inflated outliers from an overnight run and should be read as approximate;
+the swing/objective columns are set comparisons unaffected by wall-clock noise.
 
 ## Reproducing
 
@@ -245,13 +235,6 @@ from raven_toolbox.init import ftinit
 model_a = ftinit(prep, scores, seed=1234, resolve_ties=True, prove_abs_gap=1.0)
 model_b = ftinit(prep, scores, seed=7,    resolve_ties=True, prove_abs_gap=1.0)
 print(len({r.id for r in model_a.reactions} ^ {r.id for r in model_b.reactions}))
-
-# Stability: a lightly edited template, anchored to the original build.
-m0 = ftinit(prep, scores, resolve_ties=True, prove_abs_gap=1.0)
-m0_kept = {r.id for r in m0.reactions}
-prep_edited = prep_init_model(edited_template, tasks)  # tasks unchanged, template edited
-m1 = ftinit(prep_edited, scores, resolve_ties=True, prove_abs_gap=1.0,
-           reference_reactions=m0_kept)
 ```
 
 Set `FTINIT_DEBUG=1` to log each solve's status and each tie-break phase — the fastest way
