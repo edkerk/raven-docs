@@ -5,6 +5,12 @@ implementation that makes deliberate architectural choices where RAVEN 2.0
 showed its age or where the Python ecosystem offers better alternatives. This
 page documents the most significant departures and the reasoning behind them.
 
+!!! note "Looking for the MATLAB upgrade instead?"
+    This page compares the **Python** package against RAVEN 2.0. If you are
+    upgrading a MATLAB workflow from RAVEN 2 to RAVEN 3, that is a different
+    set of changes — see
+    [Migrating from RAVEN 2](raven3-migration.md).
+
 ## What is not in raven-toolbox
 
 ### MetaCyc / BioCyc
