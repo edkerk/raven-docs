@@ -41,19 +41,6 @@ model, so a placement that breaks biomass production is rejected rather than
 returned. It can also couple gap-filling into the same step, and keeps a second
 compartment for a reaction only when a loopless FVA shows it carries flux there.
 
-## Model diffing and comparison
-
-`diff_models` reports the semantic differences between two models — including
-comparing gene associations as logic rather than as strings, so `A or B` and
-`B or A` are recognised as the same rule. `compare_models` handles the N-model
-case.
-
-## SIF export
-
-`export_model_to_sif` writes the reaction/metabolite graph for Cytoscape. RAVEN
-had `exportModelToSIF`, but it was removed in the RAVEN 3 codebase review, so
-this is Python-only on the branches documented here.
-
 ## Smaller additions
 
 - **Growth conditions** — apply a named, versioned growth condition to a model.

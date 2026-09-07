@@ -67,6 +67,8 @@ models is the clearest possible statement of what it matches on.
     ```
 
     ```text title="Output"
+    [Warning: The following reaction IDs in second are already present in the model and were renamed: Old: acOUT New: acOUT_second Old: biomassOUT New: biomassOUT_second Old: co2OUT New: co2OUT_second Old: ethOUT New: ethOUT_second Old: glyOUT New: glyOUT_second Old: glcIN New: glcIN_second Old: o2IN New: o2IN_second Old: ethIN New: ethIN_second Old: HXK New: HXK_second ...and 44 more]
+
     merged: 106 rxns, 52 mets, 61 genes
     ```
 
@@ -91,7 +93,11 @@ while every reaction is carried over from both sources and kept.
 That asymmetry is the whole behaviour. Metabolites are matched on
 **name and compartment** — `metaboliteName[comp]`, not the identifier — and
 genes on name, so anything the two models call by the same name becomes one
-entity. Reactions are added without any check at all.
+entity. Reactions are matched on nothing: every one is carried over, and the
+warning is RAVEN saying so. An id that already exists gets the source model's
+id appended — `HXK` and `HXK_second` — which keeps the identifiers unique
+without pretending the two reactions were reconciled. Python renames the same
+way, silently.
 
 !!! warning "Names, not identifiers"
     Two models built from different databases usually share almost no metabolite

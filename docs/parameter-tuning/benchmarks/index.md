@@ -177,7 +177,6 @@ e_coli_core 95 rxns, synthetic toy models. Binaries: BLAST 2.17.0.
 |---|---|---|---|---|
 | `export_to_excel` | `sort_ids` | `False` | implicit unsorted | ✓ keep |
 | `write_yaml_model` | `sort_ids` | `False` | N/A | ✓ keep |
-| `export_model_to_sif` | `graph_type` | `'rc'` | N/A | ✓ keep |
 | `export_for_git` | `formats` | all four | N/A | ✓ keep |
 
 ---

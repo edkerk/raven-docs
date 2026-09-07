@@ -64,6 +64,9 @@ arrayData                     # the expression struct ftINIT and scoreModel take
 hpaData                       # ftINIT argument
 metabolomicsData              # ftINIT argument
 INITSteps                     # ftINIT argument
+dataPrecedence                # ftINIT argument
+gapFillMode                   # fitTasks argument
+getExprForRxnScore            # RAVEN test fixture under testing/function_tests/private/, not public API
 gene_scores                   # ftinit argument
 spontRxnNames                 # prepINITModel argument
 extComp                       # prepINITModel argument
@@ -189,6 +192,8 @@ addSLIMEreactions             # SLIMEr
 # the checker flagged it -- confirm first that the page discusses it as removed.
 importExcelModel              # removed in RAVEN/#631
 exportModelToSIF              # removed in RAVEN/#650
+exportToTabDelimited          # removed in RAVEN/#727
+qMOMA                         # removed with RAVEN's last Optimization Toolbox dependency
 drawMap                       # plotting/ dropped in RAVEN/#614
 drawPathway                   # plotting/ dropped in RAVEN/#614
 setOmicDataToRxns             # plotting/ dropped in RAVEN/#614
@@ -199,7 +204,7 @@ random_objective             # random_sampling method= value, not a function
 deleteUnconstrained          # simplifyModel argument, not a function
 drop_single_metabolite_reactions  # merge_compartments argument
 deleteRxnsWithOneMet         # mergeCompartments argument
-nElements                    # compareRxnsGenesMetsComps struct field
+nElements                    # compareMultipleModels struct field
 smallYeastBad                 # the deliberately broken example model, docs/data/
 maxE                         # getModelFromHomology argument
 minLen                       # getModelFromHomology argument

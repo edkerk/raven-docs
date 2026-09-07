@@ -66,11 +66,11 @@ more detail.
 ### 3. Investigate the problematic reaction
 
 According to KEGG, the removed reaction is a general polymer reaction. Use
-`makeSomething` to look at the flux distributions in more detail and find out if
-there is a better alternative to delete.
+`findLeakMetabolite` to look at the flux distributions in more detail and find
+out if there is a better alternative to delete.
 
 ```matlab
-[fluxes, metabolite]=makeSomething(model,{'H+'},true);
+[fluxes, metabolite]=findLeakMetabolite(model,'produce',{'H+'},true);
 model.metNames(metabolite)
 printFluxes(model, fluxes, false, [], [],'%rxnID (%rxnName):\n\t%eqn: %flux\n')
 ```
@@ -110,7 +110,7 @@ The model can no longer make something from nothing. Check whether it can
 consume something without any output.
 
 ```matlab
-[solution, metabolite]=consumeSomething(model,{'H+'},true);
+[solution, metabolite]=findLeakMetabolite(model,'consume',{'H+'},true);
 model.metNames(metabolite)
 ```
 
@@ -122,12 +122,12 @@ see what the model can produce.
 [model, addedRxns]=addExchangeRxns(model,'in',J);
 ```
 
-`canProduce` reports which metabolites can be produced given these uptakes. It
+`canExchange` reports which metabolites can be produced given these uptakes. It
 allows output of all metabolites — which does not happen in a real cell, but is
 very useful for functionality testing.
 
 ```matlab
-I=canProduce(model);
+I=canExchange(model,'produce');
 fprintf('%d%%\n', round(sum(I)/numel(model.mets)*100));
 ```
 

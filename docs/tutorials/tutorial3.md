@@ -1,9 +1,9 @@
-# Tutorial 3 — Knockouts, MOMA and omics data
+# Tutorial 3 — Knockouts and omics data
 
-This exercise shows how to run FBA and **minimization of metabolic adjustment
-(MOMA)** simulations, and how a GEM can serve as a scaffold for interpreting
-microarray data. It uses a simplified model of yeast metabolism
-(`smallYeast.yml`), imported with `readYAMLmodel`.
+This exercise shows how to run FBA simulations and gene deletion analysis, and
+how a GEM can serve as a scaffold for interpreting microarray data. It uses a
+simplified model of yeast metabolism (`smallYeast.yml`), imported with
+`readYAMLmodel`.
 
 It is assumed you have completed Tutorial 2.
 
@@ -69,7 +69,7 @@ model = setParam(model, 'obj', {'biomassOUT'}, 1);
 sol = solveLP(model);
 printFluxes(model, sol.x, true);
 
-[genes, fluxes, originalGenes, details] = findGeneDeletions(model, 'sgd', 'fba');
+[genes, fluxes, originalGenes, details] = findGeneDeletions(model, 'sgd');
 
 I = getIndexes(model, {'biomassOUT'}, 'rxns');
 J = getIndexes(model, {'glyOUT'}, 'rxns');
@@ -91,36 +91,15 @@ compareFluxes(model, sol.x, sol2.x, 'cutoff', 10^-2, ...
     'metaboliteList', {'NADPH' 'NADH' 'NAD' 'NADP'});
 ```
 
-### 5. MOMA
-
-FBA assumes the cell re-optimises after a perturbation. **MOMA** instead assumes
-the perturbed cell changes its metabolism as little as possible — useful when
-you have wild-type data and want to predict a mutant. Constrain the wild-type
-model to the recorded batch exchange rates, then define an unconstrained model
-with `ZWF` knocked out:
-
-```matlab
-model = setParam(model, 'ub', {'acOUT' 'biomassOUT' 'co2OUT' 'ethOUT' 'glyOUT' 'glcIN' 'o2IN' 'ethIN'}, [0 0.67706 22.4122 19.0946 1.4717 15 1.6 0]*1.0001);
-model = setParam(model, 'lb', {'acOUT' 'biomassOUT' 'co2OUT' 'ethOUT' 'glyOUT' 'glcIN' 'o2IN' 'ethIN'}, [0 0.67706 22.4122 19.0946 1.4717 15 1.6 0]*0.9999);
-
-model2 = model;
-I = getIndexes(model, getExchangeRxns(model), 'rxns');
-model2.lb(I) = 0;  model2.ub(I) = 1000;
-model2 = setParam(model2, 'eq', {'ZWF'}, 0);
-
-[fluxA, fluxB, flag] = qMOMA(model, model2);
-```
-
-The glycerol production is higher in the deletion strain. Note that this is
-without any objectives, just by trying to maintain the cell's original flux
-distribution.
-
-### 6. Reporter metabolites from microarray data
+### 5. Reporter metabolites from microarray data
 
 A GEM can highlight the metabolites around which significant transcriptional
-changes cluster. Load expression data and run the reporter-metabolites test:
+changes cluster. Reload the model first — the steps above changed its bounds and
+objective — then load the expression data and run the reporter-metabolites test:
 
 ```matlab
+model = readYAMLmodel('smallYeast.yml');
+
 [orfs, pvalues] = textread('expression.txt', '%s%f');
 repMets = reporterMetabolites(model, orfs, pvalues);
 [I, J] = sort(repMets.metPValues);

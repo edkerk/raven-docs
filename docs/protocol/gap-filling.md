@@ -63,10 +63,10 @@ biomass.
 
 !!! tip "Semi-automatic gap analysis"
     Beyond automated `fillGaps`, RAVEN offers functions to *find* gaps:
-    `canProduce` and `canConsume` (net synthesis/consumption of metabolites),
-    `checkProduction` (smallest set of metabolites needing net synthesis),
-    `getAllSubGraphs` (disconnected subnetworks) and `haveFlux` (reactions that
-    can/cannot carry flux). Absence of a biomass macromolecule from `canProduce`
-    indicates a gap.
+    `canExchange` (net synthesis or consumption of metabolites, `'produce'` or
+    `'consume'`), `checkProduction` (smallest set of metabolites needing net
+    synthesis), `getAllSubGraphs` (disconnected subnetworks) and `haveFlux`
+    (reactions that can/cannot carry flux). Absence of a biomass macromolecule
+    from `canExchange(model, 'produce')` indicates a gap.
 
 Next: [Save and simulate](simulation.md).

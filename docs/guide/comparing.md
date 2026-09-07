@@ -12,9 +12,8 @@ the same organism at all.
 | MATLAB | Python | |
 |---|---|---|
 | `diffModels` | `diff_models` | every semantic difference between two models |
-| `compareRxnsGenesMetsComps` | `compare_models` | overlap in reactions, metabolites, genes |
-| `compareMultipleModels` | `compare_models` | the same, across many models |
-| `compareFluxes` | — | which fluxes changed between two solutions |
+| `compareMultipleModels` | `compare_models` | overlap in reactions, metabolites, genes, across two or more models |
+| `compareFluxes` | `compare_fluxes` | which fluxes changed between two solutions |
 
 ## Setup
 
@@ -102,16 +101,20 @@ curation script — and in MATLAB, `report.equal` does the same job.
 The other question is coarser: across the whole reaction set, how much do two
 models overlap? `compare_models` builds a presence matrix — one row per
 identifier, one column per model — and reduces it to a Jaccard similarity.
-`compareRxnsGenesMetsComps` prints a full breakdown (reactions, metabolites,
-genes, EC numbers, equations with and without compartments) unless you pass
-`'printResults', false`, as here.
+`compareMultipleModels` takes two models or twenty and reports the overlap on
+seven identity notions at once (reactions, metabolites, genes, EC numbers,
+metabolite names, equations with and without compartments), plus a similarity
+matrix. Pass `'printResults', true` for the full breakdown on screen.
 
 === "MATLAB"
 
     ```matlab
     good.id = 'smallYeast';
     bad.id = 'smallYeastBad';
-    compStruct = compareRxnsGenesMetsComps({good, bad}, 'printResults', false);
+    % compareMultipleModels narrates each stage as it goes, and its structural
+    % projection needs the Statistics and Machine Learning Toolbox, so what it
+    % prints depends on the machine. The counts do not: capture and drop it.
+    [~, compStruct] = evalc('compareMultipleModels({good, bad})');
     inBoth = all(compStruct.rxns.comparison, 2);
     fprintf('%d reactions shared of %d in the union\n', ...
         compStruct.rxns.nElements(inBoth), sum(compStruct.rxns.nElements));
@@ -188,7 +191,7 @@ differ; only a simulation tells you what the difference costs. (MATLAB reports
 that zero as `-0.0000`; the minus sign is a formatting artefact of a zero
 objective, not a negative growth rate.)
 
-The two tabs also show what `compareRxnsGenesMetsComps` and `compare_models`
+The two tabs also show what `compareMultipleModels` and `compare_models`
 count differently. RAVEN's matrix has one row per *combination of models* —
 in-first-only, in-second-only, in-both — with `nElements` counting each;
 raven-toolbox's has one row per *identifier* with a column per model. Both
