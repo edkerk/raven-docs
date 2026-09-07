@@ -41,6 +41,7 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
 
     ```text title="Output"
     [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+    [Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
     273 exchange reactions
       r_1654  ammonium exchange              1000.0
       r_1714  D-glucose exchange                1.0

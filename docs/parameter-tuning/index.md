@@ -98,7 +98,7 @@ cross-toolbox to-do list.
 | [Master index](benchmarks/index.md) | All parameters with non-trivial defaults, MATLAB/Python parity decisions, master to-do list |
 | [Flux sampling](benchmarks/sampling.md) | `random_sampling`, `find_good_reactions`, `max_volume_ellipsoid` |
 | [FSEOF](benchmarks/fseof.md) | `fseof` |
-| [INIT / ftINIT](benchmarks/init.md) | `run_init`, `get_init_model`, `run_ftinit`, `gene_scores_from_expression` |
+| [INIT / ftINIT](benchmarks/init.md) | `run_ftinit`, `ftinit`, `gene_scores_from_expression` |
 | [Gap-filling](benchmarks/gapfilling.md) | `fill_gaps_fast_lp`, `connect_blocked_reactions`, `fill_gaps_kumar_milp` |
 | [Homology-based reconstruction](benchmarks/reconstruction-homology.md) | `run_blast`, `run_diamond`, `get_model_from_homology` |
 | [KEGG-based reconstruction](benchmarks/reconstruction-kegg.md) | `assign_kos`, `run_hmmsearch`, `build_ko_hmm`, `get_kegg_model_*` |

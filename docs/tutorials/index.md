@@ -13,7 +13,7 @@ folder of the RAVEN repository.
 |---|---|---|
 | 1 | [Import a GEM and run FBA](tutorial1.md) | Load a model, set constraints and an objective, run FBA, visualise fluxes |
 | 2 | [Construct a functional small model](tutorial2.md) | Build a model from scratch in Excel; exchange reactions and the steady-state assumption |
-| 3 | [Knockouts, MOMA and omics data](tutorial3.md) | Gene deletions, MOMA, and using a GEM as a scaffold for microarray data |
+| 3 | [Knockouts and omics data](tutorial3.md) | Gene deletions, and using a GEM as a scaffold for microarray data |
 | 4 | [Fix an erroneous model](tutorial4.md) | Systematic quality control: find and fix mass-balance and naming errors |
 | 5 | [Reconstruct a GEM from KEGG](tutorial5.md) | *De novo* reconstruction from protein sequences using KEGG |
 

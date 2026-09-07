@@ -5,6 +5,13 @@ Functions: `raven_toolbox.init.init.run_init`, `raven_toolbox.init.ftinit.run_ft
 
 Date: 2026-06-20.
 
+!!! note "Measured before raven-toolbox dropped tINIT"
+    `run_init` and `get_init_model` were removed from raven-toolbox afterwards,
+    in [raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148):
+    the package implements ftINIT alone now, while MATLAB RAVEN keeps both
+    algorithms. This page is left as it was measured. For what the parameters
+    are today, see [Tuned parameter defaults](../../tuned-parameters.md).
+
 ---
 
 ## `mip_gap` — MILP optimality tolerance

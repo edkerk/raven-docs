@@ -5,6 +5,12 @@ reconstruction (Human-GEM) using the Hart2015 RNA-seq dataset (5 cell lines: DLD
 GBM, HCT116, HELA, RPE1). The goal is functional equivalence — do raven-toolbox and RAVEN
 extract the *same* context-specific reaction sets from the same inputs?
 
+!!! note "The tINIT half is a record, not current behaviour"
+    raven-toolbox has since removed tINIT
+    ([raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148))
+    and implements ftINIT alone; `get_init_model` no longer exists there, though
+    MATLAB RAVEN keeps `getINITModel`. This study is left as it was run.
+
 ## Method
 
 * **Template & inputs.** RAVEN built the ftINIT reference model from Human-GEM

@@ -79,7 +79,7 @@ printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux
 
     Apply each with `changeRxns(model, …, 3)`.
 
-### 4. `canConsume`
+### 4. `canExchange`
 
 Set all uptakes and production to 0, drop the excretion column again, and check
 which metabolites can be consumed without any production:
@@ -87,13 +87,14 @@ which metabolites can be consumed without any production:
 ```matlab
 model = setParam(model, 'eq', getExchangeRxns(model), 0);
 model.b = model.b(:, 1);
-I = canConsume(model);
+I = canExchange(model, 'consume');
 disp(model.mets(I)); %These 12 metabolites can be consumed without any production
 ```
 
-`canConsume` reports the metabolites the model can consume even when no
-production is allowed. Allow all uptake again, then force the uptake of one of
-them — here CO2 — and study the fluxes (a negative output means input):
+`canExchange` with `'consume'` reports the metabolites the model can consume
+even when no production is allowed; `'produce'` asks the opposite. Allow all
+uptake again, then force the uptake of one of them — here CO2 — and study the
+fluxes (a negative output means input):
 
 ```matlab
 model.b = [ones(numel(model.b), 1) * -1000 model.b];
@@ -129,7 +130,7 @@ refModel = readYAMLmodel('smallYeast.yml');
 model.b = [model.b inf(numel(model.b), 1)];
 sol = solveLP(model, 1);
 printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
-I = canConsume(model);
+I = canExchange(model, 'consume');
 disp(model.mets(I));
 gapReport(model, {refModel});
 

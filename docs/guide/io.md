@@ -1,7 +1,7 @@
 # 3. Reading and writing models
 
-Get a model in and out of both toolboxes: SBML, RAVEN YAML, Excel, tab-delimited
-text, and the directory layout a Git-maintained model repository expects.
+Get a model in and out of both toolboxes: SBML, RAVEN YAML, Excel, and the
+directory layout a Git-maintained model repository expects.
 
 ### Functions on this page
 
@@ -12,7 +12,6 @@ text, and the directory layout a Git-maintained model repository expects.
 | `readYAMLmodel` | `read_yaml_model` | read RAVEN YAML |
 | `writeYAMLmodel` | `write_yaml_model` | write RAVEN YAML |
 | `exportToExcelFormat` | `export_to_excel` | write the RAVEN Excel format |
-| `exportToTabDelimited` | `export_to_excel` (path) | write tab-delimited text |
 | `exportForGit` | `export_for_git` | write a Standard-GEM repository layout |
 
 ## Setup
@@ -36,6 +35,7 @@ Which function you need depends on the file format, not on the model.
 
     ```text title="Output"
     [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+    [Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
     smallYeast 53 reactions
     yeastGEM_v9.1.0 4102 reactions
     ```
@@ -156,24 +156,28 @@ necessarily report the same id.
 Both writers take `sortIds` / `sort_ids` to sort reactions, metabolites and genes
 by identifier first, which keeps the diff between two versions of a model small.
 
-## 3.4 Spreadsheets and text
+## 3.4 Spreadsheets
 
-The Excel format is the one people curate by hand; the tab-delimited one is what
-you grep.
+The Excel format is the one people curate by hand: five sheets — reactions,
+metabolites, compartments, genes and the model's own metadata — that a
+non-modeller can read and edit.
 
 === "MATLAB"
 
     ```matlab
-    exportToExcelFormat(modelSmall, 'smallYeast.xlsx');
-
-    mkdir('txt');
-    exportToTabDelimited(modelSmall, 'txt/');
-    fprintf('%s\n', strjoin({dir('txt/*.txt').name}, ', '));
+    exportToExcelFormat(modelSmall, 'fileName', 'smallYeast.xlsx');
+    fprintf('%s\n', strjoin(sheetnames('smallYeast.xlsx'), ', '));
     ```
 
     ```text title="Output"
-    excelComps.txt, excelGenes.txt, excelMets.txt, excelModel.txt, excelRxns.txt
+    RXNS, METS, COMPS, GENES, MODEL
     ```
+
+    RAVEN wrote tab-delimited text as well, through `exportToExcelFormat`
+    reinterpreting a bare directory path as a request for `.txt` files. That
+    fallback contradicted the function's own "only xlsx is supported" error for
+    every other input and was removed in RAVEN 3, together with the
+    `exportToTabDelimited` it called. Anything under `.xlsx` now writes `.xlsx`.
 
 === "Python"
 
@@ -192,7 +196,7 @@ you grep.
     ```
 
     `export_to_excel` needs the `excel` extra (`pip install raven-toolbox[excel]`).
-    raven-toolbox has no separate tab-delimited writer; use pandas on the model's
+    Neither toolbox writes tab-delimited text any more; use pandas on the model's
     collections, or the Excel file, whichever suits.
 
 ## 3.5 Export for a model repository

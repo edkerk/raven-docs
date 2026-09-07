@@ -167,6 +167,8 @@ draft.
 
     ```text title="Output"
     gapFillFastLP: 2 blocked reaction(s) found in draft model.
+    [Warning: The following reaction IDs in smallYeast are already present in the model and were renamed: Old: acOUT New: acOUT_smallYeast Old: biomassOUT New: biomassOUT_smallYeast Old: co2OUT New: co2OUT_smallYeast Old: ethOUT New: ethOUT_smallYeast Old: glyOUT New: glyOUT_smallYeast Old: glcIN New: glcIN_smallYeast Old: o2IN New: o2IN_smallYeast Old: ethIN New: ethIN_smallYeast Old: HXK New: HXK_smallYeast ...and 43 more]
+
     gapFillFastLP: 1 reaction(s) cannot be rescued by the universal database.
     gapFillFastLP: 1/2 blocked reaction(s) are rescuable; running fast...
     gapFillFastLP: added 8 reaction(s) from universal database.
@@ -188,13 +190,13 @@ draft.
 
 ## 13.4 The MILP formulation
 
-<!-- run-examples: needs-gurobi -->
-
 When the LP relaxation adds too much — or you want the provably smallest set —
 the mixed-integer formulation is the alternative. It needs a MILP solver, and it
 is slower by a wide margin on anything genome-scale.
 
 === "MATLAB"
+
+    <!-- run-examples: needs-gurobi -->
 
     ```matlab
     setRavenSolver('gurobi');
@@ -205,6 +207,8 @@ is slower by a wide margin on anything genome-scale.
     ```
 
     ```text title="Output"
+    [Warning: The following reaction IDs in smallYeast are already present in the model and were renamed: Old: acOUT New: acOUT_smallYeast Old: biomassOUT New: biomassOUT_smallYeast Old: co2OUT New: co2OUT_smallYeast Old: ethOUT New: ethOUT_smallYeast Old: glyOUT New: glyOUT_smallYeast Old: glcIN New: glcIN_smallYeast Old: o2IN New: o2IN_smallYeast Old: ethIN New: ethIN_smallYeast Old: HXK New: HXK_smallYeast ...and 43 more]
+
     gapFillMILP: merged model has 52 mets, 105 rxns (52 draft, 52 universal).
     gapFillMILP: 35 reversal candidates, 52 database candidates.
     gapFillMILP: setting minGrowth = 0.02443 (10% of max 0.2443).
@@ -214,6 +218,8 @@ is slower by a wide margin on anything genome-scale.
     ```
 
 === "Python"
+
+    <!-- run-examples: needs-gurobi -->
 
     ```python
     from raven_toolbox.gapfilling import fill_gaps_kumar_milp
@@ -248,7 +254,7 @@ particular compound.
     ```text title="Output"
     [Warning: Exchange metabolites should normally not be removed from the model when using checkTasks. Inputs and outputs are defined in the task file instead. Use importModel(file,false) to import a model with exchange metabolites remaining]
     [GROWTH] Growth on glucose: Added 0 reaction(s), 0 reactions added in total
-    [Warning: "[LEAK] Biomass from nothing" is set as SHOULD FAIL. Such tasks cannot be modelled using this approach and the task is therefore ignored\n]
+    [Warning: "[LEAK] Biomass from nothing" is set as SHOULD FAIL. Such tasks cannot be modelled using this approach and the task is therefore ignored]
     ```
 
 === "Python"

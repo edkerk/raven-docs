@@ -12,8 +12,8 @@ nothing.
 | `checkModelStruct` | `check_model` | structural problems |
 | `getElementalBalance` | `get_elemental_balance` | mass balance, reaction by reaction |
 | `haveFlux` | `find_blocked_reactions` <span class="cobrapy-tag">cobrapy</span> | reactions that can never carry flux |
-| `canProduce` | `analyse_topology` | which metabolites the model can make, given its medium |
-| `makeSomething`, `findLeakMetabolite` | `Model.optimize` on a demand <span class="cobrapy-tag">cobrapy</span> | can the model make something from **nothing** |
+| `canExchange` | `analyse_topology` | which metabolites the model can make — or consume — given its medium |
+| `findLeakMetabolite` | `Model.optimize` on a demand <span class="cobrapy-tag">cobrapy</span> | can the model make something from **nothing** |
 | `gapReport` | `check_model` + `analyse_topology` | one summary of the gaps |
 
 ## Setup
@@ -191,11 +191,11 @@ without a carbon source.
     exchangeRxns = getExchangeRxns(model);
     closed = setParam(model, 'eq', exchangeRxns, 0);
 
-    produced = canProduce(closed);
+    produced = canExchange(closed, 'produce');
     fprintf('%d of %d metabolites producible from nothing\n', ...
         sum(produced), numel(produced));
 
-    [~, metabolite] = makeSomething(closed);
+    [~, metabolite] = findLeakMetabolite(closed, 'produce');
     fprintf('one leak: %s\n', strjoin(closed.mets(metabolite), ', '));
     ```
 
@@ -204,9 +204,10 @@ without a carbon source.
     one leak: F6P_c
     ```
 
-    `canProduce` counts them; `makeSomething` — a wrapper for
-    `findLeakMetabolite` — finds one, using as few reactions as possible, so you
-    have somewhere to start.
+    `canExchange` counts them; `findLeakMetabolite` finds one, using as few
+    reactions as possible, so you have somewhere to start. Both take the
+    direction as their second argument, and `'consume'` asks the mirror-image
+    question — what can this model swallow without limit.
 
 === "Python"
 
@@ -243,8 +244,8 @@ without a carbon source.
 
 !!! note "Give by-products a way out, or you will find nothing"
     Both RAVEN functions assume every metabolite can be excreted while the test
-    runs — `canProduce` adds an output reaction for each metabolite it checks, and
-    `findLeakMetabolite` takes `allowExcretion` as true by default. The Python
+    runs — `canExchange` adds an output reaction for each metabolite it checks,
+    and `findLeakMetabolite` takes `allowExcretion` as true by default. The Python
     loop has to do it explicitly, and the difference is not subtle: testing one
     demand reaction at a time, with no outlet for the by-products, reports **zero**
     leaks in this model instead of 33, because a leaking reaction is then blocked

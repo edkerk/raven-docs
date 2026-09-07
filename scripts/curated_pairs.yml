@@ -35,7 +35,8 @@ aliases:
   assignSBOterms: add_sbo_terms
   checkModelStruct: check_model
   curateModelFromTables: batch_curate_from_tsv
-  deltaGCSV: load_delta_g_csv
+  loadDeltaGCSV: load_delta_g_csv
+  saveDeltaGCSV: save_delta_g_csv
   grRuleToDNF: gpr_to_dnf
   isDnfGrRule: is_dnf
   standardizeGrRules: gpr_to_dnf
@@ -47,26 +48,23 @@ aliases:
 
   # Gap-filling and topology
   fillGaps: connect_blocked_reactions
-  canProduce: analyse_topology
-  canConsume: analyse_topology
+  canExchange: analyse_topology
   checkProduction: analyse_topology
   getAllSubGraphs: analyse_topology
   haveFlux: analyse_topology
 
   # INIT / ftINIT
+  fitTasks: fill_tasks
   ftINITFillGaps: fill_tasks
-  ftINITFillGapsMILP: fill_tasks
-  ftINITFillGapsForAllTasks: fill_tasks
   ftINITInternalAlg: run_ftinit
   prepINITModel: prep_init_model
   rescaleModelForINIT: rescale_for_init
-  scoreComplexModel: score_reactions_from_genes
+  scoreModel: score_reactions_from_genes
 
   # Biomass and omics
   getBiomassFractions: sum_biomass
   scaleBiomassFraction: scale_biomass
   scaleBiomassPseudoreaction: rescale_pseudoreaction
-  scoreModel: hpa_gene_scores
 
   # Localization
   getUniProtScores: load_uniprot
@@ -91,7 +89,6 @@ cobrapy:
   findGeneDeletions: cobra.flux_analysis.single_gene_deletion
   runProductionEnvelope: cobra.flux_analysis.production_envelope
   runPhenotypePhasePlane: cobra.flux_analysis.production_envelope
-  qMOMA: cobra.flux_analysis.moma
   modelSummary: cobra.Model.summary
   setRavenSolver: cobra.Configuration
 

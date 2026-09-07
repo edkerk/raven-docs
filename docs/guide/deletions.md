@@ -13,7 +13,7 @@ distribution better than plain FBA does".
 | `findGeneDeletions` (`'sgd'`/`'dgd'`) | `double_gene_deletion` <span class="cobrapy-tag">cobrapy</span> | pairs of genes |
 | `getEssentialRxns` | `find_task_essential_reactions` | reactions a task cannot do without |
 | `deleteUnusedGenes` | `remove_genes` | remove genes, rather than knock them out |
-| `qMOMA` | `moma` <span class="cobrapy-tag">cobrapy</span> | a knockout's fluxes, staying near the wild type |
+| — | `moma` <span class="cobrapy-tag">cobrapy</span> | a knockout's fluxes, staying near the wild type |
 
 ## Setup
 
@@ -97,8 +97,7 @@ complex and the reaction goes.
 === "MATLAB"
 
     ```matlab
-    [genes, fluxes] = findGeneDeletions(model, 'testType', 'sgd', ...
-        'analysisType', 'fba');
+    [genes, fluxes] = findGeneDeletions(model, 'testType', 'sgd');
     growth = full(fluxes(logical(model.c), :));   % fluxes come back sparse
     fprintf('%d genes tested, %d essential\n', numel(genes), sum(growth < 1e-6));
     ```
@@ -171,8 +170,7 @@ small model earns its keep.
 === "MATLAB"
 
     ```matlab
-    [genes, fluxes] = findGeneDeletions(model, 'testType', 'dgd', ...
-        'analysisType', 'fba');
+    [genes, fluxes] = findGeneDeletions(model, 'testType', 'dgd');
     fprintf('%d gene pairs tested\n', size(genes, 1));
     ```
 
@@ -205,18 +203,15 @@ knockout's physiology, and a different answer.
 
 === "MATLAB"
 
-    <!-- run-examples: skip -->
+    **RAVEN has no MOMA.** It had `qMOMA`, which solved the quadratic problem
+    with `quadprog` from MATLAB's **Optimization Toolbox**; RAVEN 3 removed it
+    as the last function that depended on a paid MATLAB toolbox. Nothing in
+    RAVEN replaces it, so a MOMA prediction has to come from the Python side —
+    or from the COBRA Toolbox, which keeps its own.
 
-    ```matlab
-    modelKO = removeGenes(model, {'YBR196C'}, 'removeBlockedRxns', true);
-    solMOMA = qMOMA(modelKO, model);
-    fprintf('MOMA growth: %.4f /h\n', solMOMA.f);
-    ```
-
-    `qMOMA` solves a quadratic problem with `quadprog`, from MATLAB's
-    **Optimization Toolbox**. Without it the call fails with
-    `Undefined function 'quadprog'` whatever solver RAVEN is set to, which is
-    why this block carries no output here.
+    What RAVEN does offer for the same *question* — what changed in the mutant,
+    rather than by how much growth fell — is `compareFluxes` on two flux
+    vectors from the same model, in [17. Comparing models](comparing.md).
 
 === "Python"
 

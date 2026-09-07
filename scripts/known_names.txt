@@ -60,10 +60,16 @@ reference_reactions           # ftinit/fill_tasks argument, named in ftinit-dete
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument
 allowNewGenes                 # addRxns argument
-arrayData                     # the expression struct ftINIT and scoreComplexModel take
+arrayData                     # the expression struct ftINIT and scoreModel take
 hpaData                       # ftINIT argument
 metabolomicsData              # ftINIT argument
 INITSteps                     # ftINIT argument
+dataPrecedence                # ftINIT argument
+gapFillMode                   # fitTasks argument
+printOutput                   # checkTasks argument
+resolveTies                   # ftINIT argument
+proveAbsGap                   # ftINIT argument
+getExprForRxnScore            # RAVEN test fixture under testing/function_tests/private/, not public API
 gene_scores                   # ftinit argument
 spontRxnNames                 # prepINITModel argument
 extComp                       # prepINITModel argument
@@ -189,6 +195,8 @@ addSLIMEreactions             # SLIMEr
 # the checker flagged it -- confirm first that the page discusses it as removed.
 importExcelModel              # removed in RAVEN/#631
 exportModelToSIF              # removed in RAVEN/#650
+exportToTabDelimited          # removed in RAVEN/#727
+qMOMA                         # removed with RAVEN's last Optimization Toolbox dependency
 drawMap                       # plotting/ dropped in RAVEN/#614
 drawPathway                   # plotting/ dropped in RAVEN/#614
 setOmicDataToRxns             # plotting/ dropped in RAVEN/#614
@@ -199,7 +207,7 @@ random_objective             # random_sampling method= value, not a function
 deleteUnconstrained          # simplifyModel argument, not a function
 drop_single_metabolite_reactions  # merge_compartments argument
 deleteRxnsWithOneMet         # mergeCompartments argument
-nElements                    # compareRxnsGenesMetsComps struct field
+nElements                    # compareMultipleModels struct field
 smallYeastBad                 # the deliberately broken example model, docs/data/
 maxE                         # getModelFromHomology argument
 minLen                       # getModelFromHomology argument
@@ -219,3 +227,15 @@ dataDir                      # getKEGGModelForOrganism argument
 outDir                       # getKEGGModelForOrganism argument
 keggModel                    # RAVEN data artefact, not a function
 deletedRxns                  # mergeCompartments output variable
+
+# -- raven-toolbox functions that only the dated reports still name ----------
+# raven-toolbox removed tINIT in raven-toolbox/#148: MATLAB RAVEN keeps both
+# algorithms for the models already built with them, and the Python package,
+# having no such installed base, implements ftINIT alone. The measurements in
+# parameter-tuning/ were taken while these existed and describe them
+# accurately, so those pages are left as they were written rather than
+# rewritten around a removal that happened after the benchmark date. The live
+# pages -- guide/init.md, tuned-parameters.md, parameter-tuning/index.md -- do
+# not name them.
+run_init                     # removed from raven-toolbox in #148, with tINIT
+get_init_model               # removed from raven-toolbox in #148, with tINIT
