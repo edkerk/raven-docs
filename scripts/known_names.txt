@@ -66,6 +66,7 @@ metabolomicsData              # ftINIT argument
 INITSteps                     # ftINIT argument
 dataPrecedence                # ftINIT argument
 gapFillMode                   # fitTasks argument
+printOutput                   # checkTasks argument
 getExprForRxnScore            # RAVEN test fixture under testing/function_tests/private/, not public API
 gene_scores                   # ftinit argument
 spontRxnNames                 # prepINITModel argument
@@ -224,3 +225,15 @@ dataDir                      # getKEGGModelForOrganism argument
 outDir                       # getKEGGModelForOrganism argument
 keggModel                    # RAVEN data artefact, not a function
 deletedRxns                  # mergeCompartments output variable
+
+# -- raven-toolbox functions that only the dated reports still name ----------
+# raven-toolbox removed tINIT in raven-toolbox/#148: MATLAB RAVEN keeps both
+# algorithms for the models already built with them, and the Python package,
+# having no such installed base, implements ftINIT alone. The measurements in
+# parameter-tuning/ were taken while these existed and describe them
+# accurately, so those pages are left as they were written rather than
+# rewritten around a removal that happened after the benchmark date. The live
+# pages -- guide/init.md, tuned-parameters.md, parameter-tuning/index.md -- do
+# not name them.
+run_init                     # removed from raven-toolbox in #148, with tINIT
+get_init_model               # removed from raven-toolbox in #148, with tINIT

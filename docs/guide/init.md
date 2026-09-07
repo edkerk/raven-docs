@@ -18,6 +18,10 @@ ships, in both toolboxes.
     issues a `RAVEN:legacyMethod` notice to say it is not what new work should
     use. Silence that with `warning('off','RAVEN:legacyMethod')` if you mean it.
 
+    **tINIT is MATLAB-only.** RAVEN keeps it for the models already built with
+    it; raven-toolbox, a new implementation with no such installed base, carries
+    ftINIT and nothing else. A tINIT model has to be reproduced in MATLAB.
+
 Despite the shared name, the two are **separate implementations that share no
 algorithm code**. Reaction scoring and task gap-filling look forked in the
 table below only because the two entry points call their shared functions with
@@ -71,7 +75,7 @@ genuinely differs, not `getINITModel` vs. `ftINIT` themselves.
 | `ftINIT` | `ftinit` | the staged extraction |
 | `scoreModel` | `score_reactions_from_genes` | gene scores → reaction scores |
 | — | `gene_scores_from_expression` | expression → gene scores |
-| `runINIT`, `getINITModel` | `run_init`, `get_init_model` | the legacy tINIT, for reproducing older models |
+| `runINIT`, `getINITModel` | — | the legacy tINIT, for reproducing older models |
 | `removeLowScoreGenes` | `remove_low_score_genes` | prune negative-scoring genes from GPRs |
 | `checkTasks` | `check_tasks` | confirm the result still does what it must |
 

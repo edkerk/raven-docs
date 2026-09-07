@@ -64,15 +64,19 @@ RAVEN MATLAB: `FSEOF`. raven-toolbox: `fseof`.
 ## INIT / ftINIT
 
 RAVEN MATLAB: `runINIT`, `scoreModel`, `getINITModel`, `ftINIT`, `prepINITModel`,
-`ftINITInternalAlg`, `getINITSteps`. raven-toolbox: `run_init`,
-`score_reactions_from_genes`, `gene_scores_from_expression`,
-`get_init_model`, `ftinit`, `prep_init_model`, `run_ftinit`,
-`get_init_steps`, `classify_reactions`.
+`ftINITInternalAlg`, `getINITSteps`. raven-toolbox:
+`score_reactions_from_genes`, `gene_scores_from_expression`, `ftinit`,
+`prep_init_model`, `run_ftinit`, `get_init_steps`, `classify_reactions`.
+
+Only the MATLAB side has tINIT (`runINIT`, `getINITModel`); raven-toolbox
+implements ftINIT alone — see
+[10. Context-specific models](guide/init.md). Rows below that were measured
+across both algorithms say so.
 
 | Parameter | Default | How determined |
 |---|---|---|
 | `prod_weight` | `0.5` | Literature: [Ågren et al. 2012](https://doi.org/10.1371/journal.pcbi.1002518) (the original INIT paper). |
-| `allow_excretion` | `False` (all three entry points) | Measured zero effect at the default `prod_weight` across all three entry points. |
+| `allow_excretion` | `False` | Measured zero effect at the default `prod_weight` across all three INIT entry points as they stood then; raven-toolbox has since dropped the two tINIT ones. |
 | `mip_gap` | `None` on the Python side (solver default); `0.0004` on the MATLAB side | Measured on genome-scale Human-GEM: the solver's own gap (~1e-4 on Gurobi) is already at least as tight as the measured-good value, so Python's `None` needs no change; genome-scale users get concrete numbers (`0.01` for the full ftINIT pipeline) documented rather than a single hardcoded default, since the right value depends on single-step vs. full-pipeline use. |
 | `time_limit` | `None` (uncapped) on the Python side; `5000 ms` on the MATLAB side | The same genome-scale study found the MATLAB value far too tight (real solves took 42–901s+) but also a real >75-minute uncapped runaway case on degraded input on the Python side — `None` was kept as the safer default there, with the measured working range (120–600s/step) documented for users pushing hard or noisy input. |
 | `series` | `'1+1'` | Literature: [Gustafsson et al. 2023](https://doi.org/10.1073/pnas.2217868120) (the ftINIT paper). |

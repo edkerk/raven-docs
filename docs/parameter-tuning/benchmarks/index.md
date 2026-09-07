@@ -50,6 +50,13 @@ e_coli_core 95 rxns, synthetic toy models. Binaries: BLAST 2.17.0.
 
 ## INIT (tINIT/ftINIT)
 
+!!! note "The `run_init` and `get_init_model` rows are history"
+    raven-toolbox has since removed tINIT and implements ftINIT alone, so those
+    two entry points no longer exist on the Python side; MATLAB's `runINIT` and
+    `getINITModel` remain. Every one of their rows below was already resolved
+    when it went, so nothing is outstanding — they are kept as the record of
+    what was measured on the date in the header.
+
 | Function | Parameter | Python | MATLAB | Action |
 |---|---|---|---|---|
 | `run_init` | `prod_weight` | `0.5` | 0.5 | ✓ keep (Agren 2012) |

@@ -63,15 +63,27 @@ model and is really a broken task.
     tasks = parseTaskList('tasks.txt');
     fprintf('%d tasks\n', numel(tasks));
 
-    report = checkTasks(model, [], true, false, false, tasks);
+    report = checkTasks(model, [], false, false, false, tasks);
+    for i = 1:numel(report.id)
+        verdicts = {'FAIL', 'pass'};
+        fprintf('  %-8s %s\n', report.id{i}, verdicts{report.ok(i) + 1});
+    end
     ```
 
     ```text title="Output"
     2 tasks
     [Warning: Exchange metabolites should normally not be removed from the model when using checkTasks. Inputs and outputs are defined in the task file instead. Use importModel(file,false) to import a model with exchange metabolites remaining]
-    PASS: [GROWTH] Growth on glucose
-    FAIL (should fail): [LEAK] Biomass from nothing
+      GROWTH   pass
+      LEAK     pass
     ```
+
+    `report.ok` is true for both, and for opposite reasons: `GROWTH` was
+    required to pass and did, `LEAK` was required to fail and did.
+
+    `checkTasks` can print its own verdicts — that is its third argument,
+    `printOutput`, turned off here. Reading them off `report` instead is worth
+    the extra lines: the loop runs the tasks through a `parfor`, so what
+    `checkTasks` prints is not in task-file order, while `report` is.
 
 === "Python"
 
@@ -140,13 +152,13 @@ expression score.
 === "MATLAB"
 
     ```matlab
-    [~, ~, ~, essentialRxns] = checkTasks(model, [], false, false, true, tasks(1));
+    [~, essentialRxns] = checkTasks(model, [], false, false, true, tasks(1));
     fprintf('%d reactions essential for the task\n', sum(essentialRxns));
     ```
 
     ```text title="Output"
     [Warning: Exchange metabolites should normally not be removed from the model when using checkTasks. Inputs and outputs are defined in the task file instead. Use importModel(file,false) to import a model with exchange metabolites remaining]
-    1.502712e+04 reactions essential for the task
+    0 reactions essential for the task
     ```
 
     Task-essential reactions come from `checkTasks` with its `getEssential`
