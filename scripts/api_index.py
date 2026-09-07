@@ -97,9 +97,16 @@ def cell(text: str) -> str:
 # Collect MATLAB functions                                                    #
 # --------------------------------------------------------------------------- #
 def is_matlab_function(path: Path) -> bool:
-    """True if the .m file declares a function (i.e. not a plain script)."""
+    """True if the .m file declares a function (i.e. not a plain script).
+
+    Read as utf-8-sig: some of RAVEN's .m files carry a UTF-8 byte-order mark,
+    and a leading U+FEFF is not whitespace to ``str.strip()``, so the opening
+    ``function`` line would not be recognised and the file would be indexed as
+    a script -- dropping it from the API reference and from the name checker's
+    index without any error.
+    """
     try:
-        with path.open(encoding="utf-8", errors="ignore") as fh:
+        with path.open(encoding="utf-8-sig", errors="ignore") as fh:
             for line in fh:
                 stripped = line.strip()
                 if not stripped or stripped.startswith("%"):
@@ -113,7 +120,7 @@ def is_matlab_function(path: Path) -> bool:
 def matlab_summary(path: Path, fname: str) -> str:
     """First descriptive line of a function's MATLAB help block."""
     try:
-        with path.open(encoding="utf-8", errors="ignore") as fh:
+        with path.open(encoding="utf-8-sig", errors="ignore") as fh:
             lines = fh.readlines()
     except OSError:
         return ""
