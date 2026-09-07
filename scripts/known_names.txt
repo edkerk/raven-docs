@@ -67,6 +67,8 @@ INITSteps                     # ftINIT argument
 dataPrecedence                # ftINIT argument
 gapFillMode                   # fitTasks argument
 printOutput                   # checkTasks argument
+resolveTies                   # ftINIT argument
+proveAbsGap                   # ftINIT argument
 getExprForRxnScore            # RAVEN test fixture under testing/function_tests/private/, not public API
 gene_scores                   # ftinit argument
 spontRxnNames                 # prepINITModel argument
