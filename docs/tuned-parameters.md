@@ -63,7 +63,7 @@ RAVEN MATLAB: `FSEOF`. raven-toolbox: `fseof`.
 
 ## INIT / ftINIT
 
-RAVEN MATLAB: `runINIT`, `scoreComplexModel`, `getINITModel`, `ftINIT`, `prepINITModel`,
+RAVEN MATLAB: `runINIT`, `scoreModel`, `getINITModel`, `ftINIT`, `prepINITModel`,
 `ftINITInternalAlg`, `getINITSteps`. raven-toolbox: `run_init`,
 `score_reactions_from_genes`, `gene_scores_from_expression`,
 `get_init_model`, `ftinit`, `prep_init_model`, `run_ftinit`,

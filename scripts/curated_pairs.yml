@@ -54,19 +54,17 @@ aliases:
   haveFlux: analyse_topology
 
   # INIT / ftINIT
+  fitTasks: fill_tasks
   ftINITFillGaps: fill_tasks
-  ftINITFillGapsMILP: fill_tasks
-  ftINITFillGapsForAllTasks: fill_tasks
   ftINITInternalAlg: run_ftinit
   prepINITModel: prep_init_model
   rescaleModelForINIT: rescale_for_init
-  scoreComplexModel: score_reactions_from_genes
+  scoreModel: score_reactions_from_genes
 
   # Biomass and omics
   getBiomassFractions: sum_biomass
   scaleBiomassFraction: scale_biomass
   scaleBiomassPseudoreaction: rescale_pseudoreaction
-  scoreModel: hpa_gene_scores
 
   # Localization
   getUniProtScores: load_uniprot

@@ -60,7 +60,7 @@ reference_reactions           # ftinit/fill_tasks argument, named in ftinit-dete
 # -- RAVEN model struct fields and function arguments -----------------------
 allowExcretion                # findLeakMetabolite argument
 allowNewGenes                 # addRxns argument
-arrayData                     # the expression struct ftINIT and scoreComplexModel take
+arrayData                     # the expression struct ftINIT and scoreModel take
 hpaData                       # ftINIT argument
 metabolomicsData              # ftINIT argument
 INITSteps                     # ftINIT argument
