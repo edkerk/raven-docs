@@ -163,11 +163,15 @@ name hasn't been independently confirmed). raven-toolbox: `assign_kos`,
 ## Sub-cellular localisation
 
 RAVEN MATLAB: `predictLocalization`. raven-toolbox: `predict_localization`.
-**These solve the problem with genuinely different algorithms**: MATLAB uses
-simulated annealing (a stochastic heuristic, no optimality guarantee); the Python
-side solves a deterministic MILP. A few parameters below are therefore not really
-a "which value is right" question — the same number means something different in
+These solve the problem with different algorithms: MATLAB uses simulated
+annealing, a stochastic heuristic with no optimality guarantee, while the Python
+side solves a deterministic MILP. Several parameters below are therefore not a
+question of which value is right — the same number means something different in
 a heuristic's search budget than in a solver's optimality gap.
+
+Compartment assignment is in development on the Python side and is not at parity
+with MATLAB. The defaults below are current, but the method they configure is
+still changing.
 
 | Parameter | Default | How determined |
 |---|---|---|
@@ -176,12 +180,11 @@ a heuristic's search budget than in a solver's optimality gap.
 | `time_limit` (Python) / `maxTime` (MATLAB) | `None` (uncapped) on the Python side; MATLAB's `maxTime` defaults to `15` minutes | Not a value to unify: MATLAB's number is a simulated-annealing search budget (more time generally means a better heuristic answer, not a proof of optimality), while Python's is a MILP solver cutoff (returns a proven-bounded incumbent). Python's `None` was validated at ~2.5 minutes on yeast-GEM, the primary development-scale model. Whether the MILP needs a cap at all for harder cases hasn't been stress-tested. |
 | `mip_gap` | `None` | Python-side-only — MATLAB's heuristic has no analogous optimality-gap concept. |
 
-**Full detail:** [yeast-GEM localisation benchmark](parameter-tuning/studies/yeast-localization-benchmark.md)
-(the primary measurement, real yeast-GEM data with a predictor-noise sweep) ·
-[predictLocalization head-to-head](parameter-tuning/studies/predictlocalization-comparison.md)
-(MATLAB vs Python, same inputs — accuracy, determinism, runtime) ·
-[localization.md](parameter-tuning/benchmarks/localization.md)
-(quick-reference benchmark notes)
+**Full detail:** the measurements behind these values — the yeast-GEM benchmark,
+the head-to-head against MATLAB's `predictLocalization`, the predictor
+benchmarks across four organisms, and the design documents — are in
+[raven-gecko-parity](https://github.com/SysBioChalmers/raven-gecko-parity/tree/develop/docs/localization),
+with the rest of the work in progress on this method.
 
 ## Model manipulation
 
