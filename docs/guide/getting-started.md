@@ -1,7 +1,7 @@
-﻿# 1. Getting started
+# 1. Getting started
 
-Load a model, find out what is in it, and look at a single reaction, metabolite
-and gene. Every other page in the user guide assumes you can do this.
+Load a model, see how large it is, and inspect a single reaction, metabolite and
+gene. Every later page assumes these operations.
 
 ### Functions on this page
 
@@ -16,8 +16,8 @@ and gene. Every other page in the user guide assumes you can do this.
 
 ## Setup
 
-The examples use `smallYeast.yml`, a small model of central carbon metabolism in
-yeast that ships with RAVEN. Download it from
+The examples use `smallYeast.yml`, a model of central carbon metabolism in yeast
+that ships with RAVEN. Download it from
 [`docs/data/smallYeast.yml`](../data/smallYeast.yml) and run everything from the
 directory you put it in.
 
@@ -34,9 +34,13 @@ directory you put it in.
     smallYeast
     ```
 
-    A RAVEN model is a MATLAB struct: `model.rxns`, `model.mets`, `model.genes`
-    and the stoichiometric matrix `model.S` are all fields you can index
-    directly.
+    A RAVEN model is a MATLAB struct of parallel arrays. `model.rxns`,
+    `model.mets` and `model.genes` hold the identifiers, and every other field
+    lines up with one of them by position: `model.lb(4)` is the lower bound of
+    the reaction named in `model.rxns{4}`. The stoichiometric matrix `model.S`
+    has one row per metabolite and one column per reaction, in those same orders.
+    Working with the model means working with indices into these arrays, which is
+    why looking an identifier up comes first.
 
 === "Python"
 
@@ -51,12 +55,14 @@ directory you put it in.
     smallYeast
     ```
 
-    In Python a RAVEN model **is** a `cobra.Model` â€” raven-toolbox adds no model
-    class of its own, so everything cobrapy can do is available on it.
+    In Python a RAVEN model **is** a `cobra.Model`. raven-toolbox defines no
+    model class of its own, so every cobrapy tool, and anything else in the
+    Python COBRA ecosystem, operates on it directly. Reactions, metabolites and
+    genes are objects held in collections rather than parallel arrays, and each
+    knows what it is connected to, so there are no indices to keep aligned.
 
 For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
-*Reading and writing models* (a later page in this guide) covers every
-supported format.
+[3. Reading and writing models](io.md) covers every supported format.
 
 ## 1.2 How big is it?
 
@@ -86,6 +92,15 @@ supported format.
     ** Unique reactions are defined as being biochemically unique (no compartmentalization)
     ```
 
+    Two things in that output are easy to misread. The per-compartment counts do
+    not sum to the total, because a reaction or gene is counted in every
+    compartment its metabolites touch — a transport reaction appears under both.
+    And *unique* means biochemically unique, ignoring compartments: 52
+    metabolites collapse to 45 because seven of them exist in both the cytosol
+    and the mitochondrion. The same 45 is what
+    [16. Combining and simplifying](combining.md) arrives at when it flattens the
+    compartments away.
+
 === "Python"
 
     ```python
@@ -96,14 +111,15 @@ supported format.
     53 52 61
     ```
 
-    There is no raven-toolbox equivalent of `printModelStats`: the collections
-    are attributes of the model, and after a solve `model.summary()` prints an
-    overview of the exchange fluxes.
+    There is no equivalent of `printModelStats`. The collections are attributes,
+    so their lengths are the totals, and per-compartment counts come from
+    filtering them. After a solve, `model.summary()` prints the exchange fluxes
+    and the objective, which is the overview worth having at that point.
 
 ## 1.3 Look at a reaction
 
-Glucose-6-phosphate isomerase, `PGI`, is a good one to start with â€” it is
-reversible, it carries a gene association, and it should be mass balanced.
+Glucose-6-phosphate isomerase, `PGI`, exercises most of what a reaction carries:
+it is reversible, it has a gene association, and it should be mass balanced.
 
 === "MATLAB"
 
@@ -123,6 +139,11 @@ reversible, it carries a gene association, and it should be mass balanced.
     YBR196C
     ```
 
+    `getIndexes` turns an identifier into the position used by every other
+    field. `constructEquations` builds the readable equation from the
+    stoichiometric column, substituting metabolite *names* rather than
+    identifiers, which is why the equation reads in words.
+
 === "Python"
 
     ```python
@@ -140,10 +161,17 @@ reversible, it carries a gene association, and it should be mass balanced.
     YBR196C
     ```
 
-Reversibility is not stored in the Python model: cobrapy derives it from the
-bounds, so a reaction is reversible exactly when its lower bound is negative.
-RAVEN keeps an explicit `model.rev` field alongside the bounds, which is the
-subject of the *Model structure and identifiers* page.
+    `Reaction.reaction` substitutes metabolite *identifiers*, so the same
+    reaction reads differently from the MATLAB equation above. Both describe the
+    same stoichiometry.
+
+The bounds carry the direction. A lower bound of −1000 means the reaction may
+run backwards; a lower bound of zero means it may not. cobrapy derives
+`reversibility` from the bounds each time it is asked, so the two can never
+disagree. RAVEN stores an explicit `model.rev` field alongside the bounds, which
+means it is possible to set one without the other —
+[2. Model structure and identifiers](model-structure.md) covers what to do about
+that.
 
 ## 1.4 Look at a metabolite
 
@@ -161,6 +189,11 @@ subject of the *Model structure and identifiers* page.
     takes part in 4 reactions
     ```
 
+    The reaction count comes from counting non-zero entries in the metabolite's
+    row of `model.S`. `model.metComps` holds an index into `model.comps` rather
+    than the compartment letter itself, which is why the compartment needs two
+    lookups.
+
 === "Python"
 
     ```python
@@ -173,6 +206,13 @@ subject of the *Model structure and identifiers* page.
     alpha-D-glucose 6-phosphate (C6H13O9P) in compartment c
     takes part in 4 reactions
     ```
+
+    `Metabolite.reactions` is maintained by the model as reactions are added and
+    removed, so it needs no matrix lookup.
+
+The formula is what makes a mass-balance check possible at all. A metabolite
+without one leaves every reaction it appears in undecidable, which is the
+distinction 1.6 turns on.
 
 ## 1.5 Look at a gene
 
@@ -188,6 +228,11 @@ subject of the *Model structure and identifiers* page.
     PGI1 -> PGI
     ```
 
+    `model.rxnGeneMat` is a reactions-by-genes incidence matrix; a non-zero entry
+    means that gene appears in that reaction's rule. It records *which* genes are
+    involved, not how they combine — the `and`/`or` structure lives only in
+    `model.grRules` as text.
+
 === "Python"
 
     ```python
@@ -199,11 +244,15 @@ subject of the *Model structure and identifiers* page.
     PGI1 -> ['PGI']
     ```
 
+Both toolboxes distinguish the identifier from the name. `YBR196C` is the
+systematic identifier and `PGI1` the standard gene name; the model is keyed on
+the former.
+
 ## 1.6 Is the reaction balanced?
 
-Draft models routinely contain reactions that do not balance. Checking one
-reaction is the same operation in both toolboxes; doing it for a whole model is
-covered on the *Quality control* page.
+Draft models routinely contain reactions that do not balance. Checking one is the
+same operation in both toolboxes; doing it for a whole model is
+[9. Quality control](quality-control.md).
 
 === "MATLAB"
 
@@ -216,6 +265,13 @@ covered on the *Quality control* page.
     elemental 1, charge -1
     ```
 
+    The two statuses are reported separately, and they use three values, not two:
+    `1` balanced, `0` unbalanced, `-1` undecidable. `PGI` balances elementally
+    and its charge is undecidable — the metabolites in this model carry formulas
+    but no charges, so there is nothing to sum. That is a different statement
+    from "the charges do not balance", and worth keeping apart when triaging a
+    draft.
+
 === "Python"
 
     ```python
@@ -226,20 +282,19 @@ covered on the *Quality control* page.
     {}
     ```
 
-    `check_mass_balance` is cobrapy's. An empty result means the reaction
-    balances; anything listed is the element and the amount by which it does not.
-    `getElementalBalance` answers the same question as a status code: `1`
-    balanced, `0` unbalanced, `-1` not decidable from the information in the
-    model. It reports the charge balance separately, which cobrapy folds into the
-    same dictionary.
+    An empty dictionary means the reaction balances. Anything listed is an
+    element, or `charge`, mapped to the amount by which the two sides differ, so
+    the result says both whether and by how much. cobrapy folds charge into the
+    same dictionary rather than reporting it separately, and omits what it cannot
+    decide, so an empty result covers both "balanced" and "nothing to check".
 
 !!! warning "What can go wrong"
     - **`KeyError` / empty index.** Identifiers are case-sensitive and carry the
       compartment suffix (`G6P_c`, not `G6P`). `getIndexes` returns `0` for a
       name it cannot find, so check the result before using it.
     - **The model loads but nothing grows.** In `smallYeast.yml` every uptake
-      reaction is closed (`glcIN` has bounds `[0 0]`). Opening a medium is the
-      subject of the *Growth media and conditions* page.
+      reaction is closed (`glcIN` has bounds `[0 0]`). Opening a medium is
+      [5. Growth media and conditions](media.md).
     - **Gene identifiers differ between model and FASTA.** Systematic names
       (`YBR196C`) and standard names (`PGI1`) are not interchangeable; RAVEN
       stores the systematic name as the identifier and the standard name as the
@@ -247,7 +302,7 @@ covered on the *Quality control* page.
 
 ## See also
 
-- [User guide overview](index.md) â€” the other pages, and what is still planned.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) â€” what each toolbox has, and where
+- [User guide overview](index.md) — the other pages, and what is still planned.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — what each toolbox has, and where
   cobrapy takes over.
-- [API reference](../api/index.md) â€” every function in both toolboxes.
+- [API reference](../api/index.md) — every function in both toolboxes.
