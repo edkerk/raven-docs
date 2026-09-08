@@ -108,7 +108,7 @@ falls is a knockdown candidate. Ethanol, `ethOUT`, is the product here.
     [parameter benchmarks](../parameter-tuning/benchmarks.md) measure that
     difference on a genome-scale model, where it admits 21 spurious targets.
 
-    `fseof` returns the whole experiment, not just the verdict. `scan` is the
+    `fseof` returns the whole scan rather than only its conclusion. `scan` is the
     reactions by enforced-flux-level matrix of fluxes, `enforced` the levels
     themselves, and `targets` the classified per-reaction table sorted by score.
     `gene_targets` aggregates the same result to genes, which is the form a

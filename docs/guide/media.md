@@ -160,7 +160,8 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     through a reaction with a sentinel bound.
 
     `slim_optimize` returns the objective value alone, without building a full
-    `Solution`, which is worth using inside a loop over many bound settings.
+    `Solution`, which is the cheaper call inside a loop over many bound
+    settings.
 
 ## 5.3 Define a whole medium
 

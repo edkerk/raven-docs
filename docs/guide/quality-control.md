@@ -158,9 +158,8 @@ carrier will inflate every prediction the model makes.
 
     `getElementalBalance` returns a struct rather than printing. Its
     `printUnbalanced` and `printUnparsable` options add warnings for the two
-    failure kinds separately, which is worth having when the question is
-    whether a reaction is wrong or merely undecidable. `rxns` restricts the
-    check to a subset.
+    failure kinds separately, which distinguishes a reaction that is wrong from
+    one that is undecidable. `rxns` restricts the check to a subset.
 
 ## 9.3 What can never carry flux?
 

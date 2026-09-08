@@ -93,7 +93,8 @@ original RAVEN paper. Both are MATLAB only.
 19. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
     and what such a draft is missing.
 20. [Engineering targets](engineering.md), FSEOF for over-production targets
-    and reporter metabolites for the transcriptional picture.
+    and reporter metabolites for the metabolites a transcriptional response
+    surrounds.
 21. [Table-driven curation](curation.md), applying curation as reviewable
     tables rather than a script of function calls.
 22. [Biomass composition and annotation](biomass.md), what the cell is made
