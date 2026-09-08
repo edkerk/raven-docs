@@ -126,6 +126,20 @@ has to be reproduced in MATLAB; see
 structures. There is nothing to convert in Python: the model is already a
 `cobra.Model`, so no equivalent exists or is needed.
 
+### Scope: reconstruction and analysis
+
+RAVEN's functions concentrate on **reconstruction**: building a model from a
+genome by homology or from KEGG, extracting a context-specific one from
+expression data, gap-filling it, and validating it against metabolic tasks. Its
+analysis functions cover what those steps require.
+
+The COBRA Toolbox covers more **analysis**: thermodynamic constraints,
+strain-design algorithms such as OptKnock and OptForce, community and whole-body
+models, and further sampling and loopless variants. RAVEN does not reimplement
+them. `ravenCobraWrapper` converts a RAVEN model into COBRA Toolbox form, and a
+raven-toolbox model is already a `cobra.Model`, so both are direct inputs to
+those analyses.
+
 ### Dynamic FBA
 
 `runDynamicFBA` has no Python counterpart, deliberately. Several maintained
