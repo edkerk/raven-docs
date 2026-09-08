@@ -1,9 +1,14 @@
 # 18. Reconstruction from homology
 
-The oldest way to get a model for a new organism: take a model of a related one,
-find out which of its genes have counterparts in your genome, and carry over the
-reactions those genes are responsible for. Everything rests on the middle step —
-what counts as a counterpart — so this page is mostly about the cut-offs.
+Homology-based reconstruction builds a draft model for an organism that has none,
+using a curated model of a related organism as the source of reactions. Genes in
+the new organism are matched to genes in the template by sequence similarity, and
+each template reaction whose genes have an accepted match is copied across.
+
+The work happens in two steps: a sequence search that produces a table of hits,
+and a transfer step that decides which of those hits are good enough to carry a
+reaction. The cut-offs used by the second step determine the size and the
+reliability of the draft, and they are the part worth understanding.
 
 ### Functions on this page
 
@@ -21,8 +26,9 @@ reactions, 61 genes — and `sce-template.faa` holds the sequences of exactly th
 61 *S. cerevisiae* genes. The organism being reconstructed is *Hansenula
 polymorpha*, whose full 5177-protein proteome is in `hanpo.faa`.
 
-The template model's id has to match the id used for the BLAST, because that is
-how the hits are matched back to a model.
+The template model's id must match the id used for the BLAST. The transfer step
+looks up each hit's source organism by that id to find which template model the
+reaction should come from, so a mismatch leaves every hit unattributable.
 
 === "MATLAB"
 
@@ -55,9 +61,16 @@ how the hits are matched back to a model.
 
 ## 18.1 BLAST, in both directions
 
-Both toolboxes run BLASTP twice — the new organism against the template, and the
-template against the new organism. That second direction is what lets the next
-step ask for *reciprocal* hits rather than merely good ones.
+Both toolboxes run BLASTP twice: the new organism's proteome against the
+template's, and the template's against the new organism's.
+
+The second direction is what makes orthology testable. A one-directional search
+gives, for each new gene, the template gene it resembles most — but the most
+similar sequence is not necessarily the corresponding one. A gene that has been
+duplicated in the template, or a conserved domain shared across a family, will
+attract hits from genes that do a different job. Searching both ways lets the
+transfer step ask whether two genes pick *each other*, which is a much stronger
+claim than either picking the other alone.
 
 === "MATLAB"
 
@@ -93,16 +106,35 @@ step ask for *reciprocal* hits rather than merely good ones.
     sce      hanpo    159
     ```
 
-Both are calling the same BLAST+ executables with the same parameters, so the
-hit counts agree. Neither toolbox bundles them any more: both fetch the build
-for your platform on first use and cache it, so the first run of this page needs
-internet access. RAVEN pulls them with `downloadRavenBinaries`; raven-toolbox
-does the same, or uses the ones on your `PATH` if you point
-`RAVEN_PYTHON_BLASTP` at them.
+The two directions return different counts because they ask different questions:
+159 template genes found a match in *H. polymorpha*, and 178 *H. polymorpha*
+genes found a match in the template. Neither number is the number of orthologs —
+that is decided in the next step, from the pairs that appear in both directions.
 
-`getDiamond` and `run_diamond` are drop-in alternatives. On a pair of full
-proteomes DIAMOND is the difference between minutes and hours, at some cost in
-sensitivity for distant homologs.
+The shape of the result differs between the toolboxes. RAVEN returns a struct
+array with one entry per direction, each carrying `fromId`, `toId`, `fromGenes`,
+`toGenes` and per-hit `evalue`, `aligLen` and `identity` vectors. raven-toolbox
+returns a single `pandas` DataFrame with `from_id` and `to_id` columns, so both
+directions sit in one table and can be filtered with ordinary DataFrame
+operations before being passed on.
+
+Both call the same BLAST+ executables with the same parameters, which is why the
+hit counts agree. Neither ships those executables: both download them per
+platform on first use and cache them, so the first reconstruction on a new
+machine needs network access. raven-toolbox will use the copies on your `PATH`
+instead if `RAVEN_PYTHON_BLASTP` points at them.
+
+`getDiamond` and `run_diamond` are drop-in alternatives that search with DIAMOND
+instead. DIAMOND indexes the database and searches in reduced amino-acid
+alphabets, which makes it one to two orders of magnitude faster on a full
+proteome pair — minutes rather than hours — at the cost of sensitivity for
+distant homologs, where the seeds it uses are less likely to match. For a
+template within the same genus the difference is small; for a template several
+hundred million years away, BLASTP finds pairs DIAMOND misses.
+
+If you already have orthology assignments from another source — OrthoFinder,
+OMA, a published table — `makeFakeBlastStructure` and `make_ortholog_hits` wrap
+them in the structure the transfer step expects, so no search is run.
 
 ## 18.2 From hits to a draft
 
@@ -134,21 +166,61 @@ sensitivity for distant homologs.
     draft: 37 rxns, 49 mets, 54 genes
     ```
 
-`get_model_from_homology` returns a `HomologyResult` rather than a model:
-`.model` is the draft, `.gene_map` records which template gene each new gene came
-from, and `.candidates` — with `review_identity=` — collects the reactions that
-just missed the identity threshold, so a curator can accept or reject them
-deliberately instead of never seeing them. RAVEN returns the draft and its hit
-genes as two outputs.
+The transfer works reaction by reaction. For each reaction in the template, the
+genes named in its gene-reaction rule are looked up in the hit table; a template
+gene is replaced by its accepted counterpart in the new organism, and the
+reaction is carried over if the rule still resolves to something satisfiable
+after the substitution. A reaction requiring two subunits is dropped when only
+one of them has a counterpart; a reaction with two isozymes survives on either.
+The metabolites a carried reaction needs come with it, which is why the draft has
+49 metabolites rather than the template's 52 — the three that appear only in
+dropped reactions are not created.
 
-The draft is smaller than the template: reactions whose genes have no acceptable
-counterpart are not carried over. That is the whole point, and also the whole
-risk — a missing hit is indistinguishable from a gene the organism does not have.
+The `Standardizing grRules` line is RAVEN rewriting the template's rules into a
+canonical form before substituting into them, so that the same rule written two
+ways is handled identically.
+
+`get_model_from_homology` returns a `HomologyResult` rather than a bare model.
+`.model` is the draft; `.gene_map` records which template gene each new gene was
+derived from, which is what you need to trace a reaction back to the evidence
+that put it there; and `.candidates`, populated when `review_identity=` is given,
+collects reactions that failed the identity cut-off but came within the value
+given. Those are the reactions worth a curator's attention — near-misses that a
+threshold rejected, rather than absences. RAVEN returns the draft and its hit
+genes as two separate outputs.
+
+The draft is smaller than the template because reactions whose genes have no
+accepted counterpart are not carried over. That is the intended behaviour, and
+also the main source of error: a reaction left out because no hit passed the
+cut-offs looks exactly like a reaction the organism genuinely lacks.
 
 ## 18.3 The cut-offs decide the model
 
-Defaults are a judgement, not a fact. Two matter most: `maxE` (`1e-30`) and
-`minLen` (`100`, an alignment length). Tightening either shrinks the draft.
+Three cut-offs control which hits are accepted, and tightening any of them
+shrinks the draft.
+
+`maxE` / `max_evalue` (`1e-30`) is the maximum BLAST E-value — the number of
+hits of at least this quality expected by chance in a database this size. The
+default is strict by BLAST standards, where `1e-5` is a common threshold, because
+transferring a reaction on a marginal hit adds a claim about metabolism that
+nothing downstream will question.
+
+`minLen` / `min_align_len` (`100`) is the minimum aligned length in residues. It
+exists to reject hits that align well over a short conserved domain while the
+rest of the protein is unrelated. The value was measured against KEGG and OMA
+orthology assignments across four organisms: anything at or below 150 gave the
+same result, and higher values discarded genuine orthologs whose alignment was
+interrupted.
+
+`minIde` / `min_identity` (`40`) is the minimum percentage identity across the
+alignment.
+
+A fourth parameter, `strictness`, decides how much agreement between the two
+BLAST directions is required, from accepting any hit that passes the cut-offs up
+to requiring reciprocal best hits. At its strictest setting, ties between
+candidate hits are broken on bitscore, which unlike the E-value does not depend
+on the size of the database searched, so the choice does not shift when a
+proteome is updated.
 
 === "MATLAB"
 
@@ -175,18 +247,22 @@ Defaults are a judgement, not a fact. Two matter most: `maxE` (`1e-30`) and
     strict draft: 32 rxns, 46 genes
     ```
 
-!!! warning "`minLen` changed recently"
-    Its default was **200** and is now **100**. The value was measured against
-    KEGG and OMA orthology across four organisms: anything at or below 150
-    performed the same, while 200 was discarding real orthologs. If you are
-    reproducing an older reconstruction, set it explicitly — otherwise the same
-    script gives you a different model than it did before.
+Raising the two thresholds costs five reactions and eight genes. Whether that is
+an improvement depends on what the draft is for: a model that will be curated
+by hand benefits from the extra candidates, since a wrong reaction is easier to
+spot than a missing one, while a model used directly for prediction is better
+with fewer and better-supported reactions.
+
+!!! note "Reproducing an older reconstruction"
+    Some of these defaults are not the values RAVEN 2 used, so the same script
+    can produce a different draft under RAVEN 3. Set them explicitly, or see
+    [Migrating from RAVEN 2](../raven3-migration.md).
 
 ## 18.4 A draft is not a model
 
-What comes out of this step has reactions and genes, and nothing else. There is
-no biomass reaction unless a template reaction happened to carry one, no
-exchange reactions, and no guarantee that anything can carry flux.
+What comes out of this step has reactions, metabolites and genes, and nothing
+else. There is no biomass reaction unless a template reaction happened to carry
+one, no exchange reactions, and no guarantee that anything can carry flux.
 
 === "MATLAB"
 
@@ -222,16 +298,19 @@ exchange reactions, and no guarantee that anything can carry flux.
     reactions that can carry flux: 0 of 37
     ```
 
-Not one of the 37 reactions can carry flux, and there is no objective and no way
-in or out. That is the normal, expected state of a homology draft: it is a set of
-claims about which reactions the organism probably has, and nothing more.
+None of the 37 reactions can carry flux. This is not a defect in the draft: with
+no exchange reactions there is no way for anything to enter or leave the system,
+so every reaction is blocked by the steady-state constraint regardless of how
+well connected the network is. The number says nothing yet about the quality of
+the reconstruction, and will only become informative once a medium is defined.
 
-From here the work is the rest of this guide: give it a medium
-([5. Growth media and conditions](media.md)), close the holes
-([13. Gap-filling](gap-filling.md)), check it against what the organism is known
-to do ([12. Metabolic tasks](tasks.md)). The
-[GEM reconstruction protocol](../protocol/index.md) follows exactly that path for
-*H. polymorpha*, at full scale.
+A homology draft is a set of claims about which reactions the organism has. Turning
+it into a model means giving it a medium
+([5. Growth media and conditions](media.md)), closing the gaps that stop it
+producing biomass ([13. Gap-filling](gap-filling.md)), and checking it against
+what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
+[GEM reconstruction protocol](../protocol/index.md) follows that path for
+*H. polymorpha* at full scale.
 
 !!! warning "What can go wrong"
     - **Identifiers that do not match.** The FASTA headers must carry the same

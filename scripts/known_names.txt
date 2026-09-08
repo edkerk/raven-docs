@@ -211,7 +211,15 @@ nElements                    # compareMultipleModels struct field
 smallYeastBad                 # the deliberately broken example model, docs/data/
 maxE                         # getModelFromHomology argument
 minLen                       # getModelFromHomology argument
+minIde                       # getModelFromHomology argument
 preferredOrder               # getModelFromHomology argument
+fromId                       # getBlast output struct field
+toId                         # getBlast output struct field
+fromGenes                    # getBlast output struct field
+toGenes                      # getBlast output struct field
+aligLen                      # getBlast output struct field
+from_id                      # run_blast DataFrame column
+to_id                        # run_blast DataFrame column
 review_identity              # get_model_from_homology argument
 min_align_len                # get_model_from_homology argument
 max_evalue                   # get_model_from_homology argument
