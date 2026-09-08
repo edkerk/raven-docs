@@ -127,11 +127,18 @@ reaction, `=>` for an irreversible one.
     bounds: [0 Inf], genes: YFR053C
     ```
 
-    `eqnType` says how the equation is written: `1` matches metabolites by
-    **id**, `2` by name, `3` by `name[comp]`. `allowNewGenes` is needed because
-    `YFR053C` is not in the model yet; without it `addRxns` refuses, and you
-    would call `addGenesRaven` first. cobrapy creates the gene without a
-    message, so a mistyped identifier becomes a gene.
+    `eqnType` says how the equation is written: `1` or `"id"` matches
+    metabolites against `model.mets`, `2` or `"name"` against
+    `model.metNames` with `compartment` deciding where they go, and `3` or
+    `"name[comp]"` reads the compartment from the token itself.
+
+    `allowNewGenes` is needed because `YFR053C` is not in the model yet.
+    Both `allowNewGenes` and `allowNewMets` default to `false`, so `addRxns`
+    refuses anything it does not recognise until told otherwise, and a
+    mistyped identifier is an error rather than a new entity.
+    `allowNewMets` also accepts a string, used as the prefix for the ids it
+    generates. Adding metabolites with `addMets` first carries more
+    annotation than `addRxns` can infer.
 
 === "Python"
 
@@ -157,10 +164,16 @@ reaction, `=>` for an irreversible one.
     bounds: (0.0, 1000.0) genes: YFR053C
     ```
 
-    The arrow sets the bounds, so an irreversible reaction needs no `bounds` key.
-    A gene named in the rule is created if the model does not have it; there is
-    no separate "add the gene" step, which is what `addGenesRaven` is for in
-    MATLAB.
+    The arrow sets the bounds, so an irreversible reaction needs no `bounds`
+    key; passing `bounds` overrides it. `<=>` is reversible, and `-->`, `->`
+    and `=>` are all accepted for an irreversible reaction.
+
+    `allow_new_genes` and `allow_new_mets` both default to **True** here,
+    the opposite of the MATLAB defaults, so a gene named in the rule is
+    created without a separate step and without a message. That removes the
+    `addGenesRaven` call MATLAB needs, and it means a typo becomes a new gene
+    rather than an error. Set them to `False` once the model's metabolites and
+    genes are all defined.
 
 ## 7.3 Add exchanges
 
@@ -199,7 +212,9 @@ that boundary.
     `add_boundary` works out that `e` is the external compartment. It refuses
     when nothing looks external, which is the usual reason it fails on a small
     hand-built model: give a compartment a recognisable name, or build the
-    exchange as an ordinary reaction with a single metabolite.
+    exchange as an ordinary reaction with a single metabolite. `type="demand"`
+    and `type="sink"` add the other two kinds of boundary reaction, which
+    cobrapy tracks in separate collections.
 
 ## 7.4 Does it carry flux?
 
@@ -231,10 +246,11 @@ flux at all.
     ```
 
 !!! warning "What can go wrong"
-    - **A typo silently creates a metabolite.** Both toolboxes add metabolites
-      they do not recognise, so `m7` and `M7` become two different things and the
-      pathway breaks with no error. Pass `allow_new_mets=False` in Python, or
-      `false` as the last argument of `addRxns` in MATLAB, once the metabolites are all
+    - **A typo creates a metabolite.** The defaults differ: `add_reactions_from_equations`
+      creates unrecognised metabolites and genes, while `addRxns` refuses them
+      unless `allowNewMets` and `allowNewGenes` are set. So `m7` and `M7`
+      become two different things in Python and an error in MATLAB. Set
+      `allow_new_mets=False` and `allow_new_genes=False` once everything is
       defined.
     - **No exchange reactions.** The model then gives zero flux everywhere, with
       no error to explain why.

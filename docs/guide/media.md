@@ -61,6 +61,20 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
       r_4600  Ca(2+) exchange                1000.0
     ```
 
+    `getExchangeRxns` identifies an exchange by its stoichiometry, as a reaction
+    with no substrates or no products, so it does not depend on a naming
+    convention. Its `reactionType` argument can filter by bounds instead of
+    returning all of them: `'uptake'`, `'excrete'`, `'reverse'` and `'blocked'`
+    classify a reaction by what its bounds permit, while `'in'` and `'out'`
+    classify by which side the boundary metabolite sits on and ignore the bounds
+    entirely.
+
+    The filter above is written by hand rather than as `'uptake'` because the two
+    ask different questions. `'uptake'` returns reactions that can *only* take
+    up; every open exchange in yeast-GEM also has an upper bound of 1000, so it
+    can secrete as well and is classified `'reverse'`. Selecting on
+    `model.lb < 0` is what "the medium" means here.
+
 === "Python"
 
     ```python
@@ -96,7 +110,8 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
 
     `model.medium` is a dict of `{exchange id: maximum uptake rate}`, given as a
     **positive** number; cobrapy flips the sign for you, so a medium entry of
-    `1.0` means a lower bound of `-1.0`.
+    `1.0` means a lower bound of `-1.0`. It lists only the exchanges that are
+    open, which is why the loop above prints 16 rows out of 270 reactions.
 
 !!! note "270 or 273?"
     The two toolboxes count exchange reactions differently, and both are right.
@@ -120,6 +135,10 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     [-10 1000] -> 0.8370 /h
     ```
 
+    `setParam` takes a reaction id, a list of ids, or indices, and applies one
+    value to all of them or one value each. `'lb'`, `'ub'` and `'eq'` set bounds;
+    `'obj'` sets the objective coefficient.
+
 === "Python"
 
     ```python
@@ -134,16 +153,20 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     (-10.0, 1000.0) -> 0.8370 /h
     ```
 
-    `set_reaction_bounds` sets both bounds at once and in the right order, which
-    matters: assigning a lower bound above the current upper bound raises in
-    cobrapy. `slim_optimize` returns just the objective value, without building a
-    full `Solution`.
+    `reaction.bounds = (-10.0, 1000.0)` does the same thing for ordinary edits.
+    `set_reaction_bounds` exists for the case cobrapy refuses: it writes the
+    underlying attributes directly, so a condition can land on `lb > ub`, which
+    cobrapy's own setter rejects as invalid. Conditions use that to force flux
+    through a reaction with a sentinel bound.
+
+    `slim_optimize` returns the objective value alone, without building a full
+    `Solution`, which is worth using inside a loop over many bound settings.
 
 ## 5.3 Define a whole medium
 
 Assigning to the medium is **not** a patch: everything not in the dict is closed.
-That makes it the right tool for "this exact recipe and nothing else", and a trap
-if you meant "the shipped medium, but with more glucose".
+That makes it the right tool for "this exact recipe and nothing else", and the
+wrong one for "the shipped medium, but with more glucose".
 
 === "MATLAB"
 
@@ -164,6 +187,17 @@ if you meant "the shipped medium, but with more glucose".
     growth with nothing to eat:  /h
     complete medium:           0.8370 /h
     ```
+
+    The first line prints no number at all. With every uptake closed the LP is
+    infeasible, and `solveLP` returns `sol.f` as an empty array with `sol.stat`
+    set to `-1`; `fprintf` prints nothing for an empty argument. Check `sol.stat`
+    rather than the value, as in [4. Simulating growth with FBA](fba.md).
+
+    `setExchangeBounds` is the closer counterpart to assigning `model.medium`. It
+    takes **metabolites** rather than reaction ids, sets their exchange bounds,
+    and with its default `closeOthers` shuts every other uptake, which is the
+    replace-the-whole-recipe behaviour. `mediaOnly` restricts it to the
+    extracellular compartment, so intracellular sink reactions are left alone.
 
 === "Python"
 
@@ -191,10 +225,11 @@ if you meant "the shipped medium, but with more glucose".
     `dict(model.medium)` and editing individual entries leaves the rest of the
     recipe intact, where writing it out in full does not.
 
-    With **everything** closed the growth rate is not zero but `nan`:
-    `slim_optimize` returns `nan` when the LP has no solution at all, which is a
-    different answer from "the optimum is zero". When a result surprises you, ask
-    `model.optimize().status` before believing the number.
+    The three results are three different states. `nan` means the LP had no
+    solution; `0.0000` means it solved and the optimum is zero; `0.8370` means it
+    solved and the model grows. `slim_optimize` returns `nan` for the first case
+    rather than raising, so check `model.optimize().status` when a number is
+    unexpected.
 
 ## 5.4 Anaerobic growth, and why a condition is more than bounds
 
@@ -236,6 +271,11 @@ an optional cofactor-pseudoreaction edit, an optional biomass-stoichiometry
 delta, a list of per-reaction `bounds`, and an `expected_uptake_count` that fails
 loudly when the condition no longer matches the model.
 
+Removing a metabolite from the cofactor pseudoreaction leaves it charge
+imbalanced, so `charge_balance_met` names the metabolite whose coefficient
+absorbs the difference. Both toolboxes recompute it rather than storing the new
+value, so the file stays readable as a statement of intent.
+
 === "MATLAB"
 
     <!-- run-examples: skip -->
@@ -270,16 +310,22 @@ loudly when the condition no longer matches the model.
     ```
 
     `apply_condition` edits the model **in place** and returns it, so pass a copy
-    when you want to keep the aerobic model as well. It also takes the path
-    directly: `apply_condition(model, "anaerobic.yml")`.
+    to keep the aerobic model as well. It also takes the path directly:
+    `apply_condition(model, "anaerobic.yml")`. `load_condition` is the parse step
+    on its own, for inspecting or editing a condition before applying it.
+
+    Compare 0.1615 /h against the 0.8370 /h the same model reached aerobically
+    in 5.3: both are on 10 mmol glucose, because the condition is applied to the
+    model as 5.3 left it. Fermentation yields far less ATP per glucose than
+    respiration, and the ratio is the point of the comparison.
 
 ## 5.5 What is the model actually living on?
 
 A medium copied from a paper usually contains more than the model needs.
 `getMinimalMedium` and cobrapy's `minimal_medium` search for the smallest set of
-uptakes that still supports a given growth rate, useful to find out which
-component is doing the work, and to catch a nutrient the model can do
-without because a gap-filled reaction produces it internally.
+uptakes that still supports a given growth rate, which identifies which component
+is doing the work, and catches a nutrient the model can do without because a
+gap-filled reaction produces it internally.
 
 === "MATLAB"
 
@@ -313,10 +359,20 @@ without because a gap-filled reaction produces it internally.
     ==============================================================
     ```
 
-    `getMinimalMedium` solves a **MILP**, which the GLPK that ships with RAVEN
-    cannot do: with GLPK selected it reports `glpk is not suitable for solving
-    MILPs`. cobrapy's `minimal_medium` defaults to an LP relaxation, which is why
-    the Python tab runs on any solver.
+    Candidates are the exchanges that already have `lb < 0`; a nutrient the model
+    cannot take up in the first place is never proposed. `minGrowth` defaults to
+    10% of the unconstrained optimum, which is loose enough that most components
+    drop out, so state it explicitly, as here, when the question is about a
+    particular growth rate. `verbose` set to `false` suppresses the table and
+    returns the ids alone.
+
+    Of the 16 open uptakes, 14 are kept: water and H+ are dropped because other
+    reactions supply them. `getMinimalMedium` solves a **MILP**, minimising the
+    number of open uptakes, which the GLPK that ships with RAVEN cannot do: with
+    GLPK selected it reports `glpk is not suitable for solving MILPs`. cobrapy's
+    `minimal_medium` defaults to an LP relaxation that minimises total uptake
+    flux instead, which is why the Python tab runs on any solver and returns
+    rates rather than a list.
 
 === "Python"
 
@@ -344,6 +400,11 @@ without because a gap-filled reaction produces it internally.
     r_4600     0.000
     ```
 
+    The values are uptake rates, not bounds, and the zeros are components the
+    solution needs at a rate below the printed precision rather than not at all.
+    Passing `minimize_components=True` switches to the MILP formulation and
+    returns the same kind of answer `getMinimalMedium` gives.
+
 !!! warning "What can go wrong"
     - **`infeasible` right after setting a medium.** Something essential is
       closed. Reopen the medium one component at a time, or start from
@@ -351,8 +412,8 @@ without because a gap-filled reaction produces it internally.
     - **The sign convention bites.** Uptake is a *negative* flux, but
       `model.medium` takes *positive* numbers. Both are right; mixing them is not.
     - **The model grows without a carbon source.** Usually a leak: some reaction
-      produces carbon from nothing. [Quality control](../guide/index.md) is where
-      that gets diagnosed, with `checkProduction` / `analyse_topology`.
+      produces carbon from nothing. [9. Quality control](quality-control.md) is
+      where that gets diagnosed, with `canExchange` and `analyse_topology`.
     - **Results that cannot be reproduced.** If a medium lives in a script, the
       next person runs a different one. A condition file is data, and it diffs.
 

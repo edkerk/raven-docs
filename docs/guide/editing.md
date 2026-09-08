@@ -67,7 +67,14 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
 
     Both take a **mapping of reaction to equation** so a batch of curated
     reactions can be applied in one call, which is what a curation spreadsheet
-    turns into.
+    turns into. Every id must already exist; these functions change reactions
+    rather than add them.
+
+    Bounds are left alone. Rewriting an equation from `=>` to `<=>` does not
+    make the reaction reversible, because the direction lives in `lb` and `ub`
+    rather than in the arrow; 8.4 sets those separately. Both functions also
+    take the `eqnType` and `allowNewMets` options of `addRxns`, and default to
+    matching metabolites by id.
 
 ## 8.2 Change a gene association
 
@@ -99,8 +106,9 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
     ```
 
     A gene that the model did not have is created for you. Pass `replace=False`
-    to **append** an isozyme instead of overwriting: `(old) or (new)`, which is
-    adds evidence rather than replacing it.
+    to **append** an isozyme instead of overwriting, giving `(old) or (new)`,
+    which records an additional catalyst rather than a correction. A reaction
+    with no rule yet gets the new rule alone, without empty brackets.
 
 ## 8.3 Normalise a GPR
 
@@ -120,9 +128,11 @@ parsed `GPR` object and returns the complexes as lists.
     YBR196C or YLR354C
     ```
 
-    `standardizeGrRules` returns the rules (and a matching
-    `rxnGeneMat`), not a model; assign them back if you want to keep
-    them.
+    `standardizeGrRules` returns the rules and a matching `rxnGeneMat`, not a
+    model, so the results have to be assigned back into the struct to persist.
+    Disjunctive normal form is a flat `or` of `and` groups, one group per
+    alternative complex, which is the form the scoring in
+    [10. Context-specific models](init.md) expects.
 
 === "Python"
 
@@ -191,9 +201,10 @@ cobrapy's objects know what they are attached to.
     53 -> 52 reactions, 61 -> 60 genes
     ```
 
-    The two flags are what make this safe: remove metabolites that are now
-    unused, and genes that are now unused. `deleteUnusedGenes` does the second
-    part on its own.
+    Both flags default to `false`, so a plain `removeReactions` leaves behind
+    metabolites and genes that nothing refers to any more, which later read as
+    gaps. `removeUnusedComps` does the same for compartments.
+    `deleteUnusedGenes` performs the gene half on its own.
 
 === "Python"
 
@@ -247,6 +258,13 @@ their GPRs are rewritten without it.
     60 genes
     PGI rule: 'YLR354C'
     ```
+
+`removeGenes` rewrites each affected GPR without the removed gene. Its
+`removeBlockedRxns` flag, off by default, additionally deletes reactions that
+lose their last catalyst, which turns a gene deletion into a reaction deletion;
+[11. Deletions and essentiality](deletions.md) covers when that is the
+question being asked. `standardizeRules`, on by default, normalises the
+rewritten rules.
 
 !!! warning "What can go wrong"
     - **Editing `model.S` by hand.** It leaves `model.rev`, the bounds and the
