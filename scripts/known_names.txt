@@ -8,6 +8,7 @@
 
 # -- prose terms ------------------------------------------------------------
 camelCase
+ord                           # Python builtin, used in a worked example
 snake_case
 Path                          # pathlib, used by several examples
 raven_toolbox                 # the Python package name, not a function
@@ -107,6 +108,14 @@ outputString                  # printFluxes argument
 maxRatio                      # solveLP and optimizeProb params field
 sPrice                        # solveLP solution field, the shadow prices
 rCost                         # solveLP solution field, the reduced costs
+corrThreshold                 # FSEOF argument
+outputFile                    # FSEOF and reporterMetabolites argument
+printResults                  # reporterMetabolites argument
+geneFoldChanges               # reporterMetabolites argument
+maxPhylDist                   # getKEGGModelForOrganism argument
+minScoreRatioKO               # getKEGGModelForOrganism argument
+minScoreRatioG                # getKEGGModelForOrganism argument
+keepSpontaneous               # getKEGGModelForOrganism argument
 extComp                       # prepINITModel argument
 convertGenes                  # prepINITModel argument
 essential_cache_path          # prep_init_model argument
@@ -185,6 +194,7 @@ removeBlockedRxns               # removeGenes argument (MATLAB)
 
 # -- variables and identifiers used in worked examples ----------------------
 modelKO                       # guide/fba.md, the copied model in 4.4
+ethOUT                        # smallYeast.yml reaction id, the ethanol exchange
 iAL1006                       # model name in legacy tutorial 1
 modelA                        # a stand-in model name in prose
 modelB
@@ -227,6 +237,11 @@ allow_new_genes               # add_reactions_from_equations argument
 delete_no_flux                # simplify_model argument
 open_exchanges                # simplify_model argument
 charge_balance_met            # a condition-file key, not a function
+gene_targets                  # FSEOFResult attribute
+target_type                   # FSEOFResult.targets column
+min_target                    # fseof argument
+gene_fold_changes             # reporter_metabolites argument
+correlation_threshold         # fseof argument
 
 # -- cobrapy attributes named in the guide ----------------------------------
 # Attributes, not functions, so they resolve nowhere; the guide names them when

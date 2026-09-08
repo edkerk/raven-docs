@@ -20,7 +20,7 @@ route you take depends on one thing: whether your organism is already in KEGG.
 |---|---|---|
 | `getKEGGModelForOrganism` | `get_kegg_model_for_organism_from_artefacts` | draft from an organism's KEGG annotation |
 | `getKEGGModelForOrganism` (with `fastaFile`) | `get_kegg_model_from_sequences` | draft from an HMM search of your proteins |
-| `getModelFromKEGG` | `build_reference_model` | the global KEGG reaction model |
+| `getModelFromKEGG` | `build_reference_model` | assemble and cache the global KEGG model |
 | `getPhylDist` | `PhylDist` | phylogenetic distance, used to weight the search |
 
 ## 19.1 When the organism is already in KEGG
@@ -36,22 +36,18 @@ the one to prefer when it applies.
         'dataDir', fullfile(tempdir, 'kegg118_eukaryotes'));
     ```
 
-    ```text title="Output"
-    *** The model reconstruction from KEGG based on the annotation available for KEGG Species sce ***
-    Downloading the HMM library file... COMPLETE
-    Extracting the HMM library file... COMPLETE
-    Error: keggModel.mat not found at <ravenRoot>/reconstruction/kegg/keggModel.mat.
-    Generate it with the raven-toolbox Python package or download it via downloadRavenBinaries.
-    ```
+    Without a `fastaFile`, the reconstruction runs from the organism
+    abbreviation alone and no sequence search happens, so the HMM library is not
+    fetched; the download is guarded on a FASTA being supplied. What it does need
+    is the global KEGG model, which `getModelFromKEGG` supplies. On first use
+    there is no `keggModel.mat` to load, so it downloads the published artefacts,
+    the gene-free reference model plus the KO, reaction and organism-gene tables,
+    assembles them, and caches the result. That first build takes a while and
+    needs a few hundred MB of disk; later calls load the cached file directly.
 
-    **This does not currently work**, which is why the output above is an error
-    rather than a model. `keggModel.mat` is not in the repository, and neither
-    remedy the message names provides it: `downloadRavenBinaries` fetches only
-    the BLAST+, DIAMOND and HMMER executables, and raven-toolbox has no reference
-    to `keggModel` anywhere. Filed as
-    [RAVEN#704](https://github.com/SysBioChalmers/RAVEN/issues/704). Note also
-    that the 129 MB HMM library downloads first, although this route performs no
-    homology search at all.
+    This route ignores every setting except `keepSpontaneous`,
+    `keepUndefinedStoich`, `keepIncomplete` and `keepGeneral`, since the cut-offs
+    and phylogenetic weighting only apply to a sequence search.
 
 === "Python"
 
@@ -104,6 +100,16 @@ kept per-KO so an interrupted run can resume rather than start again.
 
 The organism id still matters even here. It sets the phylogenetic distance used
 to weight the KO assignments, so pick the closest relative KEGG does have.
+`maxPhylDist` decides how far the search may reach: `-1` restricts it to the
+same domain, and a positive value admits organisms out to that distance.
+
+Three cut-offs shape the assignment. `cutOff` is the HMMER significance a hit
+needs at all. `minScoreRatioKO` drops genes that fit a KO far worse than the
+best gene in it, and `minScoreRatioG` drops KOs that fit a gene far worse than
+that gene's best KO; the two prune the same matrix from opposite sides. Their
+defaults were measured rather than inherited, and the
+[KEGG HMM cut-off study](../parameter-tuning/studies/kegg-hmm-cutoff-calibration.md)
+records which of them actually moves the result.
 
 ## 19.3 What a KEGG draft is
 

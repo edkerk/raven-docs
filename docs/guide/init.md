@@ -268,7 +268,7 @@ first thing to re-check, and the least expensive.
 === "MATLAB"
 
     ```matlab
-    taskReport = checkTasks(contextModel, [], true, false, false, tasks);
+    taskReport = checkTasks(contextModel, [], 'taskStructure', tasks);
     ```
 
 === "Python"

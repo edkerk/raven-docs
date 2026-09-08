@@ -91,6 +91,8 @@ original RAVEN paper. Both are MATLAB only.
     template model's genes, and what the cut-offs decide for you.
 19. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
     and what such a draft is missing.
+20. [Engineering targets](engineering.md), FSEOF for over-production targets
+    and reporter metabolites for the transcriptional picture.
 
 ## Also in this section
 
