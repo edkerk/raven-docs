@@ -315,7 +315,7 @@ a cell does not run reactions it gains nothing from.
     ```
 
     `minFlux` selects the second optimisation. `1` minimises the sum of absolute
-    fluxes, which is one further LP and the option to reach for by default. `3`
+    fluxes, which costs one further LP. `3`
     minimises the *number* of active reactions instead, which is a
     mixed-integer problem: the result is easier to read as a pathway, and the
     solve is far slower. Leaving `minFlux` at `0` skips the second solve

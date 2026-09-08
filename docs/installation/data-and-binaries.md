@@ -3,7 +3,7 @@
 Neither toolbox ships the large files it needs. The KEGG reference data, the
 profile-HMM libraries, and the BLAST+, DIAMOND and HMMER executables are all
 fetched on first use from a shared, checksummed release and cached locally. This
-page is what to expect from that, and how to take control of it.
+page covers what is fetched, where it is kept, and how to override each step.
 
 Both toolboxes read from the same
 [`raven-data`](https://github.com/SysBioChalmers/raven-data) repository, so the
@@ -52,8 +52,8 @@ explicit binary= argument
   → an error naming the conda package and the manual alternative
 ```
 
-An installation you already have therefore always wins, and the bundled copy is
-only a fallback for a machine that has none. The environment variable per tool is
+An existing installation therefore takes precedence, and the bundled copy is
+reached only on a machine that has none. The environment variable per tool is
 `RAVEN_PYTHON_` followed by the tool name: `RAVEN_PYTHON_BLASTP`,
 `RAVEN_PYTHON_MAKEBLASTDB`, `RAVEN_PYTHON_DIAMOND`, `RAVEN_PYTHON_HMMSEARCH`,
 `RAVEN_PYTHON_HMMBUILD`, `RAVEN_PYTHON_HMMPRESS`, `RAVEN_PYTHON_HMMSCAN`,
@@ -61,8 +61,8 @@ only a fallback for a machine that has none. The environment variable per tool i
 
 ## Fetching ahead of time
 
-Downloading on first use is convenient interactively and unhelpful in a batch
-job. Both toolboxes can be told to fetch first.
+Downloading on first use puts the download inside the first run, which is not
+always where it should be. Both toolboxes can fetch ahead of that.
 
 === "MATLAB"
 
@@ -116,17 +116,16 @@ exists for the platform.
 | MAFFT | yes | yes | no |
 | CD-HIT | yes | yes | no |
 
-The consequence for a Windows user: homology reconstruction and the KEGG query
-path both work natively, because they need only the first three. **Building** an
-HMM library does not, because that needs MAFFT and CD-HIT, which have no Windows
-builds. Use WSL2 for that, keeping the whole stack inside it, since raven-toolbox
+On Windows this means homology reconstruction and the KEGG query path both run
+natively, since they need only the first three. **Building** an HMM library does
+not, because that needs MAFFT and CD-HIT, which have no Windows builds. Use WSL2 for that, keeping the whole stack inside it, since raven-toolbox
 calls the resolved executable directly and does not translate paths between
 Windows and WSL.
 
 ## Integrity and versions
 
 Every file carries a SHA256 that is checked after download, so a truncated or
-substituted file fails loudly rather than producing a wrong model quietly.
+substituted file raises an error instead of being used.
 
 The two toolboxes pin differently, and both are deliberate. A raven-toolbox
 release carries a baked snapshot of the artefact registry, so a given version
@@ -156,9 +155,10 @@ The bundles carry their upstream licence text, and the terms differ:
     - **A machine with no network.** The first reconstruction fails at the
       download. Fetch on a connected machine, copy `~/.cache/raven_toolbox`, and
       set `RAVEN_PYTHON_AUTOFETCH=0`.
-    - **An unexpected version of a tool.** Something on the `PATH` wins over the
-      pinned bundle, so a conda environment with an old BLAST+ silently supplies
-      it. Point the `RAVEN_PYTHON_*` variable at the intended binary to be sure.
+    - **An unexpected version of a tool.** The `PATH` takes precedence over the
+      pinned bundle, so a conda environment carrying an old BLAST+ supplies it
+      with no message. Point the `RAVEN_PYTHON_*` variable at the intended
+      binary.
     - **A read-only or unusual home directory.** The cache follows
       `XDG_CACHE_HOME`; set it somewhere writable on a shared or containerised
       machine.
