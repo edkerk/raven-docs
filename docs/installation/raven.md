@@ -18,7 +18,9 @@ canonical reference is the
   Linux. `BLAST+`, `DIAMOND` and `HMMER` are **not** bundled: RAVEN fetches the
   build for your platform on first use, so the reconstruction functions need
   internet access the first time they run. `downloadRavenBinaries` fetches them
-  ahead of time, which is also the way to prepare an offline machine.
+  ahead of time. See
+  [Downloaded data and binaries](data-and-binaries.md) for the full set, where
+  it is cached, and how to prepare an offline machine.
 
 ---
 
