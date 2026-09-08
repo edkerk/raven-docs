@@ -1,14 +1,14 @@
-# RAVEN documentation — design & content guide
+# RAVEN documentation: design & content guide
 
 > **This is a living document, and it is the source of intent.** It describes how
 > the RAVEN documentation site *should* be designed and what it *should*
-> contain — it is a set of instructions, not a description of whatever happens to
+> contain; it is a set of instructions, not a description of whatever happens to
 > be on `main` at the moment. When the site and this document disagree, treat
 > this document as the target and bring the site in line (not the other way
 > round). Keep it updated as decisions are made; record new decisions in the
 > decisions log and move resolved items out of "open questions".
 
-> **⚠️ Before doing any work in this repo, pull all remotes first** — the
+> **⚠️ Before doing any work in this repo, pull all remotes first**: the
 > superproject *and* every submodule. The submodules are updated frequently
 > (including automatically), so local state goes stale quickly; never build on a
 > stale checkout:
@@ -46,7 +46,7 @@ the Docs.
 - **Low maintenance.** Pages that can be generated (the API reference) are
   generated at build time; prose pages are hand-written and kept short.
 - **Living, curated content.** Protocols and tutorials are a growing, curated
-  set — quality over quantity.
+  set: quality over quantity.
 
 ## 3. Technical foundation
 
@@ -74,8 +74,8 @@ the Docs.
 - **(b)** Make clear that **both a MATLAB and a Python version exist**, and that
   this site documents both.
 - **(c)** Links to the key articles:
-  - RAVEN 2.0 — Wang et al. (2018), *PLoS Comput Biol* 14(10):e1006541.
-  - RAVEN (1.0) — Agren et al. (2013), *PLoS Comput Biol* 9(3):e1002980.
+  - RAVEN 2.0: Wang et al. (2018), *PLoS Comput Biol* 14(10):e1006541.
+  - RAVEN (1.0): Agren et al. (2013), *PLoS Comput Biol* 9(3):e1002980.
   - (Add the raven-toolbox reference once published.)
 
 ### 4.2 Installation
@@ -84,8 +84,8 @@ An **Installation** section with an overview page and a **separate page per
 version**:
 
 - **RAVEN (MATLAB).** Requirements, then the **three install methods** from the
-  [wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation) — the
-  MATLAB Add-Ons manager (easiest), a release download, and `git clone` — plus
+  [wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation), the
+  MATLAB Add-Ons manager (easiest), a release download, and `git clone`, plus
   verifying (`checkInstallation`), **upgrading** (per method) and **removing**
   (`removeRavenFromPath`).
 - **Python (raven-toolbox).** Requirements, `pip install raven-toolbox`,
@@ -98,8 +98,8 @@ version**:
 Explain the relationship between the two implementations:
 
 - They have **large overlap**, but there are differences.
-- The **MATLAB** version works **completely independently** — including
-  independently of the COBRA Toolbox — although `ravenCobraWrapper` can translate
+- The **MATLAB** version works **completely independently**, including
+  independently of the COBRA Toolbox, although `ravenCobraWrapper` can translate
   between the RAVEN and COBRA model formats.
 - The **Python** version (raven-toolbox) is built **on top of cobrapy**.
 - As a result there are **MATLAB-only functions**, many of which are not ported
@@ -132,7 +132,7 @@ readers. `docs/protocol/index.md` is the landing page and says which is which.
 
 Short, task-focused pages modelled on the cobrapy documentation: **one job per
 page**, three to eight functions, numbered so they can be referred to. Both
-languages live on **one page** in linked MATLAB/Python tabs — the prose is
+languages live on **one page** in linked MATLAB/Python tabs; the prose is
 identical, and side by side a reader sees where raven-toolbox has no counterpart
 because cobrapy already covers it. Two parallel trees would double the
 maintenance and drift.
@@ -149,16 +149,16 @@ Conventions:
   "Functions on this page" table (MATLAB | Python | note) linking into the API
   reference; setup; two to five numbered steps, each with a tabbed code block and
   its real output; "What can go wrong"; "See also".
-- **cobrapy is marked, three ways** — a badge in the function table linking to
+- **cobrapy is marked, three ways**: a badge in the function table linking to
   cobrapy's docs, an explicit import in the snippet
   (`from cobra.io import read_sbml_model`), and a line of prose wherever the
   MATLAB tab would make a cobrapy call look like RAVEN's. A reader who thinks
   `get_by_id` is raven-toolbox's searches the wrong reference.
 - **Never fake a pairing.** Where nothing equivalent exists, the tab says so.
   `scripts/check_names.py` fails the build on an invented name.
-- **Differences are the content.** Where the two toolboxes genuinely disagree —
+- **Differences are the content.** Where the two toolboxes genuinely disagree,
   `getExchangeRxns` counting 273 exchanges where `model.exchanges` counts 270,
-  `fillGaps` being a MILP where `connect_blocked_reactions` is an LP — say so on
+  `fillGaps` being a MILP where `connect_blocked_reactions` is an LP, say so on
   the page.
 
 #### 4.4.2 Protocols
@@ -182,11 +182,11 @@ output printed beneath it, in **both** languages (`scripts/run_examples.py`,
 - **GLPK is the documented default**, since it ships with both toolboxes. Blocks
   needing a MILP carry `<!-- run-examples: needs-gurobi -->` and run where a
   Gurobi WLS licence is configured (`GUROBI_WLS*` secrets), skipped elsewhere.
-- `<!-- run-examples: skip -->` and `skip-file` opt out, and the page states why
-  — a missing toolbox, an hour-long preparation, a KEGG download.
+- `<!-- run-examples: skip -->` and `skip-file` opt out, and the page states why:
+  a missing toolbox, an hour-long preparation, a KEGG download.
 - Output is normalised before comparison: MATLAB warnings are flattened (the
   runner's terminal is narrower than a developer's), and solver chatter is
-  stripped — Gurobi's banner names the machine's licence.
+  stripped; Gurobi's banner names the machine's licence.
 - **The tabs are compared to each other.** A value printed under the same label
   with the opposite sign in the other tab is reported. This is the one thing the
   per-block check cannot see: a snippet that runs cleanly and prints a wrong
@@ -208,18 +208,18 @@ paper** (Agren et al., 2013); the code has been updated to run with current
 RAVEN, but **no further changes** have been made to the exercises.
 
 > Tutorial 6 (de novo reconstruction of *Streptomyces coelicolor* from
-> MetaCyc + KEGG) is **not** included — it is a RAVEN 2.0 showcase, not a RAVEN 1
+> MetaCyc + KEGG) is **not** included; it is a RAVEN 2.0 showcase, not a RAVEN 1
 > legacy tutorial.
 
 ### 4.6 API reference
 
 Generated from source, organised so each function is shown for both languages.
 
-- **Python (raven-toolbox)** — should look and feel like cobrapy's autoapi, e.g.
+- **Python (raven-toolbox)**: should look and feel like cobrapy's autoapi, e.g.
   <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html> and a
   function page like
   <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/flux_analysis/parsimonious/index.html#cobra.flux_analysis.parsimonious.pfba>.
-- **MATLAB** — functions organised **by subfolder** (the `develop3` modular
+- **MATLAB**: functions organised **by subfolder** (the `develop3` modular
   categories: `reconstruction`, `manipulation`, `analysis`, …).
 
 ## 5. Conventions
@@ -237,7 +237,7 @@ Generated from source, organised so each function is shown for both languages.
 *(To be resolved with the maintainer; record answers here and fold the decisions
 into the relevant section above.)*
 
-- **Custom domain** — whether to serve under a project domain in addition to the
+- **Custom domain**: whether to serve under a project domain in addition to the
   default Read the Docs URL (optional).
 
 ## 7. Decisions log
@@ -255,7 +255,7 @@ into the relevant section above.)*
 - **MATLAB↔Python mapping table:** auto-generated pairs + hand-curated cobrapy
   alternatives.
 - **Always pull all remotes (superproject + submodules) before starting work.**
-- **Look & feel:** layout "direction B" — a navy hero homepage with a
+- **Look & feel:** layout "direction B", a navy hero homepage with a
   left **sidebar** (dense, sectioned, nested), prominent search, and a segmented
   MATLAB/Python switch in the hero. Palette **navy** (`#16335C` hero /
   `#2E6FB8` accent). Logo: the **RAVEN raven silhouette only** (no wordmark),

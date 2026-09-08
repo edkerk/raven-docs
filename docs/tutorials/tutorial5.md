@@ -1,4 +1,4 @@
-# Tutorial 5 — Reconstruct a GEM from KEGG
+# Tutorial 5: Reconstruct a GEM from KEGG
 
 This exercise creates a model from KEGG, based on protein sequences in a FASTA
 file, and runs some functionality checks on the result. The example organism is
@@ -123,7 +123,7 @@ see what the model can produce.
 ```
 
 `canExchange` reports which metabolites can be produced given these uptakes. It
-allows output of all metabolites — which does not happen in a real cell, but is
+allows output of all metabolites, which does not happen in a real cell, but is
 very useful for functionality testing.
 
 ```matlab
@@ -132,7 +132,7 @@ fprintf('%d%%\n', round(sum(I)/numel(model.mets)*100));
 ```
 
 Around 31% of the metabolites could be synthesized. It is not directly clear
-whether this is high or low — many metabolites should not be possible to
+whether this is high or low; many metabolites should not be possible to
 synthesize from those simple precursors.
 
 ### 5. Fill gaps using the full KEGG model

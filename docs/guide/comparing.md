@@ -2,8 +2,8 @@
 
 You rarely have just one model. There is the draft and the curated version, the
 model before and after gap-filling, yours and the one from the paper. Two
-different questions follow: **what changed** — an exact, entry-by-entry diff —
-and **how alike are these** — an overview across whole sets. The first is for
+different questions follow: **what changed** (an exact, entry-by-entry diff)
+and **how alike are these** (an overview across whole sets). The first is for
 review and for CI; the second is for deciding whether two models are describing
 the same organism at all.
 
@@ -53,7 +53,7 @@ deliberate errors. Comparing them is the exercise this page exists for.
 
 `diffModels` matches by identifier and compares what it finds: stoichiometry,
 bounds, objective coefficients, gene rules, formulas, charges. It answers a yes
-or no question first — are these the same model? — and then says why not.
+or no question first (are these the same model?) and then says why not.
 
 === "MATLAB"
 
@@ -94,13 +94,13 @@ or no question first — are these the same model? — and then says why not.
 
 This is the comparison to put in a test. `DiffReport` is falsy when the models
 differ, so `assert diff_models(before, after)` is a working regression test for a
-curation script — and in MATLAB, `report.equal` does the same job.
+curation script, and in MATLAB, `report.equal` does the same job.
 
 ## 17.2 How alike are they?
 
 The other question is coarser: across the whole reaction set, how much do two
-models overlap? `compare_models` builds a presence matrix — one row per
-identifier, one column per model — and reduces it to a Jaccard similarity.
+models overlap? `compare_models` builds a presence matrix, one row per
+identifier, one column per model, and reduces it to a Jaccard similarity.
 `compareMultipleModels` takes two models or twenty and reports the overlap on
 seven identity notions at once (reactions, metabolites, genes, EC numbers,
 metabolite names, equations with and without compartments), plus a similarity
@@ -144,7 +144,7 @@ matrix. Pass `'printResults', true` for the full breakdown on screen.
 !!! warning "A high similarity is not a clean bill of health"
     These two models are **0.945** alike on the reaction set, and one of them is
     broken. The differences 17.1 lists are a doubled stoichiometric coefficient
-    and a reaction made irreversible — changes that alter what the model
+    and a reaction made irreversible, changes that alter what the model
     *predicts* while barely moving a set-overlap score. Similarity is for
     grouping models, not for validating one.
 
@@ -185,22 +185,22 @@ the fluxes.
     ```
 
 The errors in `smallYeastBad` are not cosmetic. On the same medium, with the same
-objective, the good model grows and **the bad one does not grow at all** — from a
+objective, the good model grows and **the bad one does not grow at all**, from a
 model that a set-overlap score called 94.5 % similar. A diff tells you the models
 differ; only a simulation tells you what the difference costs. (MATLAB reports
 that zero as `-0.0000`; the minus sign is a formatting artefact of a zero
 objective, not a negative growth rate.)
 
 The two tabs also show what `compareMultipleModels` and `compare_models`
-count differently. RAVEN's matrix has one row per *combination of models* —
-in-first-only, in-second-only, in-both — with `nElements` counting each;
+count differently. RAVEN's matrix has one row per *combination of models*,
+in-first-only, in-second-only, in-both, with `nElements` counting each;
 raven-toolbox's has one row per *identifier* with a column per model. Both
 answer the same question, but you index them in opposite directions.
 
 !!! warning "What can go wrong"
     - **Comparing on identifiers alone.** Both functions match by id. Two models
       from different databases share few ids and will look unrelated even when
-      they describe the same metabolism — see
+      they describe the same metabolism; see
       [16. Combining and simplifying](combining.md), where merging matches on
       names instead.
     - **Reading similarity as quality.** It measures overlap, not correctness.
@@ -209,13 +209,13 @@ answer the same question, but you index them in opposite directions.
       conclusion.
     - **Diffing a model against a reloaded copy of itself.** Writing and reading
       a model can change formatting, ordering and rounding; a diff that reports
-      differences after a round trip may be telling you about the file format —
+      differences after a round trip may be telling you about the file format;
       see [3. Reading and writing models](io.md).
 
 ## See also
 
-- [9. Quality control](quality-control.md) — checking one model rather than two.
-- [16. Combining and simplifying](combining.md) — putting models together, and
+- [9. Quality control](quality-control.md), checking one model rather than two.
+- [16. Combining and simplifying](combining.md), putting models together, and
   what has to line up first.
-- [4. Simulating growth with FBA](fba.md) — the simulation a flux comparison
+- [4. Simulating growth with FBA](fba.md), the simulation a flux comparison
   rests on.

@@ -10,10 +10,10 @@ from RAVEN's `1e-50` cut-off.
 `assign_kos` turns an `hmmscan` KO×gene E-value matrix into gene→KO assignments
 in three steps:
 
-1. **`cutoff`** — keep hits with `evalue <= cutoff`.
-2. **`min_score_ratio_ko`** — within a KO, drop genes whose
+1. **`cutoff`**: keep hits with `evalue <= cutoff`.
+2. **`min_score_ratio_ko`**: within a KO, drop genes whose
    `log(evalue)/log(best_evalue_in_KO) < min_score_ratio_ko`.
-3. **`min_score_ratio_g`** — within a gene, drop KOs whose
+3. **`min_score_ratio_g`**: within a gene, drop KOs whose
    `log(evalue)/log(best_evalue_for_gene) < min_score_ratio_g`.
 
 ## Method
@@ -39,7 +39,7 @@ calibration is therefore *relative* (how the parameters trade off, and where
 RAVEN's default sits relative to the signal), not an absolute accuracy estimate.
 A genome genuinely absent from KEGG would be the next validation. Also note that
 `rxn_novel` / "precision < 1" partly reflects **legitimate homology** KEGG never
-annotated for that organism (paralogs, un-curated genes), not pure error — so the
+annotated for that organism (paralogs, un-curated genes), not pure error, so the
 precision figures are a lower bound on real precision.
 
 ## Organisms
@@ -124,7 +124,7 @@ recall / F1 and reaction recovery vs the annotation.
 | 1e-100 | 0.87 | 0.50 | 0.64 | 0.47 | 21 |
 
 **Reading:** recall is flat-and-high from 1e-10 to ~1e-30, then falls as the
-cut-off eats into the matched tail — gently for model organisms, sharply for the
+cut-off eats into the matched tail, gently for model organisms, sharply for the
 divergent `mge` (rxn recall 0.98 → 0.87 from 1e-30 → 1e-50, → 0.47 at 1e-100).
 The recall lost to a stricter cut-off is *not* noise rejection (noise is at 1e-8);
 it is real annotation. `rxn_novel` shrinks with stricter cut-offs because strong
@@ -156,11 +156,11 @@ un-annotated homologs are also removed.
 | `mge` | 0.5 | 0.80 | 0.78 | 0.84 | 0.81 |
 
 **Reading:**
-- **`min_score_ratio_ko` is inert** — across all four organisms, varying it
+- **`min_score_ratio_ko` is inert**: across all four organisms, varying it
   0.0 → 0.3 → 0.5 changes precision/recall by ≤0.02 (mostly 0.00). It is a
   magic-number knob that does effectively nothing here. (Full 0.0/0.3/0.5 × g-grid
   in the script output; representative rows shown.)
-- **`min_score_ratio_g` is the real precision lever** — 0.80 → 0.95 lifts
+- **`min_score_ratio_g` is the real precision lever**: 0.80 → 0.95 lifts
   precision ~0.07–0.10 for ~0.02 recall loss. 0.50 is clearly too loose.
 
 ## 4. Chosen defaults and effect
@@ -195,8 +195,8 @@ reasons that did not need a sweep.
 `threads` in `run_hmmsearch` and `build_ko_hmm` defaults to one fewer than the
 machine has cores. HMMER's Viterbi search is deterministic across thread counts;
 E-value estimation can differ in the last floating-point places, far below any
-cut-off used here. Single-threaded search against the full KO library — more
-than 26,000 HMMs — takes 30 to 60 minutes per proteome against roughly five
+cut-off used here. Single-threaded search against the full KO library (more
+than 26,000 HMMs) takes 30 to 60 minutes per proteome against roughly five
 multi-threaded.
 
 `seq_identity` in `build_ko_hmm` is `0.9`, the identity at which CD-HIT collapses

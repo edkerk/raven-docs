@@ -160,8 +160,8 @@ lines = [
     "**raven-toolbox**. The two have large overlap, but differ in important "
     "ways:",
     "",
-    "- The **MATLAB** version works completely independently — including "
-    "independently of the COBRA Toolbox — although `ravenCobraWrapper` can "
+    "- The **MATLAB** version works completely independently, including "
+    "independently of the COBRA Toolbox, although `ravenCobraWrapper` can "
     "translate between the RAVEN and COBRA model formats.",
     "- **raven-toolbox** is built on top of "
     "[cobrapy](https://cobrapy.readthedocs.io/), so anything cobrapy already "
@@ -176,7 +176,7 @@ lines = [
     "",
     "## Paired functions",
     "",
-    f"**{len(pairs)}** pairs — {n_auto} matched automatically, "
+    f"**{len(pairs)}** pairs, {n_auto} matched automatically, "
     f"{len(pairs) - n_auto} curated.",
     "",
     "| RAVEN (MATLAB) | raven-toolbox (Python) | Summary |",

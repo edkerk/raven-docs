@@ -132,13 +132,13 @@ hr.rh-divider {
   margin: 1.5rem 0 1rem;
 }
 
-/* features grid — 3 columns */
+/* features grid, 3 columns */
 .md-typeset .grid.cards.rh-features > ul {
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
 }
 .rh-feat-icon { font-size: 1.4rem; display: block; margin-bottom: .3rem; }
 
-/* docs cards — 3 columns */
+/* docs cards, 3 columns */
 .md-typeset .grid.cards.rh-docs > ul {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -180,7 +180,7 @@ hr.rh-divider {
 .md-typeset .tabbed-labels > label:hover {
   color: var(--md-default-fg-color);
 }
-/* Active tab state — one rule per possible tab position */
+/* Active tab state, one rule per possible tab position */
 .md-typeset .tabbed-alternate input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
 .md-typeset .tabbed-alternate input:nth-child(2):checked ~ .tabbed-labels label:nth-child(2),
 .md-typeset .tabbed-alternate input:nth-child(3):checked ~ .tabbed-labels label:nth-child(3),

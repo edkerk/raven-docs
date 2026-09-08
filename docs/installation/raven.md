@@ -1,6 +1,6 @@
 # RAVEN (MATLAB)
 
-The RAVEN Toolbox runs in MATLAB and works completely independently — it does
+The RAVEN Toolbox runs in MATLAB and works completely independently; it does
 not require the COBRA Toolbox, although it can interoperate with it. The
 canonical reference is the
 [RAVEN installation wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation).
@@ -10,7 +10,7 @@ canonical reference is the
 - **MATLAB** R2016b or later, which is the oldest release the code still guards
   for. Continuous integration tests R2024b only, so a recent release is the
   better-covered choice. No additional MathWorks toolboxes required.
-- A **linear-programming solver** — [Gurobi](https://www.gurobi.com/) (free
+- A **linear-programming solver**: [Gurobi](https://www.gurobi.com/) (free
   academic license, recommended) or **GLPK** (bundled with the
   [COBRA Toolbox](https://github.com/opencobra/cobratoolbox)).
   See [Choosing a solver](index.md#choosing-a-solver).
@@ -26,7 +26,7 @@ canonical reference is the
 
 === ":material-puzzle: Add-Ons manager"
 
-    The easiest option — installs directly from within MATLAB.
+    The easiest option. It installs directly from within MATLAB.
 
     1. Open the **Home** tab and click **Add-Ons → Get Add-Ons**.
     2. Search for **RAVEN Toolbox** and click **Add → Add to MATLAB**.

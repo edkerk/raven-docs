@@ -66,7 +66,7 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
     ```
 
     Both take a **mapping of reaction to equation** so a batch of curated
-    reactions can be applied in one call — which is what a curation spreadsheet
+    reactions can be applied in one call, which is what a curation spreadsheet
     turns into.
 
 ## 8.2 Change a gene association
@@ -99,13 +99,13 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
     ```
 
     A gene that the model did not have is created for you. Pass `replace=False`
-    to **append** an isozyme instead of overwriting — `(old) or (new)` — which is
+    to **append** an isozyme instead of overwriting: `(old) or (new)`, which is
     what you want when adding evidence rather than correcting it.
 
 ## 8.3 Normalise a GPR
 
 Rules that mix `and` and `or` in nested brackets are hard to compare and hard to
-score. Both toolboxes rewrite them into disjunctive normal form — a list of
+score. Both toolboxes rewrite them into disjunctive normal form, a list of
 alternative complexes. `is_dnf` takes a rule string; `gpr_to_dnf` takes cobrapy's
 parsed `GPR` object and returns the complexes as lists.
 
@@ -121,7 +121,7 @@ parsed `GPR` object and returns the complexes as lists.
     ```
 
     `standardizeGrRules` returns the rules (and a matching
-    `rxnGeneMat`), not a model — assign them back if you want to keep
+    `rxnGeneMat`), not a model; assign them back if you want to keep
     them.
 
 === "Python"
@@ -169,7 +169,7 @@ parsed `GPR` object and returns the complexes as lists.
     ```
 
     `setParam` takes `'lb'`, `'ub'`, `'eq'`, `'obj'` and `'rev'`, and accepts a
-    list of reactions with a list of values — the batch form is worth using.
+    list of reactions with a list of values; the batch form is worth using.
 
 ## 8.5 Delete things
 
@@ -211,7 +211,7 @@ cobrapy's objects know what they are attached to.
     ```
 
     `remove_orphans=True` is cobrapy's equivalent of those two flags. Note the
-    `with model:` — deletions inside it are rolled back, which is the easiest way
+    `with model:`, deletions inside it are rolled back, which is the easiest way
     to ask "what would this cost me?" without keeping the answer.
 
 ## 8.6 Delete a gene, not a reaction
@@ -263,8 +263,8 @@ their GPRs are rewritten without it.
 
 ## See also
 
-- [7. Building a model from scratch](building.md) — the same operations, in the
+- [7. Building a model from scratch](building.md), the same operations, in the
   other direction.
-- [2. Model structure and identifiers](model-structure.md) — why RAVEN needs
+- [2. Model structure and identifiers](model-structure.md), why RAVEN needs
   dedicated deletion functions.
-- [9. Quality control](quality-control.md) — checking what an edit did.
+- [9. Quality control](quality-control.md), checking what an edit did.

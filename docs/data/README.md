@@ -10,7 +10,7 @@ downloads the file and for the example runner in CI.
 | `smallYeast.yml` | 45 kB | `RAVEN/tutorial/smallYeast.yml` | the default example model for most guide pages |
 | `empty.xml` | 4 kB | `RAVEN/tutorial/empty.xml` | an empty SBML model with compartments defined, to build a model from scratch |
 | `smallYeastBad.yml` | 45 kB | `RAVEN/tutorial/smallYeastBad.yml` | the quality-control and gap-filling pages, which need a model with known errors |
-| `yeast-GEM.yml` | 3.6 MB | yeast-GEM **v9.1.0**, `model/yeast-GEM.yml` | pages that need a genome-scale model — sampling, deletions, ftINIT, gap-filling |
+| `yeast-GEM.yml` | 3.6 MB | yeast-GEM **v9.1.0**, `model/yeast-GEM.yml` | pages that need a genome-scale model: sampling, deletions, ftINIT, gap-filling |
 | `yeast-GEM.xml` | 11.6 MB | yeast-GEM **v9.1.0**, `model/yeast-GEM.xml` | the same model as SBML, for the pages about SBML I/O and annotations |
 
 The two small yeast models are part of the RAVEN Toolbox (MIT licence).
@@ -58,7 +58,7 @@ homology](../guide/homology.md).
 | file | what it is |
 |---|---|
 | `hanpo.faa` | the *Hansenula polymorpha* proteome, 5177 sequences, copied unchanged from the `hanpo-GEM` submodule (`data/genomes/hanpo.faa`) |
-| `sce-template.faa` | 61 *S. cerevisiae* sequences — exactly the genes of `smallYeast.yml` — extracted from the same submodule's `data/genomes/sce.faa` |
+| `sce-template.faa` | 61 *S. cerevisiae* sequences (exactly the genes of `smallYeast.yml`) extracted from the same submodule's `data/genomes/sce.faa` |
 
 The template proteome is cut down to the model's own genes on purpose: BLAST
 against 61 subjects instead of a whole proteome is what keeps the page's example

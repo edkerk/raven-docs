@@ -20,7 +20,7 @@ folder of the RAVEN repository.
 ## Before you start
 
 - These tutorials use the **MATLAB** toolbox. Make sure RAVEN is installed and
-  `checkInstallation` passes — see [Installation](../installation/raven.md).
+  `checkInstallation` passes; see [Installation](../installation/raven.md).
 - Tutorials 2–4 involve editing models in **RAVEN-compatible Excel format**, so
   you need a working `importExcelModel` (i.e. the Excel parser must pass
   `checkInstallation`).
@@ -31,7 +31,7 @@ folder of the RAVEN repository.
 
 !!! tip "Python users"
     The reconstruction concepts carry over directly to raven-toolbox, but the
-    function names are not always a mechanical `snake_case` rewrite — some RAVEN
+    function names are not always a mechanical `snake_case` rewrite; some RAVEN
     functions map to cobrapy instead (`solveLP` → `model.optimize()`), and some
     have no Python counterpart at all (there is no Excel reader). Look each one up
     in the [API reference](../api/index.md), and see

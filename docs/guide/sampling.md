@@ -12,7 +12,7 @@ is usually 0, usually 10, or evenly spread; a sample does.
 | `randomSampling` | `random_sampling` | sample the flux space |
 | `sampleACHR` | `random_sampling` (`method='achr'`) | hit-and-run MCMC, the default |
 | `sampleCHRR` | `random_sampling` (`method='chrr'`) | hit-and-run with rounding, for thin polytopes |
-| — | `find_good_reactions` | reactions usable as random objectives |
+| no equivalent | `find_good_reactions` | reactions usable as random objectives |
 | `getAllowedBounds` | `flux_variability_analysis` <span class="cobrapy-tag">cobrapy</span> | the ranges sampling fills in |
 
 ## Setup
@@ -91,7 +91,7 @@ decimals: the distribution is the result, the individual draws are not.
     RAVEN returns **reactions × samples**; raven-toolbox returns a DataFrame of
     **samples × reactions**, the `cobra.sampling` layout. Every mean, histogram
     and correlation you compute has to pick the right axis, and getting it wrong
-    is silent — you get numbers, just not the ones you meant.
+    is silent; you get numbers, just not the ones you meant.
 
 ## 15.2 What a distribution says that a range does not
 
@@ -131,7 +131,7 @@ the space the cycle occupies.
     ```
 
 The two tabs are separate implementations with separate random number
-generators, so their numbers are not expected to match draw for draw — but they
+generators, so their numbers are not expected to match draw for draw, but they
 describe the same distribution, and that agreement is the check worth making.
 
 `FRDS2` is sampled across nearly its whole 1000-unit range, so the loop is not
@@ -187,7 +187,7 @@ alternative optima rather than to describe the space.
 
 The dimension is a property of the polytope, not of the sampler: it is how many
 degrees of freedom the network really has once the implicitly-determined
-reactions are folded out. A model with 53 reactions has far fewer than 53 — and
+reactions are folded out. A model with 53 reactions has far fewer than 53, and
 the two toolboxes, which implement CHRR separately, both arrive at **9**.
 
 `MVE converged: False` is a warning, not a failure. The rounding step stopped
@@ -199,8 +199,8 @@ looks lumpy.
 ## 15.4 Sample a state, not a model
 
 Sampling an unconstrained model answers "what could this network do?", which is
-rarely the question. The useful version is to constrain first — hold growth near
-its optimum, fix a measured flux — and sample the space that is left.
+rarely the question. The useful version is to constrain first (hold growth near
+its optimum, fix a measured flux) and sample the space that is left.
 
 === "MATLAB"
 
@@ -235,7 +235,7 @@ its optimum, fix a measured flux — and sample the space that is left.
 
 The `randomObjective` method needs reactions that can carry real flux to use as
 objectives. Reactions that move only through a loop are useless for that, so
-both toolboxes screen them out with a loopless FVA first — the same test
+both toolboxes screen them out with a loopless FVA first, the same test
 [14. Flux variability](fva.md) used by hand.
 
 === "MATLAB"
@@ -263,7 +263,7 @@ both toolboxes screen them out with a loopless FVA first — the same test
     ```
 
     Passing the list back as `good_reactions=` on a later call skips the FVA,
-    which is worth doing on a genome-scale model — it is the expensive part.
+    which is worth doing on a genome-scale model; it is the expensive part.
 
 !!! warning "What can go wrong"
     - **No seed.** The numbers change every run. Set one, and report it -- and do
@@ -284,7 +284,7 @@ both toolboxes screen them out with a loopless FVA first — the same test
 
 ## See also
 
-- [14. Flux variability](fva.md) — the ranges this page fills in.
-- [4. Simulating growth with FBA](fba.md) — the single point sampling surrounds.
-- [11. Deletions and essentiality](deletions.md) — the other way to ask what the
+- [14. Flux variability](fva.md), the ranges this page fills in.
+- [4. Simulating growth with FBA](fba.md), the single point sampling surrounds.
+- [11. Deletions and essentiality](deletions.md), the other way to ask what the
   model depends on.

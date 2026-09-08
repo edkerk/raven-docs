@@ -95,15 +95,15 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     ```
 
     `model.medium` is a dict of `{exchange id: maximum uptake rate}`, given as a
-    **positive** number — cobrapy flips the sign for you, so a medium entry of
+    **positive** number; cobrapy flips the sign for you, so a medium entry of
     `1.0` means a lower bound of `-1.0`.
 
 !!! note "270 or 273?"
     The two toolboxes count exchange reactions differently, and both are right.
     cobrapy sorts single-metabolite reactions into `exchanges`, `demands` and
     `sinks`; `getExchangeRxns` returns all of them together. In yeast-GEM the
-    difference is three reactions — `r_2111` (growth) and the sinks `r_4062` and
-    `r_4064` — so MATLAB reports 273 where `model.exchanges` reports 270.
+    difference is three reactions: `r_2111` (growth) and the sinks `r_4062` and
+    `r_4064`, so MATLAB reports 273 where `model.exchanges` reports 270.
 
 ## 5.2 Change one nutrient
 
@@ -186,7 +186,7 @@ if you meant "the shipped medium, but with more glucose".
     complete medium:           0.8370 /h
     ```
 
-    Glucose and oxygen alone are not enough — yeast-GEM also needs nitrogen,
+    Glucose and oxygen alone are not enough; yeast-GEM also needs nitrogen,
     phosphate, sulphate and a handful of ions, which is why building a medium from
     `dict(model.medium)` and editing the entries you care about is usually safer
     than writing the whole recipe out.
@@ -203,7 +203,7 @@ exchange". Without oxygen the model cannot make sterols or unsaturated fatty
 acids, so those have to be supplied; heme a leaves the cofactor pseudoreaction;
 the biomass gains an FADH2 term; and two reactions that are repressed on glucose
 are blocked. Those edits belong together, so both toolboxes read them from one
-YAML file — a *condition* — which can be reviewed as data rather than buried in a
+YAML file (a *condition*), which can be reviewed as data rather than buried in a
 script.
 
 [`anaerobic.yml`](../data/anaerobic.yml) is that file, transcribed from
@@ -247,7 +247,7 @@ loudly when the condition no longer matches the model.
     ```
 
     `applyCondition` reads the file with `parseYAML`, which goes through
-    MATLAB's Python bridge — so it needs a linked CPython with `pyyaml`
+    MATLAB's Python bridge, so it needs a linked CPython with `pyyaml`
     installed (`pyenv` in MATLAB shows which interpreter is linked). That is
     also why this block carries no output here: the documentation build has
     no linked interpreter.
@@ -277,7 +277,7 @@ loudly when the condition no longer matches the model.
 
 A medium copied from a paper usually contains more than the model needs.
 `getMinimalMedium` and cobrapy's `minimal_medium` search for the smallest set of
-uptakes that still supports a given growth rate — useful to find out which
+uptakes that still supports a given growth rate, useful to find out which
 component is doing the work, and to catch a nutrient the model can quietly do
 without because a gap-filled reaction produces it internally.
 
@@ -314,7 +314,7 @@ without because a gap-filled reaction produces it internally.
     ```
 
     `getMinimalMedium` solves a **MILP**, which the GLPK that ships with RAVEN
-    cannot do — with GLPK selected it reports `glpk is not suitable for solving
+    cannot do: with GLPK selected it reports `glpk is not suitable for solving
     MILPs`. cobrapy's `minimal_medium` defaults to an LP relaxation, which is why
     the Python tab runs on any solver.
 
@@ -358,7 +358,7 @@ without because a gap-filled reaction produces it internally.
 
 ## See also
 
-- [Simulating growth with FBA](fba.md) — the solve this page feeds.
-- [Reading and writing models](io.md) — keeping a model and its conditions in a
+- [Simulating growth with FBA](fba.md), the solve this page feeds.
+- [Reading and writing models](io.md), keeping a model and its conditions in a
   repository.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — the full function mapping.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md), the full function mapping.

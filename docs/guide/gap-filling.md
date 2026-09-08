@@ -3,7 +3,7 @@
 A draft model always has holes: reactions that cannot carry flux because
 something upstream is missing, metabolites nothing produces, a biomass component
 the network cannot make. Gap-filling adds reactions from a template until the
-holes close — and the judgement is in deciding which holes are worth closing.
+holes close, and the judgement is in deciding which holes are worth closing.
 
 ### Functions on this page
 
@@ -14,13 +14,13 @@ holes close — and the judgement is in deciding which holes are worth closing.
 | `gapFillFastLP` | `fill_gaps_fast_lp` | the LP formulation (fastGapFill / swiftGapFill) |
 | `gapFillMILP` | `fill_gaps_kumar_milp` | the MILP formulation, when the LP is not enough |
 | `gapFillTopological` | `analyse_topology` | connectivity, without solving an LP |
-| `fitTasks` | `fill_tasks` | fill until a task passes — see [12. Metabolic tasks](tasks.md) |
+| `fitTasks` | `fill_tasks` | fill until a task passes; see [12. Metabolic tasks](tasks.md) |
 
 ## Setup
 
 A gap-filling example needs a draft with holes and a template to fill them from.
 `smallYeast.yml` serves as both: open its medium, take a copy, and remove a
-reaction. What gap-filling then puts back is checkable by eye — it should be the
+reaction. What gap-filling then puts back is checkable by eye: it should be the
 reaction that was removed.
 
 === "MATLAB"
@@ -60,7 +60,7 @@ reaction that was removed.
     ```
 
     Note the medium. Shipped shut, `smallYeast` has **51 of its 53 reactions
-    blocked** — not because it has gaps, but because nothing can get in. Gap-fill
+    blocked**: not because it has gaps, but because nothing can get in. Gap-fill
     a model in that state and you are asking the wrong question entirely.
 
 ## 13.1 Find the holes before filling them
@@ -97,7 +97,7 @@ justify. Start from what cannot carry flux.
 ## 13.2 Connectivity gap-filling
 
 The question here is structural: which template reactions, added to the draft,
-would let a blocked reaction carry flux at all? No objective, no growth — just
+would let a blocked reaction carry flux at all? No objective, no growth, just
 connectivity.
 
 === "MATLAB"
@@ -129,7 +129,7 @@ connectivity.
     1 added: ADH1
     ```
 
-    The reaction that comes back is the one that was taken out — in both
+    The reaction that comes back is the one that was taken out, in both
     toolboxes. That identity is the result worth reporting. `fillGaps` also
     returns counts of *newly connected* and *still unconnectable* reactions, and
     those are not stable: it solves a MILP, several solutions are equally
@@ -190,7 +190,7 @@ draft.
 
 ## 13.4 The MILP formulation
 
-When the LP relaxation adds too much — or you want the provably smallest set —
+When the LP relaxation adds too much, or you want the provably smallest set,
 the mixed-integer formulation is the alternative. It needs a MILP solver, and it
 is slower by a wide margin on anything genome-scale.
 
@@ -240,7 +240,7 @@ is slower by a wide margin on anything genome-scale.
 ## 13.5 Filling towards a task, not a hole
 
 Connectivity gap-filling asks "can this reaction carry flux?". The other question
-— "can the model still do *this*?" — is answered by filling against a task list,
+("can the model still do *this*?") is answered by filling against a task list,
 which is usually what you actually want: a model that grows, or that produces a
 particular compound.
 
@@ -264,7 +264,7 @@ particular compound.
     ```
 
     See [12. Metabolic tasks](tasks.md) for the task list itself, and
-    [10. Context-specific models](init.md) for `fill_tasks` in its usual role —
+    [10. Context-specific models](init.md) for `fill_tasks` in its usual role,
     repairing a model that ftINIT has just cut down.
 
 !!! warning "What can go wrong"
@@ -278,12 +278,12 @@ particular compound.
       reactions look connectable by ignoring where the products go. Useful early,
       misleading later.
     - **MILP on a genome-scale model.** Expect it to be slow, and give it a time
-      limit — see [6. Solvers and configuration](solvers.md).
+      limit; see [6. Solvers and configuration](solvers.md).
 
 ## See also
 
-- [9. Quality control](quality-control.md) — finding the holes, and deciding
+- [9. Quality control](quality-control.md), finding the holes, and deciding
   which matter.
-- [12. Metabolic tasks](tasks.md) — the other way to say what the model must do.
-- [3. Reading and writing models](io.md) — saving the filled model with a record
+- [12. Metabolic tasks](tasks.md), the other way to say what the model must do.
+- [3. Reading and writing models](io.md), saving the filled model with a record
   of what was added.

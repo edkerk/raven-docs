@@ -3,7 +3,7 @@
 # 10. Context-specific models with tINIT and ftINIT
 
 A genome-scale model describes what an organism *can* do. tINIT and ftINIT cut it
-down to what a particular sample — a tissue, a cell line, a condition — appears to
+down to what a particular sample (a tissue, a cell line, a condition) appears to
 be doing, from expression data plus a list of metabolic tasks the result must
 still be able to perform.
 
@@ -44,20 +44,20 @@ and which reactions they need, and beneath that sit `parseTaskList`,
 operator for both `and`/`or` in a grRule and `dataPrecedence` `'reaction'` (the
 settings the original tINIT algorithm needs), converting an unmeasured gene's
 score from `NaN` to `-Inf` afterward; `ftINIT` calls it with the general
-defaults. Task gap-filling is likewise one `fitTasks` loop for both —
+defaults. Task gap-filling is likewise one `fitTasks` loop for both:
 `getINITModel` uses the default `gapFillMode` (`'merge'`, backed by
 `fillGaps`), `ftINIT` passes `'preMerged'` (backed by `ftINITFillGaps`, since
 its reference model already contains the sample's own reactions and needs no
-per-task merge). That MILP-formulation split — `fillGaps` merging per task vs.
-`ftINITFillGaps` expecting a pre-merged model — is the one place gap-filling
+per-task merge). That MILP-formulation split (`fillGaps` merging per task vs.
+`ftINITFillGaps` expecting a pre-merged model) is the one place gap-filling
 genuinely differs, not `getINITModel` vs. `ftINIT` themselves.
 
 !!! warning "The outputs on this page were produced by hand, not by the build"
     Every other page in this guide is re-executed on every commit. This one is
     not: preparing Human-GEM took **113 minutes** in MATLAB and **126 minutes**
-    in Python, the MATLAB run producing a **159 MB** artefact — which no
+    in Python, the MATLAB run producing a **159 MB** artefact, which no
     documentation build should attempt. The numbers below come
-    from one real run — Human-GEM `main`, RAVEN `develop3`, Gurobi 13.0.2 — and
+    from one real run (Human-GEM `main`, RAVEN `develop3`, Gurobi 13.0.2) and
     are quoted with their wall-clock so you can plan around them.
 
     For the MATLAB workflow in its natural habitat, including comparison of the
@@ -74,8 +74,8 @@ genuinely differs, not `getINITModel` vs. `ftINIT` themselves.
 | `getINITSteps` | `get_init_steps` | the step definitions (`1+0`, `1+1`, …) |
 | `ftINIT` | `ftinit` | the staged extraction |
 | `scoreModel` | `score_reactions_from_genes` | gene scores → reaction scores |
-| — | `gene_scores_from_expression` | expression → gene scores |
-| `runINIT`, `getINITModel` | — | the legacy tINIT, for reproducing older models |
+| no equivalent | `gene_scores_from_expression` | expression → gene scores |
+| `runINIT`, `getINITModel` | no equivalent | the legacy tINIT, for reproducing older models |
 | `removeLowScoreGenes` | `remove_low_score_genes` | prune negative-scoring genes from GPRs |
 | `checkTasks` | `check_tasks` | confirm the result still does what it must |
 
@@ -89,15 +89,15 @@ git clone --depth=1 https://github.com/SysBioChalmers/Human-GEM.git
 
 | File | What it is |
 |---|---|
-| `model/Human-GEM.mat` (or `.xml`, `.yml`) | the template — 12 931 reactions, 2 848 genes |
+| `model/Human-GEM.mat` (or `.xml`, `.yml`) | the template: 12 931 reactions, 2 848 genes |
 | `model/reactions.tsv` | reaction annotations, including which reactions are spontaneous |
 | `data/metabolicTasks/metabolicTasks_Essential.txt` | 57 tasks the extracted model must still pass |
-| `data/datasets/Hart2015_RNAseq.txt` | TPM for five cell lines — DLD1, GBM, HCT116, HELA, RPE1 |
+| `data/datasets/Hart2015_RNAseq.txt` | TPM for five cell lines: DLD1, GBM, HCT116, HELA, RPE1 |
 
 Both extractions are mixed-integer problems, so **GLPK will not do**: set Gurobi
 up first ([6. Solvers and configuration](solvers.md)).
 
-## 10.1 Prepare the template — once
+## 10.1 Prepare the template: once
 
 The preparation finds the task-essential reactions, classifies every reaction
 into omics-independent categories, merges linear stretches, and rescales the
@@ -119,7 +119,7 @@ reused for every sample.
     save('prepData.mat', 'prepData', '-v7.3');
     ```
 
-    ```text title="Output — 113 minutes"
+    ```text title="Output, 113 minutes"
     prepData.mat: 159 MB
     ```
 
@@ -146,17 +146,17 @@ reused for every sample.
     prep = prep_init_model(model, tasks, ext_comp="e")
     ```
 
-    ```text title="Output — 126 minutes"
+    ```text title="Output, 126 minutes"
     load 115s
     prep_init_model 7552s
     ```
 
     Reading Human-GEM from SBML alone takes about **two minutes**, and the
-    preparation itself **126 minutes** — the same order as MATLAB's 113, on the
+    preparation itself **126 minutes**, the same order as MATLAB's 113, on the
     same machine and solver. Two things worth knowing before starting it:
 
     - `prep_init_model` runs cobrapy's FVA, which spawns worker processes. Where
-      that is not permitted — a locked-down Windows machine, some CI runners — it
+      that is not permitted (a locked-down Windows machine, some CI runners), it
       fails with `PermissionError: [WinError 5] Access is denied`. Setting
       `processes = 1` trades the parallelism for a run that finishes.
     - `essential_cache_path` caches the slow task-essential discovery, so a
@@ -199,7 +199,7 @@ it out and the mean across samples is used per gene instead.
     ```
 
     The two steps are separate in Python: `gene_scores_from_expression` applies
-    RAVEN's rule — **5·ln(level / reference)**, clamped to [−5, 10] — and
+    RAVEN's rule (**5·ln(level / reference)**, clamped to [−5, 10]) and
     `score_reactions_from_genes` pushes the result through the GPRs. Splitting
     them means any other source of gene scores (HPA via `hpa_gene_scores`,
     proteomics, a curated list) feeds the same second step.
@@ -216,7 +216,7 @@ it out and the mean across samples is used per gene instead.
     ```
 
     `b` computes to −8.96 and comes back at the floor; a gene exactly at its
-    reference scores zero — neither in nor out.
+    reference scores zero, neither in nor out.
 
 ## 10.3 Extract a model for one sample
 
@@ -228,7 +228,7 @@ it out and the mean across samples is used per gene instead.
         'INITSteps', getINITSteps([], '1+0'));
     ```
 
-    ```text title="Output — 70 seconds"
+    ```text title="Output, 70 seconds"
     9595 rxns, 1761 genes
     ```
 
@@ -288,12 +288,12 @@ covers comparing many extracted models at once.
 
 !!! warning "What can go wrong"
     - **Identifiers that do not match.** Human-GEM speaks ENSEMBL, and so does
-      `Hart2015_RNAseq.txt` — which is why no mapping step appears above. With
+      `Hart2015_RNAseq.txt`, which is why no mapping step appears above. With
       symbols or systematic names you need one; score a handful of genes and
       check they are not all at the floor before spending two hours on the
       preparation.
     - **Re-preparing per sample.** The preparation depends only on the template
-      and the tasks. Do it once, save it, reuse it — that is the entire point of
+      and the tasks. Do it once, save it, reuse it; that is the entire point of
       the split.
     - **No MILP solver.** Both extractions are mixed-integer; GLPK cannot.
     - **A model that no longer does what you assumed.** Without a task list there
@@ -302,7 +302,7 @@ covers comparing many extracted models at once.
 
 ## See also
 
-- [Human-GEM guide: GEM extraction using ftINIT](https://sysbiochalmers.github.io/Human-GEM-guide/gem_extraction/)
-  — the same workflow in MATLAB, maintained with the model.
+- [Human-GEM guide: GEM extraction using ftINIT](https://sysbiochalmers.github.io/Human-GEM-guide/gem_extraction/),
+  the same workflow in MATLAB, maintained with the model.
 - [Human-GEM guide: extraction from single-cell data](https://sysbiochalmers.github.io/Human-GEM-guide/gem_extraction_sc/).
-- [9. Quality control](quality-control.md) — checking the model that comes out.
+- [9. Quality control](quality-control.md), checking the model that comes out.

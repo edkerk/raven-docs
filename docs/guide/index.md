@@ -43,65 +43,65 @@ original RAVEN paper. Both are MATLAB only.
 
 **Foundations**
 
-1. [Getting started](getting-started.md) — load a model and inspect it.
-2. [Model structure and identifiers](model-structure.md) — how the RAVEN struct
+1. [Getting started](getting-started.md), load a model and inspect it.
+2. [Model structure and identifiers](model-structure.md), how the RAVEN struct
    and `cobra.Model` correspond, field by field.
-3. [Reading and writing models](io.md) — SBML, RAVEN YAML, Excel, text, and the
+3. [Reading and writing models](io.md), SBML, RAVEN YAML, Excel, text, and the
    layout a model repository expects.
 
 **Simulation**
 
-4. [Simulating growth with FBA](fba.md) — objective, bounds, solve, read the
+4. [Simulating growth with FBA](fba.md), objective, bounds, solve, read the
    fluxes.
-5. [Growth media and conditions](media.md) — define a medium, keep a condition as
+5. [Growth media and conditions](media.md), define a medium, keep a condition as
    data.
-6. [Solvers and configuration](solvers.md) — which solver, and how to read what
+6. [Solvers and configuration](solvers.md), which solver, and how to read what
    it returns.
 
 **Building and curating**
 
-7. [Building a model from scratch](building.md) — metabolites, reactions, genes,
+7. [Building a model from scratch](building.md), metabolites, reactions, genes,
    exchanges.
-8. [Editing an existing model](editing.md) — stoichiometry, GPRs, bounds,
+8. [Editing an existing model](editing.md), stoichiometry, GPRs, bounds,
    deletions.
-9. [Quality control](quality-control.md) — structure, mass balance, blocked
+9. [Quality control](quality-control.md), structure, mass balance, blocked
    reactions, mass from nothing.
 
 **Reconstruction**
 
-10. [Context-specific models (tINIT / ftINIT)](init.md) — extracting a cell-line
+10. [Context-specific models (tINIT / ftINIT)](init.md), extracting a cell-line
     model from Human-GEM and RNA-seq, end to end.
 
 **Analysis and repair**
 
-11. [Deletions and essentiality](deletions.md) — knockouts, essential genes and
+11. [Deletions and essentiality](deletions.md), knockouts, essential genes and
     reactions, MOMA.
-12. [Metabolic tasks](tasks.md) — saying what a model must be able to do, and
+12. [Metabolic tasks](tasks.md), saying what a model must be able to do, and
     checking that it still can.
-13. [Gap-filling](gap-filling.md) — closing the holes a draft model has.
-14. [Flux variability](fva.md) — how much each flux can still move, and
+13. [Gap-filling](gap-filling.md), closing the holes a draft model has.
+14. [Flux variability](fva.md), how much each flux can still move, and
     which predictions the model has no choice about.
-15. [Random sampling](sampling.md) — the distribution behind those ranges, and
+15. [Random sampling](sampling.md), the distribution behind those ranges, and
     how to condition it on a state worth asking about.
-16. [Combining and simplifying models](combining.md) — merging models on
+16. [Combining and simplifying models](combining.md), merging models on
     metabolite names, and taking one apart again.
-17. [Comparing models](comparing.md) — what changed between two models, and how
+17. [Comparing models](comparing.md), what changed between two models, and how
     much that difference costs.
-18. [Reconstruction from homology](homology.md) — BLAST a proteome against a
+18. [Reconstruction from homology](homology.md), BLAST a proteome against a
     template model's genes, and what the cut-offs decide for you.
-19. [Reconstruction from KEGG](kegg.md) — a draft with no template model at all,
+19. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
     and what such a draft is missing.
 
 ## Also in this section
 
 | | |
 |---|---|
-| [Worked protocol — *H. polymorpha*](../protocol/index.md) | homology-based reconstruction of `hanpo-GEM`, end to end, from template models to a growing methylotrophic draft. A published pipeline followed from start to finish. MATLAB only, not executed here. |
+| [Worked protocol, *H. polymorpha*](../protocol/index.md) | homology-based reconstruction of `hanpo-GEM`, end to end, from template models to a growing methylotrophic draft. A published pipeline followed from start to finish. MATLAB only, not executed here. |
 | [Legacy tutorials](../tutorials/index.md) | five exercises from the original RAVEN paper (Agren et al., 2013), updated to run with current RAVEN but otherwise unchanged. MATLAB only. |
 
 Use the numbered pages to look something up; use the protocol to see a whole
 reconstruction in order.
 
-**Planned** — phenotype exploration,
+**Planned**: phenotype exploration,
 engineering targets; biomass composition and annotation; omics integration;
 localization; FSEOF and reporter metabolites; table-driven curation.

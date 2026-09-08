@@ -1,8 +1,8 @@
 # 16. Combining and simplifying models
 
 Two operations that look like bookkeeping and are not. **Merging** puts models
-together — a draft and a template, two organisms, a curated core and an
-extension — and the result is only as sound as the assumption that a metabolite
+together: a draft and a template, two organisms, a curated core and an
+extension, and the result is only as sound as the assumption that a metabolite
 in one model is the same molecule as in the other. **Simplifying** takes a model
 apart again, dropping what cannot carry flux, and the risk is deleting something
 you needed.
@@ -91,11 +91,11 @@ Read those numbers carefully. The reactions **doubled** and the metabolites did
 while every reaction is carried over from both sources and kept.
 
 That asymmetry is the whole behaviour. Metabolites are matched on
-**name and compartment** — `metaboliteName[comp]`, not the identifier — and
+**name and compartment** (`metaboliteName[comp]`, not the identifier) and
 genes on name, so anything the two models call by the same name becomes one
 entity. Reactions are matched on nothing: every one is carried over, and the
 warning is RAVEN saying so. An id that already exists gets the source model's
-id appended — `HXK` and `HXK_second` — which keeps the identifiers unique
+id appended (`HXK` and `HXK_second`), which keeps the identifiers unique
 without pretending the two reactions were reconciled. Python renames the same
 way, silently.
 
@@ -149,7 +149,7 @@ conversion twice. Collapsing those is a separate step.
 ## 16.3 Dropping what cannot carry flux
 
 `smallYeast` ships with its medium shut, so almost nothing in it can carry flux
-at all — the state [9. Quality control](quality-control.md) measures. That makes
+at all, the state [9. Quality control](quality-control.md) measures. That makes
 it a good subject for simplification, and a good warning about it.
 
 === "MATLAB"
@@ -185,7 +185,7 @@ it a good subject for simplification, and a good warning about it.
 
 A model that has been simplified against a shut medium is a model of that
 medium, not of the organism. Open the conditions you intend to simulate
-**before** simplifying, or you will delete the pathways you were about to study —
+**before** simplifying, or you will delete the pathways you were about to study;
 see [5. Growth media and conditions](media.md).
 
 ## 16.4 Collapsing compartments
@@ -234,7 +234,7 @@ membrane become `A -> A`, carry no information, and are dropped.
     reports **0** dropped where raven-toolbox reports **3** (`CAT2`, `CO2TRANS`,
     `ShuttleX`). The same three reactions go in both cases. RAVEN clears them
     when it removes reactions the merge left empty, and its `deletedRxns` counts
-    only what the `deleteRxnsWithOneMet` path deleted — which is nothing, since
+    only what the `deleteRxnsWithOneMet` path deleted, which is nothing, since
     that flag is `false` by default.
 
     A reaction left holding a single metabolite after merging carries no
@@ -268,8 +268,8 @@ Flatten a copy, for a specific question, and keep the original.
 
 ## See also
 
-- [9. Quality control](quality-control.md) — deciding what *should* be removed.
-- [13. Gap-filling](gap-filling.md) — the opposite operation, and the usual
+- [9. Quality control](quality-control.md), deciding what *should* be removed.
+- [13. Gap-filling](gap-filling.md), the opposite operation, and the usual
   reason for having a template model to merge from.
-- [10. Context-specific models](init.md) — cutting a model down by evidence
+- [10. Context-specific models](init.md), cutting a model down by evidence
   rather than by connectivity.

@@ -1,9 +1,9 @@
 # Methods & benchmarks
 
-RAVEN — both the MATLAB toolbox and raven-toolbox (Python) — ships a lot of
+RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships a lot of
 functions with numerical defaults: solver tolerances, cut-offs, iteration
 limits, literature constants. [Tuned parameter defaults](../tuned-parameters.md)
-gives the short version of every one of them — current value, one-line reason,
+gives the short version of every one of them: current value, one-line reason,
 grouped by capability. This section is the detail behind that page: the
 methodology used to evaluate a default, the full write-up for every parameter
 that got a dedicated measurement campaign (**studies**), and the quicker
@@ -15,11 +15,11 @@ A default value is *well-chosen* when a user who does not read the docstring
 gets a result that is correct and useful for the most common case.
 
 **On MATLAB/Python parity:** neither implementation's defaults were
-systematically validated from the start — MATLAB RAVEN's were often chosen by
+systematically validated from the start; MATLAB RAVEN's were often chosen by
 trial-and-error, copied from earlier tools, or never reconsidered, and
 raven-toolbox inherited a mix of ported MATLAB values and upstream (cobrapy)
-conventions. An existing default in either toolbox is a useful *prior* — it
-reflects years of practical use, or a well-tested upstream library — but it is
+conventions. An existing default in either toolbox is a useful *prior*: it
+reflects years of practical use, or a well-tested upstream library, but it is
 not a gold standard. Where the two implementations differ, the right response
 is to run both and measure, not to assume whichever came first is correct.
 
@@ -33,7 +33,7 @@ The following criteria apply in rough priority order:
    meaningfully better than any reasonable alternative, or at least no worse.
 2. **Sensitivity envelope.** Vary the parameter by ±1 order of magnitude (or
    ±50% for non-log-scale values) and measure result change. If output is
-   insensitive across the range, the exact default value matters little —
+   insensitive across the range, the exact default value matters little;
    document that and move on. If output is highly sensitive, the default must
    land in a plateau region (neither too loose nor too tight) and must be
    documented with the sensitivity profile.
@@ -55,7 +55,7 @@ The following criteria apply in rough priority order:
 ### Evaluation workflow per parameter
 
 ```
-1. Read the current docstring — does it explain *why* this value?
+1. Read the current docstring: does it explain *why* this value?
 2. Identify candidate values: current default, the other implementation's
    default (if any), paper value (if any), and at least two plausible
    alternatives (e.g. 1 order of magnitude up/down).
@@ -72,7 +72,7 @@ The following criteria apply in rough priority order:
 
 ## Studies
 
-The primary measurement campaigns — full methodology, raw results, and the
+The primary measurement campaigns: full methodology, raw results, and the
 reasoning behind each conclusion.
 
 | Study | Covers |

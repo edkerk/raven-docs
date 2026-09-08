@@ -15,14 +15,14 @@ reliability of the draft, and they are the part worth understanding.
 | MATLAB | Python | |
 |---|---|---|
 | `getBlast` | `run_blast` | bidirectional BLASTP between two proteomes |
-| `getDiamond` | `run_diamond` | the same, with DIAMOND — faster, less sensitive |
+| `getDiamond` | `run_diamond` | the same, with DIAMOND: faster, less sensitive |
 | `getModelFromHomology` | `get_model_from_homology` | carry reactions across on the hits |
 | `makeFakeBlastStructure` | `make_ortholog_hits` | feed in orthologs you already have |
 
 ## Setup
 
-Two proteomes and a template model. The template is `smallYeast.yml` — 53
-reactions, 61 genes — and `sce-template.faa` holds the sequences of exactly those
+Two proteomes and a template model. The template is `smallYeast.yml` (53
+reactions, 61 genes), and `sce-template.faa` holds the sequences of exactly those
 61 *S. cerevisiae* genes. The organism being reconstructed is *Hansenula
 polymorpha*, whose full 5177-protein proteome is in `hanpo.faa`.
 
@@ -65,7 +65,7 @@ Both toolboxes run BLASTP twice: the new organism's proteome against the
 template's, and the template's against the new organism's.
 
 The second direction is what makes orthology testable. A one-directional search
-gives, for each new gene, the template gene it resembles most — but the most
+gives, for each new gene, the template gene it resembles most, but the most
 similar sequence is not necessarily the corresponding one. A gene that has been
 duplicated in the template, or a conserved domain shared across a family, will
 attract hits from genes that do a different job. Searching both ways lets the
@@ -108,7 +108,7 @@ claim than either picking the other alone.
 
 The two directions return different counts because they ask different questions:
 159 template genes found a match in *H. polymorpha*, and 178 *H. polymorpha*
-genes found a match in the template. Neither number is the number of orthologs —
+genes found a match in the template. Neither number is the number of orthologs;
 that is decided in the next step, from the pairs that appear in both directions.
 
 The shape of the result differs between the toolboxes. RAVEN returns a struct
@@ -127,13 +127,13 @@ instead if `RAVEN_PYTHON_BLASTP` points at them.
 `getDiamond` and `run_diamond` are drop-in alternatives that search with DIAMOND
 instead. DIAMOND indexes the database and searches in reduced amino-acid
 alphabets, which makes it one to two orders of magnitude faster on a full
-proteome pair — minutes rather than hours — at the cost of sensitivity for
+proteome pair (minutes rather than hours) at the cost of sensitivity for
 distant homologs, where the seeds it uses are less likely to match. For a
 template within the same genus the difference is small; for a template several
 hundred million years away, BLASTP finds pairs DIAMOND misses.
 
-If you already have orthology assignments from another source — OrthoFinder,
-OMA, a published table — `makeFakeBlastStructure` and `make_ortholog_hits` wrap
+If you already have orthology assignments from another source (OrthoFinder,
+OMA, a published table), `makeFakeBlastStructure` and `make_ortholog_hits` wrap
 them in the structure the transfer step expects, so no search is run.
 
 ## 18.2 From hits to a draft
@@ -173,7 +173,7 @@ reaction is carried over if the rule still resolves to something satisfiable
 after the substitution. A reaction requiring two subunits is dropped when only
 one of them has a counterpart; a reaction with two isozymes survives on either.
 The metabolites a carried reaction needs come with it, which is why the draft has
-49 metabolites rather than the template's 52 — the three that appear only in
+49 metabolites rather than the template's 52: the three that appear only in
 dropped reactions are not created.
 
 The `Standardizing grRules` line is RAVEN rewriting the template's rules into a
@@ -185,7 +185,7 @@ ways is handled identically.
 derived from, which is what you need to trace a reaction back to the evidence
 that put it there; and `.candidates`, populated when `review_identity=` is given,
 collects reactions that failed the identity cut-off but came within the value
-given. Those are the reactions worth a curator's attention — near-misses that a
+given. Those are the reactions worth a curator's attention, near-misses that a
 threshold rejected, rather than absences. RAVEN returns the draft and its hit
 genes as two separate outputs.
 
@@ -199,7 +199,7 @@ cut-offs looks exactly like a reaction the organism genuinely lacks.
 Three cut-offs control which hits are accepted, and tightening any of them
 shrinks the draft.
 
-`maxE` / `max_evalue` (`1e-30`) is the maximum BLAST E-value — the number of
+`maxE` / `max_evalue` (`1e-30`) is the maximum BLAST E-value, the number of
 hits of at least this quality expected by chance in a database this size. The
 default is strict by BLAST standards, where `1e-5` is a common threshold, because
 transferring a reaction on a marginal hit adds a claim about metabolism that
@@ -320,7 +320,7 @@ what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
       from the template, so anything the template lacks the draft cannot have.
       Several templates, with `preferredOrder`, spread that risk.
     - **Reading absence as evidence.** A reaction left out means no acceptable
-      hit was found — not that the organism lacks the capability. Sequencing
+      hit was found, not that the organism lacks the capability. Sequencing
       gaps, divergent sequences and short proteins all look the same here.
     - **Full proteomes are slow.** The example on this page finishes in seconds
       because the template proteome is 61 sequences. Two complete proteomes take
@@ -329,9 +329,9 @@ what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
 
 ## See also
 
-- [13. Gap-filling](gap-filling.md) — the usual next step, and the one that
+- [13. Gap-filling](gap-filling.md), the usual next step, and the one that
   decides what the draft is missing.
-- [10. Context-specific models](init.md) — cutting a model down by evidence
+- [10. Context-specific models](init.md), cutting a model down by evidence
   instead of building one up from homology.
-- [17. Comparing models](comparing.md) — checking a draft against a curated
+- [17. Comparing models](comparing.md), checking a draft against a curated
   model of the same organism.

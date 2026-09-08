@@ -39,4 +39,4 @@ mkdocs build     # static site into ./site
 The API reference pages are generated at build time by
 [`scripts/gen_api_pages.py`](scripts/gen_api_pages.py), which walks the two
 toolbox submodules and pairs their functions. No MATLAB runtime or installed
-Python package is required — docstrings are collected statically from source.
+Python package is required; docstrings are collected statically from source.

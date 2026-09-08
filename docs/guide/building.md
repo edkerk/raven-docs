@@ -1,7 +1,7 @@
 # 7. Building a model from scratch
 
 Add metabolites, a reaction, a gene association and the exchanges that let
-material in and out — and end with a model that carries flux. This is how a
+material in and out, and end with a model that carries flux. This is how a
 hand-built model starts, and how you test an idea before an automated
 reconstruction is involved.
 
@@ -21,8 +21,8 @@ column of the stoichiometric matrix by hand.
 
 ## Setup
 
-[`empty.xml`](../data/empty.xml) is RAVEN's starter model: four metabolites —
-sucrose, glucose, fructose and water — and one reaction, invertase, which splits
+[`empty.xml`](../data/empty.xml) is RAVEN's starter model: four metabolites
+(sucrose, glucose, fructose and water) and one reaction, invertase, which splits
 sucrose into glucose and fructose. Everything is in one compartment, `e`.
 
 === "MATLAB"
@@ -129,7 +129,7 @@ reaction, `=>` for an irreversible one.
 
     `eqnType` says how the equation is written: `1` matches metabolites by
     **id**, `2` by name, `3` by `name[comp]`. `allowNewGenes` is needed because
-    `YFR053C` is not in the model yet — without it `addRxns` refuses, and you
+    `YFR053C` is not in the model yet; without it `addRxns` refuses, and you
     would call `addGenesRaven` first. cobrapy creates the gene silently, which is
     convenient until a typo becomes a gene.
 
@@ -158,7 +158,7 @@ reaction, `=>` for an irreversible one.
     ```
 
     The arrow sets the bounds, so an irreversible reaction needs no `bounds` key.
-    A gene named in the rule is created if the model does not have it — there is
+    A gene named in the rule is created if the model does not have it; there is
     no separate "add the gene" step, which is what `addGenesRaven` is for in
     MATLAB.
 
@@ -198,7 +198,7 @@ that boundary.
 
     `add_boundary` works out that `e` is the external compartment. It refuses
     when nothing looks external, which is the usual reason it fails on a small
-    hand-built model — give a compartment a recognisable name, or build the
+    hand-built model: give a compartment a recognisable name, or build the
     exchange as an ordinary reaction with a single metabolite.
 
 ## 7.4 Does it carry flux?
@@ -239,10 +239,10 @@ The first question to ask of anything you just built.
       no error to explain why.
     - **A model with no external compartment.** `add_boundary` cannot guess one,
       and RAVEN's `addExchangeRxns` will happily add exchanges for internal
-      metabolites — which is rarely what you meant.
+      metabolites, which is rarely what you meant.
 
 ## See also
 
-- [8. Editing an existing model](editing.md) — changing what is already there.
-- [9. Quality control](quality-control.md) — checking a model you just built.
-- [3. Reading and writing models](io.md) — saving it.
+- [8. Editing an existing model](editing.md), changing what is already there.
+- [9. Quality control](quality-control.md), checking a model you just built.
+- [3. Reading and writing models](io.md), saving it.

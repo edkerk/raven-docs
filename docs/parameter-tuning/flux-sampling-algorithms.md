@@ -1,9 +1,9 @@
-# Markov-chain flux sampling — CHRR and ACHR
+# Markov-chain flux sampling: CHRR and ACHR
 
 This document describes the two Markov-chain Monte Carlo (MCMC) flux samplers added to
 both raven-toolbox and MATLAB RAVEN. They are reached through the unified sampling entry
-point in each — `raven_toolbox.analysis.random_sampling(method="achr"|"chrr")` and RAVEN's
-`randomSampling(..., 'method', 'achr'|'chrr')` — alongside the historical random-objective
+point in each (`raven_toolbox.analysis.random_sampling(method="achr"|"chrr")` and RAVEN's
+`randomSampling(..., 'method', 'achr'|'chrr')`) alongside the historical random-objective
 method. The samplers are **CHRR** (Coordinate Hit-and-Run with Rounding) and **ACHR**
 (Artificially Centered Hit-and-Run). This explains what each samples, why rounding matters,
 and which to use for enzyme-constrained and tissue-specific models. For how the defaults
@@ -20,7 +20,7 @@ around these samplers (`thinning`, `warmup`, …) were chosen, see the
 3. [ACHR](#3-achr)
 4. [CHRR](#4-chrr)
 5. [The maximum-volume ellipsoid (MVE) core](#5-the-maximum-volume-ellipsoid-core)
-6. [CHRR vs ACHR — when it matters](#6-chrr-vs-achr)
+6. [CHRR vs ACHR: when it matters](#6-chrr-vs-achr)
 7. [Relationship to `randomSampling` / `random_sampling`](#7-relationship-to-random-sampling)
 8. [Implementation map](#8-implementation-map)
 9. [Validation](#9-validation)
@@ -45,13 +45,13 @@ both samplers handle this by working in a full-dimensional parametrisation.
 
 These MCMC samplers draw the (near-)uniform distribution of the polytope **interior**, which
 is the statistically correct object for the questions above. This is distinct from the
-random-objective method (`randomSampling`), which draws polytope **vertices** — see §7.
+random-objective method (`randomSampling`), which draws polytope **vertices**; see §7.
 
 ---
 
 ## 2. Why rounding matters: the elongated-polytope problem {#2-why-rounding-matters}
 
-Hit-and-run mixing time scales with the polytope's **aspect ratio** — the ratio of its
+Hit-and-run mixing time scales with the polytope's **aspect ratio**: the ratio of its
 longest to shortest axis. For a near-isotropic (ball-like) polytope, hit-and-run mixes in
 `O*(d²)` steps (`d` = dimension). For a long, thin slab, an unrounded chain crawls along the
 long axes and almost never moves across the thin ones, so it *appears* converged (short
@@ -78,7 +78,7 @@ ratio.
 **Artificially Centered Hit-and-Run** (Kaufman & Smith 1998; the sampler in COBRA Toolbox
 and cobrapy's `ACHRSampler`):
 
-1. Generate **warmup points** — one flux vector per reaction maximised and one minimised
+1. Generate **warmup points**: one flux vector per reaction maximised and one minimised
    (`2·nRxns` LPs), giving vertices that span `P`.
 2. Maintain a running **center** = mean of all points generated so far.
 3. From the current point, choose a random warmup point, take the direction *through the
@@ -87,7 +87,7 @@ and cobrapy's `ACHRSampler`):
 
 Every search direction is a difference of feasible points, so each step stays exactly on
 `S v = 0`; no reprojection is needed for the homogeneous (`b = 0`) steady-state problem.
-ACHR does **no rounding** — directions come from the warmup vertices, which on an elongated
+ACHR does **no rounding**: directions come from the warmup vertices, which on an elongated
 polytope cluster near the long axes, so the thin directions are under-explored.
 
 ACHR is lighter than CHRR (no ellipsoid solve) and is a good default on well-conditioned
@@ -128,21 +128,21 @@ subject to a_i^T x + || E a_i ||_2 <= b_i   for every constraint i,
 ```
 
 over the centre `x` and SPD matrix `E`. This is a convex program solved by the **Zhang & Gao
-(2003)** primal-dual interior-point method — the same routine COBRA's `chrrSampler` uses.
+(2003)** primal-dual interior-point method, the same routine COBRA's `chrrSampler` uses.
 Each Newton iteration forms the ellipsoid matrix `E2 = (Aᵀ diag(y) A)⁻¹` from the dual
 variables `y`, computes residuals for dual feasibility, primal slack, and complementarity,
 and takes a fraction-to-boundary step. The returned lower-triangular factor `E` (with
 `E Eᵀ = E2`) is the rounding transform.
 
 A subtlety worth noting: the MVE of a triangle is its **Steiner inellipse** (centred at the
-centroid, tangent at the side midpoints), *not* its incircle — the largest inscribed *ellipse*
+centroid, tangent at the side midpoints), *not* its incircle: the largest inscribed *ellipse*
 generally has larger area than the largest inscribed *circle*. This is used as an exact
 validation case (§9): the solver must recover the off-diagonal Steiner shape, confirming it
 maximises volume rather than merely fitting the biggest ball.
 
 ---
 
-## 6. CHRR vs ACHR — when it matters {#6-chrr-vs-achr}
+## 6. CHRR vs ACHR: when it matters {#6-chrr-vs-achr}
 
 | Model class | Polytope geometry | Recommended | Why |
 |---|---|---|---|
@@ -151,8 +151,8 @@ maximises volume rather than merely fitting the biggest ball.
 | ftINIT tissue-specific model | Pruned, moderate conditioning | CHRR preferred; ACHR acceptable | Human GEM-derived (~1500–3000 rxns); rounding cost modest, mixing safer |
 | Small / well-conditioned model | Near-isotropic | ACHR (lighter) or CHRR | Either mixes well; ACHR avoids the ellipsoid solve |
 
-For the workflows that motivated this addition — ecModels constrained with proteomics and
-experimentally measured fluxes, and ftINIT-generated tissue-specific models — **CHRR is the
+For the workflows that motivated this addition (ecModels constrained with proteomics and
+experimentally measured fluxes, and ftINIT-generated tissue-specific models), **CHRR is the
 default**. The ecModel case is precisely the elongated-polytope regime where unrounded ACHR
 gives chains that look converged but are not.
 
@@ -160,10 +160,10 @@ gives chains that look converged but are not.
 
 ## 7. Relationship to `randomSampling` / `random_sampling` {#7-relationship-to-random-sampling}
 
-The **random-objective** method (Bordel et al. 2010) — `method="random_objective"` — is also
+The **random-objective** method (Bordel et al. 2010), `method="random_objective"`, is also
 dispatched from the same `random_sampling` / `randomSampling` entry: each sample maximises a
 small random linear objective, returning a polytope **vertex**. That is a different statistical
-object — a robust, fast spread of diverse *optimal* states, well-behaved on large or tightly
+object: a robust, fast spread of diverse *optimal* states, well-behaved on large or tightly
 constrained models where MCMC mixing is hard. It does **not** approximate the uniform interior
 distribution.
 
@@ -184,14 +184,14 @@ vertices.
 | Interior point | `sampleChebyshevCenter.m` | `_chebyshev_center` (scipy `linprog`) |
 
 **Does cobrapy already have these?** cobrapy ships a mature **ACHR** (`ACHRSampler`), so the
-Python side **wraps** it rather than reimplementing — reachable through the one
+Python side **wraps** it rather than reimplementing, reachable through the one
 `random_sampling` entry point (`method='achr'`) and returning the same `FluxSamplingResult`.
 cobrapy has **no CHRR** (no rounding sampler), so the Python CHRR (`method='chrr'`) is a
 genuine addition. MATLAB RAVEN had neither, so both are implemented there from scratch.
 
-cobrapy also ships a parallel **`OptGPSampler`**, but it is *not* wired into `random_sampling`
-— only ACHR and CHRR are. Using it means calling `cobra.sampling.OptGPSampler` directly,
-bypassing this wrapper entirely — it won't return a `FluxSamplingResult` or go through
+cobrapy also ships a parallel **`OptGPSampler`**, but it is *not* wired into `random_sampling`:
+only ACHR and CHRR are. Using it means calling `cobra.sampling.OptGPSampler` directly,
+bypassing this wrapper entirely; it won't return a `FluxSamplingResult` or go through
 raven-toolbox's constraint handling. `method='chrr'` is the better-mixing alternative actually
 available through `random_sampling`.
 
@@ -206,7 +206,7 @@ The Python `max_volume_ellipsoid` is the numerically validated reference (§9) t
 
 ## 9. Validation
 
-The MVE solver — the numerical crux of CHRR — is checked against analytic cases with known
+The MVE solver (the numerical crux of CHRR) is checked against analytic cases with known
 closed-form answers:
 
 - **Unit box** `{-1 <= x_i <= 1}` → unit ball (`E = I`, centre `0`).

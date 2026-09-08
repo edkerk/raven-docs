@@ -6,7 +6,7 @@
 ## Requirements
 
 - **Python ≥ 3.11**
-- **cobrapy** — installed automatically as a dependency
+- **cobrapy**: installed automatically as a dependency
 - A **solver**: GLPK (bundled with cobrapy) works for small and medium models;
   [Gurobi](https://www.gurobi.com/) is recommended for genome-scale work.
   See [Choosing a solver](index.md#choosing-a-solver).

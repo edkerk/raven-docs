@@ -28,7 +28,7 @@ reversibility, and gene–reaction associations are stored in `grRules`.
 
 Constraining the model with measurable rates (such as carbon uptake) lets you
 estimate all intracellular fluxes by **flux balance analysis (FBA)**, and so
-predict phenotypes — supporting applications from strain engineering to
+predict phenotypes, supporting applications from strain engineering to
 antibiotic discovery and microbial-community analysis.
 
 ## The homology-based approach
@@ -59,14 +59,14 @@ models are used as templates:
 The reconstruction proceeds through the following stages (each a page in this
 section):
 
-1. [Materials and installation](materials.md) — software, files and verifying RAVEN.
-2. [Import template models](template-models.md) — load the yeast-GEM and rhto-GEM templates.
-3. [Draft from homology](homology.md) — BLAST and `getModelFromHomology`.
-4. [Biomass composition](biomass.md) — DNA, RNA, protein, carbohydrate and lipid pseudoreactions.
-5. [Curation of lipid reactions](lipid-curation.md) — the SLIME formalism.
-6. [Gap-filling](gap-filling.md) — make the draft able to produce biomass.
-7. [Save and simulate](simulation.md) — version control and FBA.
-8. [Manual curation](manual-curation.md) — fix gene associations, add methanol metabolism.
+1. [Materials and installation](materials.md), software, files and verifying RAVEN.
+2. [Import template models](template-models.md), load the yeast-GEM and rhto-GEM templates.
+3. [Draft from homology](homology.md), BLAST and `getModelFromHomology`.
+4. [Biomass composition](biomass.md), DNA, RNA, protein, carbohydrate and lipid pseudoreactions.
+5. [Curation of lipid reactions](lipid-curation.md), the SLIME formalism.
+6. [Gap-filling](gap-filling.md), make the draft able to produce biomass.
+7. [Save and simulate](simulation.md), version control and FBA.
+8. [Manual curation](manual-curation.md), fix gene associations, add methanol metabolism.
 
 See [Anticipated results](anticipated-results.md) for what the finished draft
 should look like.

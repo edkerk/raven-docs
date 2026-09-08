@@ -94,7 +94,7 @@ For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
 
     Two things in that output are easy to misread. The per-compartment counts do
     not sum to the total, because a reaction or gene is counted in every
-    compartment its metabolites touch — a transport reaction appears under both.
+    compartment its metabolites touch; a transport reaction appears under both.
     And *unique* means biochemically unique, ignoring compartments: 52
     metabolites collapse to 45 because seven of them exist in both the cytosol
     and the mitochondrion. The same 45 is what
@@ -169,7 +169,7 @@ The bounds carry the direction. A lower bound of −1000 means the reaction may
 run backwards; a lower bound of zero means it may not. cobrapy derives
 `reversibility` from the bounds each time it is asked, so the two can never
 disagree. RAVEN stores an explicit `model.rev` field alongside the bounds, which
-means it is possible to set one without the other —
+means it is possible to set one without the other;
 [2. Model structure and identifiers](model-structure.md) covers what to do about
 that.
 
@@ -230,7 +230,7 @@ distinction 1.6 turns on.
 
     `model.rxnGeneMat` is a reactions-by-genes incidence matrix; a non-zero entry
     means that gene appears in that reaction's rule. It records *which* genes are
-    involved, not how they combine — the `and`/`or` structure lives only in
+    involved, not how they combine; the `and`/`or` structure lives only in
     `model.grRules` as text.
 
 === "Python"
@@ -267,7 +267,7 @@ same operation in both toolboxes; doing it for a whole model is
 
     The two statuses are reported separately, and they use three values, not two:
     `1` balanced, `0` unbalanced, `-1` undecidable. `PGI` balances elementally
-    and its charge is undecidable — the metabolites in this model carry formulas
+    and its charge is undecidable: the metabolites in this model carry formulas
     but no charges, so there is nothing to sum. That is a different statement
     from "the charges do not balance", and worth keeping apart when triaging a
     draft.
@@ -305,7 +305,7 @@ same operation in both toolboxes; doing it for a whole model is
 
 ## See also
 
-- [User guide overview](index.md) — the other pages, and what is still planned.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — what each toolbox has, and where
+- [User guide overview](index.md), the other pages, and what is still planned.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md), what each toolbox has, and where
   cobrapy takes over.
-- [API reference](../api/index.md) — every function in both toolboxes.
+- [API reference](../api/index.md), every function in both toolboxes.
