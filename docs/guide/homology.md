@@ -94,8 +94,10 @@ step ask for *reciprocal* hits rather than merely good ones.
     ```
 
 Both are calling the same BLAST+ executables with the same parameters, so the
-hit counts agree. RAVEN ships those binaries; raven-toolbox downloads them on
-first use and caches them, or uses the ones on your `PATH` if you point
+hit counts agree. Neither toolbox bundles them any more: both fetch the build
+for your platform on first use and cache it, so the first run of this page needs
+internet access. RAVEN pulls them with `downloadRavenBinaries`; raven-toolbox
+does the same, or uses the ones on your `PATH` if you point
 `RAVEN_PYTHON_BLASTP` at them.
 
 `getDiamond` and `run_diamond` are drop-in alternatives. On a pair of full

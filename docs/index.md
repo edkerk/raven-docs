@@ -49,7 +49,7 @@
 
     **Flux analysis**
 
-    FBA, FVA, gene knockouts, MOMA, and sampling with Gurobi or GLPK solvers.
+    FBA, FVA, gene knockouts, and flux sampling with Gurobi or GLPK solvers.
 
 -   :material-layers:{ .rh-feat-icon }
 
