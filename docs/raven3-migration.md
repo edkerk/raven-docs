@@ -22,9 +22,9 @@ be checked**, even if most of the core reconstruction/analysis behavior is
 unchanged in spirit.
 
 !!! note "This is the MATLAB-to-MATLAB axis"
-    This page is about RAVEN 2 → RAVEN 3, both MATLAB. For how the Python
-    package differs from RAVEN 2.0, which is a separate question, see
-    [Changes from RAVEN 2](raven2-changes.md).
+    This page is about RAVEN 2 → RAVEN 3, both MATLAB. How the Python package
+    differs from the MATLAB one is a separate question, answered in
+    [RAVEN 3 and raven-toolbox](raven3-vs-raven-toolbox.md).
 
 Start with the [upgrade checklist](#upgrade-checklist) below, then read
 [Backward-incompatible changes](#backward-incompatible-changes) — it is the
