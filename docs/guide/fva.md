@@ -69,11 +69,11 @@ feasible space; the objective is free.
     53 reactions, 1 fixed, widest span 1000.0
     ```
 
-    `getAllowedBounds` solves two LPs per reaction and runs them in parallel, so
-    the first call in a session opens a parallel pool and reports how many
-    workers it got. Pass `'runParallel', false` to keep it in the one process --
-    quicker on a model this size, and the only option without the Parallel
-    Computing Toolbox.
+    `getAllowedBounds` solves two LPs per reaction, one minimising and one
+    maximising, and runs them in parallel, so the first call in a session opens
+    a parallel pool and reports how many workers it got. Pass
+    `'runParallel', false` to keep it in the one process, which is quicker on a
+    model this size and the only option without the Parallel Computing Toolbox.
 
 === "Python"
 
@@ -135,7 +135,7 @@ land on.
 ## 14.3 A wide range is not always a real one
 
 A reaction can show a wide range purely because it sits in a thermodynamically
-infeasible cycle -- flux going round a loop with no net driving force. The widest
+infeasible cycle, flux going round a loop with no net driving force. The widest
 span in 14.1 was 1000, the model's default bound. That span is such a cycle.
 
 === "MATLAB"
@@ -196,14 +196,14 @@ The `loopless` argument names the algorithm that forbids the cycle. `"fastSNP"`
 adds loopless constraints to the model and gives optimal bounds;
 `"cycleFreeFlux"` removes loops from each solution instead, which is quicker but
 is not guaranteed to find the tightest bounds. `loopless=True` still works and
-means `"cycleFreeFlux"`, but it is deprecated -- name the algorithm.
+means `"cycleFreeFlux"`, but it is deprecated; name the algorithm.
 `find_good_reactions` uses the same idea to decide which reactions are worth
 sampling over, keeping a reaction only if its **loopless** range is non-trivial.
 
 ## 14.4 One representative solution
 
-When a single flux distribution is needed -- for a figure, or to compare two
-conditions -- take a parsimonious one rather than whatever the solver returns
+When a single flux distribution is needed (for a figure, or to compare two
+conditions), take a parsimonious one rather than whatever the solver returns
 first. It is reproducible, and it is the natural companion to the ranges above.
 
 === "MATLAB"
@@ -239,7 +239,7 @@ first. It is reproducible, and it is the natural companion to the ranges above.
     ```
 
     All three agree here: this particular optimum happens to carry no loop flux,
-    even though 14.3 showed the cycle is there. Nothing guaranteed that -- the
+    even though 14.3 showed the cycle is there. Nothing guaranteed that: the
     solver could as easily have returned a vertex with 1000 units going round
     `FRDS2` and `SDH`, which is exactly the failure `loopless_solution` exists to
     prevent.
@@ -252,8 +252,8 @@ first. It is reproducible, and it is the natural companion to the ranges above.
     - **Reporting a flux with a wide range.** If the range at the optimum is wide,
       the number in your table is one of many equally good answers.
     - **Mistaking a loop for capacity.** Wide ranges on internal cycles are a
-      property of the stoichiometry, not of the organism -- see 14.3.
-    - **Loopless FVA is a MILP.** `loopless=True` adds binary variables, so it is
+      property of the stoichiometry, not of the organism; see 14.3.
+    - **Loopless FVA is a MILP.** `loopless="fastSNP"` adds binary variables, so it is
       far slower than plain FVA and wants a good solver on anything larger than
       a toy model.
     - **FVA on a genome-scale model.** Two LPs per reaction. cobrapy parallelises

@@ -57,7 +57,7 @@ A seed does not guarantee identical numbers, though. The Python chain
 here reproduces exactly across operating systems; the MATLAB one does not. Its
 samplers take a nullspace basis from `null`, which comes from LAPACK, so the
 same seed on Linux and on Windows explores the same *distribution* along a
-slightly different walk -- running this page on both put `FRDS2`'s sampled
+slightly different walk: running this page on both put `FRDS2`'s sampled
 minimum at 19.0 and at 18.8. That is why the numbers below are printed to two
 decimals: the distribution is the result, the individual draws are not.
 
@@ -97,8 +97,8 @@ decimals: the distribution is the result, the individual draws are not.
 
 [14. Flux variability](fva.md) found that `FRDS2` and `SDH` have the widest
 range in this model, 1000 units, and that all of it is a thermodynamically
-infeasible cycle. Sampling does not rescue you from that -- it shows how much of
-the space the cycle occupies.
+infeasible cycle. Sampling does not remove that; it shows how much of the space
+the cycle occupies.
 
 === "MATLAB"
 
@@ -137,8 +137,8 @@ describe the same distribution, and that agreement is the check to make.
 `FRDS2` is sampled across nearly its whole 1000-unit range, so the loop is not
 some rare corner of the space: it is most of it, and most of the draws are spent
 there. Growth is the opposite. Its range runs from 0 to 0.1222, but the samples
-sit between about 0.01 and 0.1 and average about 0.05 -- near-uniform
-sampling almost never lands on a vertex, and the optimum is a corner with no
+sit between about 0.01 and 0.1 and average about 0.05, because near-uniform
+sampling almost never lands on a vertex and the optimum is a corner with no
 volume around it.
 
 That is the distinction this page turns on. A sampled mean is a statement about
@@ -192,9 +192,9 @@ the two toolboxes, which implement CHRR separately, both arrive at **9**.
 
 `MVE converged: False` is a warning, not a failure. The rounding step stopped
 before reaching its tolerance, so the last ellipsoid is still a valid rounding
-and the samples are usable -- but on a polytope this elongated, mixing is slower
+and the samples are usable, but on a polytope this elongated mixing is slower
 than the defaults assume, and more thinning is the answer if the distribution
-looks lumpy.
+is uneven.
 
 ## 15.4 Sample a state, not a model
 
@@ -266,7 +266,7 @@ both toolboxes screen them out with a loopless FVA first, the same test
     which on a genome-scale model skips the expensive part of the run.
 
 !!! warning "What can go wrong"
-    - **No seed.** The numbers change every run. Set one, and report it -- and do
+    - **No seed.** The numbers change every run. Set one, and report it, and do
       not expect a seed alone to reproduce a MATLAB chain on another machine
       (see 15.1). Report the distribution, not the draws.
     - **Too little thinning.** Consecutive MCMC steps are correlated; the default

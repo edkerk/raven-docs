@@ -63,7 +63,7 @@ model and is really a broken task.
     tasks = parseTaskList('tasks.txt');
     fprintf('%d tasks\n', numel(tasks));
 
-    report = checkTasks(model, [], false, false, false, tasks);
+    report = checkTasks(model, [], 'printOutput', false, 'taskStructure', tasks);
     for i = 1:numel(report.id)
         verdicts = {'FAIL', 'pass'};
         fprintf('  %-8s %s\n', report.id{i}, verdicts{report.ok(i) + 1});
@@ -80,10 +80,15 @@ model and is really a broken task.
     `report.ok` is true for both, and for opposite reasons: `GROWTH` was
     required to pass and did, `LEAK` was required to fail and did.
 
-    `checkTasks` can print its own verdicts; that is its third argument,
-    `printOutput`, turned off here. Reading them off `report` instead is worth
-    the extra lines: the loop runs the tasks through a `parfor`, so what
-    `checkTasks` prints is not in task-file order, while `report` is.
+    `checkTasks` prints its own verdicts unless `printOutput` is off, as here,
+    and `printOnlyFailed` narrows that to the failures. Reading the verdicts
+    off `report` gives a structure to test against rather than text to read.
+
+    Passing the parsed tasks as `taskStructure` makes the second argument,
+    the task file, redundant. `runParallel` evaluates the tasks in parallel
+    workers, and defaults to `false`, because starting a pool costs more than
+    it saves on a short task list; on a genome-scale list it is the setting
+    that matters.
 
 === "Python"
 
@@ -152,7 +157,8 @@ expression score.
 === "MATLAB"
 
     ```matlab
-    [~, essentialRxns] = checkTasks(model, [], false, false, true, tasks(1));
+    [~, essentialRxns] = checkTasks(model, [], 'printOutput', false, ...
+        'getEssential', true, 'taskStructure', tasks(1));
     fprintf('%d reactions essential for the task\n', sum(essentialRxns));
     ```
 
@@ -162,8 +168,10 @@ expression score.
     ```
 
     Task-essential reactions come from `checkTasks` with its `getEssential`
-    flag. `getEssentialRxns` answers for the model's own objective and takes
-    no task at all.
+    flag, returned as a reactions-by-tasks logical matrix rather than a list.
+    Failed tasks and `SHOULD FAIL` tasks are left out of it, since a task that
+    does not pass has no reactions it depends on. `getEssentialRxns` answers
+    for the model's own objective and takes no task at all.
 
 === "Python"
 
