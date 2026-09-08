@@ -213,7 +213,6 @@ nav:
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
       - Benchmarks:
-          - Master index: parameter-tuning/benchmarks/index.md
           - Flux sampling: parameter-tuning/benchmarks/sampling.md
           - FSEOF: parameter-tuning/benchmarks/fseof.md
           - INIT / ftINIT: parameter-tuning/benchmarks/init.md

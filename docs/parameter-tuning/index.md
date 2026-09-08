@@ -93,7 +93,6 @@ cross-toolbox to-do list.
 
 | Benchmark | Function(s) |
 |---|---|
-| [Master index](benchmarks/index.md) | All parameters with non-trivial defaults, MATLAB/Python parity decisions, master to-do list |
 | [Flux sampling](benchmarks/sampling.md) | `random_sampling`, `find_good_reactions`, `max_volume_ellipsoid` |
 | [FSEOF](benchmarks/fseof.md) | `fseof` |
 | [INIT / ftINIT](benchmarks/init.md) | `run_ftinit`, `ftinit`, `gene_scores_from_expression` |
