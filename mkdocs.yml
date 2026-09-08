@@ -212,13 +212,5 @@ nav:
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
-      - Benchmarks:
-          - Flux sampling: parameter-tuning/benchmarks/sampling.md
-          - FSEOF: parameter-tuning/benchmarks/fseof.md
-          - INIT / ftINIT: parameter-tuning/benchmarks/init.md
-          - Gap-filling: parameter-tuning/benchmarks/gapfilling.md
-          - Homology-based reconstruction: parameter-tuning/benchmarks/reconstruction-homology.md
-          - KEGG-based reconstruction: parameter-tuning/benchmarks/reconstruction-kegg.md
-          - Model manipulation: parameter-tuning/benchmarks/manipulation.md
-          - Tasks: parameter-tuning/benchmarks/tasks.md
+      - Parameter benchmarks: parameter-tuning/benchmarks.md
   - References: references.md

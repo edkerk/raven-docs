@@ -187,7 +187,36 @@ unannotated reactions (the tighter gene-ratio prunes spurious multi-KO genes). T
 small precision dip vs annotation is dominated by extra strong homologs, not
 weak-hit noise.
 
-## 5. Whole-model cross-validation (sanity check)
+## 5. Settings around the query that were not measured
+
+Three settings sit alongside the cut-offs and were left where they are, for
+reasons that did not need a sweep.
+
+`threads` in `run_hmmsearch` and `build_ko_hmm` defaults to one fewer than the
+machine has cores. HMMER's Viterbi search is deterministic across thread counts;
+E-value estimation can differ in the last floating-point places, far below any
+cut-off used here. Single-threaded search against the full KO library — more
+than 26,000 HMMs — takes 30 to 60 minutes per proteome against roughly five
+multi-threaded.
+
+`seq_identity` in `build_ko_hmm` is `0.9`, the identity at which CD-HIT collapses
+near-duplicate sequences within a KO before the HMM is built, so that a KO
+crowded with near-identical entries does not produce an overfitted profile. It is
+CD-HIT's own recommended value for proteins. `seq_identity=-1` skips the
+clustering entirely. This step is Python-only: RAVEN 3 dropped its local
+clustering path when it moved to prebuilt HMM libraries, so there is no MATLAB
+value to agree or disagree with.
+
+The model-assembly flags decide what a draft keeps, and match MATLAB:
+
+| Flag | Default | What it admits |
+|---|---|---|
+| `keep_spontaneous` | `True` | Reactions marked spontaneous in KEGG, which carry no gene rule. Excluding them breaks real routes. |
+| `keep_undefined_stoich` | `True` | Reactions with variable stoichiometry (`n` subunits). They cannot be mass-balanced as written, but dropping them loses real chemistry. |
+| `keep_incomplete` | `True` | Reactions whose enzyme set is only partly known. |
+| `keep_general` | `False` | Overview-map reactions that lump many specific steps into one. Admitting them double-counts. |
+
+## 6. Whole-model cross-validation (sanity check)
 
 Full reconstruction of *S. cerevisiae* two ways, at the old defaults:
 
