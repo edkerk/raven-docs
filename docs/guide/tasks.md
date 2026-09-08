@@ -200,7 +200,7 @@ Both toolboxes can add reactions from a template until the task passes, which is
 
     ```matlab
     template = readYAMLmodel('smallYeast.yml');   % where the reactions come from
-    [outModel, addedRxns] = fitTasks(model, template, [], true, [], tasks);
+    [outModel, addedRxns] = fitTasks(model, template, [], 'taskStructure', tasks);
     ```
 
 === "Python"

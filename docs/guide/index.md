@@ -102,6 +102,6 @@ original RAVEN paper. Both are MATLAB only.
 Use the numbered pages to look something up; use the protocol to see a whole
 reconstruction in order.
 
-**Planned**: phenotype exploration,
-engineering targets; biomass composition and annotation; omics integration;
-localization; FSEOF and reporter metabolites; table-driven curation.
+**Not yet written**: biomass composition and annotation, omics integration,
+compartment localisation, FSEOF and reporter metabolites for engineering
+targets, and table-driven curation.

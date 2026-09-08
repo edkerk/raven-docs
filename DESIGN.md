@@ -137,11 +137,12 @@ identical, and side by side a reader sees where raven-toolbox has no counterpart
 because cobrapy already covers it. Two parallel trees would double the
 maintenance and drift.
 
-The first wave of 13 pages is written: getting started, model structure, I/O,
+Nineteen numbered pages are written: getting started, model structure, I/O,
 FBA, media and conditions, solvers, building, editing, quality control,
-tINIT/ftINIT, deletions, tasks, gap-filling. Planned next: flux variability,
-sampling, combining and simplifying, homology and KEGG reconstruction,
-comparison, biomass, annotation, localization, table-driven curation.
+tINIT/ftINIT, deletions, tasks, gap-filling, flux variability, sampling,
+combining and simplifying, comparison, homology reconstruction and KEGG
+reconstruction. Not yet written: biomass, annotation, localization, FSEOF and
+reporter metabolites, table-driven curation.
 
 Conventions:
 

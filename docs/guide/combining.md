@@ -97,7 +97,12 @@ entity. Reactions are matched on nothing: every one is carried over, and the
 warning is RAVEN saying so. An id that already exists gets the source model's
 id appended (`HXK` and `HXK_second`), which keeps the identifiers unique
 without pretending the two reactions were reconciled. Python renames the same
-way, silently.
+way, without a warning.
+
+`mergeModels` takes `metParam` to choose what metabolites are matched on:
+`"metNames"`, the default used above, or `"mets"` to match on identifier.
+Matching on id is the right choice when both models come from the same
+database, where the ids mean the same thing and the names may not.
 
 !!! warning "Names, not identifiers"
     Two models built from different databases usually share almost no metabolite
@@ -134,6 +139,16 @@ conversion twice. Collapsing those is a separate step.
     after contracting: 53 rxns
     ```
 
+`simplifyModel` does nothing much unless told what to remove: every flag is off
+by default except `deleteUnconstrained`. `deleteMinMax` is the expensive one
+used above, minimising and maximising each reaction to find out whether it can
+carry flux; `deleteInaccessible` drops dead ends structurally,
+`deleteZeroInterval` drops reactions already pinned to zero, and
+`deleteDuplicates` does what `contractModel` does. `reservedRxns` protects
+reactions from all of them. On the Python side the same choices are
+`delete_no_flux` and its siblings, with `open_exchanges` deciding whether the
+test runs on the medium as it stands or with the boundary opened first.
+
 !!! warning "Which functions mutate"
     Every RAVEN function here returns a new model struct and leaves its input
     alone. The Python side is not uniform:
@@ -158,7 +173,7 @@ it a good subject for simplification, and a good warning about it.
     shut = readYAMLmodel('smallYeast.yml');
     fprintf('%d of %d reactions can carry flux\n', ...
         sum(haveFlux(shut)), numel(shut.rxns));
-    reduced = simplifyModel(shut, 'deleteMinMax', true);
+    reduced = simplifyModel(shut, 'deleteMinMax', true);   % test each reaction by LP
     fprintf('simplified: %d rxns, %d mets\n', numel(reduced.rxns), numel(reduced.mets));
     ```
 

@@ -161,7 +161,7 @@ draft.
 === "MATLAB"
 
     ```matlab
-    [addedRxns, outModel] = gapFillFastLP(draft, template);
+    [addedRxns, outModel] = gapFillFastLP(draft, template);   % LP, GLPK is enough
     fprintf('%d reactions added\n', numel(addedRxns));
     ```
 
@@ -187,6 +187,16 @@ draft.
     ```text title="Output"
     1 reactions added
     ```
+
+    The two tabs add 8 and 1. They are solving the same idea with different
+    inputs: the MATLAB call merges the whole template into the draft first,
+    renaming every id it already has, which is what the rename warning above
+    lists. Its universal database therefore holds a second copy of the
+    draft's own reactions, and the LP is free to rescue a blocked reaction
+    through those duplicates. `fill_gaps_fast_lp` matches by id and treats
+    the shared reactions as already present, so only the missing one is a
+    candidate. On two models that genuinely differ, which is the real case,
+    the gap between the counts closes.
 
 ## 13.4 The MILP formulation
 
@@ -248,7 +258,7 @@ produces a particular compound.
 
     ```matlab
     tasks = parseTaskList('tasks.txt');
-    [outModel, addedRxns] = fitTasks(draft, template, [], true, [], tasks);
+    [outModel, addedRxns] = fitTasks(draft, template, [], 'taskStructure', tasks);
     ```
 
     ```text title="Output"
@@ -267,6 +277,15 @@ produces a particular compound.
     [10. Context-specific models](init.md) for `fill_tasks` in its usual role,
     repairing a model that ftINIT has just cut down.
 
+    `fitTasks` fills one task at a time rather than all of them at once, so
+    the order of the task list can change the result. Its `rxnScores` weights
+    the candidates, taking negative scores only and maximising their sum, so a
+    reaction with a score closer to zero is cheaper to add; that is the hook
+    ftINIT uses to prefer reactions its expression data supports.
+    `gapFillMode` picks the back-end: `'merge'` combines the reference model
+    with the draft for every task, and `'preMerged'` expects a reference that
+    already contains the draft, which is the form ftINIT passes.
+
 !!! warning "What can go wrong"
     - **Identifiers that do not line up.** Gap-filling can only add what it can
       match. Two models built from different databases share almost no metabolite
@@ -279,6 +298,9 @@ produces a particular compound.
       misleading later.
     - **MILP on a genome-scale model.** Expect it to be slow, and give it a time
       limit; see [6. Solvers and configuration](solvers.md).
+    - **Comparing added-reaction counts across toolboxes.** The two sides
+      differ in what they treat as a candidate, so the counts are only
+      comparable when the template genuinely holds reactions the draft lacks.
 
 ## See also
 
