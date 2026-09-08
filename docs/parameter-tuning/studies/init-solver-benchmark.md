@@ -19,7 +19,7 @@ companion to the CI-scale `tests/test_init_solvers.py`.
 * **Gurobi** is the only MILP backend that actually completes ftINIT on Human-GEM here:
   ~9 min for 7752 reactions (matches the [validation](humangem-validation.md) result).
   All our tractability tuning (big-M=100, `rescaleModelForINIT`, `mip_gap`,
-  `time_limit`) was done on Gurobi and it pays off.
+  `time_limit`) was done on Gurobi, and the numbers above reflect that.
 * **HiGHS** (`hybrid_interface`) **does not work with cobra at all in this stack**: not
   raven-toolbox's bug. Cobra sets `model.solver = "hybrid"` which calls
   `optlang.interface.Model.clone()`, which re-applies a stored `lp_method="primal"`

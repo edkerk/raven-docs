@@ -17,7 +17,7 @@ for what it should do.
 !!! note
     Many of these changes are easier to do in the Excel sheet. They are done
     here in code just to avoid having several model files. It is assumed that
-    you have already completed Tutorials 2–3 and are somewhat familiar with
+    you have already completed Tutorials 2–3 and are familiar with
     linear programming.
 
 ## Step by step
@@ -51,7 +51,7 @@ printFluxes(model, sol.x, false, [], [], '%rxnID (%rxnName):%flux\n\t%eqn\n');
 ```
 
 ??? success "Answer to Question 2: production of ethanol from nothing"
-    Lots of ethanol is produced. `ADH1` should only produce one unit of
+    A large amount of ethanol is produced. `ADH1` should only produce one unit of
     ethanol. Change its equation with
     `model = changeRxns(model, 'ADH1', 'acetaldehyde[c] + NADH[c] => ethanol[c] + NAD(+)[c]', 3);`
 
@@ -105,9 +105,9 @@ printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux
 
 ??? success "Answer to Question 4: `PDC` is missing a product"
     `PDC` converts pyruvate (3 carbons) to acetaldehyde (2 carbons) without any
-    other products: CO2 is missing. This would be simpler to change in the
-    Excel file (or using `changeRxns`), but as an exercise one can add the
-    cytosolic CO2 coefficient directly to the stoichiometric matrix:
+    other products: CO2 is missing. The change can be made in the Excel file or
+    with `changeRxns`; as an exercise, add the cytosolic CO2 coefficient
+    directly to the stoichiometric matrix:
 
     ```matlab
     Irxn = ismember(model.rxns, 'PDC');

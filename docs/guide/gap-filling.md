@@ -130,7 +130,7 @@ connectivity.
     ```
 
     The reaction that comes back is the one that was taken out, in both
-    toolboxes. That identity is the result worth reporting. `fillGaps` also
+    toolboxes. That identity is the result to report. `fillGaps` also
     returns counts of *newly connected* and *still unconnectable* reactions, and
     those are not stable: it solves a MILP, several solutions are equally
     optimal, and which one comes back can change with the machine or the thread
@@ -155,7 +155,7 @@ type`.
 
 `fill_gaps_fast_lp` (fastGapFill, and its `swift` variant) solves one LP per
 blocked reaction: activate this reaction using as few template reactions as
-possible. It is the fast option, and the one to reach for on a genome-scale
+possible. It is the fast option, and the one that scales to a genome-scale
 draft.
 
 === "MATLAB"
@@ -241,8 +241,8 @@ is slower by a wide margin on anything genome-scale.
 
 Connectivity gap-filling asks "can this reaction carry flux?". The other question
 ("can the model still do *this*?") is answered by filling against a task list,
-which is usually what you actually want: a model that grows, or that produces a
-particular compound.
+which is the form the question usually takes: a model that grows, or that
+produces a particular compound.
 
 === "MATLAB"
 
@@ -273,7 +273,7 @@ particular compound.
       ids, and the result is a gap-filler that adds nothing, or adds duplicates.
     - **Filling every gap.** Some blocked reactions are blocked because the
       organism genuinely cannot do them. Each addition is a claim about biology,
-      and `fillGaps` will happily make hundreds of them.
+      and `fillGaps` will make hundreds of them in one call.
     - **Net production hiding the problem.** `allowNetProduction` makes more
       reactions look connectable by ignoring where the products go. Useful early,
       misleading later.

@@ -23,12 +23,12 @@ build time.
 Neither is a reduced version of the other, so the choice is usually made by
 what surrounds the model rather than by the toolbox itself.
 
-**Reach for raven-toolbox** if the work lives in Python, if you want the model
+**Use raven-toolbox** if the work lives in Python, if you want the model
 to be a `cobra.Model` that every cobrapy tool accepts without conversion, if you
 need reproducible environments and CI, or if you need KEGG artefacts built
 against a stated release rather than whatever is distributed.
 
-**Reach for RAVEN** if the work lives in MATLAB, if you need to reproduce a
+**Use RAVEN** if the work lives in MATLAB, if you need to reproduce a
 model built with tINIT, or if you need dynamic FBA or conversion to the COBRA
 Toolbox structure.
 
@@ -39,7 +39,7 @@ below say which and why.
 ## Names do not convert mechanically
 
 MATLAB uses `camelCase`, Python `snake_case`, but rewriting the case is the
-most common way to reach for something that does not exist. Much of the API was
+most common way to arrive at a name that does not exist. Much of the API was
 deliberately renamed as it was ported:
 
 | MATLAB | Python |
@@ -75,7 +75,7 @@ building the per-KO FASTA sets and HMM libraries, and deriving the phylogenetic
 distance matrix. RAVEN consumes pre-built artefacts; it does not produce them.
 
 This is what keeps the KEGG route reproducible against a stated KEGG release
-rather than against whatever artefact happens to be distributed.
+rather than against whichever artefact is currently distributed.
 
 ### Confidence tracking
 
@@ -177,7 +177,7 @@ changes).
 
 The pass/fail verdicts are the same. The cost is not: at genome scale the copy
 dominates the MATLAB runtime, which is why the Python version reuses a single
-model. Worth knowing if you are comparing runtimes rather than results.
+model. This affects runtime comparisons, not results.
 
 ### Gap-filling: one function becomes three
 
@@ -217,8 +217,8 @@ instead of delegating.
 
 ## What "identical results" means
 
-A reasonable question when two implementations of the same method exist: *do
-they give the same answer?* The honest answer depends on which function you
+When two implementations of the same method exist, the question is whether they
+give the same answer. That depends on which function you
 mean, because "the same" is achievable for some and meaningless for others.
 
 ### Exact
@@ -267,8 +267,7 @@ reported in the raven-toolbox repository.
 They are, at present, **reported** rather than **enforced**: no test fails if the
 two implementations drift apart. Building that harness (committed fixtures, a
 MATLAB driver that records the reference output, and tiered assertions matching
-the three levels above) is planned work, not something this page can yet point
-at.
+the three levels above) is planned work; this page cannot yet point at it.
 
 ## Solvers
 
@@ -318,6 +317,6 @@ low gene-calling precision, measured at roughly two-thirds of reaction
 assignments wrong at the default cutoff, with no cutoff that rescues it. Use the
 KEGG or homology routes.
 
-What stayed the same is the substance: the core algorithms (homology search,
-gap-filling, KEGG reconstruction) follow the same published methods, and models
+What stayed the same are the algorithms: homology search, gap-filling and KEGG
+reconstruction follow the same published methods, and models
 move between all three through SBML and YAML.

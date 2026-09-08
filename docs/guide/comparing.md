@@ -1,7 +1,8 @@
 # 17. Comparing models
 
-You rarely have just one model. There is the draft and the curated version, the
-model before and after gap-filling, yours and the one from the paper. Two
+Curation produces several versions of one model: a draft and a curated
+version, the model before and after gap-filling, a local build and a
+published one. Two
 different questions follow: **what changed** (an exact, entry-by-entry diff)
 and **how alike are these** (an overview across whole sets). The first is for
 review and for CI; the second is for deciding whether two models are describing
@@ -141,7 +142,7 @@ matrix. Pass `'printResults', true` for the full breakdown on screen.
     similarity: 0.945
     ```
 
-!!! warning "A high similarity is not a clean bill of health"
+!!! warning "A high similarity does not mean the models agree"
     These two models are **0.945** alike on the reaction set, and one of them is
     broken. The differences 17.1 lists are a doubled stoichiometric coefficient
     and a reaction made irreversible, changes that alter what the model

@@ -2,11 +2,11 @@
 
 > **This is a living document, and it is the source of intent.** It describes how
 > the RAVEN documentation site *should* be designed and what it *should*
-> contain; it is a set of instructions, not a description of whatever happens to
-> be on `main` at the moment. When the site and this document disagree, treat
-> this document as the target and bring the site in line (not the other way
-> round). Keep it updated as decisions are made; record new decisions in the
-> decisions log and move resolved items out of "open questions".
+> contain; it is a set of instructions, not a description of the current state
+> of `main`. When the site and this document disagree, treat this document as
+> the target and bring the site in line (not the other way round). Keep it
+> updated as decisions are made; record new decisions in the decisions log and
+> move resolved items out of "open questions".
 
 > **⚠️ Before doing any work in this repo, pull all remotes first**: the
 > superproject *and* every submodule. The submodules are updated frequently
@@ -85,7 +85,7 @@ version**:
 
 - **RAVEN (MATLAB).** Requirements, then the **three install methods** from the
   [wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation), the
-  MATLAB Add-Ons manager (easiest), a release download, and `git clone`, plus
+  MATLAB Add-Ons manager, a release download, and `git clone`, plus
   verifying (`checkInstallation`), **upgrading** (per method) and **removing**
   (`removeRavenFromPath`).
 - **Python (raven-toolbox).** Requirements, `pip install raven-toolbox`,

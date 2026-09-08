@@ -89,8 +89,8 @@ complex and the reaction goes.
 
     `knock_out_model_genes` sets the bounds of every reaction whose GPR is no
     longer satisfiable to zero, and leaves the rest alone. Inside `with model:`
-    it is undone on the way out, the cheapest way to ask a knockout question
-    without keeping the answer.
+    it is undone on the way out, so the knockout does not persist past the
+    block.
 
 ## 11.2 Knock out every gene
 
@@ -164,8 +164,8 @@ particular thing?
 ## 11.4 Two at a time
 
 Double deletions find the redundancy single deletions miss: two genes that each
-look dispensable but cannot both go. The cost is quadratic, so this is where a
-small model earns its keep.
+look dispensable but cannot both go. The cost is quadratic in the number of
+genes, so run time grows sharply with model size.
 
 === "MATLAB"
 
@@ -230,8 +230,8 @@ knockout's physiology, and a different answer.
 
 !!! warning "What can go wrong"
     - **Confusing gene and reaction knockouts.** Deleting a gene only silences a
-      reaction when the GPR says so. Isozymes hide single knockouts; that is the
-      point of the double deletions.
+      reaction when the GPR says so. Isozymes mask single knockouts, which is
+      what the double deletions test.
     - **A knockout that looks lethal because the medium is wrong.** Essentiality
       is relative to the medium and the objective. State both when you report it;
       see [5. Growth media and conditions](media.md).

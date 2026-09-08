@@ -158,7 +158,7 @@ un-annotated homologs are also removed.
 **Reading:**
 - **`min_score_ratio_ko` is inert**: across all four organisms, varying it
   0.0 → 0.3 → 0.5 changes precision/recall by ≤0.02 (mostly 0.00). It is a
-  magic-number knob that does effectively nothing here. (Full 0.0/0.3/0.5 × g-grid
+  knob that does effectively nothing here. (Full 0.0/0.3/0.5 × g-grid
   in the script output; representative rows shown.)
 - **`min_score_ratio_g` is the real precision lever**: 0.80 → 0.95 lifts
   precision ~0.07–0.10 for ~0.02 recall loss. 0.50 is clearly too loose.
@@ -216,7 +216,7 @@ The model-assembly flags decide what a draft keeps, and match MATLAB:
 | `keep_incomplete` | `True` | Reactions whose enzyme set is only partly known. |
 | `keep_general` | `False` | Overview-map reactions that lump many specific steps into one. Admitting them double-counts. |
 
-## 6. Whole-model cross-validation (sanity check)
+## 6. Whole-model cross-validation (consistency check)
 
 Full reconstruction of *S. cerevisiae* two ways, at the old defaults:
 

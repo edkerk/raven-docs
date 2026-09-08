@@ -188,8 +188,8 @@ if you meant "the shipped medium, but with more glucose".
 
     Glucose and oxygen alone are not enough; yeast-GEM also needs nitrogen,
     phosphate, sulphate and a handful of ions, which is why building a medium from
-    `dict(model.medium)` and editing the entries you care about is usually safer
-    than writing the whole recipe out.
+    `dict(model.medium)` and editing individual entries leaves the rest of the
+    recipe intact, where writing it out in full does not.
 
     With **everything** closed the growth rate is not zero but `nan`:
     `slim_optimize` returns `nan` when the LP has no solution at all, which is a
@@ -278,7 +278,7 @@ loudly when the condition no longer matches the model.
 A medium copied from a paper usually contains more than the model needs.
 `getMinimalMedium` and cobrapy's `minimal_medium` search for the smallest set of
 uptakes that still supports a given growth rate, useful to find out which
-component is doing the work, and to catch a nutrient the model can quietly do
+component is doing the work, and to catch a nutrient the model can do
 without because a gap-filled reaction produces it internally.
 
 === "MATLAB"

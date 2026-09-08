@@ -14,7 +14,7 @@ compute for independence. On yeast-GEM (`n_samples=300`, `warmup=1000`, Gurobi):
 | **100** *(default)* | 0.926 | 841 |
 | 500 | 0.849 | 927 |
 
-Even at 500, consecutive samples remain 85% correlated. The decay is far too slow
+Even at 500, consecutive samples remain 85% correlated. The decay is too slow
 to fix by raising the setting: a fivefold increase from 20 to 100 removes 0.047 of
 the autocorrelation, and the next fivefold removes 0.077. Reaching roughly
 0.3 (a common rule of thumb for near-independence) would need thinning in the tens of
@@ -89,7 +89,7 @@ the polytope.
 
 4 chains × 300 samples, 2524.4 s wall (~42 min, slower than the naive
 "~same as one chain" estimate; four Gurobi processes evidently contend for
-resources on a 12-core machine rather than scaling for free).
+resources on a 12-core machine rather than scaling linearly).
 
 | | value |
 |---|---:|
@@ -174,7 +174,7 @@ n_samples=100` instead of `thinning=100, n_samples=300`. 4 chains, yeast-GEM.
 
 Essentially no change: same worst reactions, same rough ordering, same
 overall failure rate, and it took *longer* (57.5 min vs 42 min) despite equal
-total steps. **This rules out "just thin more within a fixed budget" as a
+total steps. **This rules out more thinning within a fixed budget as a
 fix.** If more thinning genuinely bought better mixing, spending the same
 budget on longer gaps between fewer stored samples should have moved R-hat;
 it didn't move it meaningfully in either direction. The non-convergence looks
@@ -187,8 +187,8 @@ it on e_coli_core while this reallocation, still ACHR, does not.
 Not run at matching scale (4 chains × 300 samples) given the ~20x
 e_coli_core cost multiplier implies perhaps 14 hours. A small bounded probe
 (2 chains, 20 samples, same `thinning=100`) was run instead purely to get a
-real genome-scale CHRR timing number before deciding whether a full run is
-worth attempting.
+real genome-scale CHRR timing number before deciding whether to attempt a full
+run.
 
 (cobrapy's `OptGPSampler` was not a candidate here: `random_sampling` doesn't
 wire it in, only `'achr'` and `'chrr'`; see
@@ -236,8 +236,7 @@ above.
   minority. The most concrete unblock identified but not pursued here: CHRR's
   rounding transform is recomputed from scratch per chain/call; caching or
   reusing it across calls on the same model would remove the dominant fixed
-  cost and is worth a future look, but is an engineering change, not a
-  parameter default.
+  cost, but is an engineering change, not a parameter default.
 
 ## Two other sampling settings that were measured
 
@@ -275,5 +274,5 @@ trade-off be explored without re-deriving already-cached chains.
 **Timing caveat:** the single-chain study's 841 s was extrapolated to "about
 841 s wall for 4 parallel chains too"; that estimate was wrong by ~3x
 (actual: 2524 s). Four concurrent Gurobi processes on a 12-core machine
-evidently contend for resources rather than scaling for free; budget for that
+evidently contend for resources rather than scaling linearly; budget for that
 when planning further sweeps at this scale.

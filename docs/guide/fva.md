@@ -92,7 +92,7 @@ feasible space; the objective is free.
 
     `fraction_of_optimum=0.0` is what makes this the same question
     `getAllowedBounds` asks. Leave it out and cobrapy defaults to **1.0**, which
-    asks something quite different; see the next section.
+    asks a different question; see the next section.
 
 ## 14.2 The range *at* the optimum
 
@@ -128,16 +128,15 @@ at 90 % of it), which fluxes are still free to move?
     ```
 
 Reactions whose span collapses to zero at the optimum are the ones the model has
-no choice about. Those are the predictions worth reporting; a flux with a wide
-range at the optimum is an artefact of which vertex the solver happened to land
-on.
+no choice about. Those are the predictions the model determines; a flux with a
+wide range at the optimum is an artefact of which vertex the solver happened to
+land on.
 
 ## 14.3 A wide range is not always a real one
 
 A reaction can show a wide range purely because it sits in a thermodynamically
 infeasible cycle -- flux going round a loop with no net driving force. The widest
-span in 14.1 was 1000, the model's default bound. This is what that turns out to
-be.
+span in 14.1 was 1000, the model's default bound. That span is such a cycle.
 
 === "MATLAB"
 
@@ -162,7 +161,7 @@ be.
     ```
 
     **RAVEN has no loopless FVA.** The practical check is the one above: shut one
-    reaction of a suspected cycle and see whether anything you care about moves.
+    reaction of a suspected cycle and see whether anything downstream moves.
     Growth is untouched, so those 1000 units of flux were never doing any work.
 
 === "Python"

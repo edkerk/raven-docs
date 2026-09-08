@@ -1,6 +1,6 @@
 # Methods & benchmarks
 
-RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships a lot of
+RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships many
 functions with numerical defaults: solver tolerances, cut-offs, iteration
 limits, literature constants. [Tuned parameter defaults](../tuned-parameters.md)
 gives the short version of every one of them: current value, one-line reason,
@@ -30,7 +30,7 @@ The following criteria apply in rough priority order:
    small model (iJO1366 or similar). Compare the result against a known-good
    answer (a published reconstruction, a literature flux distribution, a
    validated gene-essentiality set). The default must produce a result that is
-   meaningfully better than any reasonable alternative, or at least no worse.
+   meaningfully better than the alternatives tested, or at least no worse.
 2. **Sensitivity envelope.** Vary the parameter by ±1 order of magnitude (or
    ±50% for non-log-scale values) and measure result change. If output is
    insensitive across the range, the exact default value matters little;

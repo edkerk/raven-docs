@@ -53,8 +53,8 @@ random-objective method (`randomSampling`), which draws polytope **vertices**; s
 
 Hit-and-run mixing time scales with the polytope's **aspect ratio**: the ratio of its
 longest to shortest axis. For a near-isotropic (ball-like) polytope, hit-and-run mixes in
-`O*(d²)` steps (`d` = dimension). For a long, thin slab, an unrounded chain crawls along the
-long axes and almost never moves across the thin ones, so it *appears* converged (short
+`O*(d²)` steps (`d` = dimension). For a long, thin slab, an unrounded chain moves mostly
+along the long axes and rarely across the thin ones, so it *appears* converged (short
 within-axis autocorrelation) while having explored only a sliver of the feasible set.
 
 This is exactly the geometry of the models this work targets:
@@ -90,7 +90,7 @@ Every search direction is a difference of feasible points, so each step stays ex
 ACHR does **no rounding**: directions come from the warmup vertices, which on an elongated
 polytope cluster near the long axes, so the thin directions are under-explored.
 
-ACHR is lighter than CHRR (no ellipsoid solve) and is a good default on well-conditioned
+ACHR is lighter than CHRR (no ellipsoid solve) and mixes adequately on well-conditioned
 models.
 
 ---
@@ -114,7 +114,7 @@ models.
 4. **Map back.** `v = v0 + N (c + E y)` for each recorded point.
 
 The rounding (step 2) is computed **once** per model; the per-step cost afterwards equals
-ACHR's. The investment buys aspect-ratio-independent mixing.
+ACHR's. The investment yields aspect-ratio-independent mixing.
 
 ---
 
@@ -134,7 +134,7 @@ variables `y`, computes residuals for dual feasibility, primal slack, and comple
 and takes a fraction-to-boundary step. The returned lower-triangular factor `E` (with
 `E Eᵀ = E2`) is the rounding transform.
 
-A subtlety worth noting: the MVE of a triangle is its **Steiner inellipse** (centred at the
+One consequence: the MVE of a triangle is its **Steiner inellipse** (centred at the
 centroid, tangent at the side midpoints), *not* its incircle: the largest inscribed *ellipse*
 generally has larger area than the largest inscribed *circle*. This is used as an exact
 validation case (§9): the solver must recover the off-diagonal Steiner shape, confirming it
@@ -192,7 +192,7 @@ genuine addition. MATLAB RAVEN had neither, so both are implemented there from s
 cobrapy also ships a parallel **`OptGPSampler`**, but it is *not* wired into `random_sampling`:
 only ACHR and CHRR are. Using it means calling `cobra.sampling.OptGPSampler` directly,
 bypassing this wrapper entirely; it won't return a `FluxSamplingResult` or go through
-raven-toolbox's constraint handling. `method='chrr'` is the better-mixing alternative actually
+raven-toolbox's constraint handling. `method='chrr'` is the better-mixing alternative
 available through `random_sampling`.
 
 The MATLAB filenames are prefixed `sample*` to avoid clashing with COBRA Toolbox's

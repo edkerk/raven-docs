@@ -181,7 +181,7 @@ it go out of scope.
     Without `with`, the bound change would persist and every later result on this
     page would silently be an anaerobic one.
 
-    Two things in that output are worth reading carefully. The anaerobic growth
+    Two things in that output need care. The anaerobic growth
     rate is **zero**, not a smaller positive number: closing the oxygen exchange is
     not enough to make yeast-GEM grow fermentatively; it also needs sterol and
     fatty-acid uptake and a different biomass composition, which is what a

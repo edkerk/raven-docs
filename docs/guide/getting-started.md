@@ -114,7 +114,7 @@ For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
     There is no equivalent of `printModelStats`. The collections are attributes,
     so their lengths are the totals, and per-compartment counts come from
     filtering them. After a solve, `model.summary()` prints the exchange fluxes
-    and the objective, which is the overview worth having at that point.
+    and the objective.
 
 ## 1.3 Look at a reaction
 
@@ -269,8 +269,8 @@ same operation in both toolboxes; doing it for a whole model is
     `1` balanced, `0` unbalanced, `-1` undecidable. `PGI` balances elementally
     and its charge is undecidable: the metabolites in this model carry formulas
     but no charges, so there is nothing to sum. That is a different statement
-    from "the charges do not balance", and worth keeping apart when triaging a
-    draft.
+    from "the charges do not balance": one says the check could not run, the
+    other says it failed.
 
 === "Python"
 
@@ -293,8 +293,8 @@ same operation in both toolboxes; doing it for a whole model is
       compartment suffix (`G6P_c`, not `G6P`). Neither toolbox returns a
       sentinel for a name it cannot find: `getIndexes` errors with
       `Could not find object 'X' in the model` and `get_by_id` raises
-      `KeyError`, so a typo stops the script rather than quietly indexing
-      something else.
+      `KeyError`, so a typo stops the script rather than indexing something else
+      without warning.
     - **The model loads but nothing grows.** In `smallYeast.yml` every uptake
       reaction is closed (`glcIN` has bounds `[0 0]`). Opening a medium is
       [5. Growth media and conditions](media.md).

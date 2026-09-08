@@ -82,7 +82,7 @@ original RAVEN paper. Both are MATLAB only.
 14. [Flux variability](fva.md), how much each flux can still move, and
     which predictions the model has no choice about.
 15. [Random sampling](sampling.md), the distribution behind those ranges, and
-    how to condition it on a state worth asking about.
+    how to condition it on a particular state.
 16. [Combining and simplifying models](combining.md), merging models on
     metabolite names, and taking one apart again.
 17. [Comparing models](comparing.md), what changed between two models, and how
