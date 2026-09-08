@@ -289,9 +289,12 @@ same operation in both toolboxes; doing it for a whole model is
     decide, so an empty result covers both "balanced" and "nothing to check".
 
 !!! warning "What can go wrong"
-    - **`KeyError` / empty index.** Identifiers are case-sensitive and carry the
-      compartment suffix (`G6P_c`, not `G6P`). `getIndexes` returns `0` for a
-      name it cannot find, so check the result before using it.
+    - **A lookup fails.** Identifiers are case-sensitive and carry the
+      compartment suffix (`G6P_c`, not `G6P`). Neither toolbox returns a
+      sentinel for a name it cannot find: `getIndexes` errors with
+      `Could not find object 'X' in the model` and `get_by_id` raises
+      `KeyError`, so a typo stops the script rather than quietly indexing
+      something else.
     - **The model loads but nothing grows.** In `smallYeast.yml` every uptake
       reaction is closed (`glcIN` has bounds `[0 0]`). Opening a medium is
       [5. Growth media and conditions](media.md).

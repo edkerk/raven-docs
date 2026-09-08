@@ -1,4 +1,4 @@
-﻿# Legacy tutorials
+# Legacy tutorials
 
 These five hands-on tutorials were part of the original **RAVEN 1** paper
 (Agren et al., 2013). The code has been updated to run with current RAVEN, but
@@ -20,8 +20,8 @@ folder of the RAVEN repository.
 ## Before you start
 
 - These tutorials use the **MATLAB** toolbox. Make sure RAVEN is installed and
-  `checkInstallation` passes â€” see [Installation](../installation/raven.md).
-- Tutorials 2â€“4 involve editing models in **RAVEN-compatible Excel format**, so
+  `checkInstallation` passes — see [Installation](../installation/raven.md).
+- Tutorials 2–4 involve editing models in **RAVEN-compatible Excel format**, so
   you need a working `importExcelModel` (i.e. the Excel parser must pass
   `checkInstallation`).
 - To run a section of a script in MATLAB, highlight it, right-click, and choose
@@ -31,8 +31,8 @@ folder of the RAVEN repository.
 
 !!! tip "Python users"
     The reconstruction concepts carry over directly to raven-toolbox, but the
-    function names are not always a mechanical `snake_case` rewrite â€” some RAVEN
-    functions map to cobrapy instead (`solveLP` â†’ `model.optimize()`), and some
+    function names are not always a mechanical `snake_case` rewrite — some RAVEN
+    functions map to cobrapy instead (`solveLP` → `model.optimize()`), and some
     have no Python counterpart at all (there is no Excel reader). Look each one up
     in the [API reference](../api/index.md), and see
     [RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
