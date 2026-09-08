@@ -1,4 +1,4 @@
-# 1. Getting started
+﻿# 1. Getting started
 
 Load a model, find out what is in it, and look at a single reaction, metabolite
 and gene. Every other page in the user guide assumes you can do this.
@@ -51,7 +51,7 @@ directory you put it in.
     smallYeast
     ```
 
-    In Python a RAVEN model **is** a `cobra.Model` — raven-toolbox adds no model
+    In Python a RAVEN model **is** a `cobra.Model` â€” raven-toolbox adds no model
     class of its own, so everything cobrapy can do is available on it.
 
 For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
@@ -102,7 +102,7 @@ supported format.
 
 ## 1.3 Look at a reaction
 
-Glucose-6-phosphate isomerase, `PGI`, is a good one to start with — it is
+Glucose-6-phosphate isomerase, `PGI`, is a good one to start with â€” it is
 reversible, it carries a gene association, and it should be mass balanced.
 
 === "MATLAB"
@@ -247,7 +247,7 @@ covered on the *Quality control* page.
 
 ## See also
 
-- [User guide overview](index.md) — the other pages, and what is still planned.
-- [MATLAB vs Python](../differences.md) — what each toolbox has, and where
+- [User guide overview](index.md) â€” the other pages, and what is still planned.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) â€” what each toolbox has, and where
   cobrapy takes over.
-- [API reference](../api/index.md) — every function in both toolboxes.
+- [API reference](../api/index.md) â€” every function in both toolboxes.
