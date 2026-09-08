@@ -239,3 +239,52 @@ deletedRxns                  # mergeCompartments output variable
 # not name them.
 run_init                     # removed from raven-toolbox in #148, with tINIT
 get_init_model               # removed from raven-toolbox in #148, with tINIT
+
+# -- RAVEN 2 names, referenced by the RAVEN 2 -> 3 migration guide -----------
+# raven3-migration.md exists to say what RAVEN 3 removed, renamed and merged,
+# so it necessarily names functions that are gone from develop3. Every entry
+# below was confirmed present on RAVEN 2's develop branch (== v2.11.3) and
+# absent from develop3; the page discusses each one as removed or merged.
+addSpontaneousRxns           # external/metacyc, dropped with MetaCyc support
+changeGeneAssoc              # legacy/, dropped
+colorPathway                 # pathway/, dropped with visualization
+colorSubsystem               # pathway/, dropped with visualization
+combineMetaCycKEGGModels     # external/metacyc, dropped
+compareRxnsGenesMetsComps    # folded into compareMultipleModels
+constructMultiFasta          # dropped with the local-KEGG-FTP workflow
+dispEM                       # replaced by native error()/warning()
+getBlastFromExcel            # dropped with the local-KEGG-FTP workflow
+getEnzymesFromMetaCyc        # external/metacyc, dropped
+getGenesFromKEGG             # dropped with the local-KEGG-FTP workflow
+getMetsFromKEGG              # dropped with the local-KEGG-FTP workflow
+getMetsFromMetaCyc           # external/metacyc, dropped
+getModelFromMetaCyc          # external/metacyc, dropped
+getRxnsFromKEGG              # dropped with the local-KEGG-FTP workflow
+getRxnsFromMetaCyc           # external/metacyc, dropped
+getWSLpath                   # dropped with the local-KEGG-FTP workflow
+linkMetaCycKEGGRxns          # external/metacyc, dropped
+markPathwayWithExpression    # pathway/, dropped with visualization
+markPathwayWithFluxes        # pathway/, dropped with visualization
+plotAdditionalInfo           # plotting/, dropped with visualization
+scoreComplexModel            # folded into scoreModel in RAVEN/#746
+solveQP                      # dropped with RAVEN's Optimization Toolbox use
+
+# RAVEN 2 argument names the same page names when describing what changed.
+analysisType                 # findGeneDeletions argument, removed with qMOMA
+fileName                     # exportToExcelFormat argument
+ignoreIntBounds              # makeSomething / findLeakMetabolite argument
+keggPath                     # getModelFromKEGG argument, removed
+nSequences                   # getKEGGModelForOrganism argument, removed
+oeFactor                     # findGeneDeletions argument, removed with qMOMA
+refModel                     # findGeneDeletions argument, removed with qMOMA
+seqIdentity                  # getKEGGModelForOrganism argument, removed
+
+kegg118_eukaryotes           # raven-data KEGG artefact name, not a function
+kegg118_prokaryotes          # raven-data KEGG artefact name, not a function
+xml_toolbox                  # third-party library bundled by RAVEN 2's legacy/
+
+# Pending on develop3: checkRaven is the rename of checkInstallation, landing
+# with the 3.0.0b1 changelog work. It is not on develop3 yet, so the index
+# cannot resolve it. DELETE THIS ENTRY once develop3 carries checkRaven.m --
+# the checker should be the thing that tells us the rename has landed.
+checkRaven                   # RAVEN 3 rename of checkInstallation, not yet on develop3
