@@ -1,4 +1,4 @@
-﻿# 2. Model structure and identifiers
+# 2. Model structure and identifiers
 
 The same model is a **struct of parallel arrays** in MATLAB and a **graph of
 objects** in Python. Knowing which field corresponds to which attribute is most
@@ -11,7 +11,7 @@ of what you need to translate a script between the two.
 | `checkModelStruct` | `check_model` | report structural problems |
 | `sortIdentifiers` | `sort_identifiers` | sort reactions, metabolites and genes by id |
 | `getIndexes` | `parse_name_comp` | split a `name[comp]` token |
-| â€” | `subsystem_to_str` | one subsystem string, whatever the source stored |
+| — | `subsystem_to_str` | one subsystem string, whatever the source stored |
 | `addIdentifierPrefix`, `removeIdentifierPrefix` | handled on read/write <span class="cobrapy-tag">cobrapy</span> | SBML identifier prefixes |
 | `ravenCobraWrapper` | not needed | convert between RAVEN and COBRA structs |
 
@@ -36,7 +36,7 @@ of what you need to translate a script between the two.
 The consequence worth internalising: in MATLAB you edit **arrays in parallel and
 keep them aligned**, and in Python you edit **objects that know their own
 neighbours**. Deleting a reaction in RAVEN means removing the same row from every
-reaction-length field â€” which is why `removeReactions` exists. In cobrapy the
+reaction-length field — which is why `removeReactions` exists. In cobrapy the
 object holds its own links, so `model.remove_reactions([...])` is enough.
 
 ## Setup
@@ -220,7 +220,7 @@ reaction uses, a missing objective.
 
 ## 2.5 Sort the identifiers before you commit
 
-Sorting makes the diff between two versions of a model readable â€” the reason
+Sorting makes the diff between two versions of a model readable — the reason
 `exportForGit` and `export_for_git` offer it too.
 
 === "MATLAB"
@@ -265,6 +265,6 @@ Sorting makes the diff between two versions of a model readable â€” the rea
 
 ## See also
 
-- [Getting started](getting-started.md) â€” loading a model and looking around it.
-- [Reading and writing models](io.md) â€” where identifier prefixes come from.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) â€” the full function mapping.
+- [Getting started](getting-started.md) — loading a model and looking around it.
+- [Reading and writing models](io.md) — where identifier prefixes come from.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — the full function mapping.

@@ -1,4 +1,4 @@
-﻿# 3. Reading and writing models
+# 3. Reading and writing models
 
 Get a model in and out of both toolboxes: SBML, RAVEN YAML, Excel, and the
 directory layout a Git-maintained model repository expects.
@@ -71,7 +71,7 @@ Which function you need depends on the file format, not on the model.
 
 SBML identifiers must be valid XML names, so they cannot contain a dot. Model,
 reaction and metabolite ids that do are encoded on the way out and stay encoded
-on the way back in â€” the same model read from YAML and from SBML does not
+on the way back in — the same model read from YAML and from SBML does not
 necessarily report the same id.
 
 === "MATLAB"
@@ -109,10 +109,10 @@ necessarily report the same id.
 
 !!! note "Each toolbox is slow in the other's favourite format"
     Reading yeast-GEM takes about **17 s from SBML and 73 s from YAML in
-    Python**, and about **78 s from SBML and 17 s from YAML in MATLAB** â€” the
+    Python**, and about **78 s from SBML and 17 s from YAML in MATLAB** — the
     ranking is reversed. RAVEN parses YAML itself and goes through libSBML for
     SBML; cobrapy has the opposite balance. Pick the format for what you need
-    from it â€” a readable diff, or the RAVEN-specific fields YAML preserves â€” and
+    from it — a readable diff, or the RAVEN-specific fields YAML preserves — and
     if a script is slow, try the other one before optimising anything else.
 
 ## 3.3 Write a model
@@ -158,8 +158,8 @@ by identifier first, which keeps the diff between two versions of a model small.
 
 ## 3.4 Spreadsheets
 
-The Excel format is the one people curate by hand: five sheets â€” reactions,
-metabolites, compartments, genes and the model's own metadata â€” that a
+The Excel format is the one people curate by hand: five sheets — reactions,
+metabolites, compartments, genes and the model's own metadata — that a
 non-modeller can read and edit.
 
 === "MATLAB"
@@ -250,8 +250,8 @@ request. Both toolboxes write that layout directly.
 
 ## See also
 
-- [Getting started](getting-started.md) â€” what to do with the model once it is
+- [Getting started](getting-started.md) — what to do with the model once it is
   loaded.
-- [User guide overview](index.md) â€” the other pages and what is planned.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) â€” the full function mapping, including
+- [User guide overview](index.md) — the other pages and what is planned.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — the full function mapping, including
   everything that resolves to cobrapy.
