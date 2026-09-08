@@ -1,0 +1,11 @@
+Gene	Gene name	Tissue	Cell type	Level	Reliability
+ENSG00000111640	GAPDH	liver	hepatocytes	High	Supported
+ENSG00000111640	GAPDH	kidney	cells in tubules	Medium	Supported
+ENSG00000106633	GCK	liver	hepatocytes	Medium	Approved
+ENSG00000106633	GCK	kidney	cells in tubules	Not detected	Approved
+ENSG00000156515	HK1	liver	hepatocytes	Low	Supported
+ENSG00000156515	HK1	kidney	cells in tubules	High	Supported
+ENSG00000159399	HK2	liver	hepatocytes	Not detected	Approved
+ENSG00000159399	HK2	kidney	cells in tubules	Low	Approved
+ENSG00000067225	PKM	liver	hepatocytes	High	Supported
+ENSG00000067225	PKM	liver	bile duct cells	Low	Supported

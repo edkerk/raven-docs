@@ -1,5 +1,3 @@
-<!-- run-examples: skip-file -->
-
 # 10. Context-specific models with tINIT and ftINIT
 
 A genome-scale model describes what an organism *can* do. tINIT and ftINIT cut it
@@ -77,11 +75,15 @@ genuinely differs, not `getINITModel` vs. `ftINIT` themselves.
 | no equivalent | `gene_scores_from_expression` | expression → gene scores |
 | `runINIT`, `getINITModel` | no equivalent | the legacy tINIT, for reproducing older models |
 | `removeLowScoreGenes` | `remove_low_score_genes` | prune negative-scoring genes from GPRs |
+| `parseHPA`, `parseHPArna` | `parse_hpa`, `parse_hpa_rna` | read Human Protein Atlas dumps |
+| no equivalent | `hpa_gene_scores`, `rna_gene_scores` | HPA levels or TPM to gene scores |
 | `checkTasks` | `check_tasks` | confirm the result still does what it must |
 
 ## Setup
 
 Human-GEM ships everything needed except the toolbox:
+
+<!-- run-examples: skip -->
 
 ```bash
 git clone --depth=1 https://github.com/SysBioChalmers/Human-GEM.git
@@ -107,6 +109,8 @@ reused for every sample.
 
 === "MATLAB"
 
+    <!-- run-examples: skip -->
+
     ```matlab
     load('Human-GEM/model/Human-GEM.mat');          % the struct is called humanGEM
     tasks = parseTaskList('Human-GEM/data/metabolicTasks/metabolicTasks_Essential.txt');
@@ -129,6 +133,8 @@ reused for every sample.
     inside it throws. Calling `prepINITModel` directly, as above, sidesteps that.
 
 === "Python"
+
+    <!-- run-examples: skip -->
 
     ```python
     import cobra
@@ -170,6 +176,8 @@ it out and the mean across samples is used per gene instead.
 
 === "MATLAB"
 
+    <!-- run-examples: skip -->
+
     ```matlab
     tbl = readtable('Human-GEM/data/datasets/Hart2015_RNAseq.txt', ...
         'FileType', 'text', 'Delimiter', '\t');
@@ -185,6 +193,8 @@ it out and the mean across samples is used per gene instead.
     ```
 
 === "Python"
+
+    <!-- run-examples: skip -->
 
     ```python
     import pandas as pd
@@ -207,6 +217,8 @@ it out and the mean across samples is used per gene instead.
     Seeing the clamp directly explains why two very different samples can
     produce nearly the same model:
 
+    <!-- run-examples: skip -->
+
     ```python
     print(gene_scores_from_expression({"a": 12.0, "b": 0.5, "c": 3.0}, reference=3.0))
     ```
@@ -218,9 +230,145 @@ it out and the mean across samples is used per gene instead.
     `b` computes to −8.96 and comes back at the floor; a gene exactly at its
     reference scores zero, neither in nor out.
 
+### Scores from the Human Protein Atlas
+
+A transcript table is one source of gene scores. The Human Protein Atlas is
+another, and both toolboxes read it directly.
+[`hpa-sample.tsv`](../data/hpa-sample.tsv) is a ten-row excerpt in HPA's
+proteomics format: the six columns the parsers expect, five human genes across
+two tissues, with the levels chosen so each category appears. A real dump is
+`normal_tissue.tsv` from
+[proteinatlas.org](https://www.proteinatlas.org/about/download).
+
+=== "MATLAB"
+
+    ```matlab
+    hpaData = parseHPA('hpa-sample.tsv');
+    fprintf('%d genes, %d tissue/cell-type columns\n', ...
+        numel(hpaData.genes), numel(hpaData.tissues));
+    fprintf('levels: %s\n', strjoin(hpaData.levels, ', '));
+    ```
+
+    ```text title="Output"
+    5 genes, 3 tissue/cell-type columns
+    levels: High, Low, Medium, Not detected
+    ```
+
+    `parseHPA` returns a struct rather than a table. `genes` and `geneNames`
+    hold the Ensembl ids and the symbols, `tissues` and `celltypes` are parallel
+    arrays with one entry per tissue and cell-type combination rather than per
+    tissue, and `gene2Level` is a sparse genes-by-combination matrix whose values
+    index into `levels`. Reading a level therefore takes two steps, the same
+    indirection `model.metComps` uses in
+    [2. Model structure and identifiers](model-structure.md).
+
+    The `version` argument is accepted and ignored: the format is inferred from
+    the column headers. `hpaData` is what `ftINIT` takes as its fourth positional
+    argument, in place of the `transcrData` used above.
+
+=== "Python"
+
+    ```python
+    from raven_toolbox.omics import parse_hpa
+
+    hpa = parse_hpa("hpa-sample.tsv")
+    print(hpa.df.shape[0], "rows")
+    print("tissues:", hpa.tissues())
+    print("cell types in liver:", hpa.celltypes("liver"))
+    print("levels:", sorted(hpa.df["level"].unique()))
+    ```
+
+    ```text title="Output"
+    10 rows
+    tissues: ['kidney', 'liver']
+    cell types in liver: ['bile duct cells', 'hepatocytes']
+    levels: ['High', 'Low', 'Medium', 'Not detected']
+    ```
+
+    `parse_hpa` returns an `HPAData` wrapping a tidy pandas DataFrame on `.df`,
+    one row per gene, tissue and cell type, with the columns renamed to
+    `gene_id`, `gene_name`, `tissue`, `celltype`, `level` and `reliability`, so
+    ordinary grouping and filtering apply before any of it becomes a score.
+    `tissues()` and `celltypes()` save writing the obvious queries.
+
+    MATLAB's parallel arrays plus a sparse index matrix answer "what is the level
+    of gene i in combination j" directly; the DataFrame answers "show me every
+    row for this tissue". Neither holds anything the other does not.
+
+### Levels to numbers
+
+HPA reports a category, not a quantity, so a level has to become a number before
+the scoring above can use it.
+
+=== "Python"
+
+    ```python
+    from raven_toolbox.omics import HPA_LEVEL_SCORES, hpa_gene_scores
+
+    print(HPA_LEVEL_SCORES)
+
+    scores = hpa_gene_scores(hpa, tissue="liver")
+    for gene, score in sorted(scores.items()):
+        print(f"  {gene}  {score:+.1f}")
+    ```
+
+    ```text title="Output"
+    {'High': 20.0, 'Medium': 15.0, 'Low': 10.0, 'Not detected': -8.0, 'Strong': 20.0, 'Moderate': 15.0, 'Weak': 10.0, 'Negative': -8.0}
+      ENSG00000067225  +20.0
+      ENSG00000106633  +15.0
+      ENSG00000111640  +20.0
+      ENSG00000156515  +10.0
+      ENSG00000159399  -8.0
+    ```
+
+    The mapping is exposed as `HPA_LEVEL_SCORES` and is replaced by passing
+    `level_scores=`. Both vocabularies are covered: `High`/`Medium`/`Low`/`Not
+    detected` for expression, and `Strong`/`Moderate`/`Weak`/`Negative` for
+    antibody staining, scoring the same.
+
+    On the MATLAB side there is no separate step: `scoreModel` takes `hpaData`
+    and applies the mapping internally.
+
+A negative score is a statement, not a missing value. `Not detected` scores
+**-8**, which pushes a reaction towards exclusion; a gene absent from the tissue
+is omitted from the result instead, and the reaction scorer falls back to its
+`no_gene_score`. The two produce different models.
+
+### One gene, several cell types
+
+A tissue has several cell types, and a gene can be measured differently in each.
+`PKM` in the excerpt is `High` in hepatocytes and `Low` in bile duct cells.
+
+=== "Python"
+
+    ```python
+    best = hpa_gene_scores(hpa, tissue="liver", multiple_celltype="best")
+    average = hpa_gene_scores(hpa, tissue="liver", multiple_celltype="average")
+    print(f"PKM  best {best['ENSG00000067225']:+.1f}, "
+          f"average {average['ENSG00000067225']:+.1f}")
+    ```
+
+    ```text title="Output"
+    PKM  best +20.0, average +15.0
+    ```
+
+    `"best"` takes the maximum and is the default, matching RAVEN. `"average"`
+    takes the mean. The maximum states what the tissue is capable of, the mean
+    what it does across the cells in it. Passing `celltype=` selects one and the
+    question does not arise.
+
+`parseHPArna` and `parse_hpa_rna` read the RNA-seq dump instead, whose header is
+`Gene`, `Gene name`, `Tissue` followed by the TPM columns. Those are quantities
+already, so `rna_gene_scores` applies the same logarithmic rule as 10.2 rather
+than a level mapping. Both routes end at a gene-to-score mapping, which is what
+`score_reactions_from_genes` walks the GPRs with.
+
+
 ## 10.3 Extract a model for one sample
 
 === "MATLAB"
+
+    <!-- run-examples: skip -->
 
     ```matlab
     contextModel = ftINIT(prepData, 'HCT116', [], [], ...
@@ -242,6 +390,8 @@ it out and the mean across samples is used per gene instead.
       taken as a positional value, and you get that same misleading error.
 
 === "Python"
+
+    <!-- run-examples: skip -->
 
     ```python
     from raven_toolbox.init import ftinit
@@ -267,11 +417,15 @@ first thing to re-check, and the least expensive.
 
 === "MATLAB"
 
+    <!-- run-examples: skip -->
+
     ```matlab
     taskReport = checkTasks(contextModel, [], 'taskStructure', tasks);
     ```
 
 === "Python"
+
+    <!-- run-examples: skip -->
 
     ```python
     from raven_toolbox.tasks import check_tasks
