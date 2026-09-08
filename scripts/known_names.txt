@@ -9,6 +9,7 @@
 # -- prose terms ------------------------------------------------------------
 camelCase
 ord                           # Python builtin, used in a worked example
+tuple                         # Python builtin, used in a worked example
 snake_case
 Path                          # pathlib, used by several examples
 raven_toolbox                 # the Python package name, not a function
@@ -116,6 +117,21 @@ maxPhylDist                   # getKEGGModelForOrganism argument
 minScoreRatioKO               # getKEGGModelForOrganism argument
 minScoreRatioG                # getKEGGModelForOrganism argument
 keepSpontaneous               # getKEGGModelForOrganism argument
+balanceOut                    # scaleBiomassFraction argument
+metPrefix                     # curateModelFromTables argument
+rxnPrefix                     # curateModelFromTables argument
+rxnIdx                        # curation table column, links the two reaction tables
+geneShortNames                # RAVEN model field, and a curation table column
+metNotes                      # RAVEN model field, and a curation table column
+metCharges                    # RAVEN model field
+metMiriams                    # RAVEN model field, the metabolite cross-references
+rxnMiriams                    # RAVEN model field, the reaction cross-references
+rxnNotes                      # RAVEN model field, and a curation table column
+rxnReferences                 # RAVEN model field, and a curation table column
+rxnConfidenceScores           # RAVEN model field, and a curation table column
+subSystems                    # RAVEN model field, and a curation table column
+rxnSBOs                       # RAVEN model field, written by assignSBOterms
+lipidBackbone                 # guide/biomass.md, a component name in the config struct
 extComp                       # prepINITModel argument
 convertGenes                  # prepINITModel argument
 essential_cache_path          # prep_init_model argument
@@ -242,6 +258,16 @@ target_type                   # FSEOFResult.targets column
 min_target                    # fseof argument
 gene_fold_changes             # reporter_metabolites argument
 correlation_threshold         # fseof argument
+met_id_prefix                 # batch_curate argument
+rxn_id_prefix                 # batch_curate argument
+mets_tsv                      # batch_curate_from_tsv argument
+balance_out                   # scale_biomass argument
+pseudoreaction_name           # BiomassComponent field
+mass_strategy                 # BiomassComponent field
+proton_met                    # BiomassConfig field
+biomass_rxn                   # BiomassConfig field
+mw_minus_2h                   # a mass_strategy value
+mw_minus_water                # a mass_strategy value
 
 # -- cobrapy attributes named in the guide ----------------------------------
 # Attributes, not functions, so they resolve nowhere; the guide names them when

@@ -141,8 +141,8 @@ Nineteen numbered pages are written: getting started, model structure, I/O,
 FBA, media and conditions, solvers, building, editing, quality control,
 tINIT/ftINIT, deletions, tasks, gap-filling, flux variability, sampling,
 combining and simplifying, comparison, homology reconstruction and KEGG
-reconstruction. Not yet written: biomass, annotation, localization, FSEOF and
-reporter metabolites, table-driven curation.
+reconstruction, engineering targets, table-driven curation, and biomass and
+annotation. Not yet written: omics integration and localization.
 
 Conventions:
 

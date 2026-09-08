@@ -177,6 +177,8 @@ nav:
       - 18. Reconstruction from homology: guide/homology.md
       - 19. Reconstruction from KEGG: guide/kegg.md
       - 20. Engineering targets: guide/engineering.md
+      - 21. Table-driven curation: guide/curation.md
+      - 22. Biomass and annotation: guide/biomass.md
       - Worked protocol, H. polymorpha (MATLAB):
           - Overview: protocol/index.md
           - Introduction: protocol/reconstruction.md

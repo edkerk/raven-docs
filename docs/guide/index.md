@@ -93,6 +93,10 @@ original RAVEN paper. Both are MATLAB only.
     and what such a draft is missing.
 20. [Engineering targets](engineering.md), FSEOF for over-production targets
     and reporter metabolites for the transcriptional picture.
+21. [Table-driven curation](curation.md), applying curation as reviewable
+    tables rather than a script of function calls.
+22. [Biomass composition and annotation](biomass.md), what the cell is made
+    of, rescaling it, and the annotation that outlives the solve.
 
 ## Also in this section
 
@@ -104,6 +108,4 @@ original RAVEN paper. Both are MATLAB only.
 Use the numbered pages to look something up; use the protocol to see a whole
 reconstruction in order.
 
-**Not yet written**: biomass composition and annotation, omics integration,
-compartment localisation, FSEOF and reporter metabolites for engineering
-targets, and table-driven curation.
+**Not yet written**: omics integration and compartment localisation.
