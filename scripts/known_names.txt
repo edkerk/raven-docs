@@ -65,6 +65,7 @@ allowExcretion                # findLeakMetabolite argument
 allowNewGenes                 # addRxns argument
 arrayData                     # the expression struct ftINIT and scoreModel take
 hpaData                       # ftINIT argument
+transcrData                   # ftINIT argument
 metabolomicsData              # ftINIT argument
 INITSteps                     # ftINIT argument
 dataPrecedence                # ftINIT argument
@@ -125,6 +126,8 @@ geneShortNames                # RAVEN model field, and a curation table column
 metNotes                      # RAVEN model field, and a curation table column
 metCharges                    # RAVEN model field
 metMiriams                    # RAVEN model field, the metabolite cross-references
+geneNames                     # parseHPA output field
+gene2Level                    # parseHPA output field, a sparse level index
 rxnMiriams                    # RAVEN model field, the reaction cross-references
 rxnNotes                      # RAVEN model field, and a curation table column
 rxnReferences                 # RAVEN model field, and a curation table column
@@ -265,6 +268,7 @@ balance_out                   # scale_biomass argument
 pseudoreaction_name           # BiomassComponent field
 mass_strategy                 # BiomassComponent field
 proton_met                    # BiomassConfig field
+gene_name                     # HPAData.df column
 biomass_rxn                   # BiomassConfig field
 mw_minus_2h                   # a mass_strategy value
 mw_minus_water                # a mass_strategy value

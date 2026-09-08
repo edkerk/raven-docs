@@ -142,7 +142,8 @@ FBA, media and conditions, solvers, building, editing, quality control,
 tINIT/ftINIT, deletions, tasks, gap-filling, flux variability, sampling,
 combining and simplifying, comparison, homology reconstruction and KEGG
 reconstruction, engineering targets, table-driven curation, and biomass and
-annotation. Not yet written: omics integration and localization.
+annotation. Omics integration is part of the tINIT/ftINIT page. Not yet
+written: localization.
 
 Conventions:
 
