@@ -84,8 +84,6 @@ reasoning behind each conclusion.
 | [INIT solver benchmark](studies/init-solver-benchmark.md) | Solver-backend behaviour (Gurobi / GLPK / HiGHS) for the INIT/ftINIT MILP |
 | [ftINIT reproducibility](studies/ftinit-determinism.md) | What `resolve_ties`/`prove_abs_gap` buy (and cost) on genome-scale Human-GEM, and how `reference_reactions` closes most of the remaining stability gap (13x less spurious essential-gene drift after a template edit) |
 | [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
-| [Yeast-GEM localisation benchmark](studies/yeast-localization-benchmark.md) | `time_limit`, `transport_cost` in sub-cellular localisation prediction, measured on real yeast-GEM data with a predictor-noise sweep |
-| [predictLocalization head-to-head](studies/predictlocalization-comparison.md) | `predict_localization` (deterministic MILP) vs MATLAB RAVEN's `predictLocalization` (stochastic simulated annealing) on identical inputs — accuracy, determinism, and runtime |
 
 ## Benchmarks
 
@@ -102,7 +100,6 @@ cross-toolbox to-do list.
 | [Gap-filling](benchmarks/gapfilling.md) | `fill_gaps_fast_lp`, `connect_blocked_reactions`, `fill_gaps_kumar_milp` |
 | [Homology-based reconstruction](benchmarks/reconstruction-homology.md) | `run_blast`, `run_diamond`, `get_model_from_homology` |
 | [KEGG-based reconstruction](benchmarks/reconstruction-kegg.md) | `assign_kos`, `run_hmmsearch`, `build_ko_hmm`, `get_kegg_model_*` |
-| [Sub-cellular localisation](benchmarks/localization.md) | `predict_localization` |
 | [Model manipulation](benchmarks/manipulation.md) | `remove_genes`, `merge_models`, `constrain_reversible_reactions`, `find_duplicate_reactions`, `add_transport_reactions` |
 | [Tasks](benchmarks/tasks.md) | `check_tasks`, `find_task_essential_reactions` |
 

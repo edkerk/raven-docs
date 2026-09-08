@@ -7,13 +7,18 @@ canonical reference is the
 
 ## Requirements
 
-- **MATLAB** R2016b or later. No additional MathWorks toolboxes required.
+- **MATLAB** R2016b or later, which is the oldest release the code still guards
+  for. Continuous integration tests R2024b only, so a recent release is the
+  better-covered choice. No additional MathWorks toolboxes required.
 - A **linear-programming solver** — [Gurobi](https://www.gurobi.com/) (free
   academic license, recommended) or **GLPK** (bundled with the
   [COBRA Toolbox](https://github.com/opencobra/cobratoolbox)).
   See [Choosing a solver](index.md#choosing-a-solver).
-- RAVEN **bundles** `libSBML`, `BLAST+`, `DIAMOND` and `HMMER` for Windows,
-  macOS and Linux — no separate installation needed.
+- RAVEN **bundles** `libSBML` and the GLPK mex files for Windows, macOS and
+  Linux. `BLAST+`, `DIAMOND` and `HMMER` are **not** bundled: RAVEN fetches the
+  build for your platform on first use, so the reconstruction functions need
+  internet access the first time they run. `downloadRavenBinaries` fetches them
+  ahead of time, which is also the way to prepare an offline machine.
 
 ---
 
