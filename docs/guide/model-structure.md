@@ -33,9 +33,8 @@ of what you need to translate a script between the two.
 | `model.subSystems` | `reaction.subsystem` | RAVEN allows several per reaction |
 | `model.c` | `model.objective` | an expression, not a coefficient vector |
 
-The consequence worth internalising: in MATLAB you edit **arrays in parallel and
-keep them aligned**, and in Python you edit **objects that know their own
-neighbours**. Deleting a reaction in RAVEN means removing the same row from every
+The consequence: in MATLAB the caller keeps **parallel arrays aligned**, and in
+Python the **objects hold their own references**. Deleting a reaction in RAVEN means removing the same row from every
 reaction-length field, and the matching column of `model.S`, which is why
 `removeReactions` exists rather than a one-line deletion. In cobrapy the object
 holds its own links, so `model.remove_reactions([...])` is enough and there is no
@@ -79,8 +78,8 @@ because the structure is maintained by the class rather than by the caller.
     genes: YBR196C
     ```
 
-    Indices are the currency: nearly every RAVEN function takes or returns them,
-    and `getIndexes` is how you get from an identifier to one. The third argument
+    Most RAVEN functions take or return indices rather than identifiers, and
+    `getIndexes` converts between the two. The third argument
     names the field to search, because the same string can be a reaction id in
     one field and nothing at all in another. It takes `'rxns'`, `'mets'`,
     `'genes'`, `'metnames'` or `'metcomps'`, plus `'ecrxns'`, `'ecenzymes'` and

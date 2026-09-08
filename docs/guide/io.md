@@ -46,11 +46,11 @@ This page uses two models from [`docs/data/`](../data/README.md):
     Both warnings are informational and neither stops the read. The first says
     `importModel` stripped the `R_`, `M_`, `G_` and `C_` prefixes SBML requires
     on identifiers, which it does only when every identifier of that type
-    carries one; pass `removePrefix` as `false` to keep them, which matters if
-    you intend to compare ids against the file itself. The second reports that
-    the model annotates several differently-named metabolites with the same
-    database identifier. That is a property of yeast-GEM, not of the reader, and
-    it is worth knowing before you use annotations to match metabolites across
+    carries one; pass `removePrefix` as `false` to keep them, which is what a
+    comparison against the file's own ids requires. The second reports that the
+    model annotates several differently-named metabolites with the same database
+    identifier. That is a property of yeast-GEM rather than of the reader, and it
+    makes those annotations unusable as a key for matching metabolites across
     models.
 
     `importModel` accepts SBML Level 3 Version 1 with FBC version 2 and errors
@@ -127,18 +127,18 @@ the way back in.
 
     cobrapy leaves the encoding in place, so the same release read from the two
     formats reports two different ids while being the same model. Only the
-    *identifiers* are affected. Reach for `model.name` or the annotation when you
-    need something human-readable, and normalise ids yourself before matching
-    them against a model that came from YAML.
+    *identifiers* are affected; `model.name` and the annotations are unchanged.
+    Ids have to be decoded before they can be matched against a model read from
+    YAML.
 
 !!! note "Each toolbox is slow in the other's favourite format"
     Reading yeast-GEM takes about **17 s from SBML and 73 s from YAML in
     Python**, and about **78 s from SBML and 17 s from YAML in MATLAB**, so the
     ranking is reversed. RAVEN parses YAML itself and goes through libSBML for
-    SBML; cobrapy has the opposite balance. Pick the format for what you need
-    from it, a readable diff or the RAVEN-specific fields YAML preserves, and if
-    a script spends its time reading, try the other format before optimising
-    anything else.
+    SBML; cobrapy has the opposite balance. The format therefore follows from what is
+    needed from it, a readable diff or the RAVEN-specific fields YAML preserves,
+    and a script that spends its time in the reader will often run faster in the
+    other format.
 
 ## 3.3 Write a model
 
@@ -167,7 +167,7 @@ the way back in.
     that is not valid SBML.
 
     Both `writeYAMLmodel` and `exportModel` take `sortIds`, which sorts a copy
-    before writing and leaves your model untouched.
+    before writing and leaves the caller's model untouched.
 
 === "Python"
 
@@ -189,19 +189,18 @@ the way back in.
 
     `write_yaml_model` and `export_to_excel` take `sort_ids`, which sorts what is
     written without touching the model. cobrapy's `write_sbml_model` has no such
-    argument, so sort first, on a copy, if you want a stable SBML diff:
+    argument, so a stable SBML diff needs the sort applied first, on a copy:
     `write_sbml_model(sort_identifiers(small.copy()), path)`.
 
-Sorting matters more than it sounds. Both toolboxes write reactions in whatever
-order the model holds them, so inserting one reaction near the front can shift
-every line after it and turn a one-reaction change into an unreadable pull
-request.
+Both toolboxes write reactions in whatever order the model holds them, so
+inserting one reaction near the front shifts every line after it. Sorting first
+confines the diff of a one-reaction change to that reaction.
 
 ## 3.4 Spreadsheets
 
-The Excel format is the one people curate by hand: five sheets, holding
-reactions, metabolites, compartments, genes and the model's own metadata, that
-a non-modeller can read and edit.
+The Excel format holds the model as five sheets, covering reactions,
+metabolites, compartments, genes and the model's own metadata, in a form that
+can be edited without a toolbox.
 
 === "MATLAB"
 
@@ -215,11 +214,11 @@ a non-modeller can read and edit.
     ```
 
     `exportToExcelFormat` writes `.xlsx` and errors on any other extension, so a
-    bare directory path is rejected rather than interpreted. See the
-    [RAVEN 3 migration guide](../raven3-migration.md#excel-io) if a script of
-    yours passes one. There is no matching importer: to bring a curated
-    spreadsheet back, use `curateModelFromTables`, which applies tabular edits
-    to an existing model rather than building one from scratch.
+    bare directory path is rejected rather than interpreted. The
+    [RAVEN 3 migration guide](../raven3-migration.md#excel-io) covers scripts
+    that pass one. There is no matching importer: `curateModelFromTables` reads
+    a curated spreadsheet back by applying tabular edits to an existing model,
+    not by building one from scratch.
 
 === "Python"
 
@@ -278,7 +277,7 @@ plus a `dependencies.txt` recording the versions the files were written with.
     `mat`, `txt`, `xlsx`, `xml` and `yml`; `formats` narrows that. `COBRAtext`
     switches the `txt` table from metabolite names to metabolite ids, and
     `mainBranchFlag` makes the export fail unless RAVEN itself is on its main
-    branch, which is what you want in a release script and not while drafting.
+    branch, which pins a release to a released toolbox version.
 
 === "Python"
 
