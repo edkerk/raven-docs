@@ -21,7 +21,7 @@ A task list is a tab-separated table, one row per task, with columns for the
 inputs, the outputs, any equations that must carry flux, and the bounds on each.
 [`tasks.txt`](../data/tasks.txt) holds two tasks for `smallYeast.yml`:
 
-```text title="tasks.txt — abridged; the real file keeps every column"
+```text title="tasks.txt, abridged; the real file keeps every column"
 	ID	DESCRIPTION	SHOULD FAIL	IN	IN LB	IN UB	OUT	OUT LB	OUT UB	…
 	GROWTH	Growth on glucose		alpha-D-glucose[c];O2[c]	0	1000	biomass[c];CO2[c]	0	1000	…
 	LEAK	Biomass from nothing	1				biomass[c]	0.01	1000	…
@@ -31,7 +31,7 @@ Two things about the format are worth getting right the first time, because both
 fail in MATLAB with the same unhelpful `Index in position 2 is invalid`:
 
 - **Every row starts with an empty cell.** `parseTaskList` discards any row whose
-  first cell is non-empty — that is how it skips comments and section headers — so
+  first cell is non-empty (that is how it skips comments and section headers), so
   a file without the leading tab loses every row.
 - **Keep the full column set**, even where the columns are empty. `parseTaskList`
   matches all seventeen known headers and then indexes the numeric ones
@@ -49,7 +49,7 @@ apply to all of them.
 biomass with nothing supplied, which a correct model cannot do, so failing it is
 a pass.
 
-Note what `GROWTH` has to list. Glucose and oxygen in, biomass out — and **CO₂**,
+Note what `GROWTH` has to list. Glucose and oxygen in, biomass out, and **CO₂**,
 because a task closes the model's own exchanges and growth has to put its carbon
 somewhere. Leave CO₂ out and the task is infeasible, which reads like a broken
 model and is really a broken task.
@@ -80,7 +80,7 @@ model and is really a broken task.
     `report.ok` is true for both, and for opposite reasons: `GROWTH` was
     required to pass and did, `LEAK` was required to fail and did.
 
-    `checkTasks` can print its own verdicts — that is its third argument,
+    `checkTasks` can print its own verdicts; that is its third argument,
     `printOutput`, turned off here. Reading them off `report` instead is worth
     the extra lines: the loop runs the tasks through a `parfor`, so what
     `checkTasks` prints is not in task-file order, while `report` is.
@@ -107,7 +107,7 @@ model and is really a broken task.
     ```
 
     `check_tasks` closes the model's own exchange reactions first, so the inputs
-    and outputs are exactly what the task says they are — RAVEN does the same.
+    and outputs are exactly what the task says they are; RAVEN does the same.
     That is why a task list is portable between models in a way a script full of
     `setParam` calls is not.
 
@@ -115,7 +115,7 @@ model and is really a broken task.
 
 `check_tasks` closes every exchange, sink and demand the model has before
 applying a task, exactly as RAVEN does. The task's inputs and outputs are then
-the *only* way anything enters or leaves — which is what makes a task list
+the *only* way anything enters or leaves, which is what makes a task list
 portable between models, and what makes an incomplete task look like a broken
 model.
 
@@ -183,7 +183,7 @@ expression score.
 ## 12.4 When a task fails
 
 A failing task is a gap: something the model should be able to do and cannot.
-Both toolboxes can add reactions from a template until the task passes — which is
+Both toolboxes can add reactions from a template until the task passes, which is
 [13. Gap-filling](gap-filling.md), approached from the task side.
 
 === "MATLAB"
@@ -213,13 +213,13 @@ Both toolboxes can add reactions from a template until the task passes — which
       the model must *not* satisfy; without them, a leaking model passes
       everything.
     - **Tasks that encode the medium.** A task defines its own inputs, so it does
-      not inherit the model's medium. That is a feature — but it means a task
+      not inherit the model's medium. That is a feature, but it means a task
       passing says nothing about whether the model grows on your medium.
 
 ## See also
 
-- [13. Gap-filling](gap-filling.md) — making a failing task pass.
-- [10. Context-specific models](init.md) — tasks as the thing an extraction must
+- [13. Gap-filling](gap-filling.md), making a failing task pass.
+- [10. Context-specific models](init.md), tasks as the thing an extraction must
   preserve.
-- [9. Quality control](quality-control.md) — the checks that do not need a task
+- [9. Quality control](quality-control.md), the checks that do not need a task
   list.

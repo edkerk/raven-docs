@@ -20,7 +20,7 @@ This is the loop every other analysis on this site is built from.
 
 ## Setup
 
-`yeast-GEM.xml` from [`docs/data/`](../data/README.md) — yeast-GEM v9.1.0, which
+`yeast-GEM.xml` from [`docs/data/`](../data/README.md), yeast-GEM v9.1.0, which
 arrives with a growth objective and an aerobic glucose medium already set.
 
 ## 4.1 Solve
@@ -43,8 +43,8 @@ arrives with a growth objective and an aerobic glucose medium already set.
     growth:    0.0809 /h
     ```
 
-    `sol.f` is the objective value itself — no sign to undo, whatever RAVEN does
-    internally — and `sol.x` holds the flux vector, in the order of `model.rxns`.
+    `sol.f` is the objective value itself, no sign to undo, whatever RAVEN does
+    internally, and `sol.x` holds the flux vector, in the order of `model.rxns`.
     `sol.stat` is `1` for an optimal solve.
 
 === "Python"
@@ -71,7 +71,7 @@ arrives with a growth objective and an aerobic glucose medium already set.
 
 ## 4.2 Change the objective
 
-The objective is a reaction to maximise — growth, a product exchange, an ATP
+The objective is a reaction to maximise: growth, a product exchange, an ATP
 demand.
 
 === "MATLAB"
@@ -143,7 +143,7 @@ roughly ten times the growth.
 
 A knockout or a tighter bound is usually a question, not a decision. cobrapy's
 model is a context manager: changes made inside `with model:` are rolled back on
-the way out. MATLAB has no equivalent — copy the struct, change the copy, and let
+the way out. MATLAB has no equivalent; copy the struct, change the copy, and let
 it go out of scope.
 
 === "MATLAB"
@@ -183,7 +183,7 @@ it go out of scope.
 
     Two things in that output are worth reading carefully. The anaerobic growth
     rate is **zero**, not a smaller positive number: closing the oxygen exchange is
-    not enough to make yeast-GEM grow fermentatively — it also needs sterol and
+    not enough to make yeast-GEM grow fermentatively; it also needs sterol and
     fatty-acid uptake and a different biomass composition, which is what a
     *condition* does. See [Growth media and conditions](media.md). And the minus
     sign on that zero is solver noise, not a negative growth rate; compare against
@@ -233,8 +233,8 @@ uninteresting. Both toolboxes offer a filtered view.
      ethanol:    0.0000
     ```
 
-    `model.summary()` prints the same picture — uptake, secretion and the
-    objective — as a table, and `solution.fluxes` is a pandas Series, so the usual
+    `model.summary()` prints the same picture (uptake, secretion and the
+    objective) as a table, and `solution.fluxes` is a pandas Series, so the usual
     filtering works: `solution.fluxes[solution.fluxes.abs() > 1e-6]`.
 
 ## 4.6 Pick a parsimonious solution
@@ -273,18 +273,18 @@ total flux, which is both more biological and reproducible.
     ```
 
     The growth rate is unchanged and the total flux is now the smallest that
-    achieves it. The *number* of active reactions still varies between solves —
-    pFBA pins the total flux, not which reactions carry it — so do not build a
+    achieves it. The *number* of active reactions still varies between solves;
+    pFBA pins the total flux, not which reactions carry it, so do not build a
     test on that count.
 
 !!! warning "What can go wrong"
-    - **The status is `infeasible`.** Something is over-constrained — most often
+    - **The status is `infeasible`.** Something is over-constrained, most often
       an uptake that is closed, or a bound set to the wrong sign. See
       [Growth media and conditions](media.md).
     - **Growth is zero but the solve succeeded.** The model is feasible and the
       optimum really is zero: a nutrient is missing, or a gap blocks the biomass
       pseudoreaction.
-    - **The same model gives different flux distributions.** Expected — alternative
+    - **The same model gives different flux distributions.** Expected: alternative
       optima. Use pFBA, or compare ranges with FVA, rather than one solution.
     - **Reading `sol.f` as a negated objective.** RAVEN minimises `-c'x`
       internally, but `solveLP` hands back the objective value itself, so
@@ -293,7 +293,7 @@ total flux, which is both more biological and reproducible.
 
 ## See also
 
-- [Getting started](getting-started.md) — loading and inspecting a model.
-- [Growth media and conditions](media.md) — what the exchange bounds mean and how
+- [Getting started](getting-started.md), loading and inspecting a model.
+- [Growth media and conditions](media.md), what the exchange bounds mean and how
   to define a medium.
-- [MATLAB vs Python](../raven3-vs-raven-toolbox.md) — the full function mapping.
+- [MATLAB vs Python](../raven3-vs-raven-toolbox.md), the full function mapping.

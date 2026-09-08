@@ -1,6 +1,6 @@
-# Tutorial 4 — Fix an erroneous model
+# Tutorial 4: Fix an erroneous model
 
-The power of GEMs comes from their size — but that size makes errors almost
+The power of GEMs comes from their size, but that size makes errors almost
 inevitable, whether you build a model yourself or use someone else's. This
 exercise is a systematic round of quality control on a deliberately broken
 version of the small yeast model, `smallYeastBad.yml`.
@@ -50,7 +50,7 @@ sol = solveLP(model, 1);
 printFluxes(model, sol.x, false, [], [], '%rxnID (%rxnName):%flux\n\t%eqn\n');
 ```
 
-??? success "Answer to Question 2 — production of ethanol from nothing"
+??? success "Answer to Question 2: production of ethanol from nothing"
     Lots of ethanol is produced. `ADH1` should only produce one unit of
     ethanol. Change its equation with
     `model = changeRxns(model, 'ADH1', 'acetaldehyde[c] + NADH[c] => ethanol[c] + NAD(+)[c]', 3);`
@@ -58,7 +58,7 @@ printFluxes(model, sol.x, false, [], [], '%rxnID (%rxnName):%flux\n\t%eqn\n');
 ### 3. Allow every metabolite to be excreted
 
 Add a second column to `model.b` so RAVEN treats it as lower/upper bounds on the
-equality constraints — letting anything be excreted. This exposes errors that
+equality constraints, letting anything be excreted. This exposes errors that
 need a partner metabolite to be dumped.
 
 ```matlab
@@ -67,7 +67,7 @@ sol = solveLP(model, 1);
 printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n');
 ```
 
-??? success "Answer to Question 3 — two unbalanced reactions"
+??? success "Answer to Question 3: two unbalanced reactions"
     By looking at the reactions which were unbalanced and that were in the flux
     list, one can see that two reactions should each result in only one unit of
     product:
@@ -93,7 +93,7 @@ disp(model.mets(I)); %These 12 metabolites can be consumed without any productio
 
 `canExchange` with `'consume'` reports the metabolites the model can consume
 even when no production is allowed; `'produce'` asks the opposite. Allow all
-uptake again, then force the uptake of one of them — here CO2 — and study the
+uptake again, then force the uptake of one of them (here CO2), and study the
 fluxes (a negative output means input):
 
 ```matlab
@@ -103,9 +103,9 @@ sol = solveLP(model);
 printFluxes(model, sol.x, false, 10^-5, [], '%rxnID (%rxnName):\n\t%eqn\n\t%flux\n'); %Now it works
 ```
 
-??? success "Answer to Question 4 — `PDC` is missing a product"
+??? success "Answer to Question 4: `PDC` is missing a product"
     `PDC` converts pyruvate (3 carbons) to acetaldehyde (2 carbons) without any
-    other products — CO2 is missing. This would be simpler to change in the
+    other products: CO2 is missing. This would be simpler to change in the
     Excel file (or using `changeRxns`), but as an exercise one can add the
     cytosolic CO2 coefficient directly to the stoichiometric matrix:
 

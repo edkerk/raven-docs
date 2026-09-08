@@ -40,7 +40,7 @@
    <https://doi.org/10.1186/s12918-018-0673-8>
 6. Kerkhoven EJ (2019). Modeling lipid metabolism in yeast. In: Geiger O (ed),
    *Biogenesis of Fatty Acids, Lipids and Membranes*. Springer, pp. 375–388.
-7. Moretti S, Martin O, Van Du TT, et al. (2016). MetaNetX/MNXref —
+7. Moretti S, Martin O, Van Du TT, et al. (2016). MetaNetX/MNXref:
    reconciliation of metabolites and biochemical reactions to bring together
    genome-scale metabolic networks. *Nucleic Acids Res* 44:D523–D526.
    <https://doi.org/10.1093/nar/gkv1117>
@@ -51,5 +51,5 @@
   [Wiki](https://github.com/SysBioChalmers/RAVEN/wiki)
 - [raven-toolbox GitHub repository](https://github.com/SysBioChalmers/raven-toolbox)
 - [hanpo-GEM repository](https://github.com/SysBioChalmers/hanpo-GEM)
-- [SysBioChalmers](https://github.com/SysBioChalmers) — model and toolbox
+- [SysBioChalmers](https://github.com/SysBioChalmers), model and toolbox
   collection

@@ -48,7 +48,7 @@ file in SBML format.
     template **must use the same gene identifiers**.
 
 All required files for *H. polymorpha* are provided in the
-[hanpo-GEM](https://github.com/SysBioChalmers/hanpo-GEM) repository — clone it to
+[hanpo-GEM](https://github.com/SysBioChalmers/hanpo-GEM) repository; clone it to
 get a local copy.
 
 ## Literature data

@@ -3,9 +3,9 @@
 RAVEN ships in two implementations that build the **same** genome-scale
 metabolic models with the same algorithms:
 
-- **RAVEN** — the original **MATLAB** toolbox, built on the COBRA Toolbox and
+- **RAVEN**: the original **MATLAB** toolbox, built on the COBRA Toolbox and
   `libSBML`. Functions use `camelCase` names.
-- **raven-toolbox** — the **Python** port, built on cobrapy. Functions use
+- **raven-toolbox**: the **Python** port, built on cobrapy. Functions use
   `snake_case` names.
 
 The function help on these pages is extracted directly from the source of each
@@ -17,9 +17,9 @@ The reference is split into **two parallel trees**, one per language, each
 organised by the toolbox's own module layout and each function shown with its
 signature, parameters and returns:
 
-- **MATLAB API (RAVEN)** — one page per category (`Reconstruction`,
+- **MATLAB API (RAVEN)**: one page per category (`Reconstruction`,
   `Manipulation`, `Input / output`, …).
-- **Python API (raven-toolbox)** — one page per package, mirroring the same
+- **Python API (raven-toolbox)**: one page per package, mirroring the same
   categories.
 
 Every page opens with a *Functions* table you can scan, followed by the full

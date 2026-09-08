@@ -1,4 +1,4 @@
-# Tutorial 1 — Import a GEM, set parameters and run FBA
+# Tutorial 1: Import a GEM, set parameters and run FBA
 
 This short introduction shows how to load a genome-scale metabolic model (GEM),
 set reaction constraints and an objective function, run an optimization through
@@ -18,7 +18,7 @@ The example uses a GEM for the filamentous fungus *Penicillium chrysogenum*
 
 `importModel` imports the model from SBML and performs a number of structural
 checks (such as for incorrectly written equations or illegal characters). The
-`false` flag imports the model with exchange reactions in their "closed" form —
+`false` flag imports the model with exchange reactions in their "closed" form,
 unsuited for modelling, but useful for quality-control steps.
 
 ```matlab
@@ -110,7 +110,7 @@ reaction and `res.turnedOn` / `res.turnedOff` / `res.flipped` list those that
 switched state.
 
 By drilling down this way you can understand the flux redistributions that give
-rise to different phenotypes — for example, on glucose ATP is generated in
+rise to different phenotypes; for example, on glucose ATP is generated in
 glycolysis, whereas on ethanol it involves acetate.
 
 ## Full script

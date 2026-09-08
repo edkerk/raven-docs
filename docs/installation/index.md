@@ -8,7 +8,7 @@ whichever fits your workflow:
 
 -   :custom-matlab: **[RAVEN (MATLAB)](raven.md)**
 
-    Install the MATLAB toolbox — via the MATLAB Add-Ons manager, a release
+    Install the MATLAB toolbox: via the MATLAB Add-Ons manager, a release
     download, or `git`. Includes upgrading and removal.
 
 -   :material-language-python: **[raven-toolbox (Python)](python.md)**

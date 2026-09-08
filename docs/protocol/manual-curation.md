@@ -2,7 +2,7 @@
 
 A draft GEM always requires manual curation to become a high-quality model.
 Curation can mean correcting gene associations, adding or removing reactions, and
-moving reactions between compartments — all aiming for a more accurate
+moving reactions between compartments, all aiming for a more accurate
 description of the *in vivo* network. (For comparison, the *S. cerevisiae* model
 has been continuously curated since 2003.)
 
@@ -35,8 +35,8 @@ lacks the required pathway. Five reactions are needed; reactions 3–5 (formate
 dehydrogenase, peroxisomal catalase, dihydroxyacetone kinase) are already
 present, so two are added manually:
 
-1. **methanol oxidase** — `methanol[p] + oxygen[p] => formaldehyde[p] + hydrogen peroxide[p]`
-2. **dihydroxyacetone synthase** — `formaldehyde[p] + D-xylulose 5-phosphate[p] => glyceraldehyde 3-phosphate[p] + glycerone[p]`
+1. **methanol oxidase**: `methanol[p] + oxygen[p] => formaldehyde[p] + hydrogen peroxide[p]`
+2. **dihydroxyacetone synthase**: `formaldehyde[p] + D-xylulose 5-phosphate[p] => glyceraldehyde 3-phosphate[p] + glycerone[p]`
 
 A `rxnsToAdd` structure collects all the information for the new reactions, which
 are then added with `addRxns`:

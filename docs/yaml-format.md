@@ -65,7 +65,7 @@ The same file can be round-tripped through any of the three. cobrapy is the cano
 
 Three structural rules are non-obvious and worth pointing out before the field-by-field detail:
 
-1. The whole document is one **ordered mapping** — `!!omap` — at the root. Every nested map that should preserve key order is also `!!omap` (metaData, each metabolite / reaction / gene entry, `annotation`, `metabolites`, `compartments`, and the ec sections).
+1. The whole document is one **ordered mapping** (`!!omap`) at the root. Every nested map that should preserve key order is also `!!omap` (metaData, each metabolite / reaction / gene entry, `annotation`, `metabolites`, `compartments`, and the ec sections).
 2. Each metabolite, reaction, and gene is **one `- !!omap` element** of a list. Inside that mapping, every field is written as `- key: value`. This is cobrapy's native shape and is what RAVEN MATLAB's reader keys off.
 3. Strings are **unquoted by default**; quotes appear only when YAML would otherwise misparse the value (leading `-`, `[`, `?` or `:`; embedded `: ` or ` #`; values that look like `true` / `false` / `null`).
 
@@ -126,7 +126,7 @@ Field order (cobra-core first, then RAVEN extensions):
 
 Cobrapy emits exactly the first seven keys (the cobra-core block). raven-toolbox and RAVEN MATLAB additionally emit `inchis`, `deltaG`, and `metFrom` when those fields are populated. On read, cobrapy puts the RAVEN extensions on the metabolite as attribute fall-through; raven-toolbox captures them into `metabolite.notes` (keyed by their YAML name); RAVEN MATLAB stores them on `model.inchis` / `model.metDeltaG` / `model.metFrom`.
 
-Annotation entries with multiple values are emitted as a YAML list (`chebi:` then several `-` items). Single-value entries are emitted inline (`kegg.compound: C00002`). SMILES strings live inside the annotation block under the `smiles` key — not as a top-level metabolite field, which is the historical RAVEN MATLAB shape and is still accepted on read for backward compatibility.
+Annotation entries with multiple values are emitted as a YAML list (`chebi:` then several `-` items). Single-value entries are emitted inline (`kegg.compound: C00002`). SMILES strings live inside the annotation block under the `smiles` key, not as a top-level metabolite field, which is the historical RAVEN MATLAB shape and is still accepted on read for backward compatibility.
 
 ---
 
@@ -160,7 +160,7 @@ Annotation entries with multiple values are emitted as a YAML list (`chebi:` the
 Some fields are conditional:
 
 - `objective_coefficient` is only written when non-zero (cobrapy convention).
-- The `metabolites` block uses `!!omap []` (flow-style empty omap) when the reaction has no metabolites — this keeps the file a valid YAML 1.2 document.
+- The `metabolites` block uses `!!omap []` (flow-style empty omap) when the reaction has no metabolites; this keeps the file a valid YAML 1.2 document.
 - `eccodes` is written inline (`eccodes: 2.7.1.1`) when there is exactly one code, and as a list when there are several. Same for `references`.
 
 **Notes key naming.** Cobrapy and the current raven-toolbox / RAVEN MATLAB writers use **`notes`**. Older yeast-GEM files used `rxnNotes`; both readers accept that as a legacy alias.
@@ -294,9 +294,9 @@ In a double-quoted string, only `\` and `"` are escaped. Other characters (inclu
 | raven-toolbox (`write_yaml_model`) | core (no `metaData`-derived `id`); RAVEN extras live as unknown top-level keys but don't break parsing | full | full |
 | RAVEN MATLAB (`writeYAMLmodel`) | core (no `metaData`-derived `id`); RAVEN extras land via attribute fall-through | full | full |
 
-"Full" = every field read back into its canonical position on the model object; "core" = cobrapy-known fields, RAVEN extensions ignored or kept on the object as attribute fall-through (`reaction.eccodes` etc., not re-emitted on save). A round-trip through cobrapy is therefore **lossy for RAVEN extensions** — only the core fields survive `cobrapy.load → cobrapy.save`. Round-trips through raven-toolbox or RAVEN MATLAB are lossless.
+"Full" = every field read back into its canonical position on the model object; "core" = cobrapy-known fields, RAVEN extensions ignored or kept on the object as attribute fall-through (`reaction.eccodes` etc., not re-emitted on save). A round-trip through cobrapy is therefore **lossy for RAVEN extensions**: only the core fields survive `cobrapy.load → cobrapy.save`. Round-trips through raven-toolbox or RAVEN MATLAB are lossless.
 
-Neither writer reproduces cobrapy's own `ruamel`-default layout byte-for-byte (indentation, quoting style, line folding) — RAVEN and raven-toolbox instead share a layout with each other, close to cobrapy's structural shape but not identical to it. See [raven-gecko-parity's reconciliation record](https://github.com/SysBioChalmers/raven-gecko-parity/blob/develop/docs/yaml-reconciliation.md) for why, and for the one scenario (`yaml_roundtrip_smallyeast`) that continuously checks the two writers agree.
+Neither writer reproduces cobrapy's own `ruamel`-default layout byte-for-byte (indentation, quoting style, line folding); RAVEN and raven-toolbox instead share a layout with each other, close to cobrapy's structural shape but not identical to it. See [raven-gecko-parity's reconciliation record](https://github.com/SysBioChalmers/raven-gecko-parity/blob/develop/docs/yaml-reconciliation.md) for why, and for the one scenario (`yaml_roundtrip_smallyeast`) that continuously checks the two writers agree.
 
 ---
 
@@ -315,4 +315,4 @@ Loading `yeast-GEM.yml` (2748 metabolites, 4102 reactions, 1143 genes) and re-wr
 | metabolites with SMILES | 1788 |
 | reactions with notes (rxnNotes) | 1443 |
 
-(Cobrapy round-trips give 2748 / 4102 / 1143 for the core but drop the RAVEN extensions in the rightmost column — that's the documented loss.)
+(Cobrapy round-trips give 2748 / 4102 / 1143 for the core but drop the RAVEN extensions in the rightmost column; that's the documented loss.)

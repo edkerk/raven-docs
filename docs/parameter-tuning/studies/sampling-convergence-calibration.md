@@ -16,8 +16,8 @@ compute for independence. On yeast-GEM (`n_samples=300`, `warmup=1000`, Gurobi):
 
 Even at 500, consecutive samples remain 85% correlated. The decay is far too slow
 to fix by raising the setting: a fivefold increase from 20 to 100 removes 0.047 of
-the autocorrelation, and the next fivefold removes 0.077. Reaching roughly 0.3 —
-a common rule of thumb for near-independence — would need thinning in the tens of
+the autocorrelation, and the next fivefold removes 0.077. Reaching roughly
+0.3 (a common rule of thumb for near-independence) would need thinning in the tens of
 thousands, which is weeks of compute for 1000 samples.
 
 Treating an AR(1) process, effective sample size is `n × (1−ρ) / (1+ρ)`. At the
@@ -35,7 +35,7 @@ which setting is right.
 Autocorrelation measures independence *within* a chain. It says nothing about
 whether that chain reached every part of the flux polytope, or mixed well inside
 one sub-region. That needs several independent chains from different starting
-points and a check that they agree — the Gelman-Rubin R-hat diagnostic.
+points and a check that they agree, the Gelman-Rubin R-hat diagnostic.
 
 For each reaction, R-hat compares between-chain variance to within-chain
 variance across `n_chains` independent `random_sampling` runs (different
@@ -48,9 +48,9 @@ started.
 * Settings matched to the existing single-chain study for direct comparison:
   `n_samples=300`, `thinning=100`, `warmup=1000` (cobrapy/RAVEN defaults).
 * `n_chains=4`, run in parallel via `ProcessPoolExecutor` (one process per
-  chain — cobra models aren't guaranteed thread-safe for concurrent solves).
+  chain; cobra models aren't guaranteed thread-safe for concurrent solves).
 
-## e_coli_core (95 reactions) — methodology validation
+## e_coli_core (95 reactions): methodology validation
 
 4 chains × 300 samples, 34.7 s wall (parallel).
 
@@ -75,19 +75,19 @@ Worst-converged reactions:
 | `TKT2`, `RPE`, `TKT1`, `TALA`, `G6PDH2r` | 1.0369 (tied) |
 
 **Already informative at this scale.** Even on a 95-reaction textbook model,
-one reaction — `EX_succ_e`, succinate exchange, a byproduct/overflow route —
+one reaction (`EX_succ_e`, succinate exchange, a byproduct/overflow route)
 clears the "not converged" threshold (R-hat 1.30) at the default settings, and
 nearly half the reactions fail the stricter 1.01 bar. This is a genuinely
 different failure mode from what the single-chain ESS result showed: it's not
 that samples are autocorrelated *within* a chain, it's that independent chains
-land on measurably different distributions for a subset of reactions —
+land on measurably different distributions for a subset of reactions,
 consistent with a byproduct-secretion pathway that's rarely favoured and only
 gets explored if a chain's random walk happens to wander into that corner of
 the polytope.
 
 ## yeast-GEM (4105 reactions, genome scale)
 
-4 chains × 300 samples, 2524.4 s wall (~42 min — slower than the naive
+4 chains × 300 samples, 2524.4 s wall (~42 min, slower than the naive
 "~same as one chain" estimate; four Gurobi processes evidently contend for
 resources on a 12-core machine rather than scaling for free).
 
@@ -108,7 +108,7 @@ Worst-converged reactions: `r_0318` (9.94), `r_0307` (9.65), `r_1690` (8.89),
 than the existing single-chain ESS finding implied on its own.** At genome
 scale, with the exact default settings (`thinning=100`, `n_samples=300`,
 `warmup=1000`), the *median* reaction already exceeds the 1.1 "not converged"
-threshold — meaning independent chains disagree on where a typical reaction's
+threshold, meaning independent chains disagree on where a typical reaction's
 flux distribution sits, not just on a tail of hard cases. Two in three
 reactions fail even the loose threshold; effectively none (3.5%) pass the
 strict one.
@@ -126,10 +126,10 @@ restatement of one.
 trusted as converged for the majority of reactions. The existing docstring
 warning (increase `thinning`/`n_samples`, check ESS, or switch to
 `method='optgp'`) was correctly directioned but understated the scale of the
-problem — this justifies raising it from an FYI-level note to an explicit
+problem; this justifies raising it from an FYI-level note to an explicit
 warning with numbers attached.
 
-## Does `method='chrr'` fix it? Yes on e_coli_core — but at a cost that may not scale
+## Does `method='chrr'` fix it? Yes on e_coli_core, but at a cost that may not scale
 
 Same 4 chains × 300 samples on e_coli_core, `method='chrr'` instead of `'achr'`:
 
@@ -143,17 +143,17 @@ Same 4 chains × 300 samples on e_coli_core, `method='chrr'` instead of `'achr'`
 | R-hat > 1.01 | 48.3% | 17.9% |
 | R-hat > 1.1 | 1.1% | **0.0%** |
 
-CHRR converges properly here — the worst reaction (`ICDHyr`, 1.0248) doesn't
+CHRR converges properly here: the worst reaction (`ICDHyr`, 1.0248) doesn't
 even reach the loose 1.1 threshold, versus ACHR's `EX_succ_e` at 1.30. This is
 a real, substantial fix, not a marginal one.
 
 The cost is the problem: **~20x slower on a 95-reaction model.** CHRR's
 up-front max-volume-ellipsoid rounding step is the likely driver, and MVE
-computation typically scales worse than linearly with dimension — so a naive
+computation typically scales worse than linearly with dimension, so a naive
 extrapolation of 20x to yeast-GEM's 4102 reactions (43x more reactions than
 e_coli_core) could plausibly land anywhere from "worse than 20x" to much
 worse, not better. At ACHR's already-measured 2524s for 4 genome-scale chains,
-a proportional 20x would be ~14 hours — not attempted blind. See the bounded
+a proportional 20x would be ~14 hours, not attempted blind. See the bounded
 probe below for what was actually measured.
 
 ## Follow-up: does reallocating the same ACHR budget help? No.
@@ -172,14 +172,14 @@ n_samples=100` instead of `thinning=100, n_samples=300`. 4 chains, yeast-GEM.
 | R-hat > 1.1 | 67.5% | 67.2% |
 | worst reaction | `r_0318` (9.94) | `r_0318` (9.83) |
 
-Essentially no change — same worst reactions, same rough ordering, same
+Essentially no change: same worst reactions, same rough ordering, same
 overall failure rate, and it took *longer* (57.5 min vs 42 min) despite equal
 total steps. **This rules out "just thin more within a fixed budget" as a
 fix.** If more thinning genuinely bought better mixing, spending the same
 budget on longer gaps between fewer stored samples should have moved R-hat;
 it didn't move it meaningfully in either direction. The non-convergence looks
 structural to ACHR's mixing on this polytope, not a matter of turning an
-existing dial — consistent with CHRR (a different algorithm entirely) fixing
+existing dial, consistent with CHRR (a different algorithm entirely) fixing
 it on e_coli_core while this reallocation, still ACHR, does not.
 
 ## Does CHRR fix it at genome scale, and is it practical?
@@ -191,7 +191,7 @@ real genome-scale CHRR timing number before deciding whether a full run is
 worth attempting.
 
 (cobrapy's `OptGPSampler` was not a candidate here: `random_sampling` doesn't
-wire it in, only `'achr'` and `'chrr'` — see
+wire it in, only `'achr'` and `'chrr'`; see
 [flux-sampling-algorithms.md](../flux-sampling-algorithms.md).)
 
 **Result: 4815.3 s (~80 min) for 2 chains × 20 samples.** This settles the
@@ -207,34 +207,34 @@ be at a matching sample count.
 The R-hat computed from this probe (median **5.16**, p90 86, max in the
 billions) should **not** be read as "CHRR converges worse than ACHR at genome
 scale." With only 20 samples per chain, within-chain variance (R-hat's
-denominator) is estimated from too little data to be stable — a reaction
+denominator) is estimated from too little data to be stable, a reaction
 that happens to show near-zero variance in 20 draws by chance, combined with
 any between-chain difference, produces an enormous, physically meaningless
 ratio. (Contrast e_coli_core, where 300 samples/chain gave stable,
 well-behaved R-hat throughout.) This run cannot distinguish "CHRR doesn't
 work at genome scale" from "R-hat needs more than 20 samples to mean
-anything" — telling those apart would need a genome-scale CHRR run with
+anything"; telling those apart would need a genome-scale CHRR run with
 enough samples for a stable R-hat, which circles back to the cost problem
 above.
 
 ## Bottom line
 
-- **Default settings are unconverged for most reactions at genome scale** —
+- **Default settings are unconverged for most reactions at genome scale**:
   robust finding, confirmed by two independent lines of evidence (ESS and
   R-hat).
-- **Reallocating the same ACHR budget doesn't help** — ruling out the
+- **Reallocating the same ACHR budget doesn't help**: ruling out the
   cheapest possible fix.
 - **CHRR fixes it on a small model, but its current genome-scale cost (a
   fixed ~80 min+ per chain before any samples are even drawn) makes it
   impractical as a drop-in fix today.** Whether CHRR *would* converge well at
-  genome scale given enough samples to trust the R-hat is still open — it
+  genome scale given enough samples to trust the R-hat is still open; it
   would need a run long enough to be informative, which is itself the
   problem.
 - **No cheap, validated fix exists yet.** Users doing genome-scale flux
   sampling with `random_sampling`'s defaults should treat per-reaction flux
   ranges as unconverged for most reactions, not as a caveat affecting a
   minority. The most concrete unblock identified but not pursued here: CHRR's
-  rounding transform is recomputed from scratch per chain/call — caching or
+  rounding transform is recomputed from scratch per chain/call; caching or
   reusing it across calls on the same model would remove the dominant fixed
   cost and is worth a future look, but is an engineering change, not a
   parameter default.
@@ -245,7 +245,7 @@ Both diverge from MATLAB, and in both cases the divergence is the point.
 
 `replace_max_bound` swaps big-M upper bounds for infinity before sampling, and
 applies only to `method='random_objective'`. RAVEN-convention models use 1000 as
-the conventional big-M for almost every reaction — 4,083 of yeast-GEM's 4,102 —
+the conventional big-M for almost every reaction (4,083 of yeast-GEM's 4,102)
 so replacing them all makes the random-objective LP unbounded: the objective can
 be driven to infinity through any unconstrained reaction. At `False`, 200 samples
 complete, with 0.57% of them pinned at the bound. MATLAB's `True` suits models
@@ -273,7 +273,7 @@ so re-running with the same settings is instant; changing `--thinning` or
 trade-off be explored without re-deriving already-cached chains.
 
 **Timing caveat:** the single-chain study's 841 s was extrapolated to "about
-841 s wall for 4 parallel chains too" — that estimate was wrong by ~3x
+841 s wall for 4 parallel chains too"; that estimate was wrong by ~3x
 (actual: 2524 s). Four concurrent Gurobi processes on a 12-core machine
 evidently contend for resources rather than scaling for free; budget for that
 when planning further sweeps at this scale.

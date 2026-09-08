@@ -1,4 +1,4 @@
-# Tutorial 2 — Construct a functional small model
+# Tutorial 2: Construct a functional small model
 
 This exercise deals with a small glycolysis model in RAVEN format and shows the
 most basic aspects of stoichiometric modelling: building a model from scratch,
@@ -52,7 +52,7 @@ Two problems remain:
   production via pyruvate decarboxylase + alcohol dehydrogenase) or add "fake"
   exchange reactions for NAD⁺/NADH.
 - **Measuring ATP yield.** Add a "fake" ATP hydrolysis reaction and maximise its
-  flux — because production must match consumption, this reports how much ATP
+  flux: because production must match consumption, this reports how much ATP
   the network can make. Watch the directionality so you don't accidentally allow
   free ATP synthesis.
 

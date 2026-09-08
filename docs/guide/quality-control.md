@@ -12,14 +12,14 @@ nothing.
 | `checkModelStruct` | `check_model` | structural problems |
 | `getElementalBalance` | `get_elemental_balance` | mass balance, reaction by reaction |
 | `haveFlux` | `find_blocked_reactions` <span class="cobrapy-tag">cobrapy</span> | reactions that can never carry flux |
-| `canExchange` | `analyse_topology` | which metabolites the model can make — or consume — given its medium |
+| `canExchange` | `analyse_topology` | which metabolites the model can make, or consume, given its medium |
 | `findLeakMetabolite` | `Model.optimize` on a demand <span class="cobrapy-tag">cobrapy</span> | can the model make something from **nothing** |
 | `gapReport` | `check_model` + `analyse_topology` | one summary of the gaps |
 
 ## Setup
 
 `smallYeastBad.yml` is the same small yeast model as elsewhere in this guide,
-with deliberate errors left in — exactly what these checks are for.
+with deliberate errors left in, exactly what these checks are for.
 
 === "MATLAB"
 
@@ -143,8 +143,8 @@ carrier will quietly inflate every prediction the model makes.
       ATPX: {'H': 2.0, 'O': 1.0}
     ```
 
-    Exchange reactions read as unbalanced by design — they are where mass enters
-    and leaves — so filter them out before judging the number.
+    Exchange reactions read as unbalanced by design: they are where mass enters
+    and leaves, so filter them out before judging the number.
 
 ## 9.3 What can never carry flux?
 
@@ -181,7 +181,7 @@ mistake. This is the cheapest question that finds real problems.
 ## 9.4 Can the model make something from nothing?
 
 With every uptake closed, a correct model can produce nothing at all. If it still
-makes a metabolite, some reaction is unbalanced or a loop is creating mass — the
+makes a metabolite, some reaction is unbalanced or a loop is creating mass: the
 most damaging class of error there is, because such a model will happily "grow"
 without a carbon source.
 
@@ -207,7 +207,7 @@ without a carbon source.
     `canExchange` counts them; `findLeakMetabolite` finds one, using as few
     reactions as possible, so you have somewhere to start. Both take the
     direction as their second argument, and `'consume'` asks the mirror-image
-    question — what can this model swallow without limit.
+    question: what can this model swallow without limit.
 
 === "Python"
 
@@ -235,7 +235,7 @@ without a carbon source.
     33 metabolite(s) producible from nothing: ['ACA_c', 'AC_c', 'AKG_m', 'BIOMASS_c', 'CI_m']
     ```
 
-    raven-toolbox has no single call for this: the loop is what it amounts to —
+    raven-toolbox has no single call for this. The loop is what it amounts to:
     close everything, let every metabolite leave, then maximise each one in turn
     and see whether anything comes out. That last assumption matters: without a
     way for by-products to leave, a leaking reaction is blocked by its own
@@ -244,7 +244,7 @@ without a carbon source.
 
 !!! note "Give by-products a way out, or you will find nothing"
     Both RAVEN functions assume every metabolite can be excreted while the test
-    runs — `canExchange` adds an output reaction for each metabolite it checks,
+    runs: `canExchange` adds an output reaction for each metabolite it checks,
     and `findLeakMetabolite` takes `allowExcretion` as true by default. The Python
     loop has to do it explicitly, and the difference is not subtle: testing one
     demand reaction at a time, with no outlet for the by-products, reports **zero**
@@ -306,7 +306,7 @@ compare against the last version that was good.
 
 ## See also
 
-- [8. Editing an existing model](editing.md) — fixing what these checks find.
-- [2. Model structure and identifiers](model-structure.md) — what the structural
+- [8. Editing an existing model](editing.md), fixing what these checks find.
+- [2. Model structure and identifiers](model-structure.md), what the structural
   checks are checking.
-- [5. Growth media and conditions](media.md) — closing the medium, as in 9.4.
+- [5. Growth media and conditions](media.md), closing the medium, as in 9.4.

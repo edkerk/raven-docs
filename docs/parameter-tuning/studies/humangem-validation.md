@@ -2,7 +2,7 @@
 
 Validation of raven-toolbox's tINIT/ftINIT against MATLAB RAVEN on a real genome-scale
 reconstruction (Human-GEM) using the Hart2015 RNA-seq dataset (5 cell lines: DLD1,
-GBM, HCT116, HELA, RPE1). The goal is functional equivalence — do raven-toolbox and RAVEN
+GBM, HCT116, HELA, RPE1). The goal is functional equivalence: do raven-toolbox and RAVEN
 extract the *same* context-specific reaction sets from the same inputs?
 
 !!! note "The tINIT half is a record, not current behaviour"
@@ -65,10 +65,10 @@ comparable to RAVEN.
 | RPE1      | 7569 | 7564 | 7570 |
 
 Counts agree within ~0.5 % everywhere; the task-constrained run is closest (e.g. RPE1
-7570 vs 7569, HCT116 7776 vs 7780). raven-toolbox tINIT (HCT116) gives 6024 reactions — a
+7570 vs 7569, HCT116 7776 vs 7780). raven-toolbox tINIT (HCT116) gives 6024 reactions, a
 smaller model, as expected from the different (classic INIT) objective.
 
-### Agreement — raven-toolbox (no-task) ftINIT vs RAVEN ftINIT
+### Agreement: raven-toolbox (no-task) ftINIT vs RAVEN ftINIT
 
 | cell line | shared | only raven-toolbox | only RAVEN | Jaccard |
 |-----------|-------:|--------------:|-----------:|--------:|
@@ -83,7 +83,7 @@ though this run is *expression-only* while RAVEN's reference is task-constrained
 "only RAVEN" surplus (≈99–125) is expected to include task-essential reactions that the
 task-constrained run (below) recovers.
 
-### Agreement — raven-toolbox (task-constrained) ftINIT vs RAVEN ftINIT
+### Agreement: raven-toolbox (task-constrained) ftINIT vs RAVEN ftINIT
 
 | cell line | shared | only raven-toolbox | only RAVEN | Jaccard |
 |-----------|-------:|--------------:|-----------:|--------:|
@@ -102,7 +102,7 @@ MIP-gap tolerance (both accept near-optimal incumbents) and alternate optima.
 ### raven-toolbox tINIT vs ftINIT (HCT116)
 
 tINIT 6024 rxns vs ftINIT 7752; shared 5957, Jaccard 0.762. tINIT is nearly a subset
-(only 67 reactions unique to it) — the two methods agree on a common core, with ftINIT
+(only 67 reactions unique to it): the two methods agree on a common core, with ftINIT
 keeping more (its staged formulation and task handling are less aggressive at removal).
 This matches the expected tINIT/ftINIT relationship rather than indicating a defect.
 
@@ -110,7 +110,7 @@ This matches the expected tINIT/ftINIT relationship rather than indicating a def
 
 From identical inputs on a genome-scale human reconstruction, raven-toolbox reproduces RAVEN's
 ftINIT reaction selection to **97.5 % (no-task) and 98 % (task-constrained) set identity**
-across five cell lines — strong evidence of functional equivalence between the two
+across five cell lines, strong evidence of functional equivalence between the two
 independent implementations. Agreement is symmetric and the residual (~80 reactions each
 way) is consistent with MIP near-optimality and alternate optima rather than any
 systematic divergence.

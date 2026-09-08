@@ -1,4 +1,4 @@
-# Tutorial 3 — Knockouts and omics data
+# Tutorial 3: Knockouts and omics data
 
 This exercise shows how to run FBA simulations and gene deletion analysis, and
 how a GEM can serve as a scaffold for interpreting microarray data. It uses a
@@ -94,8 +94,8 @@ compareFluxes(model, sol.x, sol2.x, 'cutoff', 10^-2, ...
 ### 5. Reporter metabolites from microarray data
 
 A GEM can highlight the metabolites around which significant transcriptional
-changes cluster. Reload the model first — the steps above changed its bounds and
-objective — then load the expression data and run the reporter-metabolites test:
+changes cluster. Reload the model first (the steps above changed its bounds and
+objective), then load the expression data and run the reporter-metabolites test:
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');

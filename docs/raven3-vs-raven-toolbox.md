@@ -2,15 +2,15 @@
 
 RAVEN exists as two independent implementations:
 
-- **RAVEN** — the original MATLAB toolbox, which works entirely on its own,
+- **RAVEN**: the original MATLAB toolbox, which works entirely on its own,
   including independently of the COBRA Toolbox.
-- **raven-toolbox** — the Python package, built on
+- **raven-toolbox**: the Python package, built on
   [cobrapy](https://cobrapy.readthedocs.io/), so a model is a `cobra.Model` and
   the wider Python ecosystem works on it directly.
 
-They cover the same ground — homology and KEGG reconstruction, metabolic tasks,
+They cover the same ground (homology and KEGG reconstruction, metabolic tasks,
 gap-filling, context-specific extraction with ftINIT, compartment assignment,
-model comparison — but they are **not transliterations of each other**. Names
+model comparison), but they are **not transliterations of each other**. Names
 differ, some capabilities exist on one side only, and a handful of functions
 answer the same question differently.
 
@@ -69,7 +69,7 @@ table.
 
 ### KEGG artefact generation
 
-raven-toolbox can build the KEGG reference artefacts themselves — parsing a KEGG
+raven-toolbox can build the KEGG reference artefacts themselves, parsing a KEGG
 release into reaction and compound tables, assembling the reference model,
 building the per-KO FASTA sets and HMM libraries, and deriving the phylogenetic
 distance matrix. RAVEN consumes pre-built artefacts; it does not produce them.
@@ -79,7 +79,7 @@ rather than against whatever artefact happens to be distributed.
 
 ### Confidence tracking
 
-Per-reaction, multi-facet confidence scoring — evidence for a reaction's presence
+Per-reaction, multi-facet confidence scoring: evidence for a reaction's presence
 graded across several independent facets, with the bands calibrated against
 curated models. Used to prioritise manual curation on a draft: reactions the
 score is least sure about are where a curator's time goes furthest.
@@ -97,13 +97,13 @@ reaction only when a loopless FVA shows it carries flux there.
 
 ### Smaller additions
 
-- **Growth conditions** — apply a named, versioned growth condition to a model.
-- **Batch curation** — apply a table of curation edits to a model in one pass.
-- **ΔG and SBO annotation** — load and save thermodynamic data through CSV, and
+- **Growth conditions**: apply a named, versioned growth condition to a model.
+- **Batch curation**: apply a table of curation edits to a model in one pass.
+- **ΔG and SBO annotation**: load and save thermodynamic data through CSV, and
   assign SBO terms.
-- **Biomass helpers** — sum a biomass composition, rescale a pseudoreaction, and
+- **Biomass helpers**: sum a biomass composition, rescale a pseudoreaction, and
   scale a fraction to a measured value.
-- **Checksummed provisioning** — both toolboxes now fetch BLAST+, DIAMOND,
+- **Checksummed provisioning**: both toolboxes now fetch BLAST+, DIAMOND,
   HMMER and the KEGG artefacts on demand rather than bundling them; what is
   Python-only is verifying each download against a checksummed manifest.
 
@@ -114,14 +114,14 @@ reaction only when a loopless FVA shows it carries flux there.
 `getINITModel` and `runINIT` are the original tINIT implementation. RAVEN keeps
 them for the models already built with them; raven-toolbox, a new
 implementation with no such installed base, carries ftINIT alone. A tINIT model
-has to be reproduced in MATLAB — see
+has to be reproduced in MATLAB; see
 [10. Context-specific models](guide/init.md).
 
 ### COBRA Toolbox conversion
 
 `ravenCobraWrapper` converts between the RAVEN and COBRA Toolbox model
-structures. There is nothing to convert in Python — the model is already a
-`cobra.Model` — so no equivalent exists or is needed.
+structures. There is nothing to convert in Python: the model is already a
+`cobra.Model`, so no equivalent exists or is needed.
 
 ### Dynamic FBA
 
@@ -149,8 +149,8 @@ added only once the difference has been confirmed in both sources.
 
 !!! info "Not a complete list"
     Absence from this section is not a guarantee of identical behaviour. Where
-    an exact answer matters — reproducing a published result, comparing two
-    pipelines — see [what "identical results" means](#what-identical-results-means).
+    an exact answer matters (reproducing a published result, comparing two
+    pipelines); see [what "identical results" means](#what-identical-results-means).
 
 ### Duplicate reactions: gene associations are not merged
 
@@ -163,8 +163,8 @@ the rest, without merging gene associations. A gene that was associated *only*
 with a removed duplicate is no longer associated with anything.
 
 The stoichiometric network is the same either way; the gene–reaction mapping is
-not. If you are contracting a draft assembled from several templates — where the
-same reaction commonly arrives with different gene associations — check the GPRs
+not. If you are contracting a draft assembled from several templates, where the
+same reaction commonly arrives with different gene associations, check the GPRs
 of the survivors afterwards.
 
 ### Metabolic tasks: same verdicts, very different cost
@@ -191,14 +191,14 @@ so porting a `fillGaps` call means choosing:
 | MILP filling with explicit weights | `fill_gaps_kumar_milp` |
 | Only *finding* the gaps (`canExchange`, `checkProduction`, `getAllSubGraphs`, `haveFlux`) | `analyse_topology` |
 
-The choice changes both the reaction set added and the runtime — they are
+The choice changes both the reaction set added and the runtime; they are
 different algorithms, not one algorithm behind three names.
 
 ### Anything solved by MILP
 
 ftINIT extraction, gap-filling, and compartment assignment all solve
 mixed-integer problems that routinely have **several optima of equal objective
-value**. Two runs can return different reaction sets and both be correct — across
+value**. Two runs can return different reaction sets and both be correct; across
 languages, across solvers, and in some configurations across runs of the same
 solver.
 
@@ -212,7 +212,7 @@ than returning a bare balanced/unbalanced flag: a reaction whose metabolites lac
 formulas is reported as *unknown*, not as balanced. The two agree.
 
 The distinction matters when moving to plain cobrapy, whose `check_mass_balance`
-does not make it — which is the reason raven-toolbox keeps its own function
+does not make it, which is the reason raven-toolbox keeps its own function
 instead of delegating.
 
 ## What "identical results" means
@@ -226,7 +226,7 @@ mean, because "the same" is achievable for some and meaningless for others.
 The output can and should match value for value. Anything deterministic that
 transforms a model or a file rather than solving an optimisation problem:
 
-- model I/O — SBML and YAML round-trips, Excel export
+- model I/O: SBML and YAML round-trips, Excel export
 - task-list parsing
 - gene-association normalisation (`grRuleToDNF` / `gpr_to_dnf`)
 - elemental balance
@@ -238,7 +238,7 @@ If these disagree, one of them is wrong.
 ### Set-level
 
 The output is the solution to a mixed-integer problem that has many optima of
-equal value, so identity is not a meaningful target — a different reaction set of
+equal value, so identity is not a meaningful target; a different reaction set of
 the same objective value is not an error. This covers ftINIT extraction,
 gap-filling, and compartment assignment.
 
@@ -254,8 +254,8 @@ hold the solver fixed before concluding anything about the languages.
 ### Statistical
 
 Flux sampling and random sampling explore a space rather than compute a point.
-Two runs of the *same* implementation differ. Compare distributions — means,
-marginals, coverage — at a fixed seed, never individual samples.
+Two runs of the *same* implementation differ. Compare distributions (means,
+marginals, coverage) at a fixed seed, never individual samples.
 
 ### What is actually verified today
 
@@ -265,9 +265,9 @@ multi-organism set. Those are set-level comparisons of the extraction pipeline,
 reported in the raven-toolbox repository.
 
 They are, at present, **reported** rather than **enforced**: no test fails if the
-two implementations drift apart. Building that harness — committed fixtures, a
+two implementations drift apart. Building that harness (committed fixtures, a
 MATLAB driver that records the reference output, and tiered assertions matching
-the three levels above — is planned work, not something this page can yet point
+the three levels above) is planned work, not something this page can yet point
 at.
 
 ## Solvers
@@ -278,7 +278,7 @@ at.
 | Recommended solver | Gurobi (free academic licence) | Gurobi (free academic licence) |
 | Open-source option | GLPK (via COBRA Toolbox) | GLPK (bundled with cobrapy) |
 
-Genome-scale MILP work — ftINIT extraction in particular — is where the choice
+Genome-scale MILP work (ftINIT extraction in particular) is where the choice
 matters most; see [Installation](installation/index.md) for the full solver
 matrix.
 
@@ -286,7 +286,7 @@ matrix.
 
 Models move through **SBML** (`.xml`) and **YAML** (`.yml`). raven-toolbox's
 YAML follows the cobrapy layout plus RAVEN's own per-entry fields, so a model
-written by either side round-trips through the other — see
+written by either side round-trips through the other; see
 [the YAML format reference](yaml-format.md) for the field-by-field spec and
 interoperability matrix.
 
@@ -295,7 +295,7 @@ and RAVEN's `importExcelModel` was removed in the RAVEN 3 refactor.
 
 ## Coming from RAVEN 2.0 to Python
 
-raven-toolbox is not a port of RAVEN 2.0 — it is a fresh implementation that
+raven-toolbox is not a port of RAVEN 2.0; it is a fresh implementation that
 made different architectural choices where RAVEN 2.0 showed its age. If you are
 moving a RAVEN 2.0 workflow straight to Python rather than to RAVEN 3, three
 differences matter beyond everything above.
@@ -314,10 +314,10 @@ straightforward. Every public function carries type annotations and passes
 `getMetaCycModelForOrganism`; RAVEN 3 removed the whole `external/metacyc`
 folder, and raven-toolbox never had it. The reason is not neglect: MetaCyc
 provides a single representative sequence per enzyme, which gives intrinsically
-low gene-calling precision — measured at roughly two-thirds of reaction
+low gene-calling precision, measured at roughly two-thirds of reaction
 assignments wrong at the default cutoff, with no cutoff that rescues it. Use the
 KEGG or homology routes.
 
-What stayed the same is the substance: the core algorithms — homology search,
-gap-filling, KEGG reconstruction — follow the same published methods, and models
+What stayed the same is the substance: the core algorithms (homology search,
+gap-filling, KEGG reconstruction) follow the same published methods, and models
 move between all three through SBML and YAML.

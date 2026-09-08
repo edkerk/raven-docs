@@ -12,7 +12,7 @@ Following this protocol yields a **draft** genome-scale metabolic model for
   *H. polymorpha* being a methylotroph.
 
 The published hanpo-GEM (the curated result distributed in the repository)
-contains on the order of **2,370 reactions, 2,118 metabolites and 984 genes** —
+contains on the order of **2,370 reactions, 2,118 metabolites and 984 genes**,
 your draft will be in the same ballpark but is expected to differ, since it is a
 starting point for the open-ended process of manual curation.
 
@@ -38,8 +38,8 @@ curation is tracked and the model can be distributed.
 
 ## The complete protocol script
 
-The full, runnable reconstruction — the authoritative version of every command
-on these pages — is the
+The full, runnable reconstruction (the authoritative version of every command
+on these pages) is the
 [`reconstructionProtocol.m`](https://github.com/SysBioChalmers/hanpo-GEM/blob/main/code/reconstructionProtocol.m)
 script in the hanpo-GEM repository, reproduced here:
 

@@ -52,7 +52,7 @@ and grows at exactly zero.
     RAVEN solver preference: ...
     ```
 
-    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts —
+    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts,
     and the answer is whatever *this* installation was last told, which is why
     the output above is elided. `checkInstallation` prints it along with a test
     solve.
@@ -107,7 +107,7 @@ The two solution objects carry the same information under different names.
 | MATLAB `solveLP` | cobrapy `Solution` | |
 |---|---|---|
 | `sol.f` | `solution.objective_value` | objective value, same sign in both |
-| `sol.x` | `solution.fluxes` | fluxes — a vector in `model.rxns` order, or a Series by id |
+| `sol.x` | `solution.fluxes` | fluxes: a vector in `model.rxns` order, or a Series by id |
 | `sol.stat` | `solution.status` | `1` optimal, `0` feasible, `-1` infeasible |
 | `sol.msg` | `solution.status` | what the solver said |
 | `sol.sPrice`, `sol.rCost` | `solution.shadow_prices`, `solution.reduced_costs` | duals |
@@ -144,7 +144,7 @@ The two solution objects carry the same information under different names.
 
 An infeasible problem is the most common outcome of a bad edit, and the two
 toolboxes report it differently: RAVEN sets `sol.stat` to `-1` and returns an
-empty flux vector, while cobrapy raises nothing at all — `optimize` returns a
+empty flux vector, while cobrapy raises nothing at all; `optimize` returns a
 solution with status `infeasible`, and `slim_optimize` returns `nan`.
 
 === "MATLAB"
@@ -176,7 +176,7 @@ solution with status `infeasible`, and `slim_optimize` returns `nan`.
     ```
 
     Check the status before you use a number. `slim_optimize` skips building a
-    full solution, so it is the fast option inside a loop — at the cost of
+    full solution, so it is the fast option inside a loop, at the cost of
     returning `nan` instead of telling you why.
 
 !!! warning "What can go wrong"
@@ -184,14 +184,14 @@ solution with status `infeasible`, and `slim_optimize` returns `nan`.
       stores the preference whether or not Gurobi is there; the failure appears
       at the next solve. `checkInstallation` tests it directly.
     - **MILP with GLPK.** GLPK solves LPs only, in RAVEN. Anything mixed-integer
-      — `getMinimalMedium`, some gap-filling — needs Gurobi.
+      (`getMinimalMedium`, some gap-filling) needs Gurobi.
     - **Tiny differences between solvers.** Alternative optima mean two solvers
       can return different flux distributions for the same objective value. Pin
       one solver for anything you intend to compare.
 
 ## See also
 
-- [4. Simulating growth with FBA](fba.md) — the solve itself.
-- [5. Growth media and conditions](media.md) — the constraints that decide
+- [4. Simulating growth with FBA](fba.md), the solve itself.
+- [5. Growth media and conditions](media.md), the constraints that decide
   whether a problem is feasible at all.
-- [Installation](../installation/index.md) — installing and testing a solver.
+- [Installation](../installation/index.md), installing and testing a solver.

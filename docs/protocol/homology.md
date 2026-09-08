@@ -11,7 +11,7 @@ The gene identifiers in each template model **must match** those in its protein
 FASTA (compare against, e.g., *S. cerevisiae* `YML001W`). For the target
 organism it is also convenient to shorten the identifiers to a standard format
 such as `Hanpo2_12345`. The *H. polymorpha* FASTA from JGI needs some editing to
-strip annotations — see [Note 2](#notes) below.
+strip annotations; see [Note 2](#notes) below.
 
 ## 3.3.2 Determine homology by BLAST
 
@@ -54,7 +54,7 @@ model = addRxnsGenesMets(model, modelSce, mediumComps);
 ```
 
 These represent ammonium, CO₂, glycerol, H⁺, iron, O₂, phosphate, sulfate, water
-and biomass — everything that must be able to enter or leave the system to
+and biomass, everything that must be able to enter or leave the system to
 support growth. Inspect your first draft:
 
 ```matlab
@@ -65,12 +65,12 @@ Next: [Biomass composition](biomass.md).
 
 ## Notes
 
-- **Note 2 — matching identifiers.** Protein identifiers must match between the
+- **Note 2: matching identifiers.** Protein identifiers must match between the
   model and FASTA of each organism. One common fix is to discard everything
   after the first whitespace in each FASTA header with `sed -i 's/ .*$//'
   sce.faa`, turning a long annotated header into a bare identifier such as
   `>YAL001C`.
-- **Note 6 — `getModelFromHomology` arguments.** Up to ten input arguments can
+- **Note 6: `getModelFromHomology` arguments.** Up to ten input arguments can
   be given. The first four are the template model(s), the BLAST structure, the
   target organism id (which must match the one given to `getBlast`), and the
   preferred order of templates (here *S. cerevisiae* is preferred). The next

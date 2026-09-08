@@ -54,7 +54,7 @@ macromolecule with the **ratio of its constituents**:
 | **Carbohydrate** | measured glucan / mannan / trehalose / glycogen | reported levels for *H. polymorpha* |
 | **Lipids** | measured lipid classes and acyl chains | the SLIME approach (next section) |
 
-For nucleotides, the DNA FASTA gives the frequency of each base — readily counted
+For nucleotides, the DNA FASTA gives the frequency of each base, readily counted
 with `sed`/`grep`:
 
 ```bash
@@ -70,7 +70,7 @@ biomass. Ribonucleotide and amino-acid ratios are derived analogously from the
 coding sequences and the protein FASTA.
 
 !!! note "Lipids use SLIME"
-    Lipid representation depends on two measurement types — **lipid classes**
+    Lipid representation depends on two measurement types: **lipid classes**
     (e.g. triacylglycerol, phosphatidylinositol) and **acyl chains** (e.g. 16:0,
     18:1). This model uses the SLIME formalism (*Split Lipids Into Measurable
     Entities*), set up in the next section.

@@ -18,8 +18,8 @@ Reconstruct four organisms from an *S. cerevisiae* template, at a range of
 settings, and ask of every match that survives: are these two genes really
 counterparts?
 
-Two independent sources answer that — KEGG's gene annotations and OMA's ortholog
-assignments — and wrong matches count double, because a wrong reaction is worse
+Two independent sources answer that: KEGG's gene annotations and OMA's ortholog
+assignments, and wrong matches count double, because a wrong reaction is worse
 than a missing one: gap-filling can add what is absent, while something wrong is
 hard to notice and harder to remove.
 
@@ -54,7 +54,7 @@ two sources put the answer between 35 and 45, and 40 sits comfortably inside
 that. Neither supports anything looser.
 
 That last point is worth stating plainly, because counting a missing match as
-equally bad as a wrong one moves the recommendation to 25 — a completely
+equally bad as a wrong one moves the recommendation to 25, a completely
 different answer from the same measurements. Any recommendation about these
 settings is meaningless unless it says how it weighed the two kinds of mistake.
 
@@ -98,7 +98,7 @@ They do:
 | `ani` | 35 | 35 | 0.814 vs 0.811 |
 | `eco` | 40 | 40 | 0.598 vs 0.593 |
 
-DIAMOND finds about half as many matches — 29,785 against 54,478 on `kla` — but
+DIAMOND finds about half as many matches (29,785 against 54,478 on `kla`), but
 almost all the missing ones are weak ones these settings discard anyway. After
 filtering, the two agree on 87–92% of what survives, and DIAMOND runs 10–20×
 faster (34 s against 358 s on `kla`; 40 s against 788 s on `ani`).
@@ -112,7 +112,7 @@ The three settings above filter BLAST's output. Two more control the search that
 produces it, and neither turned out to matter for the finished model.
 
 `evalue` is the aligner's own cut-off, `1e-4` for `run_blast` and `1e-3` for
-`run_diamond` — each matching what the MATLAB side passes, explicitly in
+`run_diamond`, each matching what the MATLAB side passes, explicitly in
 `getBlast`'s case and by inheriting DIAMOND's own default in `getDiamond`'s. On
 *H. polymorpha* against *S. cerevisiae*, loosening from `1e-5` to `1e-4` admits
 5,204 more raw hits, 8.9% of the table. None of them reach the model: at
@@ -133,7 +133,7 @@ about 20 minutes per direction.
   partly measure agreement with the method being tested. OMA infers counterparts
   independently, which is why both were used; they agree.
 - **The two sources are not directly comparable in absolute terms.** KEGG only
-  covers genes it has annotated — a few hundred well-studied ones per organism —
+  covers genes it has annotated (a few hundred well-studied ones per organism)
   while OMA covers whole proteomes and lists strict counterparts, so ordinary
   gene duplicates count against us. Compare the shape of each column, not the
   heights between them.
@@ -159,7 +159,7 @@ one step past them. That cliff is the reference remembering its own
 construction: the curated model agrees with predictions made at *its own* build
 settings and disagrees with everything else, regardless of whether those other
 settings are better or worse. Optimising against it returns the build settings
-whether or not they are good — it cannot measure correctness, only
+whether or not they are good; it cannot measure correctness, only
 self-consistency. Most curated non-model fungal GEMs are RAVEN drafts built the
 same way, so this applies to the class, not just these two models.
 
@@ -172,5 +172,5 @@ python scripts/homology_cutoff_kegg.py score --out work/ --beta 0.5 \
     --gene-ko kegg118_organism_gene_ko.tsv.gz
 ```
 
-Aligning is the only slow part and is saved, so re-scoring — under a different
-weighting, or against a different reference — takes about two minutes.
+Aligning is the only slow part and is saved, so re-scoring (under a different
+weighting, or against a different reference) takes about two minutes.

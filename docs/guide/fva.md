@@ -12,9 +12,9 @@ from one it merely happened to report.
 | `getAllowedBounds` | `flux_variability_analysis` <span class="cobrapy-tag">cobrapy</span> | the range each reaction can take |
 | `haveFlux` | `find_blocked_reactions` <span class="cobrapy-tag">cobrapy</span> | reactions that can carry no flux at all |
 | `solveLP` (`minFlux`) | `pfba` <span class="cobrapy-tag">cobrapy</span> | one representative optimum |
-| — | `loopless_solution` <span class="cobrapy-tag">cobrapy</span> | an optimum without thermodynamically infeasible loops |
-| — | `add_loopless` <span class="cobrapy-tag">cobrapy</span> | the constraints behind `loopless="fastSNP"` |
-| — | `find_good_reactions` | reactions whose range is real rather than a loop |
+| no equivalent | `loopless_solution` <span class="cobrapy-tag">cobrapy</span> | an optimum without thermodynamically infeasible loops |
+| no equivalent | `add_loopless` <span class="cobrapy-tag">cobrapy</span> | the constraints behind `loopless="fastSNP"` |
+| no equivalent | `find_good_reactions` | reactions whose range is real rather than a loop |
 
 ## Setup
 
@@ -54,7 +54,7 @@ flux through a `=> metabolite` reaction, so it is the upper bound that opens it.
 ## 14.1 The range of every reaction
 
 With no further constraint, this asks how far each flux can move anywhere in the
-feasible space — the objective is free.
+feasible space; the objective is free.
 
 === "MATLAB"
 
@@ -92,7 +92,7 @@ feasible space — the objective is free.
 
     `fraction_of_optimum=0.0` is what makes this the same question
     `getAllowedBounds` asks. Leave it out and cobrapy defaults to **1.0**, which
-    asks something quite different — see the next section.
+    asks something quite different; see the next section.
 
 ## 14.2 The range *at* the optimum
 
@@ -246,7 +246,7 @@ first. It is reproducible, and it is the natural companion to the ranges above.
     prevent.
 
 !!! warning "What can go wrong"
-    - **Forgetting `fraction_of_optimum`.** cobrapy defaults to `1.0` — ranges at
+    - **Forgetting `fraction_of_optimum`.** cobrapy defaults to `1.0`, ranges at
       the optimum. `getAllowedBounds` has no such notion and answers for the whole
       feasible space. The same call in the two toolboxes therefore asks different
       questions unless you say which one you mean.
@@ -263,8 +263,8 @@ first. It is reproducible, and it is the natural companion to the ranges above.
 
 ## See also
 
-- [4. Simulating growth with FBA](fba.md) — the single solve this qualifies.
-- [11. Deletions and essentiality](deletions.md) — the other way to ask what the
+- [4. Simulating growth with FBA](fba.md), the single solve this qualifies.
+- [11. Deletions and essentiality](deletions.md), the other way to ask what the
   model depends on.
-- [9. Quality control](quality-control.md) — blocked reactions, the degenerate
+- [9. Quality control](quality-control.md), blocked reactions, the degenerate
   case of a zero range.

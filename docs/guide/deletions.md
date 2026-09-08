@@ -13,7 +13,7 @@ distribution better than plain FBA does".
 | `findGeneDeletions` (`'sgd'`/`'dgd'`) | `double_gene_deletion` <span class="cobrapy-tag">cobrapy</span> | pairs of genes |
 | `getEssentialRxns` | `find_task_essential_reactions` | reactions a task cannot do without |
 | `deleteUnusedGenes` | `remove_genes` | remove genes, rather than knock them out |
-| — | `moma` <span class="cobrapy-tag">cobrapy</span> | a knockout's fluxes, staying near the wild type |
+| no equivalent | `moma` <span class="cobrapy-tag">cobrapy</span> | a knockout's fluxes, staying near the wild type |
 
 ## Setup
 
@@ -54,7 +54,7 @@ the upper bound that opens it.
 ## 11.1 Knock out one gene
 
 The question underneath every deletion study: with this gene gone, can the model
-still reach its objective? A gene knockout is not a reaction knockout — the GPR
+still reach its objective? A gene knockout is not a reaction knockout: the GPR
 decides. Remove one of two isozymes and nothing happens; remove a subunit of a
 complex and the reaction goes.
 
@@ -89,7 +89,7 @@ complex and the reaction goes.
 
     `knock_out_model_genes` sets the bounds of every reaction whose GPR is no
     longer satisfiable to zero, and leaves the rest alone. Inside `with model:`
-    it is undone on the way out — the cheapest way to ask a knockout question
+    it is undone on the way out, the cheapest way to ask a knockout question
     without keeping the answer.
 
 ## 11.2 Knock out every gene
@@ -123,7 +123,7 @@ complex and the reaction goes.
     ```
 
     `single_gene_deletion` returns a DataFrame indexed by the deleted gene set,
-    with the resulting growth rate and solver status — so the usual pandas
+    with the resulting growth rate and solver status, so the usual pandas
     filtering finds the essential ones.
 
 ## 11.3 Essential reactions
@@ -158,7 +158,7 @@ particular thing?
     ```
 
     For essentiality with respect to a *task* rather than the objective,
-    raven-toolbox has `find_task_essential_reactions` — see
+    raven-toolbox has `find_task_essential_reactions`; see
     [12. Metabolic tasks](tasks.md).
 
 ## 11.4 Two at a time
@@ -198,7 +198,7 @@ small model earns its keep.
 
 FBA assumes the knockout re-optimises perfectly, which a cell that just lost a
 gene does not do. MOMA instead looks for the flux distribution closest to the
-wild type that the mutant can actually achieve — usually a better predictor of a
+wild type that the mutant can actually achieve, usually a better predictor of a
 knockout's physiology, and a different answer.
 
 === "MATLAB"
@@ -206,11 +206,11 @@ knockout's physiology, and a different answer.
     **RAVEN has no MOMA.** It had `qMOMA`, which solved the quadratic problem
     with `quadprog` from MATLAB's **Optimization Toolbox**; RAVEN 3 removed it
     as the last function that depended on a paid MATLAB toolbox. Nothing in
-    RAVEN replaces it, so a MOMA prediction has to come from the Python side —
+    RAVEN replaces it, so a MOMA prediction has to come from the Python side,
     or from the COBRA Toolbox, which keeps its own.
 
-    What RAVEN does offer for the same *question* — what changed in the mutant,
-    rather than by how much growth fell — is `compareFluxes` on two flux
+    What RAVEN does offer for the same *question* (what changed in the mutant,
+    rather than by how much growth fell) is `compareFluxes` on two flux
     vectors from the same model, in [17. Comparing models](comparing.md).
 
 === "Python"
@@ -233,8 +233,8 @@ knockout's physiology, and a different answer.
       reaction when the GPR says so. Isozymes hide single knockouts; that is the
       point of the double deletions.
     - **A knockout that looks lethal because the medium is wrong.** Essentiality
-      is relative to the medium and the objective. State both when you report it
-      — see [5. Growth media and conditions](media.md).
+      is relative to the medium and the objective. State both when you report it;
+      see [5. Growth media and conditions](media.md).
     - **Reading essentiality off a threshold.** `growth < 1e-6` is a numerical
       cut-off, not biology. A mutant at 1 % of wild-type growth is not dead.
     - **Double deletions on a genome-scale model.** Quadratic in the gene count;
@@ -242,6 +242,6 @@ knockout's physiology, and a different answer.
 
 ## See also
 
-- [4. Simulating growth with FBA](fba.md) — the solve underneath all of this.
-- [12. Metabolic tasks](tasks.md) — essentiality with respect to a task.
-- [9. Quality control](quality-control.md) — before trusting any of it.
+- [4. Simulating growth with FBA](fba.md), the solve underneath all of this.
+- [12. Metabolic tasks](tasks.md), essentiality with respect to a task.
+- [9. Quality control](quality-control.md), before trusting any of it.

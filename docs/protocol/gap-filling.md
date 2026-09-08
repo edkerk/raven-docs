@@ -1,6 +1,6 @@
 # 3.6 Perform gap-filling
 
-Homology-based draft models tend to have many **gaps** — missing reactions that
+Homology-based draft models tend to have many **gaps**: missing reactions that
 break a pathway needed to produce biomass macromolecules. The pathway is likely
 functional in the template, but `getBlast`/`getModelFromHomology` cannot always
 find a homolog for every gene, leaving the pathway incomplete. Gap-filling
@@ -26,7 +26,7 @@ model = setParam(model, 'lb', 'r_1808', -10);    % allow glycerol uptake
 
 Gaps should be resolved with enzymatic and transport reactions, **not** new
 exchange reactions (which could, e.g., introduce other carbon sources). So all
-exchange reactions — and the biomass pseudoreactions — are removed from the
+exchange reactions, and the biomass pseudoreactions, are removed from the
 template copies used as the reaction source. Reactions already shared between the
 two templates are also dropped to shrink the MILP search space:
 

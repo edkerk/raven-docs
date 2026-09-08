@@ -25,7 +25,7 @@ modelSce.id = 'sce';
 ## Inspect the model
 
 It is often easier to browse a model as a spreadsheet. `exportToExcelFormat`
-writes an `.xlsx` with five sheets — `RXNS`, `METS`, `COMPS`, `GENES` and
+writes an `.xlsx` with five sheets: `RXNS`, `METS`, `COMPS`, `GENES` and
 `MODEL`:
 
 ```matlab

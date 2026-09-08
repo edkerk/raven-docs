@@ -28,7 +28,7 @@ On iJO1366:
 | **`1e-6`** *(default)* | 18 | **393** |
 
 The 21 extra targets admitted below `1e-6` all have a flux standard deviation
-around `5e-7` across the ten scan steps — Gurobi's primal feasibility tolerance
+around `5e-7` across the ten scan steps, Gurobi's primal feasibility tolerance
 accumulated across 2,583 reactions, which is floating-point summation noise
 rather than a metabolic trend. Reporting them would send a user to engineer
 reactions that are functionally zero throughout.
@@ -60,7 +60,7 @@ essentiality screens.
 ## Literature and convention values, checked
 
 These were swept and confirmed rather than changed. Both implementations agree on
-each, so there is nothing to reconcile — the value of the check is that the number
+each, so there is nothing to reconcile; the value of the check is that the number
 is no longer taken on trust.
 
 | Parameter | Value | What the sweep showed |

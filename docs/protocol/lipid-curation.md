@@ -44,7 +44,7 @@ subset of possible acyl-chain distributions is included.
 ## Scale the acyl chains
 
 After gap-filling (next section) it becomes apparent that the provided acyl-chain
-and lipid-class levels are not fully compatible — one of the two must be scaled
+and lipid-class levels are not fully compatible; one of the two must be scaled
 for a functional model. Assuming the lipid-class measurements are technically
 more reliable, the acyl-chain data is scaled:
 
