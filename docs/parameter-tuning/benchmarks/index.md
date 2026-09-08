@@ -145,7 +145,9 @@ e_coli_core 95 rxns, synthetic toy models. Binaries: BLAST 2.17.0.
 | `predict_localization` | `time_limit` | `None` | `maxTime=15` (minutes; MATLAB's simulated-annealing budget, not a MILP cutoff) | ✓ keep `None` — not a value to unify, see [parity decisions](#cross-toolbox-parity-decisions) |
 | `predict_localization` | `mip_gap` | `None` | N/A | ✓ keep |
 
-**Benchmark file:** [localization.md](localization.md)
+**Benchmark file:** [`localization_parameters.md`](https://github.com/SysBioChalmers/raven-gecko-parity/blob/develop/docs/localization/localization_parameters.md),
+with the rest of the compartment-assignment evidence — the method is still in
+development and not at parity with MATLAB.
 
 ---
 

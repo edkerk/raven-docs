@@ -217,8 +217,6 @@ nav:
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
-          - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md
-          - predictLocalization head-to-head: parameter-tuning/studies/predictlocalization-comparison.md
       - Benchmarks:
           - Master index: parameter-tuning/benchmarks/index.md
           - Flux sampling: parameter-tuning/benchmarks/sampling.md
@@ -227,7 +225,6 @@ nav:
           - Gap-filling: parameter-tuning/benchmarks/gapfilling.md
           - Homology-based reconstruction: parameter-tuning/benchmarks/reconstruction-homology.md
           - KEGG-based reconstruction: parameter-tuning/benchmarks/reconstruction-kegg.md
-          - Sub-cellular localisation: parameter-tuning/benchmarks/localization.md
           - Model manipulation: parameter-tuning/benchmarks/manipulation.md
           - Tasks: parameter-tuning/benchmarks/tasks.md
   - References: references.md
