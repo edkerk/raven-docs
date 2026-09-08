@@ -139,7 +139,7 @@ no `-evalue` flag at all, so it inherits DIAMOND's own native default (`1e-3`),
 not BLAST's. The two aligners are deliberately *not* unified: `run_blast` tracks
 `getBlast`'s explicit value, `run_diamond` tracks `getDiamond`'s implicit one —
 see the "Cross-toolbox parity
-decisions" section of [index.md](index.md)).
+decisions" section of [Tuned parameter defaults](../../tuned-parameters.md#cross-toolbox-parity-decisions)).
 
 **Still `develop`-only, not ported here:** `min_align_len=200` remains MATLAB
 RAVEN's own default (a back-port is proposed but not this session's call to

@@ -1,9 +1,9 @@
-﻿# Methods & benchmarks
+# Methods & benchmarks
 
-RAVEN â€” both the MATLAB toolbox and raven-toolbox (Python) â€” ships a lot of
+RAVEN — both the MATLAB toolbox and raven-toolbox (Python) — ships a lot of
 functions with numerical defaults: solver tolerances, cut-offs, iteration
 limits, literature constants. [Tuned parameter defaults](../tuned-parameters.md)
-gives the short version of every one of them â€” current value, one-line reason,
+gives the short version of every one of them — current value, one-line reason,
 grouped by capability. This section is the detail behind that page: the
 methodology used to evaluate a default, the full write-up for every parameter
 that got a dedicated measurement campaign (**studies**), and the quicker
@@ -15,11 +15,11 @@ A default value is *well-chosen* when a user who does not read the docstring
 gets a result that is correct and useful for the most common case.
 
 **On MATLAB/Python parity:** neither implementation's defaults were
-systematically validated from the start â€” MATLAB RAVEN's were often chosen by
+systematically validated from the start — MATLAB RAVEN's were often chosen by
 trial-and-error, copied from earlier tools, or never reconsidered, and
 raven-toolbox inherited a mix of ported MATLAB values and upstream (cobrapy)
-conventions. An existing default in either toolbox is a useful *prior* â€” it
-reflects years of practical use, or a well-tested upstream library â€” but it is
+conventions. An existing default in either toolbox is a useful *prior* — it
+reflects years of practical use, or a well-tested upstream library — but it is
 not a gold standard. Where the two implementations differ, the right response
 is to run both and measure, not to assume whichever came first is correct.
 
@@ -31,9 +31,9 @@ The following criteria apply in rough priority order:
    answer (a published reconstruction, a literature flux distribution, a
    validated gene-essentiality set). The default must produce a result that is
    meaningfully better than any reasonable alternative, or at least no worse.
-2. **Sensitivity envelope.** Vary the parameter by Â±1 order of magnitude (or
-   Â±50% for non-log-scale values) and measure result change. If output is
-   insensitive across the range, the exact default value matters little â€”
+2. **Sensitivity envelope.** Vary the parameter by ±1 order of magnitude (or
+   ±50% for non-log-scale values) and measure result change. If output is
+   insensitive across the range, the exact default value matters little —
    document that and move on. If output is highly sensitive, the default must
    land in a plateau region (neither too loose nor too tight) and must be
    documented with the sensitivity profile.
@@ -55,7 +55,7 @@ The following criteria apply in rough priority order:
 ### Evaluation workflow per parameter
 
 ```
-1. Read the current docstring â€” does it explain *why* this value?
+1. Read the current docstring — does it explain *why* this value?
 2. Identify candidate values: current default, the other implementation's
    default (if any), paper value (if any), and at least two plausible
    alternatives (e.g. 1 order of magnitude up/down).
@@ -72,18 +72,18 @@ The following criteria apply in rough priority order:
 
 ## Studies
 
-The primary measurement campaigns â€” full methodology, raw results, and the
+The primary measurement campaigns — full methodology, raw results, and the
 reasoning behind each conclusion.
 
 | Study | Covers |
 |---|---|
 | [Homology cut-off calibration](studies/homology-cutoff-calibration.md) | `min_align_len`, `min_identity`, `max_evalue` in homology-based reconstruction, measured against independent KEGG and OMA ortholog references across a 4-organism relatedness series |
-| [KEGG HMM cut-off calibration](studies/kegg-hmm-cutoff-calibration.md) | `cutoff`, `min_score_ratio_ko`, `min_score_ratio_g` in KEGG HMM-based reconstruction, measured against real KEGG geneâ†’KO annotations across 4 organisms |
+| [KEGG HMM cut-off calibration](studies/kegg-hmm-cutoff-calibration.md) | `cutoff`, `min_score_ratio_ko`, `min_score_ratio_g` in KEGG HMM-based reconstruction, measured against real KEGG gene→KO annotations across 4 organisms |
 | [Sampling convergence calibration](studies/sampling-convergence-calibration.md) | Between-chain (Gelman-Rubin R-hat) convergence of ACHR/CHRR flux sampling at genome scale |
 | [INIT parameter calibration](studies/init-param-calibration.md) | `mip_gap`, `time_limit` in INIT/ftINIT, measured on genome-scale Human-GEM (multiple cell lines) |
 | [INIT solver benchmark](studies/init-solver-benchmark.md) | Solver-backend behaviour (Gurobi / GLPK / HiGHS) for the INIT/ftINIT MILP |
 | [ftINIT reproducibility](studies/ftinit-determinism.md) | What `resolve_ties`/`prove_abs_gap` buy (and cost) on genome-scale Human-GEM, and how `reference_reactions` closes most of the remaining stability gap (13x less spurious essential-gene drift after a template edit) |
-| [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975â€“0.980) |
+| [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
 
 ## Benchmarks
 
@@ -93,7 +93,6 @@ cross-toolbox to-do list.
 
 | Benchmark | Function(s) |
 |---|---|
-| [Master index](benchmarks/index.md) | All parameters with non-trivial defaults, MATLAB/Python parity decisions, master to-do list |
 | [Flux sampling](benchmarks/sampling.md) | `random_sampling`, `find_good_reactions`, `max_volume_ellipsoid` |
 | [FSEOF](benchmarks/fseof.md) | `fseof` |
 | [INIT / ftINIT](benchmarks/init.md) | `run_ftinit`, `ftinit`, `gene_scores_from_expression` |
