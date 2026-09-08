@@ -72,6 +72,10 @@ proveAbsGap                   # ftINIT argument
 getExprForRxnScore            # RAVEN test fixture under testing/function_tests/private/, not public API
 gene_scores                   # ftinit argument
 spontRxnNames                 # prepINITModel argument
+throwErrors                   # checkModelStruct argument
+neverPrefix                   # exportModel argument
+subDirs                       # exportForGit argument
+mainBranchFlag                # exportForGit argument
 extComp                       # prepINITModel argument
 convertGenes                  # prepINITModel argument
 essential_cache_path          # prep_init_model argument
@@ -172,6 +176,18 @@ ko_reaction                   # KEGG relational table name
 gene_id                       # column name, yeast-localization-benchmark.md
 lp_method                     # solver config variable, init-solver-benchmark.md
 hybrid_interface               # optlang.hybrid_interface module, named in init-solver-benchmark.md
+
+# -- issue categories reported by the model validators ----------------------
+# Strings in checkModelStruct's `category` field and a ModelIssue attribute,
+# named in guide/model-structure.md so a script can filter on them.
+missing_field
+wrong_type
+empty_id
+invalid_id
+invalid_bounds
+invalid_formula
+cross_reference
+object_id
 
 # -- cobrapy attributes named in the guide ----------------------------------
 # Attributes, not functions, so they resolve nowhere; the guide names them when
