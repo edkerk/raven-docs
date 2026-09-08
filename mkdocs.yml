@@ -156,6 +156,7 @@ nav:
           - Overview: installation/index.md
           - RAVEN (MATLAB): installation/raven.md
           - raven-toolbox (Python): installation/python.md
+      - Migrating from RAVEN 2 (MATLAB): raven3-migration.md
       - 1. Getting started: guide/getting-started.md
       - 2. Model structure and identifiers: guide/model-structure.md
       - 3. Reading and writing models: guide/io.md
@@ -196,15 +197,10 @@ nav:
           - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
   - API reference: api/
   - MATLAB vs Python:
-      - Overview: differences.md
+      - RAVEN 3 and raven-toolbox: raven3-vs-raven-toolbox.md
       - Function mapping: matlab-vs-python.md
-      - Only in raven-toolbox: python-only.md
-      - Only in RAVEN: matlab-only.md
-      - Same function, different answer: behaviour.md
-      - What identical results means: parity.md
       - Tuned parameter defaults: tuned-parameters.md
       - Model file format (YAML): yaml-format.md
-      - Changes from RAVEN 2: raven2-changes.md
   - Methods & benchmarks:
       - Overview: parameter-tuning/index.md
       - Flux sampling algorithms: parameter-tuning/flux-sampling-algorithms.md

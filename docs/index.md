@@ -49,7 +49,7 @@
 
     **Flux analysis**
 
-    FBA, FVA, gene knockouts, MOMA, and sampling with Gurobi or GLPK solvers.
+    FBA, FVA, gene knockouts, and flux sampling with Gurobi or GLPK solvers.
 
 -   :material-layers:{ .rh-feat-icon }
 
@@ -138,9 +138,10 @@
 
 -   :material-compare-horizontal:
 
-    **[MATLAB vs Python](differences.md)**
+    **[RAVEN 3 and raven-toolbox](raven3-vs-raven-toolbox.md)**
 
-    What the two toolboxes share, where they differ, and why.
+    Which to reach for, what only one of them has, and where the same function
+    gives a different answer.
 
 </div>
 
