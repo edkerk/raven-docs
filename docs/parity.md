@@ -11,7 +11,7 @@ Three tiers are worth distinguishing.
 The output can and should match value for value. Anything deterministic that
 transforms a model or a file rather than solving an optimisation problem:
 
-- model I/O — SBML and YAML round-trips, Excel export, SIF export
+- model I/O — SBML and YAML round-trips, Excel export
 - task-list parsing
 - gene-association normalisation (`grRuleToDNF` / `gpr_to_dnf`)
 - elemental balance

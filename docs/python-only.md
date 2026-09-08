@@ -49,5 +49,6 @@ compartment for a reaction only when a loopless FVA shows it carries flux there.
   assign SBO terms.
 - **Biomass helpers** — sum a biomass composition, rescale a pseudoreaction, and
   scale a fraction to a measured value.
-- **Binary and data provisioning** — fetch and verify BLAST+, DIAMOND, HMMER and
-  the KEGG artefacts on demand, against a checksummed manifest.
+- **Checksummed provisioning** — both toolboxes now fetch BLAST+, DIAMOND,
+  HMMER and the KEGG artefacts on demand rather than bundling them; what is
+  Python-only is verifying each download against a checksummed manifest.
