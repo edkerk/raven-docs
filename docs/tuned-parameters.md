@@ -44,9 +44,7 @@ Both implementations expose all three sampling methods through one entry point.
 
 **Full detail:** [sampling convergence study](parameter-tuning/studies/sampling-convergence-calibration.md)
 (the primary measurement) ·
-[CHRR/ACHR algorithm reference](parameter-tuning/flux-sampling-algorithms.md) ·
-[sampling.md](parameter-tuning/benchmarks/sampling.md)
-(quick-reference benchmark notes)
+[CHRR/ACHR algorithm reference](parameter-tuning/flux-sampling-algorithms.md)
 
 ## FSEOF
 
@@ -59,7 +57,7 @@ RAVEN MATLAB: `FSEOF`. raven-toolbox: `fseof`.
 | `correlation_threshold` | `0.9` | Literature: [Choi et al. 2010](https://doi.org/10.1128/AEM.00115-10); measured — 0.7 adds 4 spurious amplification targets on iJO1366. |
 | `flux_eps` | `1e-6` on the Python side; MATLAB has no threshold at all | Measured: an explicit `1e-6` floor avoids classifying accumulated solver noise as a false-positive knockdown target on genome-scale models. MATLAB's target classification is a bare float comparison with no tolerance whatsoever, stricter than any fixed floor — real solver noise there is expected to produce at least as many spurious classifications as measured here, likely more. |
 
-**Full detail:** [fseof.md](parameter-tuning/benchmarks/fseof.md)
+**Full detail:** [Parameter benchmarks](parameter-tuning/benchmarks.md)
 
 ## INIT / ftINIT
 
@@ -95,9 +93,7 @@ across both algorithms say so.
 `reference_reactions` for stability under a curated template — 13x less spurious
 essential-gene drift, measured) ·
 [Human-GEM validation vs MATLAB RAVEN](parameter-tuning/studies/humangem-validation.md)
-(Jaccard 0.975–0.980 across 5 cell lines) ·
-[init.md](parameter-tuning/benchmarks/init.md)
-(quick-reference benchmark notes)
+(Jaccard 0.975–0.980 across 5 cell lines)
 
 ## Gap-filling
 
@@ -113,7 +109,7 @@ methods added to the Python implementation, with no MATLAB RAVEN counterpart.
 | `weights` (in `fill_gaps_kumar_milp`) | `(1.0, 2.0)` | Literature: [Kumar et al. 2007](https://doi.org/10.1186/1471-2105-8-212); measured — confirms reversal is preferred over adding a new reaction at the intended 2:1 ratio. |
 | `big_m` (in `fill_gaps_kumar_milp`) | `1000.0` | Measured: matches RAVEN's ±1000 bound convention; a smaller value artificially caps reversed-reaction flux. |
 
-**Full detail:** [gapfilling.md](parameter-tuning/benchmarks/gapfilling.md)
+**Full detail:** [Parameter benchmarks](parameter-tuning/benchmarks.md)
 
 ## Homology-based reconstruction
 
@@ -136,9 +132,7 @@ the obvious circularity directly: agreement with the curated model peaked exactl
 at that model's own build settings and collapsed one step past them.
 
 **Full detail:** [homology cut-off calibration study](parameter-tuning/studies/homology-cutoff-calibration.md)
-(the primary measurement, including the retired curated-GEM arm) ·
-[reconstruction-homology.md](parameter-tuning/benchmarks/reconstruction-homology.md)
-(quick-reference benchmark notes)
+(the primary measurement, including the retired curated-GEM arm)
 
 ## KEGG-based reconstruction
 
@@ -156,9 +150,7 @@ name hasn't been independently confirmed). raven-toolbox: `assign_kos`,
 | `keep_spontaneous`, `keep_undefined_stoich`, `keep_incomplete`, `keep_general` (`get_kegg_model_*`) | `True`, `True`, `True`, `False` | Same on both sides / standard draft-reconstruction practice. |
 
 **Full detail:** [KEGG HMM cut-off calibration study](parameter-tuning/studies/kegg-hmm-cutoff-calibration.md)
-(the primary measurement, 4 organisms against real KEGG annotations) ·
-[reconstruction-kegg.md](parameter-tuning/benchmarks/reconstruction-kegg.md)
-(quick-reference benchmark notes)
+(the primary measurement, 4 organisms against real KEGG annotations)
 
 ## Sub-cellular localisation
 
@@ -200,7 +192,7 @@ RAVEN MATLAB: `removeGenes`, `mergeModels`, `addRxns`, `addTransport`, `simplify
 | `match_by` (in `merge_models`) | `'name'` (Python) / `'metNames'` (MATLAB) | Same semantic field (metabolite display name), different schema field name — not a value disagreement to resolve. |
 | `remove_orphans`, `mets_by`, `ignore_direction`, `reversible`, `only_to_existing` | various | Python-side additions/refinements; sensible defaults, no direct MATLAB equivalent to compare against. |
 
-**Full detail:** [manipulation.md](parameter-tuning/benchmarks/manipulation.md)
+**Full detail:** [Parameter benchmarks](parameter-tuning/benchmarks.md)
 
 ## Tasks
 
@@ -211,7 +203,7 @@ RAVEN MATLAB: `checkTasks`. raven-toolbox: `check_tasks`, `find_task_essential_r
 | `close_boundaries` (both functions) | `True` | Matches RAVEN's implied behaviour. |
 | `tol` (in `find_task_essential_reactions`) | `1e-8` | Python-side-only parameter. |
 
-**Full detail:** [tasks.md](parameter-tuning/benchmarks/tasks.md)
+**Full detail:** [Parameter benchmarks](parameter-tuning/benchmarks.md)
 
 ## Cross-toolbox parity decisions
 
@@ -230,9 +222,9 @@ change, or explains why it stays split.
 | `get_model_from_homology.min_align_len` | `100` ✓ done | `200` | **`100`** | Python done; MATLAB pending | High | Directly measured — [homology cut-off calibration study](parameter-tuning/studies/homology-cutoff-calibration.md) |
 | `assign_kos.cutoff` | `1e-30` | `1e-50` | **`1e-30`** | MATLAB | High | Directly measured — [KEGG HMM cut-off calibration study](parameter-tuning/studies/kegg-hmm-cutoff-calibration.md) |
 | `assign_kos.min_score_ratio_g` | `0.9` | `0.8` | **`0.9`** | MATLAB | High | Directly measured, same study |
-| `fseof.flux_eps` | `1e-6` | implicit `1e-8` | **`1e-6`** | MATLAB (needs exposing as a tunable first) | High | Measured — `1e-8` catches 21 solver-noise false positives (std≈5e-7, below Gurobi's feasibility tolerance accumulated genome-wide); see `parameter-tuning/benchmarks/fseof.md` |
-| `remove_genes.blocked_reactions` | `'remove'` | `'keep'` | **`'remove'` semantics** | MATLAB | High | Measured on e_coli_core — `'keep'` gives false-positive growth after an essential gene is removed; see `parameter-tuning/benchmarks/manipulation.md` |
-| `get_init_model.allow_excretion` | `False` ✓ done | `False` | **`False`** | ~~Python~~ done (2026-06-20) | High | Zero effect at default `prod_weight`, pure inconsistency; see `parameter-tuning/benchmarks/manipulation.md` |
+| `fseof.flux_eps` | `1e-6` | implicit `1e-8` | **`1e-6`** | MATLAB (needs exposing as a tunable first) | High | Measured — `1e-8` catches 21 solver-noise false positives (std≈5e-7, below Gurobi's feasibility tolerance accumulated genome-wide); see `parameter-tuning/benchmarks.md` |
+| `remove_genes.blocked_reactions` | `'remove'` | `'keep'` | **`'remove'` semantics** | MATLAB | High | Measured on e_coli_core — `'keep'` gives false-positive growth after an essential gene is removed; see `parameter-tuning/benchmarks.md` |
+| `get_init_model.allow_excretion` | `False` ✓ done | `False` | **`False`** | ~~Python~~ done (2026-06-20) | High | Zero effect at default `prod_weight`, pure inconsistency; see `parameter-tuning/benchmarks.md` |
 
 ### Resolved without unifying — `run_init`/`run_ftinit` `mip_gap`/`time_limit`
 
@@ -292,8 +284,8 @@ to need correcting from an earlier version of this table).
 | `getKEGGModelForOrganism`'s `cutOff` parameter: `10^-50` → `10^-30` | High | [KEGG HMM cut-off calibration study](parameter-tuning/studies/kegg-hmm-cutoff-calibration.md); current value confirmed directly in `external/kegg/getKEGGModelForOrganism.m` |
 | Same function, `minScoreRatioG`: `0.8` → `0.9` | High | Same study and same confirmation |
 | `getModelFromHomology`'s `minLen`: `200` → `100` | Medium | [homology cut-off calibration study](parameter-tuning/studies/homology-cutoff-calibration.md); confirmed directly in `core/getModelFromHomology.m`. A fix already exists as an uncommitted local branch (`fix/homology-minlen`) but is stale relative to current `origin/develop` (file moved `reconstruction/homology/` → `core/`) and hasn't been pushed. |
-| `removeGenes`'s `removeBlockedRxns` parameter (default `false`, i.e. keep blocked reactions): default to `true` instead, matching raven-toolbox's `'remove'` | Medium | `parameter-tuning/benchmarks/manipulation.md` — measured false-positive growth on e_coli_core after essential-gene deletion. Confirmed directly in `core/removeGenes.m`: `removeBlockedRxns` defaults to `false`. |
-| `FSEOF`: add an explicit noise floor — currently there is **no tolerance at all** (bare `>0`/`<0`/`>`/`<` float comparison), not merely a looser fixed one as an earlier version of this row said | Medium | `parameter-tuning/benchmarks/fseof.md` measured `1e-8` catching solver-noise false positives *in raven-toolbox*; confirmed directly in `core/FSEOF.m` that MATLAB has no threshold whatsoever, which was not previously checked and is likely a worse version of the same problem, though not independently measured on the MATLAB side |
+| `removeGenes`'s `removeBlockedRxns` parameter (default `false`, i.e. keep blocked reactions): default to `true` instead, matching raven-toolbox's `'remove'` | Medium | `parameter-tuning/benchmarks.md` — measured false-positive growth on e_coli_core after essential-gene deletion. Confirmed directly in `core/removeGenes.m`: `removeBlockedRxns` defaults to `false`. |
+| `FSEOF`: add an explicit noise floor — currently there is **no tolerance at all** (bare `>0`/`<0`/`>`/`<` float comparison), not merely a looser fixed one as an earlier version of this row said | Medium | `parameter-tuning/benchmarks.md` measured `1e-8` catching solver-noise false positives *in raven-toolbox*; confirmed directly in `core/FSEOF.m` that MATLAB has no threshold whatsoever, which was not previously checked and is likely a worse version of the same problem, though not independently measured on the MATLAB side |
 
 Localisation's time-budget parameter was removed from this table: `core/predictLocalization.m`
 confirmed MATLAB solves the problem with simulated annealing (`maxTime`, default 15 minutes,

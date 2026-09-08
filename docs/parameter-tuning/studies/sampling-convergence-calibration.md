@@ -1,12 +1,41 @@
-# ACHR sampling: between-chain convergence
+# Flux sampling: convergence and settings
 
-[`sampling.md`](../benchmarks/sampling.md)'s existing `thinning`
-result is a **single-chain** diagnostic: lag-1 autocorrelation / effective
-sample size, measuring how independent consecutive samples are *within* one
-Markov chain. It says nothing about whether that one chain actually reached
-every part of the flux polytope, or got stuck mixing well inside a sub-region.
-That needs multiple independent chains from different starting points and a
-check that they agree — the Gelman-Rubin R-hat diagnostic.
+How far a set of ACHR samples can be trusted at genome scale, measured two ways,
+plus the two other sampling settings that were tested.
+
+## Within one chain: consecutive samples are not independent
+
+`thinning=k` takes k random-walk steps between each stored sample, trading
+compute for independence. On yeast-GEM (`n_samples=300`, `warmup=1000`, Gurobi):
+
+| `thinning` | Lag-1 autocorrelation | Wall time (s) |
+|---|---|---|
+| 20 | 0.973 | 660 |
+| **100** *(default)* | 0.926 | 841 |
+| 500 | 0.849 | 927 |
+
+Even at 500, consecutive samples remain 85% correlated. The decay is far too slow
+to fix by raising the setting: a fivefold increase from 20 to 100 removes 0.047 of
+the autocorrelation, and the next fivefold removes 0.077. Reaching roughly 0.3 —
+a common rule of thumb for near-independence — would need thinning in the tens of
+thousands, which is weeks of compute for 1000 samples.
+
+Treating an AR(1) process, effective sample size is `n × (1−ρ) / (1+ρ)`. At the
+default, ρ=0.926 gives about **12 independent samples from 300 stored**.
+Collecting 100 would need roughly 2,600 stored samples, about 7.5 hours.
+
+This is expected behaviour rather than a defect: ACHR's mixing time scales with
+the dimension of the polytope, and yeast-GEM's 4,102 reactions are 15–20 times
+the models cobrapy calibrated `thinning=100` against. The default tracks the
+upstream value; what changes at genome scale is how many samples you need, not
+which setting is right.
+
+## Between chains: one chain may not have seen the whole polytope
+
+Autocorrelation measures independence *within* a chain. It says nothing about
+whether that chain reached every part of the flux polytope, or mixed well inside
+one sub-region. That needs several independent chains from different starting
+points and a check that they agree — the Gelman-Rubin R-hat diagnostic.
 
 For each reaction, R-hat compares between-chain variance to within-chain
 variance across `n_chains` independent `random_sampling` runs (different
@@ -209,6 +238,26 @@ above.
   reusing it across calls on the same model would remove the dominant fixed
   cost and is worth a future look, but is an engineering change, not a
   parameter default.
+
+## Two other sampling settings that were measured
+
+Both diverge from MATLAB, and in both cases the divergence is the point.
+
+`replace_max_bound` swaps big-M upper bounds for infinity before sampling, and
+applies only to `method='random_objective'`. RAVEN-convention models use 1000 as
+the conventional big-M for almost every reaction — 4,083 of yeast-GEM's 4,102 —
+so replacing them all makes the random-objective LP unbounded: the objective can
+be driven to infinity through any unconstrained reaction. At `False`, 200 samples
+complete, with 0.57% of them pinned at the bound. MATLAB's `True` suits models
+where only a handful of reactions genuinely reach the big-M and those represent
+real capacity limits, which is rare.
+
+`loopless_good_reactions` chooses which reactions are eligible as random
+objectives. MATLAB excludes any reaction whose FVA maximum reaches 999, treating
+proximity to the big-M as evidence of a thermodynamic loop. That also excludes
+reactions which reach capacity for real metabolic reasons. Loopless FVA
+identifies only reactions that actually participate in infeasible cycles, at
+higher cost.
 
 ## Reproducing
 

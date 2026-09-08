@@ -93,14 +93,7 @@ cross-toolbox to-do list.
 
 | Benchmark | Function(s) |
 |---|---|
-| [Flux sampling](benchmarks/sampling.md) | `random_sampling`, `find_good_reactions`, `max_volume_ellipsoid` |
-| [FSEOF](benchmarks/fseof.md) | `fseof` |
-| [INIT / ftINIT](benchmarks/init.md) | `run_ftinit`, `ftinit`, `gene_scores_from_expression` |
-| [Gap-filling](benchmarks/gapfilling.md) | `fill_gaps_fast_lp`, `connect_blocked_reactions`, `fill_gaps_kumar_milp` |
-| [Homology-based reconstruction](benchmarks/reconstruction-homology.md) | `run_blast`, `run_diamond`, `get_model_from_homology` |
-| [KEGG-based reconstruction](benchmarks/reconstruction-kegg.md) | `assign_kos`, `run_hmmsearch`, `build_ko_hmm`, `get_kegg_model_*` |
-| [Model manipulation](benchmarks/manipulation.md) | `remove_genes`, `merge_models`, `constrain_reversible_reactions`, `find_duplicate_reactions`, `add_transport_reactions` |
-| [Tasks](benchmarks/tasks.md) | `check_tasks`, `find_task_essential_reactions` |
+| [Parameter benchmarks](benchmarks.md) | `fseof`, `remove_genes`, `connect_blocked_reactions`, `fill_gaps_*`, `check_tasks`, `find_task_essential_reactions` |
 
 See also the [flux sampling algorithms reference](flux-sampling-algorithms.md)
 (CHRR/ACHR, cross-linked from the sampling study and benchmark above).

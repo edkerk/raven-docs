@@ -326,7 +326,26 @@ choice, is what bridges the gap.
 
 ---
 
-## 3. Cross-solver portability
+## 3. The gene-scoring constants have no confirmed source
+
+Expression values become gene scores through
+
+```
+score = clip(factor × ln(level / reference), min_score, max_score)
+```
+
+with `factor=5.0`, `max_score=10.0`, `min_score=-5.0` on both sides. The
+logarithm is natural, not base 2, in `init/score.py` and in RAVEN's `scoreModel`
+alike.
+
+The constants themselves are unattributed. Neither implementation's source cites
+a paper for them, and the one candidate reference that has been suggested — a
+2012 paper describing mCADRE — uses categorical scoring rather than this
+continuous log-ratio, so it is not the origin. They are RAVEN's own numbers with
+no literature anchor behind them. Since both implementations agree there is
+nothing to reconcile, but the values rest on convention rather than evidence.
+
+## 4. Cross-solver portability
 
 See [init-solver-benchmark.md](init-solver-benchmark.md) for the genome-scale
 solver comparison (Gurobi/HiGHS/GLPK) and [tests/test_init_solvers.py](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/tests/test_init_solvers.py)

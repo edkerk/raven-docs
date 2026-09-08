@@ -106,6 +106,27 @@ faster (34 s against 358 s on `kla`; 40 s against 788 s on `ani`).
 So one shared set of defaults is justified, and DIAMOND is a reasonable choice
 for large jobs.
 
+## The search itself
+
+The three settings above filter BLAST's output. Two more control the search that
+produces it, and neither turned out to matter for the finished model.
+
+`evalue` is the aligner's own cut-off, `1e-4` for `run_blast` and `1e-3` for
+`run_diamond` — each matching what the MATLAB side passes, explicitly in
+`getBlast`'s case and by inheriting DIAMOND's own default in `getDiamond`'s. On
+*H. polymorpha* against *S. cerevisiae*, loosening from `1e-5` to `1e-4` admits
+5,204 more raw hits, 8.9% of the table. None of them reach the model: at
+`min_identity=40` and `max_evalue=1e-30` the post-BLAST filters discard
+essentially all of them. The setting decides the size of the intermediate hit
+table and nothing downstream of it, so there is no correctness argument for
+either value.
+
+`threads` defaults to one fewer than the machine has cores. Both aligners score
+each query sequence independently, so the result does not depend on it: a
+500-query subset returned an identical 2,469 hits at one thread and at four,
+in 45.2 s and 23.7 s. On a full proteome pair, single-threaded BLASTP takes
+about 20 minutes per direction.
+
 ## What the numbers do not cover
 
 - **KEGG's annotations lean on BLAST comparisons**, so on their own they would
