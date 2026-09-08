@@ -1,6 +1,6 @@
-site_name: RAVEN
+﻿site_name: RAVEN
 site_description: >-
-  Reconstruction, Analysis and Visualization of Metabolic Networks — the RAVEN
+  Reconstruction, Analysis and Visualization of Metabolic Networks â€” the RAVEN
   Toolbox (MATLAB) and raven-toolbox, documented side by side.
 site_author: Wang, Marcisauskas, Sanchez, Domenzain, Hermansson, Agren, Nielsen, Kerkhoven et al.
 repo_url: https://github.com/SysBioChalmers/RAVEN
@@ -175,7 +175,7 @@ nav:
       - 17. Comparing models: guide/comparing.md
       - 18. Reconstruction from homology: guide/homology.md
       - 19. Reconstruction from KEGG: guide/kegg.md
-      - Worked protocol — H. polymorpha (MATLAB):
+      - Worked protocol â€” H. polymorpha (MATLAB):
           - Overview: protocol/index.md
           - Introduction: protocol/reconstruction.md
           - Materials and installation: protocol/materials.md
@@ -216,8 +216,6 @@ nav:
           - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
-          - Yeast-GEM localisation benchmark: parameter-tuning/studies/yeast-localization-benchmark.md
-          - predictLocalization head-to-head: parameter-tuning/studies/predictlocalization-comparison.md
       - Benchmarks:
           - Master index: parameter-tuning/benchmarks/index.md
           - Flux sampling: parameter-tuning/benchmarks/sampling.md
@@ -226,7 +224,6 @@ nav:
           - Gap-filling: parameter-tuning/benchmarks/gapfilling.md
           - Homology-based reconstruction: parameter-tuning/benchmarks/reconstruction-homology.md
           - KEGG-based reconstruction: parameter-tuning/benchmarks/reconstruction-kegg.md
-          - Sub-cellular localisation: parameter-tuning/benchmarks/localization.md
           - Model manipulation: parameter-tuning/benchmarks/manipulation.md
           - Tasks: parameter-tuning/benchmarks/tasks.md
   - References: references.md
