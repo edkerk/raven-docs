@@ -100,7 +100,7 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
 
     A gene that the model did not have is created for you. Pass `replace=False`
     to **append** an isozyme instead of overwriting: `(old) or (new)`, which is
-    what you want when adding evidence rather than correcting it.
+    adds evidence rather than replacing it.
 
 ## 8.3 Normalise a GPR
 
@@ -169,7 +169,7 @@ parsed `GPR` object and returns the complexes as lists.
     ```
 
     `setParam` takes `'lb'`, `'ub'`, `'eq'`, `'obj'` and `'rev'`, and accepts a
-    list of reactions with a list of values; the batch form is worth using.
+    list of reactions with a list of values, applying them in one call.
 
 ## 8.5 Delete things
 
@@ -211,8 +211,8 @@ cobrapy's objects know what they are attached to.
     ```
 
     `remove_orphans=True` is cobrapy's equivalent of those two flags. Note the
-    `with model:`, deletions inside it are rolled back, which is the easiest way
-    to ask "what would this cost me?" without keeping the answer.
+    `with model:`, deletions inside it are rolled back on exit, so the cost of
+    a deletion can be measured without keeping it.
 
 ## 8.6 Delete a gene, not a reaction
 

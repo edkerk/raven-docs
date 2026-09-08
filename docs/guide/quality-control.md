@@ -1,7 +1,7 @@
 # 9. Quality control
 
-A model that loads and solves can still be wrong. This page runs the checks worth
-running before you trust a result: is the structure sound, do the reactions
+A model that loads and solves can still be wrong. This page runs the checks that
+apply before a result can be trusted: is the structure sound, do the reactions
 balance, is anything disconnected, and can the model make something out of
 nothing.
 
@@ -83,7 +83,7 @@ objective.
 ## 9.2 Do the reactions balance?
 
 An unbalanced reaction can create matter, and one that creates ATP or a redox
-carrier will quietly inflate every prediction the model makes.
+carrier will inflate every prediction the model makes.
 
 === "MATLAB"
 
@@ -149,7 +149,7 @@ carrier will quietly inflate every prediction the model makes.
 ## 9.3 What can never carry flux?
 
 A reaction that cannot carry flux under any conditions is either a gap or a
-mistake. This is the cheapest question that finds real problems.
+mistake. It is also the cheapest of these checks to run.
 
 === "MATLAB"
 
@@ -182,8 +182,8 @@ mistake. This is the cheapest question that finds real problems.
 
 With every uptake closed, a correct model can produce nothing at all. If it still
 makes a metabolite, some reaction is unbalanced or a loop is creating mass: the
-most damaging class of error there is, because such a model will happily "grow"
-without a carbon source.
+most damaging class of error, because such a model grows without a carbon
+source.
 
 === "MATLAB"
 
@@ -207,7 +207,7 @@ without a carbon source.
     `canExchange` counts them; `findLeakMetabolite` finds one, using as few
     reactions as possible, so you have somewhere to start. Both take the
     direction as their second argument, and `'consume'` asks the mirror-image
-    question: what can this model swallow without limit.
+    question: what this model can take up without limit.
 
 === "Python"
 
@@ -253,8 +253,8 @@ without a carbon source.
 
 ## 9.5 Compare against a model you trust
 
-When a check reports something, the fastest way to see whether it is new is to
-compare against the last version that was good.
+When a check reports something, comparing against the last version that passed
+shows whether the finding is new.
 
 === "MATLAB"
 

@@ -75,8 +75,8 @@ model.metNames(metabolite)
 printFluxes(model, fluxes, false, [], [],'%rxnID (%rxnName):\n\t%eqn: %flux\n')
 ```
 
-This shows the model could produce H₂O, and results in quite a lot of fluxes to
-look through. It is easier if the elementally balanced reactions are excluded.
+This shows the model could produce H₂O, and returns more fluxes than can be read
+at once. Excluding the elementally balanced reactions narrows the list.
 Since water was produced, only look at the reactions unbalanced for oxygen
 (column 6 of the elemental balance).
 
@@ -168,14 +168,14 @@ params.printReport=true;
 
 The results show that `fillGaps` could connect around 29 reactions
 (`newConnected`) by including around 41 reactions from the KEGG model
-(`addedRxns`). These should of course be checked manually to confirm that they
-exist in yeast, but here it is assumed they all occur in yeast.
+(`addedRxns`). These should be checked manually to confirm that they exist in
+yeast; here they are assumed to.
 
 ### 6. Report on connectivity
 
 Continue to improve the connectivity of the model by identifying metabolites
-that should be connected. `gapReport` gives a convenient overview of how
-connected the model is, together with a lot of useful data.
+that should be connected. `gapReport` summarises how connected the model is,
+along with the supporting detail.
 
 ```matlab
 [noFluxRxns, noFluxRxnsRelaxed, subGraphs, notProducedMets, minToConnect,...

@@ -13,10 +13,10 @@ ships, in both toolboxes.
 !!! tip "Which one should I use?"
     **ftINIT.** It is the recommended method, and everything below uses it.
 
-    Reach for tINIT (`getINITModel`) only to reproduce a model that was built
+    Use tINIT (`getINITModel`) only to reproduce a model that was built
     with it. It remains supported and is not scheduled for removal, but it
     issues a `RAVEN:legacyMethod` notice to say it is not what new work should
-    use. Silence that with `warning('off','RAVEN:legacyMethod')` if you mean it.
+    use. Silence it with `warning('off','RAVEN:legacyMethod')`.
 
     **tINIT is MATLAB-only.** RAVEN keeps it for the models already built with
     it; raven-toolbox, a new implementation with no such installed base, carries
@@ -60,8 +60,8 @@ genuinely differs, not `getINITModel` vs. `ftINIT` themselves.
     from one real run (Human-GEM `main`, RAVEN `develop3`, Gurobi 13.0.2) and
     are quoted with their wall-clock so you can plan around them.
 
-    For the MATLAB workflow in its natural habitat, including comparison of the
-    extracted models, see the
+    For the same MATLAB workflow as the model's own documentation presents it,
+    including comparison of the extracted models, see the
     [Human-GEM guide](https://sysbiochalmers.github.io/Human-GEM-guide/gem_extraction/),
     which is maintained alongside the model.
 
@@ -153,7 +153,7 @@ reused for every sample.
 
     Reading Human-GEM from SBML alone takes about **two minutes**, and the
     preparation itself **126 minutes**, the same order as MATLAB's 113, on the
-    same machine and solver. Two things worth knowing before starting it:
+    same machine and solver. Two things affect the run:
 
     - `prep_init_model` runs cobrapy's FVA, which spawns worker processes. Where
       that is not permitted (a locked-down Windows machine, some CI runners), it
@@ -204,8 +204,8 @@ it out and the mean across samples is used per gene instead.
     them means any other source of gene scores (HPA via `hpa_gene_scores`,
     proteomics, a curated list) feeds the same second step.
 
-    The clamp is worth seeing directly, because it explains why two very
-    different samples can produce nearly the same model:
+    Seeing the clamp directly explains why two very different samples can
+    produce nearly the same model:
 
     ```python
     print(gene_scores_from_expression({"a": 12.0, "b": 0.5, "c": 3.0}, reference=3.0))
@@ -263,7 +263,7 @@ takes two to three times longer, and gives a smaller model. The run above is
 ## 10.4 Check what came out
 
 An extracted model is a hypothesis. The tasks it was built to satisfy are the
-first thing to re-check, and the cheapest.
+first thing to re-check, and the least expensive.
 
 === "MATLAB"
 
@@ -293,8 +293,8 @@ covers comparing many extracted models at once.
       check they are not all at the floor before spending two hours on the
       preparation.
     - **Re-preparing per sample.** The preparation depends only on the template
-      and the tasks. Do it once, save it, reuse it; that is the entire point of
-      the split.
+      and the tasks. Do it once, save it, and reuse it; separating preparation
+      from extraction is what makes that possible.
     - **No MILP solver.** Both extractions are mixed-integer; GLPK cannot.
     - **A model that no longer does what you assumed.** Without a task list there
       is nothing to repair against, and the extraction is free to remove

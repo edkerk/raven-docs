@@ -8,7 +8,7 @@ each template reaction whose genes have an accepted match is copied across.
 The work happens in two steps: a sequence search that produces a table of hits,
 and a transfer step that decides which of those hits are good enough to carry a
 reaction. The cut-offs used by the second step determine the size and the
-reliability of the draft, and they are the part worth understanding.
+reliability of the draft, and they are where the method's assumptions sit.
 
 ### Functions on this page
 
@@ -185,9 +185,8 @@ ways is handled identically.
 derived from, which is what you need to trace a reaction back to the evidence
 that put it there; and `.candidates`, populated when `review_identity=` is given,
 collects reactions that failed the identity cut-off but came within the value
-given. Those are the reactions worth a curator's attention, near-misses that a
-threshold rejected, rather than absences. RAVEN returns the draft and its hit
-genes as two separate outputs.
+given. Those are near-misses that a threshold rejected, rather than absences.
+RAVEN returns the draft and its hit genes as two separate outputs.
 
 The draft is smaller than the template because reactions whose genes have no
 accepted counterpart are not carried over. That is the intended behaviour, and
@@ -315,7 +314,7 @@ what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
 !!! warning "What can go wrong"
     - **Identifiers that do not match.** The FASTA headers must carry the same
       gene ids as the template model's `genes`. A mismatch produces a draft with
-      no reactions and no error worth the name.
+      no reactions and no error.
     - **One template, one organism's biases.** Every reaction in the draft comes
       from the template, so anything the template lacks the draft cannot have.
       Several templates, with `preferredOrder`, spread that risk.

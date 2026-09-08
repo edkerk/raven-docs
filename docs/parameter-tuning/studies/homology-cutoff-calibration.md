@@ -53,9 +53,9 @@ Against OMA the best value is 45 for the three fungi and 35 for *E. coli*. So th
 two sources put the answer between 35 and 45, and 40 sits comfortably inside
 that. Neither supports anything looser.
 
-That last point is worth stating plainly, because counting a missing match as
-equally bad as a wrong one moves the recommendation to 25, a completely
-different answer from the same measurements. Any recommendation about these
+That last point needs stating plainly: counting a missing match as equally bad
+as a wrong one moves the recommendation to 25, a different answer from the same
+measurements. Any recommendation about these
 settings is meaningless unless it says how it weighed the two kinds of mistake.
 
 ## Alignment length: 200 was too strict
@@ -73,7 +73,7 @@ Anything at or below 150 performs the same; the loss appears between 150 and
 wrong-match rate moves by at most 0.6 of a percentage point. 50 and 100 are
 identical, so 100 was chosen as the less permissive of the two.
 
-## E-value: not a setting worth touching
+## E-value: not a setting that changes the result
 
 | `max_evalue` | `kla` | `ani` |
 |---|---|---|
@@ -103,7 +103,7 @@ almost all the missing ones are weak ones these settings discard anyway. After
 filtering, the two agree on 87–92% of what survives, and DIAMOND runs 10–20×
 faster (34 s against 358 s on `kla`; 40 s against 788 s on `ani`).
 
-So one shared set of defaults is justified, and DIAMOND is a reasonable choice
+So one shared set of defaults is justified, and DIAMOND is the faster choice
 for large jobs.
 
 ## The search itself
@@ -148,7 +148,7 @@ about 20 minutes per direction.
 
 An earlier arm of this study also scored candidate thresholds against curated
 non-model-organism GEMs (hanpo-GEM, rhto-GEM) built by RAVEN's own
-homology-based reconstruction. It was dropped, and the reason is worth recording
+homology-based reconstruction. It was dropped, for the reason recorded here
 because it generalises beyond this study.
 
 The diagnostic: walk the thresholds loose one step at a time and ask what

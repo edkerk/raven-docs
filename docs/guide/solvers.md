@@ -78,8 +78,9 @@ and grows at exactly zero.
 ## 6.2 Change it
 
 Both toolboxes ship with **GLPK**, which is enough for every LP on this site.
-Gurobi is worth having for large models and for the mixed-integer problems that
-gap-filling and `getMinimalMedium` solve; it is free for academic use.
+Gurobi is required for the mixed-integer problems that gap-filling and
+`getMinimalMedium` solve, and is faster on large models; it is free for
+academic use.
 
 === "MATLAB"
 

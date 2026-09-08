@@ -27,7 +27,7 @@ inputs, the outputs, any equations that must carry flux, and the bounds on each.
 	LEAK	Biomass from nothing	1				biomass[c]	0.01	1000	…
 ```
 
-Two things about the format are worth getting right the first time, because both
+Two things about the format have to be right the first time, because both
 fail in MATLAB with the same unhelpful `Index in position 2 is invalid`:
 
 - **Every row starts with an empty cell.** `parseTaskList` discards any row whose
@@ -39,13 +39,13 @@ fail in MATLAB with the same unhelpful `Index in position 2 is invalid`:
 
 raven-toolbox's `parse_task_list` accepts the file with or without either, which
 makes both easy to miss until the MATLAB tab runs. The file above has the full
-set; the columns after `OUT UB` are simply blank.
+set; the columns after `OUT UB` are blank.
 
 Metabolites are named `name[compartment]`, matching the metabolite **names**, not
 the identifiers. Several go in one cell, separated by `;`, and the bounds columns
 apply to all of them.
 
-`SHOULD FAIL` marks a task the model is supposed to *fail*: the second asks for
+`SHOULD FAIL` marks a task the model must *fail*: the second asks for
 biomass with nothing supplied, which a correct model cannot do, so failing it is
 a pass.
 
@@ -213,8 +213,8 @@ Both toolboxes can add reactions from a template until the task passes, which is
       the model must *not* satisfy; without them, a leaking model passes
       everything.
     - **Tasks that encode the medium.** A task defines its own inputs, so it does
-      not inherit the model's medium. That is a feature, but it means a task
-      passing says nothing about whether the model grows on your medium.
+      not inherit the model's medium. A task passing therefore says nothing
+      about whether the model grows on the medium the model carries.
 
 ## See also
 

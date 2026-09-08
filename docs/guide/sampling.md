@@ -53,7 +53,7 @@ the two pages can be read against each other.
 Both toolboxes take a `seed`, and you should always set one: without it a chain
 is different every run and nothing you report can be reproduced.
 
-A seed is not quite a guarantee of identical numbers, though. The Python chain
+A seed does not guarantee identical numbers, though. The Python chain
 here reproduces exactly across operating systems; the MATLAB one does not. Its
 samplers take a nullspace basis from `null`, which comes from LAPACK, so the
 same seed on Linux and on Windows explores the same *distribution* along a
@@ -132,7 +132,7 @@ the space the cycle occupies.
 
 The two tabs are separate implementations with separate random number
 generators, so their numbers are not expected to match draw for draw, but they
-describe the same distribution, and that agreement is the check worth making.
+describe the same distribution, and that agreement is the check to make.
 
 `FRDS2` is sampled across nearly its whole 1000-unit range, so the loop is not
 some rare corner of the space: it is most of it, and most of the draws are spent
@@ -231,7 +231,7 @@ its optimum, fix a measured flux) and sample the space that is left.
     ethanol: free 0.72, at 90% growth 0.04
     ```
 
-## 15.5 Reactions worth sampling over
+## 15.5 Which reactions to sample over
 
 The `randomObjective` method needs reactions that can carry real flux to use as
 objectives. Reactions that move only through a loop are useless for that, so
@@ -263,7 +263,7 @@ both toolboxes screen them out with a loopless FVA first, the same test
     ```
 
     Passing the list back as `good_reactions=` on a later call skips the FVA,
-    which is worth doing on a genome-scale model; it is the expensive part.
+    which on a genome-scale model skips the expensive part of the run.
 
 !!! warning "What can go wrong"
     - **No seed.** The numbers change every run. Set one, and report it -- and do
@@ -271,10 +271,10 @@ both toolboxes screen them out with a loopless FVA first, the same test
       (see 15.1). Report the distribution, not the draws.
     - **Too little thinning.** Consecutive MCMC steps are correlated; the default
       of 100 steps between recorded samples exists for that reason. Lowering it
-      buys speed and costs independence.
+      gains speed and loses independence.
     - **Reading a mean as a prediction.** The mean of a sample describes the
       *feasible space*, not the cell. A reaction can average 5 while no
-      biologically sensible state has it anywhere near 5.
+      individual feasible state puts it near 5.
     - **Sampling a model that is wide open.** With an unconstrained medium the
       space is enormous and the distribution says nothing. Constrain first.
     - **Loops.** They inflate the space being sampled, and every sample drawn

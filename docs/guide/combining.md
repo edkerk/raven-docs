@@ -136,7 +136,7 @@ conversion twice. Collapsing those is a separate step.
 
 !!! warning "Which functions mutate"
     Every RAVEN function here returns a new model struct and leaves its input
-    alone. The Python side is not uniform, so it is worth knowing which is which:
+    alone. The Python side is not uniform:
 
     | Python | |
     |---|---|
@@ -144,7 +144,7 @@ conversion twice. Collapsing those is a separate step.
     | `merge_models`, `merge_compartments` | return a **new** model |
 
     `model = simplify_model(model)` is correct MATLAB and sets `model` to `None`
-    in Python. Copy first if you want to keep the original.
+    in Python. Copy the model first to keep the original.
 
 ## 16.3 Dropping what cannot carry flux
 
@@ -248,7 +248,7 @@ membrane become `A -> A`, carry no information, and are dropped.
 
 That is a real loss. A model that distinguishes mitochondrial from cytosolic
 acetyl-CoA cannot be recovered from the flattened one, and the flattened model
-will happily let a pathway run on a pool that no membrane separates any more.
+permits a pathway to run on a pool that no membrane separates.
 Flatten a copy, for a specific question, and keep the original.
 
 !!! warning "What can go wrong"
@@ -260,8 +260,7 @@ Flatten a copy, for a specific question, and keep the original.
     - **Simplifying against the wrong condition.** Reactions are removed because
       they cannot carry flux *under the current bounds*. Change the medium first.
     - **In place or a copy.** The Python functions mutate; the MATLAB ones
-      return. Mixing the conventions up loses either your original or your
-      result.
+      return. Mixing the conventions loses either the original or the result.
     - **`deleteUnconstrained` has no Python counterpart.** RAVEN models mark
       boundary metabolites with an `unconstrained` field; cobra models use
       explicit boundary reactions instead, so that flag has nothing to act on.

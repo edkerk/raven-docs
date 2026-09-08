@@ -26,7 +26,7 @@ canonical reference is the
 
 === ":material-puzzle: Add-Ons manager"
 
-    The easiest option. It installs directly from within MATLAB.
+    Installs from within MATLAB, with no separate download.
 
     1. Open the **Home** tab and click **Add-Ons → Get Add-Ons**.
     2. Search for **RAVEN Toolbox** and click **Add → Add to MATLAB**.
@@ -44,7 +44,7 @@ canonical reference is the
 
 === ":octicons-git-branch-16: Clone with git"
 
-    Best option if you want the latest code and one-command upgrades.
+    Tracks the development branch, and upgrades with a single command.
 
     ```bash
     git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git

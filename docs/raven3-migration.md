@@ -222,14 +222,14 @@ returns a different, corrected result.
   `canExchange`, and emit a one-time `RAVEN:deprecated` warning stating they
   "will be removed in the next major release." Unlike the legacy-notice
   functions above, these are on an actual removal track; migrate call sites
-  when convenient. See [§9](#ftinit).
+  before the next major release. See [§9](#ftinit).
 - **`checkInstallation` is now `checkRaven`**, moved from `installation/` to the
   repository root, with an unchanged signature
   (`[currVer, installType] = checkRaven(developMode, checkBinaries)`). Existing
   calls do **not** break: `checkInstallation` survives as a forwarding wrapper
   that passes every argument and output straight through, after emitting a
   `RAVEN:deprecated` warning naming `checkRaven`. It is on the same removal
-  track as the `deprecated/` functions above, so switch when convenient.
+  track as the `deprecated/` functions above, so switch at the next opportunity.
 
 ### Environment / installation changes
 
@@ -259,7 +259,7 @@ codebase" push. None of these have call sites left in RAVEN 3 itself.
 | `core/dispEM.m` | Universal error/warning display | Native `warning()`/`error()` + new `utils/ravenList.m` for formatted item lists. See [§3](#backward-incompatible-changes). |
 | `core/followFluxes.m`, `core/followChanged.m` | Flux-change reporting relative to a reference solution | `queries/printFluxes.m` covers the cutoff-filtering half; nothing replaces the reference-flux comparison directly. |
 | `core/printModel.m` | Printed reactions to screen/file | `queries/printModelStats.m` / `queries/printFluxes.m` cover related summary/flux printing; no direct one-line-per-reaction dump remains. |
-| `core/getMetsInComp.m` | Returned metabolite indices in a given compartment | Trivial to inline: `model.metComps == compIndex`. |
+| `core/getMetsInComp.m` | Returned metabolite indices in a given compartment | Inline it as `model.metComps == compIndex`. |
 | `core/mapCompartments.m` | Remapped compartment labels in a localization-score structure | Superseded by the new predictor-based localization workflow and `localization/defaultCompartmentMap.m`. |
 | `core/getExpressionStructure.m` | Loaded an expression-experiment structure from an ad hoc Excel format | Superseded by `omics/parseHPA.m`/`omics/parseHPArna.m` for the supported expression-data workflow. |
 | `core/checkRxn.m` | Per-reaction reactant/product synthesizability debugging | No direct successor; use `gapfilling/findLeakMetabolite.m`, `gapfilling/canExchange.m`, or `gapfilling/checkProduction.m`. |

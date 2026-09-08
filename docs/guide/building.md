@@ -130,8 +130,8 @@ reaction, `=>` for an irreversible one.
     `eqnType` says how the equation is written: `1` matches metabolites by
     **id**, `2` by name, `3` by `name[comp]`. `allowNewGenes` is needed because
     `YFR053C` is not in the model yet; without it `addRxns` refuses, and you
-    would call `addGenesRaven` first. cobrapy creates the gene silently, which is
-    convenient until a typo becomes a gene.
+    would call `addGenesRaven` first. cobrapy creates the gene without a
+    message, so a mistyped identifier becomes a gene.
 
 === "Python"
 
@@ -203,7 +203,8 @@ that boundary.
 
 ## 7.4 Does it carry flux?
 
-The first question to ask of anything you just built.
+Solving the model shows whether the reactions assembled so far can carry
+flux at all.
 
 === "MATLAB"
 
@@ -232,14 +233,15 @@ The first question to ask of anything you just built.
 !!! warning "What can go wrong"
     - **A typo silently creates a metabolite.** Both toolboxes add metabolites
       they do not recognise, so `m7` and `M7` become two different things and the
-      pathway quietly breaks. Pass `allow_new_mets=False` in Python, or `false`
-      as the last argument of `addRxns` in MATLAB, once the metabolites are all
+      pathway breaks with no error. Pass `allow_new_mets=False` in Python, or
+      `false` as the last argument of `addRxns` in MATLAB, once the metabolites are all
       defined.
     - **No exchange reactions.** The model then gives zero flux everywhere, with
       no error to explain why.
     - **A model with no external compartment.** `add_boundary` cannot guess one,
-      and RAVEN's `addExchangeRxns` will happily add exchanges for internal
-      metabolites, which is rarely what you meant.
+      and RAVEN's `addExchangeRxns` adds exchanges for internal metabolites
+      without warning, opening the model to uptake and secretion of
+      intermediates.
 
 ## See also
 

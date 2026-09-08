@@ -164,7 +164,7 @@ tolerance, so tune by what the data and biology call for, not by these tables.
 Unlike the single-step ftINIT MILP in §1.1 (where build time dominated and the gap was
 free), **the full pipeline does benefit from a looser gap**: `mip_gap=0.01` is ~37 %
 faster than `0.001` with Jaccard 0.995, essentially the same model. → **For genome-scale
-ftINIT, `mip_gap=0.01` (or 0.005) is the sweet spot**; keep 0.001 only if exact
+ftINIT, `mip_gap=0.01` (or 0.005) is the best measured trade-off**; keep 0.001 only if exact
 reproducibility matters more than a few minutes.
 
 `big_m=50` is actually *slower* than the default 100 (738s vs 346s); a tighter cap makes
@@ -254,8 +254,8 @@ The metabolic-task + gap-fill layer is held fixed; only the expression input is 
 **No lever recovers the drift**: Jaccard stays ~0.59 across all settings. Two reasons,
 both informative:
 
-* The information dropout destroys is simply gone; no scoring/connectivity knob reconstructs
-  the missing expression evidence. You cannot tune your way out of sparse input.
+* The information dropout destroys is gone; no scoring or connectivity knob reconstructs
+  the missing expression evidence. No parameter setting compensates for sparse input.
 * `no_gene_score` is the wrong knob *for dropout specifically*: dropout leaves genes
   *present but zero* (scored −5), whereas `no_gene_score` only governs reactions whose genes
   are **absent** from the data, i.e. the *downsampling* failure mode. So `no_gene_score` is
@@ -269,7 +269,7 @@ gap-fill MILP (keeps it tractable). For *missing*-gene sparsity specifically, `n
 trades model size against confidence. For noise, defaults are already robust. No parameter
 restores fidelity lost to dropout; that is a property of the data, not the pipeline.
 
-### tINIT robustness: `essential_rxns=[]` (the tINIT-without-task-layer picture)
+### tINIT robustness: `essential_rxns=[]` (tINIT without the task layer)
 
 For the reasons in §1.5, tINIT cannot accept the full task-essential set as forced
 reactions; this section runs `get_init_model` with `essential_rxns=[]` to show the

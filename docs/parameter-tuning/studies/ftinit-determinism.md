@@ -12,11 +12,11 @@ Two different properties are at stake, and they need separating:
 
 `resolve_ties`/`prove_abs_gap` target determinism only. `reference_reactions` (built on
 top of `resolve_ties`) is the parameter that targets stability directly; see the
-dedicated section below for what it buys and what it still doesn't.
+dedicated section below for what it fixes and what it does not.
 
 ## Why the problem exists
 
-The extraction MILP is massively degenerate. Of the ~6700 negative-score reactions (the
+The extraction MILP is degenerate. Of the ~6700 negative-score reactions (the
 true 0/1 keep-or-drop binaries) on Human-GEM/DLD1, **99.7% sit in tied blocks**, and the
 largest block (5159 reactions scored −2.00, of which 5101 are GPR-less) is *identical
 across all five Hart2015 cell lines*. It is the default score for reactions with no gene
@@ -153,7 +153,7 @@ scale and can time out at genome scale.
   tie-break means a reduction, not a guarantee.
 * **`prove_abs_gap=1.0`**: fixes a genuine optimality defect in the default escalation and
   collapses the objective variation, at ~2.4x runtime. Do not go tighter than 1.0; it
-  buys nothing further and costs more.
+  gains nothing further and costs more.
 * **Pinning the solver stack** (raven-toolbox commit + `gurobipy` version) remains the
   zero-cost lever for run-to-run identity, and is unaffected by anything above.
 
@@ -200,11 +200,11 @@ Anchoring cuts the spurious essential-gene drift **13× (13 → 1)** and leaves 
 essentially untouched, where the unanchored re-extraction (from an edit that touched
 *nothing* the reference model used) swings growth by 14% and flips 13 genes essential
 that have no relationship to the removed reactions. The reaction-level swing drops less
-dramatically (58 → 46): consistent with the rest of this study, reaction-level movement is
+(58 → 46): consistent with the rest of this study, reaction-level movement is
 a poor proxy for what a user actually cares about, and the flags that help most at the
 gene level help least at the reaction level.
 
-**The control that separates a real effect from re-selection noise remains worth using
+**The control that separates a real effect from re-selection noise still applies
 alongside anchoring, not instead of it: apply the edit to the *extracted* model as well,
 not only to the template.** Comparing an extraction of the edited template against the
 extracted baseline model with the same edit applied directly gives an exact, causal
@@ -225,7 +225,7 @@ re-selection noise cleanly but is gentler than a typical real curation (which us
 removes or changes something the model *does* use, so both baseline and anchored drift
 would likely be larger there; the relative gap between them, which is the actual claim,
 has no particular reason to shrink). Wall-clock figures include some suspend-inflated
-outliers from an overnight run and should be read as approximate; the swing/objective
+outliers from an overnight run and are approximate; the swing/objective
 columns are set comparisons unaffected by wall-clock noise.
 
 ## Reproducing
@@ -248,5 +248,5 @@ m1 = ftinit(prep_edited, scores, resolve_ties=True, prove_abs_gap=1.0,
            reference_reactions=m0_kept)
 ```
 
-Set `FTINIT_DEBUG=1` to log each solve's status and each tie-break phase, the fastest way
-to see whether a build rests on a proven optimum or an unproven incumbent.
+Set `FTINIT_DEBUG=1` to log each solve's status and each tie-break phase, which shows
+whether a build rests on a proven optimum or an unproven incumbent.

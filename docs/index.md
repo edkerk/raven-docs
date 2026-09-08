@@ -140,7 +140,7 @@
 
     **[RAVEN 3 and raven-toolbox](raven3-vs-raven-toolbox.md)**
 
-    Which to reach for, what only one of them has, and where the same function
+    Which to use for what, what only one of them has, and where the same function
     gives a different answer.
 
 </div>

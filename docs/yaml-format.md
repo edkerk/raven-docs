@@ -63,7 +63,7 @@ The same file can be round-tripped through any of the three. cobrapy is the cano
     - e: extracellular
 ```
 
-Three structural rules are non-obvious and worth pointing out before the field-by-field detail:
+Three structural rules are non-obvious, and apply throughout the field-by-field detail below:
 
 1. The whole document is one **ordered mapping** (`!!omap`) at the root. Every nested map that should preserve key order is also `!!omap` (metaData, each metabolite / reaction / gene entry, `annotation`, `metabolites`, `compartments`, and the ec sections).
 2. Each metabolite, reaction, and gene is **one `- !!omap` element** of a list. Inside that mapping, every field is written as `- key: value`. This is cobrapy's native shape and is what RAVEN MATLAB's reader keys off.
@@ -194,7 +194,7 @@ Empty names (`name: ''`) are not emitted (matches RAVEN MATLAB's historical beha
     - m: mitochondrion
 ```
 
-Just an `!!omap` of `<short code>: <human-readable name>` pairs. Compartments don't carry their own MIRIAMs in the current format.
+An `!!omap` of `<short code>: <human-readable name>` pairs. Compartments don't carry their own MIRIAMs in the current format.
 
 ---
 
