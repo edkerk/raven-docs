@@ -29,8 +29,8 @@ need reproducible environments and CI, or if you need KEGG artefacts built
 against a stated release rather than whatever is distributed.
 
 **Reach for RAVEN** if the work lives in MATLAB, if you need to reproduce a
-model built with tINIT, if you need dynamic FBA or conversion to the COBRA
-Toolbox structure, or if you need ftINIT's metabolomics scoring.
+model built with tINIT, or if you need dynamic FBA or conversion to the COBRA
+Toolbox structure.
 
 **Either** covers the core reconstruction and analysis path. Where both have a
 function, the mapping table names the pair; where only one does, the sections
@@ -131,17 +131,6 @@ Python packages already cover dynamic FBA well
 [reframed](https://pypi.org/project/reframed/),
 [mewpy](https://pypi.org/project/mewpy/)), and reimplementing it would add a
 second-rate version of something that already exists.
-
-### Metabolomics-based scoring in ftINIT
-
-ftINIT's production-bonus block, which lets detected metabolites contribute to
-the extraction score, is not implemented. Passing metabolomics data to the
-Python `ftinit` raises `NotImplementedError` rather than silently ignoring it.
-
-The reason is structural: raven-toolbox's linear merge eliminates the degree-2
-metabolites this block scores, so supporting it needs the producer-group mapping
-and negative-producer force-flux constraints rebuilt — the most intricate part
-of ftINIT, for its least-used input.
 
 ### MATLAB-specific plumbing
 
