@@ -12,7 +12,7 @@ of what you need to translate a script between the two.
 | `sortIdentifiers` | `sort_identifiers` | sort reactions, metabolites and genes by id |
 | `getIndexes` | `parse_name_comp` | split a `name[comp]` token |
 | no equivalent | `subsystem_to_str` | one subsystem string, whatever the source stored |
-| `addIdentifierPrefix`, `removeIdentifierPrefix` | handled on read/write {bdg-secondary}`cobrapy` | SBML identifier prefixes |
+| `addIdentifierPrefix`, `removeIdentifierPrefix` | handled on read/write {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | SBML identifier prefixes |
 | `ravenCobraWrapper` | not needed | convert between RAVEN and COBRA structs |
 
 ## The correspondence
@@ -40,7 +40,7 @@ reaction-length field, and the matching column of `model.S`, which is why
 holds its own links, so `model.remove_reactions([...])` is enough and there is no
 state left behind to go stale.
 
-That difference also decides where mistakes surface. A RAVEN model can be left in
+That difference also decides where mistakes become visible. A RAVEN model can be left in
 a state no function rejects but later functions misread, which is why RAVEN ships
 a validator (2.4). A `cobra.Model` cannot reach most of those states at all,
 because the structure is maintained by the class rather than by the caller.

@@ -1,19 +1,19 @@
 # 14. Flux variability and alternative optima
 
 An FBA solution is one point in a space of equally optimal answers. Flux
-variability asks the more honest question: **given the objective, how much can
-each reaction's flux still vary?** It is how you tell a flux the model insists on
-from one it merely happened to report.
+variability asks the more accurate question: **given the objective, how much can
+each reaction's flux still vary?** It is how you distinguish a flux the model
+requires from one it merely happened to report.
 
 ### Functions on this page
 
 | MATLAB | Python | |
 |---|---|---|
-| `getAllowedBounds` | `flux_variability_analysis` {bdg-secondary}`cobrapy` | the range each reaction can take |
-| `haveFlux` | `find_blocked_reactions` {bdg-secondary}`cobrapy` | reactions that can carry no flux at all |
-| `solveLP` (`minFlux`) | `pfba` {bdg-secondary}`cobrapy` | one representative optimum |
-| no equivalent | `loopless_solution` {bdg-secondary}`cobrapy` | an optimum without thermodynamically infeasible loops |
-| no equivalent | `add_loopless` {bdg-secondary}`cobrapy` | the constraints behind `loopless="fastSNP"` |
+| `getAllowedBounds` | `flux_variability_analysis` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the range each reaction can take |
+| `haveFlux` | `find_blocked_reactions` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | reactions that can carry no flux at all |
+| `solveLP` (`minFlux`) | `pfba` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | one representative optimum |
+| no equivalent | `loopless_solution` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | an optimum without thermodynamically infeasible loops |
+| no equivalent | `add_loopless` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the constraints behind `loopless="fastSNP"` |
 | no equivalent | `find_good_reactions` | reactions whose range is real rather than a loop |
 
 ## Setup
@@ -149,7 +149,7 @@ land on.
 
 ## 14.3 A wide range is not always a real one
 
-A reaction can show a wide range purely because it sits in a thermodynamically
+A reaction can show a wide range purely because it is part of a thermodynamically
 infeasible cycle, flux going round a loop with no net driving force. The widest
 span in 14.1 was 1000, the model's default bound. That span is such a cycle.
 
@@ -242,7 +242,7 @@ growth: 0.1222 /h, total flux: 20.9
 
 `minFlux` minimises total absolute flux subject to the objective, which is
 parsimonious FBA. It is also the closest RAVEN gets to excluding loops: a
-cycle costs flux, so a parsimonious solution has no reason to carry one.
+cycle adds flux, so a parsimonious solution has no reason to carry one.
 :::
 :::{tab-item} 🐍 Python
 :sync: python

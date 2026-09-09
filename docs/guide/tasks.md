@@ -12,7 +12,7 @@ after cutting a model down.
 |---|---|---|
 | `parseTaskList` | `parse_task_list` | read a task-list file |
 | `checkTasks` | `check_tasks` | run the tasks against a model |
-| `checkTasks` (`getEssential`) | `find_task_essential_reactions` | reactions a task cannot do without |
+| `checkTasks` (`getEssential`) | `find_task_essential_reactions` | reactions a task requires |
 | `fitTasks` | `fill_tasks` | add reactions until the tasks pass |
 
 ## The file format
@@ -51,7 +51,7 @@ a pass.
 
 Note what `GROWTH` has to list. Glucose and oxygen in, biomass out, and **CO₂**,
 because a task closes the model's own exchanges and growth has to put its carbon
-somewhere. Leave CO₂ out and the task is infeasible, which reads like a broken
+somewhere. Leave CO₂ out and the task is infeasible, which looks like a broken
 model and is really a broken task.
 
 ## 12.1 Read and run the tasks
@@ -88,9 +88,9 @@ off `report` gives a structure to test against rather than text to read.
 
 Passing the parsed tasks as `taskStructure` makes the second argument,
 the task file, redundant. `runParallel` evaluates the tasks in parallel
-workers, and defaults to `false`, because starting a pool costs more than
-it saves on a short task list; on a genome-scale list it is the setting
-that matters.
+workers, and defaults to `false`, because starting a pool takes longer than
+the time it saves on a short task list; on a genome-scale list it is the
+setting that matters.
 :::
 :::{tab-item} 🐍 Python
 :sync: python

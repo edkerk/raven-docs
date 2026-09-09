@@ -112,7 +112,7 @@ Sweeping the value on the first stage (4 seeds) and second stage (3 seeds):
 | 0.1 | 1 / 1 | −712.87 | all timed out | 1858 s |
 | 0.05 | 1 / 1 | −712.87 | all timed out | 1948 s |
 
-The headline is not determinism: **the default escalation returns a suboptimal
+The main point is not determinism: **the default escalation returns a suboptimal
 extraction.** It lands 2.0 below the true optimum in stage 1 and 4.0 below in stage 2,
 351 kept reactions where the optimum keeps 349, silently, with no warning.
 

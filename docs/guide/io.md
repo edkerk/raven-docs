@@ -7,8 +7,8 @@ directory layout a Git-maintained model repository expects.
 
 | MATLAB | Python | |
 |---|---|---|
-| `importModel` | `read_sbml_model` {bdg-secondary}`cobrapy` | read SBML |
-| `exportModel` | `write_sbml_model` {bdg-secondary}`cobrapy` | write SBML |
+| `importModel` | `read_sbml_model` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | read SBML |
+| `exportModel` | `write_sbml_model` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | write SBML |
 | `readYAMLmodel` | `read_yaml_model` | read RAVEN YAML |
 | `writeYAMLmodel` | `write_yaml_model` | write RAVEN YAML |
 | `exportToExcelFormat` | `export_to_excel` | write the RAVEN Excel format |
@@ -17,7 +17,7 @@ directory layout a Git-maintained model repository expects.
 Which of these you need depends on the file, not on the model: all of them
 produce the same in-memory model, and none of them is the canonical format.
 What differs is what survives a round trip and how readable the file is, which
-3.2 and 3.4 make concrete.
+3.2 and 3.4 show with examples.
 
 ## Setup
 
@@ -141,14 +141,14 @@ YAML.
 :::
 ::::
 
-:::{note} Each toolbox is slow in the other's favourite format
+:::{note} Each toolbox is fast in one format and slow in the other
 Reading yeast-GEM takes about **17 s from SBML and 73 s from YAML in
 Python**, and about **78 s from SBML and 17 s from YAML in MATLAB**, so the
 ranking is reversed. RAVEN parses YAML itself and goes through libSBML for
 SBML; cobrapy has the opposite balance. The format therefore follows from what is
 needed from it, a readable diff or the RAVEN-specific fields YAML preserves,
-and a script that spends its time in the reader will often run faster in the
-other format.
+and a script whose run time is dominated by reading the file will often run
+faster in the other format.
 :::
 
 ## 3.3 Write a model
@@ -176,8 +176,8 @@ Document written
 The two warnings are the prefixing rule in both directions: `exportModel`
 adds a prefix to a whole field as soon as one id in it starts with something
 other than a letter or underscore, and `importModel` takes it off again.
-Pass `neverPrefix` as `true` to suppress the addition, at the cost of a file
-that is not valid SBML.
+Pass `neverPrefix` as `true` to suppress the addition, but the resulting file
+is not valid SBML.
 
 Both `writeYAMLmodel` and `exportModel` take `sortIds`, which sorts a copy
 before writing and leaves the caller's model untouched.
@@ -291,8 +291,8 @@ Document written
 dependencies.txt, smallYeast.xml, smallYeast.yml
 ```
 
-`dir` reports names, so the subdirectories the files sit in are not visible
-above: the layout written is `repo/model/yml/smallYeast.yml` and
+`dir` reports names, so the subdirectories that contain the files are not
+visible above: the layout written is `repo/model/yml/smallYeast.yml` and
 `repo/model/xml/smallYeast.xml`. Set `subDirs` to `false` to put everything
 in one folder instead. Identifiers are sorted before writing, with no option
 to skip it, so successive releases diff cleanly. Left to itself
@@ -350,6 +350,6 @@ repositories that pin one.
 
 - [Getting started](getting-started.md), what to do with the model once it is
   loaded.
-- [User guide overview](index.md), the other pages and what is planned.
+- [Guide overview](index.md), the other pages and what is planned.
 - [MATLAB vs Python](../raven3-vs-raven-toolbox.md), the full function mapping,
   including everything that resolves to cobrapy.

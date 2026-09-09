@@ -2,7 +2,7 @@
 icon: material/folder-open
 ---
 
-# Methods
+# Parameter tuning
 
 RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships many
 functions with numerical defaults: solver tolerances, cut-offs, iteration
@@ -24,8 +24,9 @@ trial-and-error, copied from earlier tools, or never reconsidered, and
 raven-toolbox inherited a mix of ported MATLAB values and upstream (cobrapy)
 conventions. An existing default in either toolbox is a useful *prior*: it
 reflects years of practical use, or a well-tested upstream library, but it is
-not a gold standard. Where the two implementations differ, the right response
-is to run both and measure, not to assume whichever came first is correct.
+not necessarily correct. Where the two implementations differ, the right
+response is to run both and measure, not to assume whichever came first is
+correct.
 
 The following criteria apply in rough priority order:
 
@@ -52,9 +53,9 @@ The following criteria apply in rough priority order:
 5. **User expectation alignment.** Prefer values that match what a competent
    user would supply without thinking (e.g. `verbose=True` for a long-running
    MILP, `sort_ids=False` for round-trip-safe export).
-6. **No `None`-surprises.** `None`/empty defaults are fine for optional
-   features but should never silently change algorithmic behaviour; document
-   the fallback clearly.
+6. **No undocumented `None` behavior.** `None`/empty defaults are fine for
+   optional features, but any resulting change to algorithmic behaviour must
+   be documented in the fallback.
 
 ### Evaluation workflow per parameter
 
@@ -99,11 +100,18 @@ cross-toolbox to-do list.
 |---|---|
 | [Parameter benchmarks](benchmarks.md) | `fseof`, `remove_genes`, `connect_blocked_reactions`, `fill_gaps_*`, `check_tasks`, `find_task_essential_reactions` |
 
+## Model file format
+
+[YAML model format](../yaml-format.md): the format cobrapy, raven-toolbox and
+RAVEN MATLAB all read and write, for moving a model file between any of them
+or into version control.
+
 ```{toctree}
 :hidden:
 
 ../tuned-parameters
 benchmarks
+../yaml-format
 ```
 
 ```{toctree}

@@ -8,15 +8,15 @@ a condition as reviewable data instead of a paragraph of bound-setting code.
 
 | MATLAB | Python | |
 |---|---|---|
-| `getExchangeRxns` | `Model.exchanges` {bdg-secondary}`cobrapy` | find the exchange reactions |
-| `setExchangeBounds` | `Model.medium` {bdg-secondary}`cobrapy` | set a whole medium, closing the rest |
+| `getExchangeRxns` | `Model.exchanges` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | find the exchange reactions |
+| `setExchangeBounds` | `Model.medium` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | set a whole medium, closing the rest |
 | `setParam` | `set_reaction_bounds` | set one reaction's bounds |
-| `getMinimalMedium` | `minimal_medium` {bdg-secondary}`cobrapy` | the smallest medium that still supports growth |
+| `getMinimalMedium` | `minimal_medium` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the smallest medium that still supports growth |
 | `applyCondition` | `apply_condition`, `load_condition` | apply a condition file |
 
 ## Setup
 
-`yeast-GEM.xml` from [`docs/data/`](../data/README.md), which ships with an
+`yeast-GEM.yml` from [`docs/data/`](../data/README.md), which ships with an
 aerobic minimal glucose medium already applied.
 
 ## 5.1 What is currently open
@@ -30,7 +30,7 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
 :sync: matlab
 
 ```matlab
-model = importModel('yeast-GEM.xml');
+model = readYAMLmodel('yeast-GEM.yml');
 [exchangeRxns, exchangeIdx] = getExchangeRxns(model);
 fprintf('%d exchange reactions\n', numel(exchangeRxns));
 
@@ -42,8 +42,6 @@ end
 ```
 
 ```text
-[Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
-[Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
 273 exchange reactions
   r_1654  ammonium exchange              1000.0
   r_1714  D-glucose exchange                1.0
@@ -81,9 +79,9 @@ can secrete as well and is classified `'reverse'`. Selecting on
 :sync: python
 
 ```python
-from cobra.io import read_sbml_model
+from raven_toolbox.io import read_yaml_model
 
-model = read_sbml_model("yeast-GEM.xml")
+model = read_yaml_model("yeast-GEM.yml")
 shipped = dict(model.medium)          # keep it; later steps restore from here
 print(len(model.exchanges), "exchange reactions")
 
@@ -346,7 +344,7 @@ respiration, and the ratio is the point of the comparison.
 A medium copied from a paper usually contains more than the model needs.
 `getMinimalMedium` and cobrapy's `minimal_medium` search for the smallest set of
 uptakes that still supports a given growth rate, which identifies which component
-is doing the work, and catches a nutrient the model can do without because a
+is necessary for growth, and catches a nutrient the model does not need because a
 gap-filled reaction produces it internally.
 
 ::::{tab-set}

@@ -5,8 +5,9 @@ icon: material/folder-open
 # Worked protocol: *Hansenula polymorpha*
 
 A complete homology-based reconstruction of `hanpo-GEM`, followed from start to
-finish: template models in, a growing methylotrophic draft out. This is the
-published pipeline, in order, with the judgement calls left visible.
+finish: it takes template models as input and produces a growing methylotrophic
+draft. This is the published pipeline, in order, with the judgement calls left
+visible.
 
 It is the counterpart to the [user guide](../guide/index.md). The numbered guide
 pages answer "how do I do this one thing"; this protocol answers "what does a

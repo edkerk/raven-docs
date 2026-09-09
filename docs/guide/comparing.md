@@ -209,7 +209,8 @@ growth: good 0.1222, bad 0.0000
 The errors in `smallYeastBad` are not cosmetic. On the same medium, with the same
 objective, the good model grows and **the bad one does not grow at all**, from a
 model that a set-overlap score called 94.5 % similar. A diff tells you the models
-differ; only a simulation tells you what the difference costs. (MATLAB reports
+differ; only a simulation tells you what effect the difference has on growth.
+(MATLAB reports
 that zero as `-0.0000`; the minus sign is a formatting artefact of a zero
 objective, not a negative growth rate.)
 

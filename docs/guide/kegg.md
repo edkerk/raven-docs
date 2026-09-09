@@ -129,7 +129,8 @@ records which of them actually moves the result.
 
 ## 19.3 What a KEGG draft is
 
-Genome-scale in size, and unlike a working model in every other respect.
+A KEGG draft is genome-scale in size, and unlike a working model in every other
+respect.
 
 ```text title="the sce draft, measured"
 reactions:     1357
@@ -155,8 +156,8 @@ in their stoichiometry, which cannot be balanced as written. Turning both off:
 1348 rxns, 827 genes   (from 1357 and 838)
 ```
 
-A change of nine reactions on this organism. The size of the effect depends on
-the organism, so measure it rather than assuming it. `keepGeneral` /
+That is a change of nine reactions on this organism. The size of the effect
+depends on the organism, so measure it rather than assuming it. `keepGeneral` /
 `keep_general` is off by default for a better reason: general reactions are placeholders like "an alcohol
 + NAD+", and admitting them produces a network that appears to do far more than
 it can.

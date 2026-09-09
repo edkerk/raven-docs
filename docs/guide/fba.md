@@ -7,21 +7,21 @@ This is the loop every other analysis on this site is built from.
 
 | MATLAB | Python | |
 |---|---|---|
-| `setParam` | `Reaction.bounds`, `Model.objective` {bdg-secondary}`cobrapy` | set bounds and the objective |
-| `solveLP` | `Model.optimize` {bdg-secondary}`cobrapy` | solve the LP |
-| `printFluxes` | `Model.summary` {bdg-secondary}`cobrapy` | show the fluxes that carry material |
-| `solveLP` (`minFlux`) | `pfba` {bdg-secondary}`cobrapy` | pick a parsimonious solution among the optima |
+| `setParam` | `Reaction.bounds`, `Model.objective` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | set bounds and the objective |
+| `solveLP` | `Model.optimize` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve the LP |
+| `printFluxes` | `Model.summary` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | show the fluxes that carry material |
+| `solveLP` (`minFlux`) | `pfba` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | pick a parsimonious solution among the optima |
 
 :::{admonition} Where the Python functions come from
 :class: info
 Every simulation step on this page is cobrapy, marked
-{bdg-secondary}`cobrapy` in the table above. In MATLAB,
+{bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` in the table above. In MATLAB,
 `solveLP` needs neither the COBRA Toolbox nor anything else outside RAVEN.
 :::
 
 ## Setup
 
-`yeast-GEM.xml` from [`docs/data/`](../data/README.md), yeast-GEM v9.1.0, which
+`yeast-GEM.yml` from [`docs/data/`](../data/README.md), yeast-GEM v9.1.0, which
 arrives with a growth objective and an aerobic glucose medium already set.
 
 ## 4.1 Solve
@@ -31,7 +31,7 @@ arrives with a growth objective and an aerobic glucose medium already set.
 :sync: matlab
 
 ```matlab
-model = importModel('yeast-GEM.xml');
+model = readYAMLmodel('yeast-GEM.yml');
 sol = solveLP(model);
 fprintf('objective: %s\n', model.rxns{model.c == 1});
 fprintf('status:    %d\n', sol.stat);
@@ -39,17 +39,13 @@ fprintf('growth:    %.4f /h\n', sol.f);
 ```
 
 ```text
-[Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
-[Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
 objective: r_2111
 status:    1
 growth:    0.0809 /h
 ```
 
 The objective is `model.c`, a vector with one entry per reaction, so
-`model.c == 1` finds the reaction being maximised. The two warnings come from
-the reader, not the solve; [3. Reading and writing models](io.md) explains
-both.
+`model.c == 1` finds the reaction being maximised.
 
 `sol` carries the whole answer. `sol.f` is the objective value with its
 natural sign: RAVEN minimises internally and negates the result, so no sign
@@ -72,9 +68,9 @@ LP dual.
 :sync: python
 
 ```python
-from cobra.io import read_sbml_model
+from raven_toolbox.io import read_yaml_model
 
-model = read_sbml_model("yeast-GEM.xml")
+model = read_yaml_model("yeast-GEM.yml")
 solution = model.optimize()
 
 print(f"objective: {model.objective.expression}")
@@ -344,7 +340,7 @@ total flux: 100.6
 ```
 
 `minFlux` selects the second optimisation. `1` minimises the sum of absolute
-fluxes, which costs one further LP. `3`
+fluxes, which requires one further LP. `3`
 minimises the *number* of active reactions instead, which is a
 mixed-integer problem: the result is easier to read as a pathway, and the
 solve is far slower. Leaving `minFlux` at `0` skips the second solve

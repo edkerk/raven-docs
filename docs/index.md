@@ -14,12 +14,13 @@ models, available as a MATLAB toolbox and a Python package built on cobrapy.
 :::{tab-item} Python (pip)
 
 ```bash
-pip install raven-toolbox
+pip install --pre raven-toolbox
 ```
 :::
 :::{tab-item} MATLAB (Add-Ons)
 
-Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox"
+Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox", then run `checkRaven`
+to verify.
 :::
 :::{tab-item} Python (git)
 
@@ -33,6 +34,8 @@ pip install -e raven-toolbox/
 ```bash
 git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git
 ```
+
+Add the folder to the MATLAB path, then run `checkRaven` to verify.
 :::
 ::::
 
@@ -118,7 +121,7 @@ fprintf('Growth rate: %.4f h-1\n', sol.f);
 
 ::::{grid} 1 2 2 2
 
-:::{grid-item-card} User guide
+:::{grid-item-card} Guide
 :link: guide/index
 :link-type: doc
 
@@ -160,7 +163,7 @@ If you use RAVEN in your research, please cite:
 > coelicolor*.** *PLoS Computational Biology* 14(10): e1006541.
 > <https://doi.org/10.1371/journal.pcbi.1006541>
 
-See [References](references.md) for the full list, including the earlier
+See [Citations](references.md) for the full list, including the earlier
 RAVEN paper and the GEM reconstruction protocol.
 
 ```{toctree}

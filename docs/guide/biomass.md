@@ -14,7 +14,7 @@ annotation that makes a model interpretable to something other than a solver.
 | `scaleBiomassPseudoreaction` | `rescale_pseudoreaction` | rescale a pseudoreaction and rebalance it |
 | `assignSBOterms` | `add_sbo_terms` | label reactions and metabolites with SBO terms |
 | `loadDeltaGCSV`, `saveDeltaGCSV` | `load_delta_g_csv`, `save_delta_g_csv` | thermodynamic data through CSV |
-| `extractMiriam`, `editMiriam` | `Object.annotation` {bdg-secondary}`cobrapy` | read and edit database cross-references |
+| `extractMiriam`, `editMiriam` | `Object.annotation` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | read and edit database cross-references |
 
 ## Setup
 
@@ -176,9 +176,10 @@ representation.
 
 ## 22.2 Change one component
 
-Measured a different protein content? Set it, and say what gives way. A biomass
-that no longer sums to 1 is worse than one with the old number in it, so both
-functions can balance a second component to absorb the difference.
+Measured a different protein content? Set it, and specify which other component
+absorbs the change. A biomass that no longer sums to 1 is worse than one with the
+old number in it, so both functions can balance a second component to absorb the
+difference.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB

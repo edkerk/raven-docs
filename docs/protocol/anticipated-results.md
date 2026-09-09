@@ -13,7 +13,7 @@ Following this protocol yields a **draft** genome-scale metabolic model for
 
 The published hanpo-GEM (the curated result distributed in the repository)
 contains on the order of **2,370 reactions, 2,118 metabolites and 984 genes**,
-your draft will be in the same ballpark but is expected to differ, since it is a
+your draft will be similar in size but is expected to differ, since it is a
 starting point for the open-ended process of manual curation.
 
 ## What "done" looks like

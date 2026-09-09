@@ -11,9 +11,9 @@ canonical reference is the
   for. Continuous integration tests R2024b only, so a recent release is the
   better-covered choice. No additional MathWorks toolboxes required.
 - A **linear-programming solver**: [Gurobi](https://www.gurobi.com/) (free
-  academic license, recommended) or **GLPK** (bundled with the
-  [COBRA Toolbox](https://github.com/opencobra/cobratoolbox)).
-  See [Choosing a solver](index.md#choosing-a-solver).
+  academic license, recommended) or **GLPK**, bundled with RAVEN itself, no
+  separate install needed. See
+  [Choosing and configuring a solver](#choosing-a-solver-matlab) below.
 - RAVEN **bundles** `libSBML` and the GLPK mex files for Windows, macOS and
   Linux. `BLAST+`, `DIAMOND` and `HMMER` are **not** bundled: RAVEN fetches the
   build for your platform on first use, so the reconstruction functions need
@@ -21,6 +21,54 @@ canonical reference is the
   ahead of time. See
   [Downloaded data and binaries](data-and-binaries.md) for the full set, where
   it is cached, and how to prepare an offline machine.
+
+---
+
+(choosing-a-solver-matlab)=
+## Choosing and configuring a solver
+
+| Solver | LP | MILP | Relative speed | License |
+|---|---|---|---|---|
+| GLPK | yes | no | 1x (baseline) | open source, bundled with RAVEN |
+| SCIP | yes | yes | 0.33x | open source; bundled on Windows, a separate install on macOS/Linux |
+| Gurobi | yes | yes | 4.2x | free academic license |
+| COBRA Toolbox | yes | depends on the COBRA solver configured | depends on the COBRA solver configured | depends on the COBRA solver configured |
+
+MILP-solving functions (`getMinimalMedium`, ftINIT, some gap-filling
+algorithms) need a solver that supports MILP; GLPK does not, so those
+functions need Gurobi, SCIP, or a MILP-capable solver through the COBRA
+Toolbox.
+
+Set the active solver with `setRavenSolver`, which takes `'gurobi'`,
+`'glpk'`, `'soplex'`, or `'cobra'`:
+
+```matlab
+setRavenSolver('gurobi');
+```
+
+### Gurobi
+
+1. Install Gurobi 7.5 or later.
+2. Request and download a license (a free academic license covers most
+   research use).
+3. Place the license file where Gurobi's own installer says to.
+4. Follow Gurobi's MATLAB integration instructions, then run `savepath` so
+   MATLAB keeps the change after a restart.
+5. `setRavenSolver('gurobi')`.
+
+### Through the COBRA Toolbox
+
+RAVEN can solve through whatever solver the COBRA Toolbox has configured,
+instead of one of its own bundled options:
+
+```matlab
+changeCobraSolver('glpk');   % or any solver the COBRA Toolbox supports
+setRavenSolver('cobra');
+```
+
+`ravenCobraWrapper` converts a model between the RAVEN struct and the COBRA
+Toolbox structure; see
+[RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md#solvers).
 
 ---
 
@@ -34,6 +82,9 @@ Installs from within MATLAB, with no separate download.
 1. Open the **Home** tab and click **Add-Ons → Get Add-Ons**.
 2. Search for **RAVEN Toolbox** and click **Add → Add to MATLAB**.
 3. [Verify the installation](#verify).
+
+If MATLAB does not pick up the toolbox after step 2, run
+`matlab.addons.enableAddon("RAVEN")` to enable it explicitly.
 :::
 :::{tab-item} {octicon}`download;1em` Release download
 
@@ -59,12 +110,13 @@ Add the folder to the MATLAB path and [verify](#verify).
 
 ---
 
-## Verify { #verify }
+(verify)=
+## Verify
 
 From the MATLAB command window:
 
 ```matlab
-checkInstallation
+checkRaven
 ```
 
 A successful run looks like:
@@ -81,8 +133,19 @@ Checking essential binary executables:
     BLAST+... OK
     DIAMOND... OK
     HMMER... OK
-*** checkInstallation complete ***
+*** checkRaven complete ***
 ```
+
+`checkInstallation` still works too: it is the old name, kept as a deprecated
+wrapper that forwards to `checkRaven` after a warning. Use `checkRaven`
+directly in new work.
+
+If MATLAB reports that it could not save the path (common on shared or
+managed installations where you do not have write access to MATLAB's own
+`pathdef.m`), run `addRavenToUserPath` instead: it writes a `startup.m` that
+adds RAVEN to the path on every MATLAB start, without touching the shared
+path file. `addRavenToUserPath('overwrite', false)` appends to an existing
+`startup.m` instead of replacing it.
 
 ---
 
@@ -92,12 +155,12 @@ Checking essential binary executables:
 :::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
 In MATLAB go to **Help → Check for Updates**, click **Update** for RAVEN,
-then run `checkInstallation` again.
+then run `checkRaven` again.
 :::
 :::{tab-item} {octicon}`download;1em` Release download
 
 Close MATLAB, delete the old RAVEN folder, download and extract the new
-release, and run `checkInstallation`.
+release, and run `checkRaven`.
 :::
 :::{tab-item} {octicon}`git-branch;1em` Clone with git
 
@@ -105,7 +168,7 @@ release, and run `checkInstallation`.
 git pull origin main
 ```
 
-Then run `checkInstallation`.
+Then run `checkRaven`.
 :::
 ::::
 
@@ -116,7 +179,9 @@ Then run `checkInstallation`.
 ::::{tab-set}
 :::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
-Go to **Add-Ons → Manage Add-Ons** and remove RAVEN from the list.
+Go to **Add-Ons → Manage Add-Ons** and remove RAVEN from the list. Running
+`removeRavenFromPath` afterward should report an unrecognized-function error,
+confirming RAVEN is off the path.
 :::
 :::{tab-item} {octicon}`download;1em` Release download
 

@@ -8,10 +8,10 @@ read what it gives back.
 
 | MATLAB | Python | |
 |---|---|---|
-| `setRavenSolver` | `Configuration` {bdg-secondary}`cobrapy` | choose the solver |
-| `checkInstallation` | `Configuration` {bdg-secondary}`cobrapy` | check the solver works |
-| `solveLP` | `Model.optimize` {bdg-secondary}`cobrapy` | solve, and get a solution object |
-| `optimizeProb` | `Model.solver` {bdg-secondary}`cobrapy` | solve a problem the toolbox built for you |
+| `setRavenSolver` | `Configuration` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | choose the solver |
+| `checkInstallation` | `Configuration` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | check the solver works |
+| `solveLP` | `Model.optimize` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve, and get a solution object |
+| `optimizeProb` | `Model.solver` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve a problem the toolbox built for you |
 
 ## Setup
 
@@ -243,8 +243,8 @@ slim_optimize: nan
 ```
 
 Check the status before using a number. `slim_optimize` skips building a full
-solution, so it is the fast option inside a loop, at the cost of returning
-`nan` instead of a reason.
+solution, so it is the fast option inside a loop, but it returns `nan` instead
+of a reason.
 :::
 ::::
 

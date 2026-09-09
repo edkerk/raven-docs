@@ -1,9 +1,10 @@
 # 20. Engineering targets
 
-Two questions sit behind most strain-design work. Which reactions would have to
-change for the cell to make more of something, and which metabolites sit at the
-centre of a transcriptional response. FSEOF answers the first from stoichiometry
-alone; reporter metabolites answer the second from expression data.
+Two questions underlie most strain-design work. Which reactions would have to
+change for the cell to make more of something, and which metabolites are most
+affected by a transcriptional response. FSEOF answers the first from
+stoichiometry alone; reporter metabolites answer the second from expression
+data.
 
 ### Functions on this page
 
@@ -132,7 +133,7 @@ zero.
 
 ## 20.2 Reading the scan
 
-A target is only as good as the trend behind it. The scan matrix is what
+A target's reliability depends on the trend behind it. The scan matrix is what
 distinguishes a reaction that rises steadily from one that jumps once and stops.
 
 ::::{tab-set}
@@ -289,8 +290,8 @@ above.
   nothing is differentially expressed. Look at the input distribution before
   trusting the ranking.
 - **Currency metabolites at the top.** ATP, NADH and water take part in a
-  large share of all reactions, so they surface easily. Excluding them, or
-  reading past them, is usually necessary.
+  large share of all reactions, so they appear at the top easily. Excluding
+  them, or reading past them, is usually necessary.
 :::
 
 ## See also

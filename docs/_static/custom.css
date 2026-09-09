@@ -22,6 +22,28 @@
   border: 0;
 }
 
+/* ===== Tables: fit the article column instead of forcing a horizontal
+   scrollbar. table-layout:auto sizes a table from its content's preferred
+   width with no upper bound; capping it at the container's width makes long
+   cells wrap instead of pushing the table wider than the page. ============ */
+.bd-article table {
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+}
+.bd-article table td,
+.bd-article table th {
+  overflow-wrap: break-word;
+}
+/* Sphinx wraps inline code in a single white-space:nowrap span, which is
+   right in prose but lets one long identifier list force a table cell wide.
+   Table cells are the one place breaking a code token mid-word is better
+   than the cell (and the whole table) overflowing. */
+.bd-article table code .pre {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
 /* ===== Home page logo: swap for the dark scheme ======================= */
 .rh-logo-light, .rh-logo-dark {
   max-width: 420px;

@@ -208,7 +208,7 @@ RAVEN MATLAB: `checkTasks`. raven-toolbox: `check_tasks`, `find_task_essential_r
 ## Cross-toolbox parity decisions
 
 Policy: where Python and MATLAB RAVEN disagree on a default, pick one value for
-both rather than let them drift, except where the divergence is forced by a real
+both rather than let them diverge, except where the divergence is forced by a real
 implementation difference (different solver stack, different algorithm, different
 data schema), in which case forcing identical values would change correct
 behaviour into incorrect behaviour. Every row below either says which side has to

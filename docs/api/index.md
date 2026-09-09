@@ -33,10 +33,10 @@ To move between the two implementations, use the **[MATLAB vs Python](../matlab-
 table, which pairs every function that exists in both (`camelCase` ↔ `snake_case`) and
 links to both references.
 
-## How the two line up
+## How the two compare
 
 The implementations are deliberately kept aligned. The main differences are
-mechanical:
+in calling convention, not in what the functions compute:
 
 | | RAVEN (MATLAB) | raven-toolbox (Python) |
 |---|---|---|

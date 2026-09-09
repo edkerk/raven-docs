@@ -1,6 +1,7 @@
 # 16. Combining and simplifying models
 
-Two operations that look like bookkeeping and are not. **Merging** puts models
+This page covers two operations that look like simple bookkeeping but carry real
+risk. **Merging** puts models
 together: a draft and a template, two organisms, a curated core and an
 extension, and the result is only as sound as the assumption that a metabolite
 in one model is the same molecule as in the other. **Simplifying** takes a model
@@ -20,8 +21,8 @@ you needed.
 ## Setup
 
 `smallYeast.yml`, and a second model to merge it with. Taking a copy and giving
-it a new id keeps the example honest: whatever the merge does to two identical
-models is the clearest possible statement of what it matches on.
+it a new id makes the comparison unambiguous: whatever the merge does to two
+identical models is the clearest possible statement of what it matches on.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -114,7 +115,7 @@ way, without a warning.
 Matching on id is the right choice when both models come from the same
 database, where the ids mean the same thing and the names may not.
 
-:::{warning} Names, not identifiers
+:::{warning} Merging matches on names, not identifiers
 Two models built from different databases usually share almost no metabolite
 **names** either, in which case merging produces a model with two disconnected
 halves that happen to live in the same struct. Merging is a claim that the

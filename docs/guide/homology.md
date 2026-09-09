@@ -8,7 +8,7 @@ each template reaction whose genes have an accepted match is copied across.
 The work happens in two steps: a sequence search that produces a table of hits,
 and a transfer step that decides which of those hits are good enough to carry a
 reaction. The cut-offs used by the second step determine the size and the
-reliability of the draft, and they are where the method's assumptions sit.
+reliability of the draft, and they are what encode the method's assumptions.
 
 ### Functions on this page
 
@@ -125,7 +125,7 @@ The shape of the result differs between the toolboxes. RAVEN returns a struct
 array with one entry per direction, each carrying `fromId`, `toId`, `fromGenes`,
 `toGenes` and per-hit `evalue`, `aligLen` and `identity` vectors. raven-toolbox
 returns a single `pandas` DataFrame with `from_id` and `to_id` columns, so both
-directions sit in one table and can be filtered with ordinary DataFrame
+directions are in one table and can be filtered with ordinary DataFrame
 operations before being passed on.
 
 Both call the same BLAST+ executables with the same parameters, which is why the
@@ -137,7 +137,7 @@ instead if `RAVEN_PYTHON_BLASTP` points at them.
 `getDiamond` and `run_diamond` are drop-in alternatives that search with DIAMOND
 instead. DIAMOND indexes the database and searches in reduced amino-acid
 alphabets, which makes it one to two orders of magnitude faster on a full
-proteome pair (minutes rather than hours) at the cost of sensitivity for
+proteome pair (minutes rather than hours), and less sensitive for
 distant homologs, where the seeds it uses are less likely to match. For a
 template within the same genus the difference is small; for a template several
 hundred million years away, BLASTP finds pairs DIAMOND misses.
@@ -266,7 +266,7 @@ strict draft: 32 rxns, 46 genes
 :::
 ::::
 
-Raising the two thresholds costs five reactions and eight genes. Whether that is
+Raising the two thresholds removes five reactions and eight genes. Whether that is
 an improvement depends on what the draft is for: a model that will be curated
 by hand benefits from the extra candidates, since a wrong reaction is easier to
 spot than a missing one, while a model used directly for prediction is better

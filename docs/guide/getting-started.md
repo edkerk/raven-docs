@@ -8,11 +8,11 @@ gene. Every later page assumes these operations.
 | MATLAB | Python | |
 |---|---|---|
 | `readYAMLmodel` | `read_yaml_model` | read a RAVEN YAML model |
-| `importModel` | `read_sbml_model` {bdg-secondary}`cobrapy` | read an SBML model |
-| `printModelStats` | model attributes {bdg-secondary}`cobrapy` | how big the model is |
-| `getIndexes` | `get_by_id` {bdg-secondary}`cobrapy` | look something up by identifier |
-| `constructEquations` | `Reaction.reaction` {bdg-secondary}`cobrapy` | a reaction as a readable string |
-| `getElementalBalance` | `check_mass_balance` {bdg-secondary}`cobrapy` | is a reaction balanced |
+| `importModel` | `read_sbml_model` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | read an SBML model |
+| `printModelStats` | model attributes {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | how big the model is |
+| `getIndexes` | `get_by_id` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | look something up by identifier |
+| `constructEquations` | `Reaction.reaction` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | a reaction as a readable string |
+| `getElementalBalance` | `check_mass_balance` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | is a reaction balanced |
 
 ## Setup
 
@@ -336,7 +336,7 @@ decide, so an empty result covers both "balanced" and "nothing to check".
 
 ## See also
 
-- [User guide overview](index.md), the other pages, and what is still planned.
+- [Guide overview](index.md), the other pages, and what is still planned.
 - [MATLAB vs Python](../raven3-vs-raven-toolbox.md), what each toolbox has, and where
   cobrapy takes over.
 - [API reference](../api/index.md), every function in both toolboxes.
