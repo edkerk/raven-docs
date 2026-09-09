@@ -1,16 +1,9 @@
 # Human-GEM cell-type model validation: raven-toolbox vs RAVEN
 
-Validation of raven-toolbox's tINIT/ftINIT against MATLAB RAVEN on a real genome-scale
+Validation of raven-toolbox's ftINIT against MATLAB RAVEN on a real genome-scale
 reconstruction (Human-GEM) using the Hart2015 RNA-seq dataset (5 cell lines: DLD1,
 GBM, HCT116, HELA, RPE1). The goal is functional equivalence: do raven-toolbox and RAVEN
 extract the *same* context-specific reaction sets from the same inputs?
-
-:::{note} The tINIT half is a record, not current behaviour
-raven-toolbox has since removed tINIT
-([raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148))
-and implements ftINIT alone; `get_init_model` no longer exists there, though
-MATLAB RAVEN keeps `getINITModel`. This study is left as it was run.
-:::
 
 ## Method
 
@@ -24,8 +17,6 @@ MATLAB RAVEN keeps `getINITModel`. This study is left as it was run.
   (`score_reactions_from_genes`), matching RAVEN's `getExprForRxnScore`.
 * **ftINIT.** Series `1+1` (2 staged MILP steps). RAVEN run via `ftINIT.m` with Gurobi;
   raven-toolbox via `raven_toolbox.init.ftinit` with Gurobi (`mip_gap=0.001`, `time_limit=600`).
-* **tINIT.** raven-toolbox `get_init_model` (classic single-MILP INIT) on HCT116, compared to
-  the ftINIT result for the same cell line.
 * **Tasks.** Two raven-toolbox ftINIT variants: *no-task* (expression only) and
   *task-constrained* (essential metabolic tasks, `metabolicTasks_Essential.txt`, force
   task-essential reactions to be kept). RAVEN's reference is task-constrained.
@@ -40,8 +31,7 @@ RAVEN's design:
    `sum()` re-canonicalises a growing sympy expression at each term; hub metabolites
    (ATP/H⁺/H₂O in ~10³ reactions) made one constraint take ~minutes (≈154 s total build,
    benchmark: 1500-term `sum` = 59 s vs `optlang.symbolics.add` = 0.01 s). Fixed by
-   building flat term lists once per reaction and summing with `optlang.symbolics.add`
-   (in both ftINIT and tINIT).
+   building flat term lists once per reaction and summing with `optlang.symbolics.add`.
 2. **Big-M too loose.** The on/off indicator constraints used each reaction's own bound
    (±1000) as big-M; with `force_on=0.1` that is a ~10⁴ ratio → very weak LP relaxation
    → Gurobi never closes the gap. RAVEN uses a fixed big-M = 100. Adopted.
@@ -66,8 +56,7 @@ comparable to RAVEN.
 | RPE1      | 7569 | 7564 | 7570 |
 
 Counts agree within ~0.5 % everywhere; the task-constrained run is closest (e.g. RPE1
-7570 vs 7569, HCT116 7776 vs 7780). raven-toolbox tINIT (HCT116) gives 6024 reactions, a
-smaller model, as expected from the different (classic INIT) objective.
+7570 vs 7569, HCT116 7776 vs 7780).
 
 ### Agreement: raven-toolbox (no-task) ftINIT vs RAVEN ftINIT
 
@@ -100,13 +89,6 @@ Adding the essential metabolic tasks (same task list RAVEN uses) raises agreemen
 reactions. The residual ≈80 reactions each way out of ~7700 is at the level expected from
 MIP-gap tolerance (both accept near-optimal incumbents) and alternate optima.
 
-### raven-toolbox tINIT vs ftINIT (HCT116)
-
-tINIT 6024 rxns vs ftINIT 7752; shared 5957, Jaccard 0.762. tINIT is nearly a subset
-(only 67 reactions unique to it): the two methods agree on a common core, with ftINIT
-keeping more (its staged formulation and task handling are less aggressive at removal).
-This matches the expected tINIT/ftINIT relationship rather than indicating a defect.
-
 ## Conclusions
 
 From identical inputs on a genome-scale human reconstruction, raven-toolbox reproduces RAVEN's
@@ -119,6 +101,6 @@ systematic divergence.
 Reaching genome-scale tractability required matching RAVEN's numerical-conditioning
 choices and fixing optlang-specific construction costs (see *Engineering findings*):
 fixed big-M = 100, `rescaleModelForINIT`, `optlang.symbolics.add` instead of Python
-`sum()` in every MILP build (ftINIT, tINIT, and the gap-fill). With these, a
+`sum()` in every MILP build (ftINIT and the gap-fill). With these, a
 task-constrained cell-line model builds in ~15–25 min (dominated by the
 essential-forced staged MILP) and a no-task one in ~3 min, comparable to RAVEN.

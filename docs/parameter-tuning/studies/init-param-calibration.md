@@ -1,6 +1,6 @@
-# (f)tINIT parameter calibration & input-robustness
+# ftINIT parameter calibration & input-robustness
 
-Empirical study of raven-toolbox's (f)tINIT parameters on a genome-scale model (Human-GEM,
+Empirical study of raven-toolbox's ftINIT parameters on a genome-scale model (Human-GEM,
 Hart2015 / HCT116). Two questions:
 
 1. **Calibration**: on clean data, which parameter values give the best speed/quality
@@ -8,14 +8,6 @@ Hart2015 / HCT116). Two questions:
 2. **Robustness**: with the task layer always on (it is part of the pipeline, not a
    variable), how does degrading the *transcriptomics input* affect the model, and which
    parameters keep it functional and stable? (`scripts/analyze_init_robustness.py`)
-
-:::{note} The tINIT sections are a record, not current behaviour
-raven-toolbox has since removed tINIT
-([raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148))
-and implements ftINIT alone; `run_init` and `get_init_model` no longer exist
-there, though MATLAB RAVEN keeps `runINIT` and `getINITModel`. The sections
-below that measure them are left as they were run.
-:::
 
 Both scripts are resumable and reusable on any model/dataset; the numbers below are HCT116.
 "Jaccard" is reaction-set overlap with the reference (tightest setting / clean data); for
@@ -93,65 +85,6 @@ freely). → **Keep scaling on, msd=25** (RAVEN's default).
 set a `time_limit` (≈120–600 s/step) so a hard essential-forced step returns a near-optimal
 incumbent rather than grinding.
 
-### tINIT MILP (`get_init_model`, `essential_rxns=[]`, `time_limit=400s`)
-
-**mip_gap** (eps=1, prod_weight=0.5):
-
-| mip_gap | time (s) | n_kept | Jaccard vs gap=0.001 |
-|--------:|---------:|-------:|---------------------:|
-| 0.001 | 901 | 6024 | ref |
-| 0.003 | 869 | 6036 | 0.991 |
-| 0.01 | 595 | 5967 | 0.968 |
-
-Tightening the gap costs ~50% more wall time on this MILP (unlike ftINIT step-0, build
-doesn't dominate); a 1% gap is ~30% faster with ~3% reaction-set drift.
-→ **`mip_gap=0.001`** for stability, **0.01** for a faster looser solve.
-
-**eps** (gap=0.005, the connectivity-flux threshold, *changes the model*):
-
-| eps | n_kept | Jaccard vs eps=1.0 |
-|----:|-------:|-------------------:|
-| 0.1 | 6119 | 0.952 |
-| 0.5 | 6123 | 0.952 |
-| 1.0 | 6064 | ref |
-| 2.0 | 6090 | 0.960 |
-
-Each `eps` value gives a slightly different model (Jaccard ~0.95 across the range); the
-reaction-set spread is ~5%. `eps=1.0` is RAVEN's default; smaller values produce *slightly*
-larger models (loosen the connectivity threshold). Pick by what the data justifies; see the
-caveat at the top of `init.py`.
-
-**prod_weight** (gap=0.005, the metabolite-production reward, *changes the model*):
-
-| prod_weight | n_kept | Jaccard vs 0.5 |
-|------------:|-------:|---------------:|
-| 0.0 | 5973 | 0.961 |
-| 0.25 | 6015 | 0.974 |
-| 0.5 | 6064 | ref |
-| 1.0 | 6106 | 0.955 |
-
-A higher `prod_weight` keeps slightly more reactions (rewards more connectivity); `0.5`
-(RAVEN's default) is the middle of the range. Effect is modest (~5%).
-
-**big_m** (gap=0.005, `None` = per-reaction `ub`):
-
-| big_m | n_kept | Jaccard vs None |
-|------:|-------:|----------------:|
-| None (per-rxn ub) | 6064 | ref |
-| 1000 | 6064 | **1.000** |
-| 250 | 6114 | 0.953 |
-| 100 | 6023 | 0.930 |
-
-`big_m=1000` is identical to `big_m=None` here because the model's `ub` is ±1000 already
-(so the per-reaction cap *is* 1000). Smaller fixed caps (250, 100) shift alternate optima
-by 5–7% but do not change the objective. Unlike ftINIT, tINIT has *not* been run through
-`rescaleModelForINIT`, so dropping `big_m` below 1000 may invalidate the LP feasibility
-region for reactions whose own bound is larger; keep the default (per-reaction `ub`).
-
-**tINIT calibration summary:** `mip_gap=0.001` (or 0.01 for ~30% speedup at ~3% drift);
-`eps`, `prod_weight`, `big_m` defaults are fine; they all change the *model*, not just
-tolerance, so tune by what the data and biology call for, not by these tables.
-
 ### ftINIT full pipeline (`ftinit`, series='1+1', no-task scaled prep, `time_limit=600s`)
 
 | config | time (s) | n_kept | Jaccard vs gap=0.001 |
@@ -172,33 +105,6 @@ reproducibility matters more than a few minutes.
 the LP relaxation harder for borderline reactions; `big_m=250` is the same speed as 100
 but shifts the reaction set ~2 %. → **Keep `big_m=100`** (RAVEN's value, what scaling is
 designed for).
-
-### tINIT + many task-essential reactions: a structural limitation
-
-ftINIT's task layer (gap-fill) and tINIT's task layer (forcing `essential_rxns`) are
-*not equivalent*. tINIT forces every essential reaction to carry `flux ≥ eps`. With
-Human-GEM's 113 task-essential reactions (the validation set), the resulting steady-state
-system is infeasible regardless of `eps`:
-
-| essentials passed to `run_init` | result |
-|---|---|
-| 0 (the original validation call) | ✅ ok, 6024 reactions |
-| 113 (merged-survivor IDs from `prep.essential_rxns`) | ❌ `infeasible` (proven by Gurobi presolve, ~330s) |
-| 260 (pre-merge IDs from `find_task_essential_reactions` cache) | ❌ `infeasible` (~480s) |
-
-Lowering `eps` (1.0 → 0.1) does **not** fix it; the issue is that 100+ reactions cannot
-simultaneously each carry a fixed positive flux in their forced direction at steady state.
-ftINIT avoids this by using an *adaptive* per-reaction forcing magnitude
-(`min(0.99·|previous flux|, force_on)`) so each essential is forced at a value it
-*actually carried* in a prior feasible solution. tINIT's `eps` mechanism applies
-one fixed value to every reaction and has no equivalent way to avoid this problem.
-
-**Practical takeaway.** For functional context-specific models on genome-scale data, use
-ftINIT, the task layer (gap-fill, adaptive essential forcing) is what makes the pipeline
-robust. tINIT remains useful for the small/no-essentials case (e.g. the
-expression-only baseline in the validation), but pairing it with the full task-essential
-set is a known incompatibility; the tINIT robustness study below is therefore reported
-with `essential_rxns=[]`.
 
 ---
 
@@ -270,61 +176,6 @@ gap-fill MILP (keeps it tractable). For *missing*-gene sparsity specifically, `n
 trades model size against confidence. For noise, defaults are already robust. No parameter
 restores fidelity lost to dropout; that is a property of the data, not the pipeline.
 
-### tINIT robustness: `essential_rxns=[]` (tINIT without the task layer)
-
-For the reasons in §1.5, tINIT cannot accept the full task-essential set as forced
-reactions; this section runs `get_init_model` with `essential_rxns=[]` to show the
-realistic tINIT behaviour on the same degradation gradient, i.e. the *cost of not
-having ftINIT's gap-fill mechanism*.
-
-| input | n_rxns | tasks pass | frac | Jaccard vs clean |
-|-------|-------:|-----------:|-----:|-----------------:|
-| **clean** | 6277 | **35/69** | **0.507** | ref |
-| dropout 50% | 4910 | 23/69 | 0.333 | 0.673 |
-| dropout 70% | 2807 | 21/69 | 0.304 | 0.408 |
-| noise σ=1.0 | 6661 | 25/69 | 0.362 | 0.878 |
-| noise σ=2.0 | 6146 | 24/69 | 0.348 | 0.869 |
-| downsample 50% | 5006 | 24/69 | 0.348 | 0.722 |
-| downsample 70% | 3541 | 19/69 | 0.275 | 0.515 |
-
-**The main contrast with ftINIT:**
-
-| | ftINIT (task layer) | tINIT (no task layer) |
-|---|---|---|
-| clean | 7777 rxns, **69/69 (1.000)** | 6277 rxns, **35/69 (0.507)** |
-| dropout 0.7 | 5113 rxns, **68/69 (0.986)**, J 0.594 | 2807 rxns, **21/69 (0.304)**, J 0.408 |
-| noise σ=2.0 | 7768 rxns, **69/69 (1.000)**, J 0.919 | 6146 rxns, **24/69 (0.348)**, J 0.869 |
-| downsample 0.7 | 6123 rxns, **68/69 (0.986)**, J 0.728 | 3541 rxns, **19/69 (0.275)**, J 0.515 |
-
-* tINIT-without-gap-fill fails roughly **half the essential tasks even on clean data**;
-  ftINIT-with-gap-fill passes them all. Under degradation tINIT collapses further (down
-  to 19/69 at 70 % downsample), ftINIT stays ≥67/69 throughout.
-* **Reaction-set drift is comparable** under noise (Jaccard 0.87 vs 0.92) but worse for
-  tINIT under sparsity (0.41 vs 0.59 at 70 % dropout) because there's no gap-fill to
-  re-add structurally needed reactions.
-
-This is *not* a critique of the tINIT algorithm; classic INIT was designed for the
-no-task-layer case. It is the empirical evidence for why ftINIT's design choices (task
-+ gap-fill, adaptive essential forcing) are the right ones for genome-scale tissue
-model extraction, and why tINIT is mostly useful here as a baseline.
-
-#### tINIT levers at dropout 70%
-
-| config | n_rxns | tasks pass | frac | Jaccard vs clean |
-|--------|-------:|-----------:|-----:|-----------------:|
-| default (prod_weight=0.5, eps=0.1) | 2807 | 21/69 | 0.304 | 0.408 |
-| prod_weight=0.0 | 2791 | 21/69 | 0.304 | 0.416 |
-| prod_weight=1.0 | 3386 | 22/69 | 0.319 | 0.485 |
-| prod_weight=2.0 | 3888 | 21/69 | 0.304 | 0.458 |
-| eps=0.5 | 2620 | 21/69 | 0.304 | 0.391 |
-| eps=1.0 | 3311 | 22/69 | 0.319 | 0.460 |
-
-Same conclusion as the ftINIT levers: parameter tuning can nudge (`prod_weight≥1.0`
-or a larger `eps` modestly grows the model and lifts Jaccard from 0.41 to ~0.48), but
-**no tINIT parameter recovers anything close to ftINIT's functionality** (22/69 at best
-vs ftINIT's 67–69/69 at the same dropout). The gap-fill layer, not the parameter
-choice, is what makes up the difference.
-
 ---
 
 ## 3. The gene-scoring constants have no confirmed source
@@ -361,8 +212,8 @@ networks), so local development works without a Gurobi licence.
 ## Reproducing
 
 ```bash
-python scripts/analyze_init_params.py    --cell HCT116 --sweeps ftinit_milp,prep_scale,tinit,ftinit_full
-python scripts/analyze_init_robustness.py --cell HCT116 --algo ftinit   # then --algo tinit
+python scripts/analyze_init_params.py    --cell HCT116 --sweeps ftinit_milp,prep_scale,ftinit_full
+python scripts/analyze_init_robustness.py --cell HCT116 --algo ftinit
 ```
 
 Both reuse the cached Human-GEM preps from the validation run

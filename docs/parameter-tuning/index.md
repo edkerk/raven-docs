@@ -82,13 +82,13 @@ The following criteria apply in rough priority order:
 | [Homology cut-off calibration](studies/homology-cutoff-calibration.md) | `min_align_len`, `min_identity`, `max_evalue` in homology-based reconstruction, measured against independent KEGG and OMA ortholog references across a 4-organism relatedness series |
 | [KEGG HMM cut-off calibration](studies/kegg-hmm-cutoff-calibration.md) | `cutoff`, `min_score_ratio_ko`, `min_score_ratio_g` in KEGG HMM-based reconstruction, measured against real KEGG gene→KO annotations across 4 organisms |
 
-## Context-specific extraction (INIT / ftINIT)
+## Context-specific extraction (ftINIT)
 
 | Study | Covers |
 |---|---|
-| [INIT parameter calibration](studies/init-param-calibration.md) | `mip_gap`, `time_limit` in INIT/ftINIT, measured on genome-scale Human-GEM (multiple cell lines) |
+| [ftINIT parameter calibration](studies/init-param-calibration.md) | `mip_gap`, `time_limit` in ftINIT, measured on genome-scale Human-GEM (multiple cell lines) |
 | [ftINIT reproducibility](studies/ftinit-determinism.md) | What `resolve_ties`/`prove_abs_gap` buy (and cost) on genome-scale Human-GEM, and how `reference_reactions` closes most of the remaining stability gap (13x less spurious essential-gene drift after a template edit) |
-| [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
+| [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
 
 ## Benchmarks
 
@@ -117,7 +117,7 @@ studies/kegg-hmm-cutoff-calibration
 
 ```{toctree}
 :hidden:
-:caption: Context-specific extraction (INIT / ftINIT)
+:caption: Context-specific extraction (ftINIT)
 
 studies/init-param-calibration
 studies/ftinit-determinism

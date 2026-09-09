@@ -1,12 +1,11 @@
 # RAVEN
 
-<img class="rh-logo-light" src="_static/raven-logo.png" alt="RAVEN">
-<img class="rh-logo-dark" src="_static/raven-logo-white.png" alt="RAVEN">
-
-**Reconstruction, Analysis and Visualization of Metabolic Networks**
-
-A toolkit for building, curating, and simulating genome-scale metabolic
-models, available as a **MATLAB** toolbox and a **Python** package built on cobrapy.
+<div class="rh-hero">
+  <img class="rh-logo-light" src="_static/raven-logo.png" alt="RAVEN">
+  <img class="rh-logo-dark" src="_static/raven-logo-white.png" alt="RAVEN">
+  <p class="rh-tag">MATLAB &amp; Python</p>
+  <p class="rh-tagline">A toolkit for building, curating, and simulating genome-scale metabolic models, available as a MATLAB toolbox and a Python package built on cobrapy.</p>
+</div>
 
 ## Install
 
@@ -166,6 +165,15 @@ If you use RAVEN in your research, please cite:
 
 See [Citations](references.md) for the full list, including the earlier
 RAVEN paper and the GEM reconstruction protocol.
+
+## Source code
+
+RAVEN is publicly available under the GPLv3 license at
+[SysBioChalmers/RAVEN](https://github.com/SysBioChalmers/RAVEN){.github},
+archived at
+[https://doi.org/10.5281/zenodo.3689518](https://doi.org/10.5281/zenodo.3689518).
+raven-toolbox, the Python port, is under the MIT license at
+[SysBioChalmers/raven-toolbox](https://github.com/SysBioChalmers/raven-toolbox){.github}.
 
 ```{toctree}
 :hidden:

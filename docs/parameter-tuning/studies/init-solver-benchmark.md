@@ -41,7 +41,7 @@ companion to the CI-scale `tests/test_init_solvers.py`.
   optlang `hybrid_interface` clone bug is fixed or GLPK gains usable MIP time-limit
   support.
 * **Toy / unit-test correctness is portable.** `tests/test_init_solvers.py` shows Gurobi
-  and GLPK give identical verdicts on the toy ftINIT/tINIT networks; the formulation
+  and GLPK give identical verdicts on the toy ftINIT networks; the formulation
   itself is solver-independent. Local development and CI work without a Gurobi license;
   only the genome-scale runs need it.
 * **Future portability work** is two concrete upstream fixes:
