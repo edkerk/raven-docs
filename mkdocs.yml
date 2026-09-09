@@ -173,7 +173,6 @@ nav:
       - 13. Gap-filling: guide/gap-filling.md
       - 14. Flux variability: guide/fva.md
       - 15. Random sampling: guide/sampling.md
-      - Flux sampling algorithms (CHRR / ACHR): parameter-tuning/flux-sampling-algorithms.md
       - 16. Combining and simplifying: guide/combining.md
       - 17. Comparing models: guide/comparing.md
       - 18. Reconstruction from homology: guide/homology.md
