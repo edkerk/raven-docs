@@ -56,12 +56,22 @@ html[data-theme="dark"] {
 
 /* ===== Home page hero ================================================= */
 .rh-hero { text-align: center; padding: 1.5rem 0 1rem; }
+/* align-items:flex-end puts the badge's bottom edge on the logo's bottom
+   edge, whatever the logo's rendered height turns out to be. */
+.rh-logo-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: .8rem;
+}
 .rh-tag {
   display: inline-block; font-size: .7rem; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase;
   color: var(--raven-accent);
   background: rgba(26,72,136,.12);
-  border-radius: 20px; padding: .2rem .75rem; margin-top: .8rem;
+  border-radius: 20px; padding: .2rem .75rem;
 }
 .rh-tagline {
   font-size: .95rem; color: var(--pst-color-text-muted);
@@ -70,10 +80,8 @@ html[data-theme="dark"] {
 
 /* ===== Home page logo: swap for the dark scheme ======================= */
 .rh-logo-light, .rh-logo-dark {
-  max-width: 380px;
-  width: 100%;
+  max-width: 340px;
   height: auto;
-  margin-bottom: .5rem;
 }
 .rh-logo-dark { display: none; }
 html[data-theme="dark"] .rh-logo-light { display: none; }
