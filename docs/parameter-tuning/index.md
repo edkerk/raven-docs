@@ -1,4 +1,4 @@
-# Methods & benchmarks
+# Methods
 
 RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships many
 functions with numerical defaults: solver tolerances, cut-offs, iteration

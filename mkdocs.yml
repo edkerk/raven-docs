@@ -158,7 +158,6 @@ nav:
           - RAVEN (MATLAB): installation/raven.md
           - raven-toolbox (Python): installation/python.md
           - Downloaded data and binaries: installation/data-and-binaries.md
-      - Migrating from RAVEN 2 (MATLAB): raven3-migration.md
       - 1. Getting started: guide/getting-started.md
       - 2. Model structure and identifiers: guide/model-structure.md
       - 3. Reading and writing models: guide/io.md
@@ -174,6 +173,7 @@ nav:
       - 13. Gap-filling: guide/gap-filling.md
       - 14. Flux variability: guide/fva.md
       - 15. Random sampling: guide/sampling.md
+      - Flux sampling algorithms (CHRR / ACHR): parameter-tuning/flux-sampling-algorithms.md
       - 16. Combining and simplifying: guide/combining.md
       - 17. Comparing models: guide/comparing.md
       - 18. Reconstruction from homology: guide/homology.md
@@ -200,22 +200,22 @@ nav:
           - 3 - Knockouts, MOMA and omics: tutorials/tutorial3.md
           - 4 - Fix an erroneous model: tutorials/tutorial4.md
           - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
-  - API reference: api/
-  - MATLAB vs Python:
-      - RAVEN 3 and raven-toolbox: raven3-vs-raven-toolbox.md
+  - Migrate:
+      - RAVEN 2 → RAVEN 3 (MATLAB): raven3-migration.md
+      - RAVEN 3 → raven-toolbox: raven3-vs-raven-toolbox.md
+      - Model file format (YAML): yaml-format.md
+  - Reference:
+      - API reference: api/
       - Function mapping: matlab-vs-python.md
       - Tuned parameter defaults: tuned-parameters.md
-      - Model file format (YAML): yaml-format.md
-  - Methods & benchmarks:
+      - Citations: references.md
+  - Methods:
       - Overview: parameter-tuning/index.md
-      - Flux sampling algorithms: parameter-tuning/flux-sampling-algorithms.md
       - Studies:
           - Homology cut-off calibration: parameter-tuning/studies/homology-cutoff-calibration.md
           - KEGG HMM cut-off calibration: parameter-tuning/studies/kegg-hmm-cutoff-calibration.md
           - Sampling convergence calibration: parameter-tuning/studies/sampling-convergence-calibration.md
           - INIT parameter calibration: parameter-tuning/studies/init-param-calibration.md
-          - INIT solver benchmark: parameter-tuning/studies/init-solver-benchmark.md
           - ftINIT reproducibility: parameter-tuning/studies/ftinit-determinism.md
           - Human-GEM validation vs MATLAB RAVEN: parameter-tuning/studies/humangem-validation.md
       - Parameter benchmarks: parameter-tuning/benchmarks.md
-  - References: references.md
