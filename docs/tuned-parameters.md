@@ -43,8 +43,7 @@ Both implementations expose all three sampling methods through one entry point.
 | `tol`, `reg` (in `max_volume_ellipsoid`) | `1e-6`, `1e-8` | Same on both sides. |
 
 **Full detail:** [sampling convergence study](parameter-tuning/studies/sampling-convergence-calibration.md)
-(the primary measurement) ·
-[CHRR/ACHR algorithm reference](parameter-tuning/flux-sampling-algorithms.md)
+(the primary measurement)
 
 ## FSEOF
 
