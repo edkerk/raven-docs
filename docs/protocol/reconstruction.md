@@ -11,7 +11,7 @@ model (GEM) **from homology**, using RAVEN. It follows the published protocol:
 All scripts and data are hosted in the
 [**hanpo-GEM**](https://github.com/SysBioChalmers/hanpo-GEM) repository, where
 `hanpo-GEM` is a short name for the model. The complete, runnable version of
-every command on these pages lives in
+every command on these pages is in
 [`code/reconstructionProtocol.m`](https://github.com/SysBioChalmers/hanpo-GEM/blob/main/code/reconstructionProtocol.m);
 the section numbering there matches the page titles here. The commands shown in
 these pages are occasionally more concise than in the script (typically around

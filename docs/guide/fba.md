@@ -42,7 +42,7 @@ arrives with a growth objective and an aerobic glucose medium already set.
     growth:    0.0809 /h
     ```
 
-    The objective lives in `model.c`, a vector with one entry per reaction, so
+    The objective is `model.c`, a vector with one entry per reaction, so
     `model.c == 1` finds the reaction being maximised. The two warnings come from
     the reader, not the solve; [3. Reading and writing models](io.md) explains
     both.

@@ -71,8 +71,8 @@ column in the stoichiometric matrix, which is what keeps everything consistent.
     rather than add them.
 
     Bounds are left alone. Rewriting an equation from `=>` to `<=>` does not
-    make the reaction reversible, because the direction lives in `lb` and `ub`
-    rather than in the arrow; 8.4 sets those separately. Both functions also
+    make the reaction reversible, because the direction is set by `lb` and `ub`
+    rather than by the arrow; 8.4 sets those separately. Both functions also
     take the `eqnType` and `allowNewMets` options of `addRxns`, and default to
     matching metabolites by id.
 

@@ -23,12 +23,12 @@ build time.
 Neither is a reduced version of the other, so the choice is usually made by
 what surrounds the model rather than by the toolbox itself.
 
-**Use raven-toolbox** if the work lives in Python, if you want the model
-to be a `cobra.Model` that every cobrapy tool accepts without conversion, if you
-need reproducible environments and CI, or if you need KEGG artefacts built
+**Use raven-toolbox** if the surrounding code is Python, if you want the model
+to be a `cobra.Model` that every cobrapy tool accepts without conversion, if
+you need reproducible environments and CI, or if you need KEGG artefacts built
 against a stated release rather than whatever is distributed.
 
-**Use RAVEN** if the work lives in MATLAB, if you need to reproduce a
+**Use RAVEN** if the surrounding code is MATLAB, if you need to reproduce a
 model built with tINIT, or if you need dynamic FBA or conversion to the COBRA
 Toolbox structure.
 

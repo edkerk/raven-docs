@@ -415,8 +415,9 @@ gap-filled reaction produces it internally.
     - **The model grows without a carbon source.** Usually a leak: some reaction
       produces carbon from nothing. [9. Quality control](quality-control.md) is
       where that gets diagnosed, with `canExchange` and `analyse_topology`.
-    - **Results that cannot be reproduced.** If a medium lives in a script, the
-      next person runs a different one. A condition file is data, and it diffs.
+    - **Results that cannot be reproduced.** If a medium is defined inside a
+      script, the next person runs a different one. A condition file is data,
+      and it diffs.
 
 ## See also
 
