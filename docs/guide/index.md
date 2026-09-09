@@ -69,7 +69,8 @@ original RAVEN paper. Both are MATLAB only.
 
 **Reconstruction**
 
-10. [Context-specific models (tINIT / ftINIT)](init.md), extracting a cell-line
+10. [Context-specific models (tINIT / ftINIT)](init.md), omics integration and
+    extracting a cell-line
     model from Human-GEM and RNA-seq, end to end.
 
 **Analysis and repair**
@@ -108,4 +109,5 @@ original RAVEN paper. Both are MATLAB only.
 Use the numbered pages to look something up; use the protocol to see a whole
 reconstruction in order.
 
-**Not yet written**: omics integration and compartment localisation.
+**Not yet written**: compartment localisation, which is still in development and
+not yet at parity between the two toolboxes.
