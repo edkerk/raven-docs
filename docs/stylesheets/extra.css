@@ -37,6 +37,15 @@
   --md-typeset-a-color:         #79b0ec;
 }
 
+/* ===== Inline links: visible as links in body text ===================== */
+/* Material's default gives body links a colour change but no underline, so
+   they read as normal prose unless a reader is specifically scanning for
+   them. Buttons keep their own style. */
+.md-typeset a:not(.md-button) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ===== Feature cards (Material grid cards) ============================ */
 .md-typeset .grid.cards > ul > li {
   border-radius: 12px;

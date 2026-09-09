@@ -86,6 +86,9 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
+    - navigation.path
+    - navigation.sections
+    - navigation.expand
     - navigation.top
     - navigation.tracking
     - navigation.indexes
@@ -200,10 +203,12 @@ nav:
           - 4 - Fix an erroneous model: tutorials/tutorial4.md
           - 5 - Reconstruct from KEGG: tutorials/tutorial5.md
   - Migrate:
+      - Overview: migrate.md
       - RAVEN 2 → RAVEN 3 (MATLAB): raven3-migration.md
       - RAVEN 3 → raven-toolbox: raven3-vs-raven-toolbox.md
       - Model file format (YAML): yaml-format.md
   - Reference:
+      - Overview: reference.md
       - API reference: api/
       - Function mapping: matlab-vs-python.md
       - Tuned parameter defaults: tuned-parameters.md
