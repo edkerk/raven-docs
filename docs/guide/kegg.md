@@ -66,9 +66,11 @@ the one to prefer when it applies.
     ```
 
     The artefacts (a reference model and three tables, about 47 MB) are fetched
-    from the `kegg118` raven-data release on first use and cached. Expect around
-    five minutes for the first run and much the same afterwards: the download is
-    not the slow part, assembling the draft from the tables is.
+    from the `kegg118` raven-data release on first use and cached; see
+    [Downloaded data and binaries](../installation/data-and-binaries.md) for
+    where, and how to fetch them ahead of a batch run. Expect around five
+    minutes for the first run and much the same afterwards: the download is not
+    the slow part, assembling the draft from the tables is.
 
 ## 19.2 When it is not
 
@@ -96,7 +98,10 @@ one per KO, trained on either prokaryotic or eukaryotic sequences.
 This is the expensive route. The eukaryotic HMM library alone is **129 MB
 compressed**, and `hmmsearch` against every KO takes tens of minutes to hours for
 a full proteome, which is why `outDir` exists in the MATLAB version: results are
-kept per-KO so an interrupted run can resume rather than start again.
+kept per-KO so an interrupted run can resume rather than start again. It also
+needs HMMER, which has no bundle for every platform;
+[Downloaded data and binaries](../installation/data-and-binaries.md) has the
+matrix.
 
 The organism id still matters even here. It sets the phylogenetic distance used
 to weight the KO assignments, so pick the closest relative KEGG does have.

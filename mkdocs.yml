@@ -3,6 +3,7 @@ site_description: >-
   Reconstruction, Analysis and Visualization of Metabolic Networks, the RAVEN
   Toolbox (MATLAB) and raven-toolbox, documented side by side.
 site_author: Wang, Marcisauskas, Sanchez, Domenzain, Hermansson, Agren, Nielsen, Kerkhoven et al.
+site_url: https://raven-docs.readthedocs.io/en/latest/
 repo_url: https://github.com/SysBioChalmers/RAVEN
 repo_name: SysBioChalmers/RAVEN
 edit_uri: ""
@@ -156,6 +157,7 @@ nav:
           - Overview: installation/index.md
           - RAVEN (MATLAB): installation/raven.md
           - raven-toolbox (Python): installation/python.md
+          - Downloaded data and binaries: installation/data-and-binaries.md
       - Migrating from RAVEN 2 (MATLAB): raven3-migration.md
       - 1. Getting started: guide/getting-started.md
       - 2. Model structure and identifiers: guide/model-structure.md

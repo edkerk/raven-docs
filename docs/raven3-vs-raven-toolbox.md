@@ -104,8 +104,11 @@ reaction only when a loopless FVA shows it carries flux there.
 - **Biomass helpers**: sum a biomass composition, rescale a pseudoreaction, and
   scale a fraction to a measured value.
 - **Checksummed provisioning**: both toolboxes now fetch BLAST+, DIAMOND,
-  HMMER and the KEGG artefacts on demand rather than bundling them; what is
-  Python-only is verifying each download against a checksummed manifest.
+  HMMER and the KEGG artefacts on demand rather than bundling them, from the
+  same release. What is Python-only is the baked registry that pins a given
+  release to the exact assets it was tested against; RAVEN resolves from the
+  published release each time. See
+  [Downloaded data and binaries](installation/data-and-binaries.md).
 
 ## What only RAVEN has
 
