@@ -9,9 +9,11 @@ glycolysis) and extend it until it forms a functional network. The companion
 script `tutorial2_solutions.m` reads the provided solution model `small.yml`
 directly with `readYAMLmodel`.
 
-!!! question "Goal"
-    Build a model of glycolysis and answer: **how many units of ATP can be
-    generated from one unit of sucrose?**
+:::{admonition} Goal
+:class: question
+Build a model of glycolysis and answer: **how many units of ATP can be
+generated from one unit of sucrose?**
+:::
 
 ## Step by step
 
@@ -77,6 +79,6 @@ for more details and the worked answer.
 
 ## Full script
 
-```matlab
---8<-- "RAVEN/tutorial/tutorial2.m"
+```{literalinclude} ../../RAVEN/tutorial/tutorial2.m
+:language: matlab
 ```

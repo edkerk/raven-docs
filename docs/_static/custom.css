@@ -1,0 +1,9 @@
+/* ===== Inline links: visible as links in body text ===================== */
+/* pydata-sphinx-theme's default gives body links a colour change but no
+   underline, so they read as normal prose unless a reader is specifically
+   scanning for them. External-reference icons already carry their own cue,
+   so they are excluded. */
+.bd-article a:not(.reference.external) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

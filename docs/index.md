@@ -1,151 +1,153 @@
-<div class="rh-hero">
-  <img class="rh-hero-logo rh-hero-logo-light" src="assets/raven-logo.png" alt="RAVEN">
-  <img class="rh-hero-logo rh-hero-logo-dark" src="assets/raven-logo-white.png" alt="RAVEN">
-  <p class="rh-tag">MATLAB &amp; Python</p>
-  <h1>Reconstruction, Analysis and Visualization<br>of Metabolic Networks</h1>
-  <p class="rh-tagline">A toolkit for building, curating, and simulating genome-scale metabolic models, available as a MATLAB toolbox and a Python package built on cobrapy.</p>
-  <div class="rh-badges">
-    <span class="rh-badge">MIT license</span>
-    <span class="rh-badge">Python ≥ 3.11</span>
-    <span class="rh-badge">MATLAB R2016b+</span>
-    <span class="rh-badge">cobrapy</span>
-    <span class="rh-badge">SBML</span>
-    <span class="rh-badge">Gurobi · GLPK</span>
-    <span class="rh-badge">Windows · macOS · Linux</span>
-    <span class="rh-badge">DOI 10.1371/journal.pcbi.1006541</span>
-  </div>
-</div>
+# RAVEN
 
-<div class="rh-install">
-  <div class="rh-install-tabs">
-    <button class="rh-itab active" data-cmd="pip install raven-toolbox">Python (pip)</button>
-    <button class="rh-itab" data-cmd="Home &rarr; Add-Ons &rarr; Get Add-Ons &rarr; search RAVEN Toolbox" data-plain>MATLAB (Add-Ons)</button>
-    <button class="rh-itab" data-cmd="git clone https://github.com/SysBioChalmers/raven-toolbox.git&#10;pip install -e raven-toolbox/">Python (git)</button>
-    <button class="rh-itab" data-cmd="git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git">MATLAB (git)</button>
-  </div>
-  <div class="rh-code-row">
-    <code id="rh-cmd">pip install raven-toolbox</code>
-    <button class="rh-copy" onclick="navigator.clipboard.writeText(document.getElementById('rh-cmd').innerText)" title="Copy to clipboard" aria-label="Copy">:octicons-copy-16:</button>
-  </div>
-</div>
+**Reconstruction, Analysis and Visualization of Metabolic Networks**
 
-<p class="rh-section-label">Key features</p>
+A toolkit for building, curating, and simulating genome-scale metabolic
+models, available as a MATLAB toolbox and a Python package built on cobrapy.
 
-<div class="grid cards rh-features" markdown>
+MIT license · Python ≥ 3.11 · MATLAB R2016b+ · cobrapy · SBML · Gurobi · GLPK
+· Windows · macOS · Linux · DOI
+[10.1371/journal.pcbi.1006541](https://doi.org/10.1371/journal.pcbi.1006541)
 
--   :material-dna:{ .rh-feat-icon }
+## Install
 
-    **Homology reconstruction**
+::::{tab-set}
+:::{tab-item} Python (pip)
 
-    Build draft models by transferring reactions from template models using BLAST+, DIAMOND, or HMMER.
+```bash
+pip install raven-toolbox
+```
+:::
+:::{tab-item} MATLAB (Add-Ons)
 
--   :material-database:{ .rh-feat-icon }
+Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox"
+:::
+:::{tab-item} Python (git)
 
-    **KEGG-based reconstruction**
+```bash
+git clone https://github.com/SysBioChalmers/raven-toolbox.git
+pip install -e raven-toolbox/
+```
+:::
+:::{tab-item} MATLAB (git)
 
-    Reconstruct metabolic networks directly from KEGG organism annotations and pathway databases.
+```bash
+git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git
+```
+:::
+::::
 
--   :material-chart-line:{ .rh-feat-icon }
+## Key features
 
-    **Flux analysis**
+::::{grid} 1 2 3 3
 
-    FBA, FVA, gene knockouts, and flux sampling with Gurobi or GLPK solvers.
+:::{grid-item-card} Homology reconstruction
+Build draft models by transferring reactions from template models using
+BLAST+, DIAMOND, or HMMER.
+:::
 
--   :material-layers:{ .rh-feat-icon }
+:::{grid-item-card} KEGG-based reconstruction
+Reconstruct metabolic networks directly from KEGG organism annotations and
+pathway databases.
+:::
 
-    **ftINIT**
+:::{grid-item-card} Flux analysis
+FBA, FVA, gene knockouts, and flux sampling with Gurobi or GLPK solvers.
+:::
 
-    Fast task-and-data-driven INIT for extracting context-specific models from transcriptomics data.
+:::{grid-item-card} ftINIT
+Fast task-and-data-driven INIT for extracting context-specific models from
+transcriptomics data.
+:::
 
--   :material-transit-connection:{ .rh-feat-icon }
+:::{grid-item-card} Gap-filling
+Identify and fill stoichiometric gaps by LP to restore connectivity or
+enable predicted growth.
+:::
 
-    **Gap-filling**
+:::{grid-item-card} Model curation
+Check mass and charge balance, dead-end metabolites, and metabolic task
+fulfilment.
+:::
 
-    Identify and fill stoichiometric gaps by LP to restore connectivity or enable predicted growth.
+::::
 
--   :material-clipboard-check:{ .rh-feat-icon }
+## Quick start
 
-    **Model curation**
+::::{tab-set}
+:::{tab-item} Python
 
-    Check mass and charge balance, dead-end metabolites, and metabolic task fulfilment.
+```python
+from raven_toolbox.io import read_yaml_model
 
-</div>
+# load yeast-GEM from RAVEN YAML -- returns a plain cobra.Model
+model = read_yaml_model("yeast-GEM.yml")
 
-<hr class="rh-divider">
+# set growth as the objective
+model.objective = "r_2111"
 
-<p class="rh-section-label">Quick start</p>
+# constrain glucose uptake to 1 mmol/gDW/h
+model.reactions.get_by_id("r_1714").lower_bound = -1.0
 
-=== "Python"
+# run FBA -- simulation comes from cobrapy, unchanged
+sol = model.optimize()
+print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
+```
+:::
+:::{tab-item} MATLAB
 
-    ```python
-    from raven_toolbox.io import read_yaml_model
+```matlab
+% load yeast-GEM from RAVEN YAML
+model = readYAMLmodel('yeast-GEM.yml');
 
-    # load yeast-GEM from RAVEN YAML -- returns a plain cobra.Model
-    model = read_yaml_model("yeast-GEM.yml")
+% set growth as the objective
+model = setParam(model, 'obj', 'r_2111', 1);
 
-    # set growth as the objective
-    model.objective = "r_2111"
+% constrain glucose uptake to 1 mmol/gDW/h
+model = setParam(model, 'lb', 'r_1714', -1);
 
-    # constrain glucose uptake to 1 mmol/gDW/h
-    model.reactions.get_by_id("r_1714").lower_bound = -1.0
+% run FBA
+sol = solveLP(model);
+fprintf('Growth rate: %.4f h-1\n', sol.f);
+```
+:::
+::::
 
-    # run FBA -- simulation comes from cobrapy, unchanged
-    sol = model.optimize()
-    print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
-    ```
+## Documentation
 
-=== "MATLAB"
+::::{grid} 1 2 2 2
 
-    ```matlab
-    % load yeast-GEM from RAVEN YAML
-    model = readYAMLmodel('yeast-GEM.yml');
+:::{grid-item-card} User guide
+:link: guide/index
+:link-type: doc
 
-    % set growth as the objective
-    model = setParam(model, 'obj', 'r_2111', 1);
+Nineteen task-focused pages, MATLAB and Python side by side, every example
+executed and checked on each commit.
+:::
 
-    % constrain glucose uptake to 1 mmol/gDW/h
-    model = setParam(model, 'lb', 'r_1714', -1);
+:::{grid-item-card} API reference
+:link: api/index
+:link-type: doc
 
-    % run FBA
-    sol = solveLP(model);
-    fprintf('Growth rate: %.4f h-1\n', sol.f);
-    ```
+Complete function reference for both MATLAB and Python.
+:::
 
-<hr class="rh-divider">
+:::{grid-item-card} Installation
+:link: installation/index
+:link-type: doc
 
-<p class="rh-section-label">Documentation</p>
+Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
+:::
 
-<div class="grid cards rh-docs" markdown>
+:::{grid-item-card} RAVEN 3 and raven-toolbox
+:link: raven3-vs-raven-toolbox
+:link-type: doc
 
--   :material-book-open-variant:
+Which to use for what, what only one of them has, and where the same
+function gives a different answer.
+:::
 
-    **[User guide](guide/index.md)**
-
-    Nineteen task-focused pages, MATLAB and Python side by side, every example
-    executed and checked on each commit.
-
--   :material-api:
-
-    **[API reference](api/index.md)**
-
-    Complete function reference for both MATLAB and Python.
-
--   :material-download:
-
-    **[Installation](installation/index.md)**
-
-    Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
-
--   :material-compare-horizontal:
-
-    **[RAVEN 3 and raven-toolbox](raven3-vs-raven-toolbox.md)**
-
-    Which to use for what, what only one of them has, and where the same function
-    gives a different answer.
-
-</div>
-
----
+::::
 
 ## Citing RAVEN
 
@@ -172,16 +174,11 @@ If you use the GEM reconstruction protocol, also cite:
 
 See [References](references.md) for the full list including methods cited in the protocol.
 
-<script>
-(function () {
-  var tabs = document.querySelectorAll('.rh-itab');
-  var cmd  = document.getElementById('rh-cmd');
-  tabs.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      tabs.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      cmd.innerHTML = btn.dataset.cmd;
-    });
-  });
-})();
-</script>
+```{toctree}
+:hidden:
+
+guide/index
+migrate
+reference
+parameter-tuning/index
+```

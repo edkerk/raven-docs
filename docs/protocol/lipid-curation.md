@@ -5,9 +5,10 @@ known to differ in the target organism. Using the **SLIME** formalism (*Split
 Lipids Into Measurable Entities*) to describe lipid metabolism requires curating
 the lipid reactions to match the lipids in the biomass reaction.
 
-!!! note "Order matters"
-    This step can also be done after gap-filling, but the curation may influence
-    the gap-filling result, so it is done first here.
+:::{note} Order matters
+This step can also be done after gap-filling, but the curation may influence
+the gap-filling result, so it is done first here.
+:::
 
 ## The SLIME formalism
 

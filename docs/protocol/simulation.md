@@ -37,10 +37,11 @@ newRelease(model);
 versions in the history file. Commits and releases become public only once
 pushed to the online repository.
 
-!!! note "Standardised repository structure"
-    hanpo-GEM follows a standardised layout: `model/` holds the latest model in
-    several formats, while `code/` and `data/` contain everything needed to
-    regenerate the model and run analyses.
+:::{note} Standardised repository structure
+hanpo-GEM follows a standardised layout: `model/` holds the latest model in
+several formats, while `code/` and `data/` contain everything needed to
+regenerate the model and run analyses.
+:::
 
 ## 3.8 Perform simulations
 

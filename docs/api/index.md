@@ -41,11 +41,19 @@ mechanical:
 | Indexing | 1-based | 0-based |
 | Model object | RAVEN `model` struct | `cobra.Model` with RAVEN extensions |
 
-!!! note "A note on the two docstring styles"
-    raven-toolbox's docstrings are NumPy-style, so they render as structured
-    parameter/return tables. RAVEN's MATLAB help blocks use the toolbox's own
-    indented convention, so they render as faithful help text rather than typed
-    tables. The content is the same; only the formatting differs.
+:::{note} A note on the two docstring styles
+raven-toolbox's docstrings are NumPy-style, so they render as structured
+parameter/return tables. RAVEN's MATLAB help blocks use the toolbox's own
+indented convention, so they render as faithful help text rather than typed
+tables. The content is the same; only the formatting differs.
+:::
 
 Use the navigation to browse either tree, or start from the
 [MATLAB vs Python](../matlab-vs-python.md) table.
+
+```{toctree}
+:hidden:
+
+matlab/index
+python/index
+```

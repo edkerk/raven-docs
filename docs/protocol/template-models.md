@@ -32,10 +32,11 @@ writes an `.xlsx` with five sheets: `RXNS`, `METS`, `COMPS`, `GENES` and
 exportToExcelFormat(modelSce, 'modelSce.xlsx');
 ```
 
-!!! tip "Use a scrap folder"
-    During reconstruction you often write files you don't want to track in git.
-    The hanpo-GEM repository keeps these in a `scrap/` folder that is excluded
-    from version control.
+:::{tip} Use a scrap folder
+During reconstruction you often write files you don't want to track in git.
+The hanpo-GEM repository keeps these in a `scrap/` folder that is excluded
+from version control.
+:::
 
 Make changes to the model **in MATLAB**, not in the Excel file, and export to
 SBML when desired:

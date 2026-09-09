@@ -61,12 +61,13 @@ model = deleteUnusedGenes(model);
 The model can now produce all the macromolecules that constitute *H. polymorpha*
 biomass.
 
-!!! tip "Semi-automatic gap analysis"
-    Beyond automated `fillGaps`, RAVEN offers functions to *find* gaps:
-    `canExchange` (net synthesis or consumption of metabolites, `'produce'` or
-    `'consume'`), `checkProduction` (smallest set of metabolites needing net
-    synthesis), `getAllSubGraphs` (disconnected subnetworks) and `haveFlux`
-    (reactions that can/cannot carry flux). Absence of a biomass macromolecule
-    from `canExchange(model, 'produce')` indicates a gap.
+:::{tip} Semi-automatic gap analysis
+Beyond automated `fillGaps`, RAVEN offers functions to *find* gaps:
+`canExchange` (net synthesis or consumption of metabolites, `'produce'` or
+`'consume'`), `checkProduction` (smallest set of metabolites needing net
+synthesis), `getAllSubGraphs` (disconnected subnetworks) and `haveFlux`
+(reactions that can/cannot carry flux). Absence of a biomass macromolecule
+from `canExchange(model, 'produce')` indicates a gap.
+:::
 
 Next: [Save and simulate](simulation.md).

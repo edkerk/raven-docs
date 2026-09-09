@@ -46,90 +46,94 @@ metNames	comps	formula	charge	metNotes
 
 ## 21.1 Apply a table
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    model = readYAMLmodel('smallYeast.yml');
-    fprintf('before: metCharges %d, metNotes %d\n', ...
-        isfield(model, 'metCharges'), isfield(model, 'metNotes'));
+```matlab
+model = readYAMLmodel('smallYeast.yml');
+fprintf('before: metCharges %d, metNotes %d\n', ...
+    isfield(model, 'metCharges'), isfield(model, 'metNotes'));
 
-    curated = curateModelFromTables(model, 'curation-mets.tsv');
-    fprintf('after:  metCharges %d, metNotes %d\n', ...
-        isfield(curated, 'metCharges'), isfield(curated, 'metNotes'));
+curated = curateModelFromTables(model, 'curation-mets.tsv');
+fprintf('after:  metCharges %d, metNotes %d\n', ...
+    isfield(curated, 'metCharges'), isfield(curated, 'metNotes'));
 
-    idx = getIndexes(curated, 'MAL_m', 'mets');
-    fprintf('%s formula %s\n', curated.metNames{idx}, curated.metFormulas{idx});
-    ```
+idx = getIndexes(curated, 'MAL_m', 'mets');
+fprintf('%s formula %s\n', curated.metNames{idx}, curated.metFormulas{idx});
+```
 
-    ```text title="Output"
-    before: metCharges 0, metNotes 0
-    [Warning: The following metabolites are already present in the model, their annotation will be overwritten to match the metsInfo file. If you do not particularly want to curate their annotations, it would be better to removes these metabolites from metsInfo: (S)-malate[m]
-    		2-oxoglutarate[m]
-    		2-phospho-D-glycerate[c]
-    		3-phospho-D-glycerate[c]]
-    after:  metCharges 0, metNotes 0
-    (S)-malate formula C4H6O5
-    ```
+```text
+before: metCharges 0, metNotes 0
+[Warning: The following metabolites are already present in the model, their annotation will be overwritten to match the metsInfo file. If you do not particularly want to curate their annotations, it would be better to removes these metabolites from metsInfo: (S)-malate[m]
+		2-oxoglutarate[m]
+		2-phospho-D-glycerate[c]
+		3-phospho-D-glycerate[c]]
+after:  metCharges 0, metNotes 0
+(S)-malate formula C4H6O5
+```
 
-    A model with no charges has no `metCharges` field at all, rather than a field
-    full of `NaN`. RAVEN's optional fields work this way throughout, so code that
-    reads one should check with `isfield` first.
+A model with no charges has no `metCharges` field at all, rather than a field
+full of `NaN`. RAVEN's optional fields work this way throughout, so code that
+reads one should check with `isfield` first.
 
-    Both fields are still absent afterwards. `curateModelFromTables` writes an
-    optional field onto an **existing** metabolite only when the model already
-    carries that field.
-    `smallYeast.yml` has neither `metCharges` nor `metNotes`, so both columns are
-    dropped for these four rows, silently. `metFormulas` does exist, so the
-    formula column is applied. A metabolite the table *adds* is unaffected: it
-    arrives with every field the table supplies.
+Both fields are still absent afterwards. `curateModelFromTables` writes an
+optional field onto an **existing** metabolite only when the model already
+carries that field.
+`smallYeast.yml` has neither `metCharges` nor `metNotes`, so both columns are
+dropped for these four rows, silently. `metFormulas` does exist, so the
+formula column is applied. A metabolite the table *adds* is unaffected: it
+arrives with every field the table supplies.
 
-    `curateModelFromTables` returns a new struct and leaves its input alone, in
-    keeping with the rest of RAVEN.
+`curateModelFromTables` returns a new struct and leaves its input alone, in
+keeping with the rest of RAVEN.
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.curation import batch_curate_from_tsv
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    from raven_toolbox.curation import batch_curate_from_tsv
-    from raven_toolbox.io import read_yaml_model
+model = read_yaml_model("smallYeast.yml")
+print("charges before:", sum(1 for m in model.metabolites if m.charge is not None))
 
-    model = read_yaml_model("smallYeast.yml")
-    print("charges before:", sum(1 for m in model.metabolites if m.charge is not None))
+result = batch_curate_from_tsv(model, mets_tsv="curation-mets.tsv")
+print("charges after: ", sum(1 for m in model.metabolites if m.charge is not None))
+print("updated:", result.updated_metabolites)
 
-    result = batch_curate_from_tsv(model, mets_tsv="curation-mets.tsv")
-    print("charges after: ", sum(1 for m in model.metabolites if m.charge is not None))
-    print("updated:", result.updated_metabolites)
+mal = model.metabolites.get_by_id("MAL_m")
+print(f"{mal.name} charge {mal.charge}")
+```
 
-    mal = model.metabolites.get_by_id("MAL_m")
-    print(f"{mal.name} charge {mal.charge}")
-    ```
+```text
+charges before: 0
+charges after:  4
+updated: ['MAL_m', 'AKG_m', 'P2G_c', 'P3G_c']
+(S)-malate charge -2
+```
 
-    ```text title="Output"
-    charges before: 0
-    charges after:  4
-    updated: ['MAL_m', 'AKG_m', 'P2G_c', 'P3G_c']
-    (S)-malate charge -2
-    ```
+`batch_curate_from_tsv` edits the model **in place** and returns a
+`CurationResult` listing what was added and what was updated, split by entity
+type. It warns when a row overwrites an existing entity, naming the ids, so
+an addition and a replacement are distinguishable without inspecting the
+model afterwards.
 
-    `batch_curate_from_tsv` edits the model **in place** and returns a
-    `CurationResult` listing what was added and what was updated, split by entity
-    type. It warns when a row overwrites an existing entity, naming the ids, so
-    an addition and a replacement are distinguishable without inspecting the
-    model afterwards.
+`batch_curate` takes the same four tables as DataFrames, for a pipeline that
+builds them rather than reading them from disk.
+:::
+::::
 
-    `batch_curate` takes the same four tables as DataFrames, for a pipeline that
-    builds them rather than reading them from disk.
+:::{warning} An absent field silently swallows a column
+The same table gives two different results on a model that lacks the field
+being curated. raven-toolbox sets the value on every matched metabolite,
+creating the attribute as needed. RAVEN sets it only on metabolites the table
+*adds*, and drops the column for metabolites that already exist, because the
+field it would write into is not there and it does not create it.
 
-!!! warning "An absent field silently swallows a column"
-    The same table gives two different results on a model that lacks the field
-    being curated. raven-toolbox sets the value on every matched metabolite,
-    creating the attribute as needed. RAVEN sets it only on metabolites the table
-    *adds*, and drops the column for metabolites that already exist, because the
-    field it would write into is not there and it does not create it.
-
-    So a table written to add charges to an uncharged model does nothing in
-    MATLAB and works in Python. Check the field afterwards rather than assuming
-    the table was applied in full, and note that this is a divergence between the
-    two toolboxes rather than a difference in the tables.
+So a table written to add charges to an uncharged model does nothing in
+MATLAB and works in Python. Check the field afterwards rather than assuming
+the table was applied in full, and note that this is a divergence between the
+two toolboxes rather than a difference in the tables.
+:::
 
 ## 21.2 Adding rather than updating
 
@@ -150,27 +154,29 @@ substrates and positive for products, linked by `rxnIdx`. Any metabolite named
 there that the model does not have is created, which is why the metabolite table
 is usually applied in the same pass.
 
-!!! warning "A blank cell is an instruction, not an omission"
-    In MATLAB an empty cell **overwrites** the model's existing value, so a table
-    written to fix one charge will erase every annotation whose column is present
-    but blank. In Python an empty cell reads as `NaN` and that field is skipped
-    instead. The safe habit for both: include only the columns being curated, and
-    keep the values that should survive in the file rather than trusting the
-    blank.
+:::{warning} A blank cell is an instruction, not an omission
+In MATLAB an empty cell **overwrites** the model's existing value, so a table
+written to fix one charge will erase every annotation whose column is present
+but blank. In Python an empty cell reads as `NaN` and that field is skipped
+instead. The safe habit for both: include only the columns being curated, and
+keep the values that should survive in the file rather than trusting the
+blank.
+:::
 
-!!! warning "What can go wrong"
-    - **Matching on names that do not match.** A trailing space, a different
-      capitalisation, or `name[comp]` written with the wrong compartment, and the
-      row adds a duplicate entity instead of curating the one meant.
-    - **Reactions matched on stoichiometry.** Two reactions with the same
-      reactants and products, differing only in direction or bounds, are one
-      reaction to the matcher.
-    - **The wrong id prefix.** The default is `M_`/`R_`. On a model using `s_`
-      and `r_` the additions are still correct, but their ids will not look like
-      anything else in the model.
-    - **No record of what changed.** The tables are the record. Commit them
-      alongside the model, or the curation is as unreviewable as the function
-      calls it replaced.
+:::{warning} What can go wrong
+- **Matching on names that do not match.** A trailing space, a different
+  capitalisation, or `name[comp]` written with the wrong compartment, and the
+  row adds a duplicate entity instead of curating the one meant.
+- **Reactions matched on stoichiometry.** Two reactions with the same
+  reactants and products, differing only in direction or bounds, are one
+  reaction to the matcher.
+- **The wrong id prefix.** The default is `M_`/`R_`. On a model using `s_`
+  and `r_` the additions are still correct, but their ids will not look like
+  anything else in the model.
+- **No record of what changed.** The tables are the record. Commit them
+  alongside the model, or the curation is as unreviewable as the function
+  calls it replaced.
+:::
 
 ## See also
 

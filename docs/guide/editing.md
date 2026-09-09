@@ -20,95 +20,104 @@ page is the safe way to do each of those.
 
 `smallYeast.yml` from [`docs/data/`](../data/README.md).
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    model = readYAMLmodel('smallYeast.yml');
-    ```
+```matlab
+model = readYAMLmodel('smallYeast.yml');
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    from raven_toolbox.io import read_yaml_model
-
-    model = read_yaml_model("smallYeast.yml")
-    ```
+model = read_yaml_model("smallYeast.yml")
+```
+:::
+::::
 
 ## 8.1 Fix a stoichiometry
 
 Give the whole equation, not a coefficient: the toolbox rewrites the reaction's
 column in the stoichiometric matrix, which is what keeps everything consistent.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    model = changeRxns(model, {'PGI'}, {'G6P_c <=> F6P_c'});
-    idx = getIndexes(model, 'PGI', 'rxns');
-    eqn = constructEquations(model, model.rxns(idx));
-    fprintf('%s\n', eqn{1});
-    ```
+```matlab
+model = changeRxns(model, {'PGI'}, {'G6P_c <=> F6P_c'});
+idx = getIndexes(model, 'PGI', 'rxns');
+eqn = constructEquations(model, model.rxns(idx));
+fprintf('%s\n', eqn{1});
+```
 
-    ```text title="Output"
-    alpha-D-glucose 6-phosphate[c] <=> beta-D-fructofuranose 6-phosphate[c]
-    ```
+```text
+alpha-D-glucose 6-phosphate[c] <=> beta-D-fructofuranose 6-phosphate[c]
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.manipulation import change_reaction_equations
 
-    ```python
-    from raven_toolbox.manipulation import change_reaction_equations
+change_reaction_equations(model, {"PGI": "G6P_c <=> F6P_c"})
+print(model.reactions.get_by_id("PGI").reaction)
+```
 
-    change_reaction_equations(model, {"PGI": "G6P_c <=> F6P_c"})
-    print(model.reactions.get_by_id("PGI").reaction)
-    ```
+```text
+G6P_c <=> F6P_c
+```
 
-    ```text title="Output"
-    G6P_c <=> F6P_c
-    ```
+Both take a **mapping of reaction to equation** so a batch of curated
+reactions can be applied in one call, which is what a curation spreadsheet
+turns into. Every id must already exist; these functions change reactions
+rather than add them.
 
-    Both take a **mapping of reaction to equation** so a batch of curated
-    reactions can be applied in one call, which is what a curation spreadsheet
-    turns into. Every id must already exist; these functions change reactions
-    rather than add them.
-
-    Bounds are left alone. Rewriting an equation from `=>` to `<=>` does not
-    make the reaction reversible, because the direction is set by `lb` and `ub`
-    rather than by the arrow; 8.4 sets those separately. Both functions also
-    take the `eqnType` and `allowNewMets` options of `addRxns`, and default to
-    matching metabolites by id.
+Bounds are left alone. Rewriting an equation from `=>` to `<=>` does not
+make the reaction reversible, because the direction is set by `lb` and `ub`
+rather than by the arrow; 8.4 sets those separately. Both functions also
+take the `eqnType` and `allowNewMets` options of `addRxns`, and default to
+matching metabolites by id.
+:::
+::::
 
 ## 8.2 Change a gene association
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    model = changeGrRules(model, {'PGI'}, {'YBR196C or YLR354C'});
-    disp(model.grRules{idx});
-    ```
+```matlab
+model = changeGrRules(model, {'PGI'}, {'YBR196C or YLR354C'});
+disp(model.grRules{idx});
+```
 
-    ```text title="Output"
-    YBR196C or YLR354C
-    ```
+```text
+YBR196C or YLR354C
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.manipulation import change_gene_reaction_rules
 
-    ```python
-    from raven_toolbox.manipulation import change_gene_reaction_rules
+change_gene_reaction_rules(model, {"PGI": "YBR196C or YLR354C"})
+pgi = model.reactions.get_by_id("PGI")
+print(pgi.gene_reaction_rule)
+print("genes now:", sorted(gene.id for gene in pgi.genes))
+```
 
-    change_gene_reaction_rules(model, {"PGI": "YBR196C or YLR354C"})
-    pgi = model.reactions.get_by_id("PGI")
-    print(pgi.gene_reaction_rule)
-    print("genes now:", sorted(gene.id for gene in pgi.genes))
-    ```
+```text
+YBR196C or YLR354C
+genes now: ['YBR196C', 'YLR354C']
+```
 
-    ```text title="Output"
-    YBR196C or YLR354C
-    genes now: ['YBR196C', 'YLR354C']
-    ```
-
-    A gene that the model did not have is created for you. Pass `replace=False`
-    to **append** an isozyme instead of overwriting, giving `(old) or (new)`,
-    which records an additional catalyst rather than a correction. A reaction
-    with no rule yet gets the new rule alone, without empty brackets.
+A gene that the model did not have is created for you. Pass `replace=False`
+to **append** an isozyme instead of overwriting, giving `(old) or (new)`,
+which records an additional catalyst rather than a correction. A reaction
+with no rule yet gets the new rule alone, without empty brackets.
+:::
+::::
 
 ## 8.3 Normalise a GPR
 
@@ -117,69 +126,75 @@ score. Both toolboxes rewrite them into disjunctive normal form, a list of
 alternative complexes. `is_dnf` takes a rule string; `gpr_to_dnf` takes cobrapy's
 parsed `GPR` object and returns the complexes as lists.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    grRules = standardizeGrRules(model);
-    fprintf('%s\n', grRules{idx});
-    ```
+```matlab
+grRules = standardizeGrRules(model);
+fprintf('%s\n', grRules{idx});
+```
 
-    ```text title="Output"
-    YBR196C or YLR354C
-    ```
+```text
+YBR196C or YLR354C
+```
 
-    `standardizeGrRules` returns the rules and a matching `rxnGeneMat`, not a
-    model, so the results have to be assigned back into the struct to persist.
-    Disjunctive normal form is a flat `or` of `and` groups, one group per
-    alternative complex, which is the form the scoring in
-    [10. Context-specific models](init.md) expects.
+`standardizeGrRules` returns the rules and a matching `rxnGeneMat`, not a
+model, so the results have to be assigned back into the struct to persist.
+Disjunctive normal form is a flat `or` of `and` groups, one group per
+alternative complex, which is the form the scoring in
+[10. Context-specific models](init.md) expects.
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from cobra.core.gene import GPR
 
-    ```python
-    from cobra.core.gene import GPR
+from raven_toolbox.manipulation import gpr_to_dnf
+from raven_toolbox.utils import is_dnf
 
-    from raven_toolbox.manipulation import gpr_to_dnf
-    from raven_toolbox.utils import is_dnf
+rule = "YBR196C and (YLR354C or YGR192C)"
+print("already DNF:", is_dnf(rule))
+print(gpr_to_dnf(GPR.from_string(rule)))
+```
 
-    rule = "YBR196C and (YLR354C or YGR192C)"
-    print("already DNF:", is_dnf(rule))
-    print(gpr_to_dnf(GPR.from_string(rule)))
-    ```
-
-    ```text title="Output"
-    already DNF: False
-    [['YBR196C', 'YLR354C'], ['YBR196C', 'YGR192C']]
-    ```
+```text
+already DNF: False
+[['YBR196C', 'YLR354C'], ['YBR196C', 'YGR192C']]
+```
+:::
+::::
 
 ## 8.4 Change bounds and the objective
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    model = setParam(model, 'lb', 'PGI', 0);        % make it irreversible
-    model = setParam(model, 'obj', 'biomassOUT', 1);
-    fprintf('bounds: [%g %g]\n', model.lb(idx), model.ub(idx));
-    ```
+```matlab
+model = setParam(model, 'lb', 'PGI', 0);        % make it irreversible
+model = setParam(model, 'obj', 'biomassOUT', 1);
+fprintf('bounds: [%g %g]\n', model.lb(idx), model.ub(idx));
+```
 
-    ```text title="Output"
-    bounds: [0 1000]
-    ```
+```text
+bounds: [0 1000]
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+model.reactions.get_by_id("PGI").bounds = (0, 1000)
+model.objective = "biomassOUT"
+print("bounds:", model.reactions.get_by_id("PGI").bounds)
+```
 
-    ```python
-    model.reactions.get_by_id("PGI").bounds = (0, 1000)
-    model.objective = "biomassOUT"
-    print("bounds:", model.reactions.get_by_id("PGI").bounds)
-    ```
+```text
+bounds: (0, 1000)
+```
 
-    ```text title="Output"
-    bounds: (0, 1000)
-    ```
-
-    `setParam` takes `'lb'`, `'ub'`, `'eq'`, `'obj'` and `'rev'`, and accepts a
-    list of reactions with a list of values, applying them in one call.
+`setParam` takes `'lb'`, `'ub'`, `'eq'`, `'obj'` and `'rev'`, and accepts a
+list of reactions with a list of values, applying them in one call.
+:::
+::::
 
 ## 8.5 Delete things
 
@@ -187,77 +202,83 @@ Deleting is where the two designs differ most. RAVEN has to remove the matching
 row or column from **every** field, which is why deletion has its own functions;
 cobrapy's objects know what they are attached to.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    before = numel(model.rxns);
-    reduced = removeReactions(model, {'ACO'}, ...
-        'removeUnusedMets', true, 'removeUnusedGenes', true);
-    fprintf('%d -> %d reactions, %d -> %d genes\n', before, numel(reduced.rxns), ...
-        numel(model.genes), numel(reduced.genes));
-    ```
+```matlab
+before = numel(model.rxns);
+reduced = removeReactions(model, {'ACO'}, ...
+    'removeUnusedMets', true, 'removeUnusedGenes', true);
+fprintf('%d -> %d reactions, %d -> %d genes\n', before, numel(reduced.rxns), ...
+    numel(model.genes), numel(reduced.genes));
+```
 
-    ```text title="Output"
-    53 -> 52 reactions, 61 -> 60 genes
-    ```
+```text
+53 -> 52 reactions, 61 -> 60 genes
+```
 
-    Both flags default to `false`, so a plain `removeReactions` leaves behind
-    metabolites and genes that nothing refers to any more, which later read as
-    gaps. `removeUnusedComps` does the same for compartments.
-    `deleteUnusedGenes` performs the gene half on its own.
+Both flags default to `false`, so a plain `removeReactions` leaves behind
+metabolites and genes that nothing refers to any more, which later read as
+gaps. `removeUnusedComps` does the same for compartments.
+`deleteUnusedGenes` performs the gene half on its own.
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+before = len(model.reactions), len(model.genes)
 
-    ```python
-    before = len(model.reactions), len(model.genes)
+with model:
+    model.remove_reactions([model.reactions.get_by_id("ACO")], remove_orphans=True)
+    print(f"{before[0]} -> {len(model.reactions)} reactions, "
+          f"{before[1]} -> {len(model.genes)} genes")
+```
 
-    with model:
-        model.remove_reactions([model.reactions.get_by_id("ACO")], remove_orphans=True)
-        print(f"{before[0]} -> {len(model.reactions)} reactions, "
-              f"{before[1]} -> {len(model.genes)} genes")
-    ```
+```text
+53 -> 52 reactions, 61 -> 60 genes
+```
 
-    ```text title="Output"
-    53 -> 52 reactions, 61 -> 60 genes
-    ```
-
-    `remove_orphans=True` is cobrapy's equivalent of those two flags. Note the
-    `with model:`, deletions inside it are rolled back on exit, so the cost of
-    a deletion can be measured without keeping it.
+`remove_orphans=True` is cobrapy's equivalent of those two flags. Note the
+`with model:`, deletions inside it are rolled back on exit, so the cost of
+a deletion can be measured without keeping it.
+:::
+::::
 
 ## 8.6 Delete a gene, not a reaction
 
 Removing a gene is not the same as knocking it out: the reactions stay, and
 their GPRs are rewritten without it.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    reduced = removeGenes(model, {'YBR196C'});
-    fprintf('%d -> %d genes\n', numel(model.genes), numel(reduced.genes));
-    disp(reduced.grRules{getIndexes(reduced, 'PGI', 'rxns')});
-    ```
+```matlab
+reduced = removeGenes(model, {'YBR196C'});
+fprintf('%d -> %d genes\n', numel(model.genes), numel(reduced.genes));
+disp(reduced.grRules{getIndexes(reduced, 'PGI', 'rxns')});
+```
 
-    ```text title="Output"
-    61 -> 60 genes
-    YLR354C
-    ```
+```text
+61 -> 60 genes
+YLR354C
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.manipulation import remove_genes
 
-    ```python
-    from raven_toolbox.manipulation import remove_genes
+with model:
+    remove_genes(model, ["YBR196C"])
+    print(len(model.genes), "genes")
+    print("PGI rule:", repr(model.reactions.get_by_id("PGI").gene_reaction_rule))
+```
 
-    with model:
-        remove_genes(model, ["YBR196C"])
-        print(len(model.genes), "genes")
-        print("PGI rule:", repr(model.reactions.get_by_id("PGI").gene_reaction_rule))
-    ```
-
-    ```text title="Output"
-    60 genes
-    PGI rule: 'YLR354C'
-    ```
+```text
+60 genes
+PGI rule: 'YLR354C'
+```
+:::
+::::
 
 `removeGenes` rewrites each affected GPR without the removed gene. Its
 `removeBlockedRxns` flag, off by default, additionally deletes reactions that
@@ -266,18 +287,19 @@ lose their last catalyst, which turns a gene deletion into a reaction deletion;
 question being asked. `standardizeRules`, on by default, normalises the
 rewritten rules.
 
-!!! warning "What can go wrong"
-    - **Editing `model.S` by hand.** It leaves `model.rev`, the bounds and the
-      gene matrix describing a different model than the matrix does. Use
-      `changeRxns`.
-    - **Deleting a reaction and stranding its metabolites.** Without the orphan
-      flags you keep metabolites nothing produces or consumes, which then show up
-      as gaps. See [9. Quality control](quality-control.md).
-    - **Overwriting a GPR you meant to extend.** `changeGrRules` and
-      `change_gene_reaction_rules` replace by default.
-    - **Forgetting that Python edits in place.** MATLAB copies the struct on
-      assignment, so `modelB = removeReactions(modelA, ...)` leaves `modelA`
-      alone. In Python, use `model.copy()` or `with model:`.
+:::{warning} What can go wrong
+- **Editing `model.S` by hand.** It leaves `model.rev`, the bounds and the
+  gene matrix describing a different model than the matrix does. Use
+  `changeRxns`.
+- **Deleting a reaction and stranding its metabolites.** Without the orphan
+  flags you keep metabolites nothing produces or consumes, which then show up
+  as gaps. See [9. Quality control](quality-control.md).
+- **Overwriting a GPR you meant to extend.** `changeGrRules` and
+  `change_gene_reaction_rules` replace by default.
+- **Forgetting that Python edits in place.** MATLAB copies the struct on
+  assignment, so `modelB = removeReactions(modelA, ...)` leaves `modelA`
+  alone. In Python, use `model.copy()` or `with model:`.
+:::
 
 ## See also
 

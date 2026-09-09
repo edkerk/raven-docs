@@ -8,11 +8,12 @@ It is the counterpart to the [user guide](../guide/index.md). The numbered guide
 pages answer "how do I do this one thing"; this protocol answers "what does a
 whole reconstruction look like, and in what order".
 
-!!! note "MATLAB only, and not executed here"
-    The protocol predates the dual-language guide and its steps are MATLAB. Its
-    commands are also not run by the documentation build, unlike the numbered
-    guide pages; several steps take hours and need data that is not shipped
-    with this site.
+:::{note} MATLAB only, and not executed here
+The protocol predates the dual-language guide and its steps are MATLAB. Its
+commands are also not run by the documentation build, unlike the numbered
+guide pages; several steps take hours and need data that is not shipped
+with this site.
+:::
 
 ## The steps
 
@@ -35,3 +36,18 @@ whole reconstruction look like, and in what order".
   original RAVEN paper.
 - [18. Reconstruction from homology](../guide/homology.md), the same technique
   at small scale, in both languages, with every example executed.
+
+```{toctree}
+:hidden:
+
+reconstruction
+materials
+template-models
+homology
+biomass
+lipid-curation
+gap-filling
+simulation
+manual-curation
+anticipated-results
+```

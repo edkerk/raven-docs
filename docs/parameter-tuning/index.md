@@ -97,3 +97,28 @@ cross-toolbox to-do list.
 
 See also the [flux sampling algorithms reference](flux-sampling-algorithms.md)
 (CHRR/ACHR, cross-linked from the sampling study and benchmark above).
+
+```{toctree}
+:hidden:
+
+flux-sampling-algorithms
+```
+
+```{toctree}
+:hidden:
+:caption: Studies
+
+studies/homology-cutoff-calibration
+studies/kegg-hmm-cutoff-calibration
+studies/sampling-convergence-calibration
+studies/init-param-calibration
+studies/init-solver-benchmark
+studies/ftinit-determinism
+studies/humangem-validation
+```
+
+```{toctree}
+:hidden:
+
+benchmarks
+```

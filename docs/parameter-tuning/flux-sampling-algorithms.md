@@ -48,8 +48,8 @@ random-objective method (`randomSampling`), which draws polytope **vertices**; s
 
 ---
 
-## 2. Why rounding matters: the elongated-polytope problem {#2-why-rounding-matters}
-
+(2-why-rounding-matters)=
+## 2. Why rounding matters: the elongated-polytope problem
 Hit-and-run mixing time scales with the polytope's **aspect ratio**: the ratio of its
 longest to shortest axis. For a near-isotropic (ball-like) polytope, hit-and-run mixes in
 `O*(d²)` steps (`d` = dimension). For a long, thin slab, an unrounded chain moves mostly
@@ -117,8 +117,8 @@ ACHR's. The investment yields aspect-ratio-independent mixing.
 
 ---
 
-## 5. The maximum-volume ellipsoid (MVE) core {#5-the-maximum-volume-ellipsoid-core}
-
+(5-the-maximum-volume-ellipsoid-core)=
+## 5. The maximum-volume ellipsoid (MVE) core
 Rounding requires the **maximum-volume inscribed ellipsoid** of `{z : A z <= b}`:
 
 ```
@@ -141,8 +141,8 @@ maximises volume rather than merely fitting the biggest ball.
 
 ---
 
-## 6. CHRR vs ACHR: when it matters {#6-chrr-vs-achr}
-
+(6-chrr-vs-achr)=
+## 6. CHRR vs ACHR: when it matters
 | Model class | Polytope geometry | Recommended | Why |
 |---|---|---|---|
 | ecModel + proteomics | Thin slab, many near-binding enzyme bounds | **CHRR** | Rounding finds the slab geometry; ACHR warmup directions miss the thin axes |
@@ -157,8 +157,8 @@ gives chains that look converged but are not.
 
 ---
 
-## 7. Relationship to `randomSampling` / `random_sampling` {#7-relationship-to-random-sampling}
-
+(7-relationship-to-random-sampling)=
+## 7. Relationship to `randomSampling` / `random_sampling`
 The **random-objective** method (Bordel et al. 2010), `method="random_objective"`, is also
 dispatched from the same `random_sampling` / `randomSampling` entry: each sample maximises a
 small random linear objective, returning a polytope **vertex**. That is a different statistical
@@ -172,8 +172,8 @@ vertices.
 
 ---
 
-## 8. Implementation map {#8-implementation-map}
-
+(8-implementation-map)=
+## 8. Implementation map
 | Component | MATLAB RAVEN | raven-toolbox (Python) |
 |---|---|---|
 | Entry point | `randomSampling.m` (`method='achr'|'chrr'`) | `analysis.random_sampling(method=...)` |

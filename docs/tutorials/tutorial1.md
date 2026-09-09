@@ -7,10 +7,11 @@ flux balance analysis (FBA), and visualise the resulting fluxes.
 The example uses a GEM for the filamentous fungus *Penicillium chrysogenum*
 (`iAL1006`), provided as the SBML file `iAL1006 v1.00.xml`.
 
-!!! note
-    Importing the model performs a number of structural checks. With this model
-    there is only one warning, that the formula for the metabolite LPE could not
-    be parsed. This is expected and can be ignored.
+:::{note}
+Importing the model performs a number of structural checks. With this model
+there is only one warning, that the formula for the metabolite LPE could not
+be parsed. This is expected and can be ignored.
+:::
 
 ## Step by step
 
@@ -115,6 +116,6 @@ glycolysis, whereas on ethanol it involves acetate.
 
 ## Full script
 
-```matlab
---8<-- "RAVEN/tutorial/tutorial1.m"
+```{literalinclude} ../../RAVEN/tutorial/tutorial1.m
+:language: matlab
 ```

@@ -11,31 +11,35 @@
   [Gurobi](https://www.gurobi.com/) is recommended for genome-scale work.
   See [Choosing a solver](index.md#choosing-a-solver).
 
-!!! tip "Use a virtual environment"
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate      # Windows: .venv\Scripts\activate
-    ```
+:::{tip} Use a virtual environment
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
+```
+:::
 
 ---
 
 ## Install
 
-=== ":material-package: From PyPI"
+::::{tab-set}
+:::{tab-item} :material-package: From PyPI
 
-    ```bash
-    pip install raven-toolbox
-    ```
+```bash
+pip install raven-toolbox
+```
+:::
+:::{tab-item} :octicons-git-branch-16: From source
 
-=== ":octicons-git-branch-16: From source"
+For the latest unreleased code or to contribute:
 
-    For the latest unreleased code or to contribute:
-
-    ```bash
-    git clone https://github.com/SysBioChalmers/raven-toolbox.git
-    cd raven-toolbox
-    pip install -e .
-    ```
+```bash
+git clone https://github.com/SysBioChalmers/raven-toolbox.git
+cd raven-toolbox
+pip install -e .
+```
+:::
+::::
 
 ---
 
@@ -46,25 +50,29 @@ import raven_toolbox
 print(raven_toolbox.__version__)
 ```
 
-!!! note
-    The import package is `raven_toolbox` (underscore); the PyPI distribution
-    name is `raven-toolbox` (hyphen).
+:::{note}
+The import package is `raven_toolbox` (underscore); the PyPI distribution
+name is `raven-toolbox` (hyphen).
+:::
 
 ---
 
 ## Upgrade
 
-=== ":material-package: From PyPI"
+::::{tab-set}
+:::{tab-item} :material-package: From PyPI
 
-    ```bash
-    pip install --upgrade raven-toolbox
-    ```
+```bash
+pip install --upgrade raven-toolbox
+```
+:::
+:::{tab-item} :octicons-git-branch-16: From source
 
-=== ":octicons-git-branch-16: From source"
-
-    ```bash
-    git pull origin develop
-    ```
+```bash
+git pull origin develop
+```
+:::
+::::
 
 ---
 

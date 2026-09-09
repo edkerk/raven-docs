@@ -9,12 +9,13 @@ Hart2015 / HCT116). Two questions:
    variable), how does degrading the *transcriptomics input* affect the model, and which
    parameters keep it functional and stable? (`scripts/analyze_init_robustness.py`)
 
-!!! note "The tINIT sections are a record, not current behaviour"
-    raven-toolbox has since removed tINIT
-    ([raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148))
-    and implements ftINIT alone; `run_init` and `get_init_model` no longer exist
-    there, though MATLAB RAVEN keeps `runINIT` and `getINITModel`. The sections
-    below that measure them are left as they were run.
+:::{note} The tINIT sections are a record, not current behaviour
+raven-toolbox has since removed tINIT
+([raven-toolbox#148](https://github.com/SysBioChalmers/raven-toolbox/pull/148))
+and implements ftINIT alone; `run_init` and `get_init_model` no longer exist
+there, though MATLAB RAVEN keeps `runINIT` and `getINITModel`. The sections
+below that measure them are left as they were run.
+:::
 
 Both scripts are resumable and reusable on any model/dataset; the numbers below are HCT116.
 "Jaccard" is reaction-set overlap with the reference (tightest setting / clean data); for

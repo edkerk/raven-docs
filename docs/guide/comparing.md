@@ -21,34 +21,37 @@ the same organism at all.
 `smallYeast.yml` and `smallYeastBad.yml`: the same model, one of them carrying
 deliberate errors. Comparing them is the exercise this page exists for.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    good = readYAMLmodel('smallYeast.yml');
-    bad = readYAMLmodel('smallYeastBad.yml');
-    fprintf('good %d rxns, bad %d rxns\n', numel(good.rxns), numel(bad.rxns));
-    ```
+```matlab
+good = readYAMLmodel('smallYeast.yml');
+bad = readYAMLmodel('smallYeastBad.yml');
+fprintf('good %d rxns, bad %d rxns\n', numel(good.rxns), numel(bad.rxns));
+```
 
-    ```text title="Output"
-    good 53 rxns, bad 54 rxns
-    ```
+```text
+good 53 rxns, bad 54 rxns
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+import cobra
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    import cobra
-    from raven_toolbox.io import read_yaml_model
+cobra.Configuration().processes = 1
 
-    cobra.Configuration().processes = 1
+good = read_yaml_model("smallYeast.yml")
+bad = read_yaml_model("smallYeastBad.yml")
+print(f"good {len(good.reactions)} rxns, bad {len(bad.reactions)} rxns")
+```
 
-    good = read_yaml_model("smallYeast.yml")
-    bad = read_yaml_model("smallYeastBad.yml")
-    print(f"good {len(good.reactions)} rxns, bad {len(bad.reactions)} rxns")
-    ```
-
-    ```text title="Output"
-    good 53 rxns, bad 54 rxns
-    ```
+```text
+good 53 rxns, bad 54 rxns
+```
+:::
+::::
 
 ## 17.1 What exactly is different?
 
@@ -56,42 +59,45 @@ deliberate errors. Comparing them is the exercise this page exists for.
 bounds, objective coefficients, gene rules, formulas, charges. It answers a yes
 or no question first (are these the same model?) and then says why not.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    report = diffModels(good, bad);
-    fprintf('equal: %d, %d differences\n', report.equal, numel(report.differences));
-    for i = 1:min(4, numel(report.differences))
-        fprintf('  - %s\n', report.differences{i});
-    end
-    ```
+```matlab
+report = diffModels(good, bad);
+fprintf('equal: %d, %d differences\n', report.equal, numel(report.differences));
+for i = 1:min(4, numel(report.differences))
+    fprintf('  - %s\n', report.differences{i});
+end
+```
 
-    ```text title="Output"
-    equal: 0, 11 differences
-      - 1 reactions only in A: ethIN
-      - 2 reactions only in B: ADH2, PDC_2
-      - ADH1: coef[ETH_c] A=1 B=2
-      - ADH1: bounds A=[-1000,1000] B=[0,1000]
-    ```
+```text
+equal: 0, 11 differences
+  - 1 reactions only in A: ethIN
+  - 2 reactions only in B: ADH2, PDC_2
+  - ADH1: coef[ETH_c] A=1 B=2
+  - ADH1: bounds A=[-1000,1000] B=[0,1000]
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.comparison import diff_models
 
-    ```python
-    from raven_toolbox.comparison import diff_models
+report = diff_models(good, bad)
+print(f"equal: {report.equal}, {len(report.differences)} differences")
+for d in report.differences[:4]:
+    print(f"  - {d}")
+```
 
-    report = diff_models(good, bad)
-    print(f"equal: {report.equal}, {len(report.differences)} differences")
-    for d in report.differences[:4]:
-        print(f"  - {d}")
-    ```
-
-    ```text title="Output"
-    equal: False, 11 differences
-      - reactions only in A (1): ['ethIN']
-      - reactions only in B (2): ['ADH2', 'PDC_2']
-      - ADH1: coef[ETH_c] A=1 B=2
-      - ADH1: bounds A=(-1000.0, 1000.0) B=(0.0, 1000.0)
-    ```
+```text
+equal: False, 11 differences
+  - reactions only in A (1): ['ethIN']
+  - reactions only in B (2): ['ADH2', 'PDC_2']
+  - ADH1: coef[ETH_c] A=1 B=2
+  - ADH1: bounds A=(-1000.0, 1000.0) B=(0.0, 1000.0)
+```
+:::
+::::
 
 This is the comparison to put in a test. `DiffReport` is falsy when the models
 differ, so `assert diff_models(before, after)` is a working regression test for a
@@ -107,47 +113,51 @@ seven identity notions at once (reactions, metabolites, genes, EC numbers,
 metabolite names, equations with and without compartments), plus a similarity
 matrix. Pass `'printResults', true` for the full breakdown on screen.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    good.id = 'smallYeast';
-    bad.id = 'smallYeastBad';
-    % compareMultipleModels narrates each stage as it goes, and its structural
-    % projection needs the Statistics and Machine Learning Toolbox, so what it
-    % prints depends on the machine. The counts do not: capture and drop it.
-    [~, compStruct] = evalc('compareMultipleModels({good, bad})');
-    inBoth = all(compStruct.rxns.comparison, 2);
-    fprintf('%d reactions shared of %d in the union\n', ...
-        compStruct.rxns.nElements(inBoth), sum(compStruct.rxns.nElements));
-    ```
+```matlab
+good.id = 'smallYeast';
+bad.id = 'smallYeastBad';
+% compareMultipleModels narrates each stage as it goes, and its structural
+% projection needs the Statistics and Machine Learning Toolbox, so what it
+% prints depends on the machine. The counts do not: capture and drop it.
+[~, compStruct] = evalc('compareMultipleModels({good, bad})');
+inBoth = all(compStruct.rxns.comparison, 2);
+fprintf('%d reactions shared of %d in the union\n', ...
+    compStruct.rxns.nElements(inBoth), sum(compStruct.rxns.nElements));
+```
 
-    ```text title="Output"
-    52 reactions shared of 55 in the union
-    ```
+```text
+52 reactions shared of 55 in the union
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+from raven_toolbox.comparison import compare_models
 
-    ```python
-    from raven_toolbox.comparison import compare_models
+good.id, bad.id = "smallYeast", "smallYeastBad"
+comparison = compare_models([good, bad])
+shared = int((comparison.reactions.sum(axis=1) == 2).sum())
+print(f"{shared} reactions shared of {len(comparison.reactions)} in the union")
+print(f"similarity: {comparison.similarity.iloc[0, 1]:.3f}")
+```
 
-    good.id, bad.id = "smallYeast", "smallYeastBad"
-    comparison = compare_models([good, bad])
-    shared = int((comparison.reactions.sum(axis=1) == 2).sum())
-    print(f"{shared} reactions shared of {len(comparison.reactions)} in the union")
-    print(f"similarity: {comparison.similarity.iloc[0, 1]:.3f}")
-    ```
+```text
+52 reactions shared of 55 in the union
+similarity: 0.945
+```
+:::
+::::
 
-    ```text title="Output"
-    52 reactions shared of 55 in the union
-    similarity: 0.945
-    ```
-
-!!! warning "A high similarity does not mean the models agree"
-    These two models are **0.945** alike on the reaction set, and one of them is
-    broken. The differences 17.1 lists are a doubled stoichiometric coefficient
-    and a reaction made irreversible, changes that alter what the model
-    *predicts* while barely moving a set-overlap score. Similarity is for
-    grouping models, not for validating one.
+:::{warning} A high similarity does not mean the models agree
+These two models are **0.945** alike on the reaction set, and one of them is
+broken. The differences 17.1 lists are a doubled stoichiometric coefficient
+and a reaction made irreversible, changes that alter what the model
+*predicts* while barely moving a set-overlap score. Similarity is for
+grouping models, not for validating one.
+:::
 
 ## 17.3 Compare what they do, not what they contain
 
@@ -155,35 +165,38 @@ Two models with the same reactions can behave differently, and two models with
 different reactions can behave identically. The comparison that settles it is of
 the fluxes.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} MATLAB
 
-    ```matlab
-    openGood = setParam(good, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
-    openGood = setParam(openGood, 'obj', 'biomassOUT', 1);
-    openBad = setParam(bad, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
-    openBad = setParam(openBad, 'obj', 'biomassOUT', 1);
-    solGood = solveLP(openGood);
-    solBad = solveLP(openBad);
-    fprintf('growth: good %.4f, bad %.4f\n', solGood.f, solBad.f);
-    ```
+```matlab
+openGood = setParam(good, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
+openGood = setParam(openGood, 'obj', 'biomassOUT', 1);
+openBad = setParam(bad, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
+openBad = setParam(openBad, 'obj', 'biomassOUT', 1);
+solGood = solveLP(openGood);
+solBad = solveLP(openBad);
+fprintf('growth: good %.4f, bad %.4f\n', solGood.f, solBad.f);
+```
 
-    ```text title="Output"
-    growth: good 0.1222, bad -0.0000
-    ```
+```text
+growth: good 0.1222, bad -0.0000
+```
+:::
+:::{tab-item} Python
 
-=== "Python"
+```python
+for model in (good, bad):
+    model.reactions.get_by_id("glcIN").upper_bound = 1.0
+    model.reactions.get_by_id("o2IN").upper_bound = 1000.0
+    model.objective = "biomassOUT"
+print(f"growth: good {good.slim_optimize():.4f}, bad {bad.slim_optimize():.4f}")
+```
 
-    ```python
-    for model in (good, bad):
-        model.reactions.get_by_id("glcIN").upper_bound = 1.0
-        model.reactions.get_by_id("o2IN").upper_bound = 1000.0
-        model.objective = "biomassOUT"
-    print(f"growth: good {good.slim_optimize():.4f}, bad {bad.slim_optimize():.4f}")
-    ```
-
-    ```text title="Output"
-    growth: good 0.1222, bad 0.0000
-    ```
+```text
+growth: good 0.1222, bad 0.0000
+```
+:::
+::::
 
 The errors in `smallYeastBad` are not cosmetic. On the same medium, with the same
 objective, the good model grows and **the bad one does not grow at all**, from a
@@ -206,20 +219,21 @@ in-first-only, in-second-only, in-both, with `nElements` counting each;
 raven-toolbox's has one row per *identifier* with a column per model. Both
 answer the same question, but you index them in opposite directions.
 
-!!! warning "What can go wrong"
-    - **Comparing on identifiers alone.** Both functions match by id. Two models
-      from different databases share few ids and will look unrelated even when
-      they describe the same metabolism; see
-      [16. Combining and simplifying](combining.md), where merging matches on
-      names instead.
-    - **Reading similarity as quality.** It measures overlap, not correctness.
-    - **Forgetting the medium.** A flux comparison compares conditions as much as
-      models. Set the same bounds on both, explicitly, before drawing any
-      conclusion.
-    - **Diffing a model against a reloaded copy of itself.** Writing and reading
-      a model can change formatting, ordering and rounding; a diff that reports
-      differences after a round trip may be telling you about the file format;
-      see [3. Reading and writing models](io.md).
+:::{warning} What can go wrong
+- **Comparing on identifiers alone.** Both functions match by id. Two models
+  from different databases share few ids and will look unrelated even when
+  they describe the same metabolism; see
+  [16. Combining and simplifying](combining.md), where merging matches on
+  names instead.
+- **Reading similarity as quality.** It measures overlap, not correctness.
+- **Forgetting the medium.** A flux comparison compares conditions as much as
+  models. Set the same bounds on both, explicitly, before drawing any
+  conclusion.
+- **Diffing a model against a reloaded copy of itself.** Writing and reading
+  a model can change formatting, ordering and rounding; a diff that reports
+  differences after a round trip may be telling you about the file format;
+  see [3. Reading and writing models](io.md).
+:::
 
 ## See also
 

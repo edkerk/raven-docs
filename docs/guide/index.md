@@ -10,23 +10,27 @@ Two older sets of material sit at the end of this section: a complete
 start to finish, and the [legacy tutorials](../tutorials/index.md) from the
 original RAVEN paper. Both are MATLAB only.
 
-!!! info "cobrapy"
-    Functions that come from cobrapy rather than raven-toolbox carry a
-    <span class="cobrapy-tag">cobrapy</span> badge, their import line shows where
-    they live (`from cobra.io import read_sbml_model`), and the badge links to
-    the cobrapy documentation. The
-    [function mapping](../matlab-vs-python.md) lists every such function.
+:::{admonition} cobrapy
+:class: info
+Functions that come from cobrapy rather than raven-toolbox carry a
+<span class="cobrapy-tag">cobrapy</span> badge, their import line shows where
+they live (`from cobra.io import read_sbml_model`), and the badge links to
+the cobrapy documentation. The
+[function mapping](../matlab-vs-python.md) lists every such function.
+:::
 
-!!! info "Executed examples"
-    Every snippet on the nineteen numbered pages is run on each commit and
-    checked against the output shown beneath it, in both languages. Two pages
-    cannot be: [10. Context-specific models](init.md), whose steps take hours on
-    Human-GEM, and [19. Reconstruction from KEGG](kegg.md), which downloads
-    tens of megabytes and takes minutes. Both say so at the top and quote the
-    wall-clock of the run their numbers came from.
+:::{admonition} Executed examples
+:class: info
+Every snippet on the nineteen numbered pages is run on each commit and
+checked against the output shown beneath it, in both languages. Two pages
+cannot be: [10. Context-specific models](init.md), whose steps take hours on
+Human-GEM, and [19. Reconstruction from KEGG](kegg.md), which downloads
+tens of megabytes and takes minutes. Both say so at the top and quote the
+wall-clock of the run their numbers came from.
 
-    That guarantee covers the numbered pages only. The protocol and the legacy
-    tutorials at the end of this section are MATLAB-only and are not executed.
+That guarantee covers the numbered pages only. The protocol and the legacy
+tutorials at the end of this section are MATLAB-only and are not executed.
+:::
 
 ## Example data
 
@@ -112,3 +116,46 @@ reconstruction in order.
 
 **Not yet written**: compartment localisation, which is still in development and
 not yet at parity between the two toolboxes.
+
+```{toctree}
+:hidden:
+:caption: Install
+
+../installation/index
+```
+
+```{toctree}
+:hidden:
+:caption: Pages
+
+getting-started
+model-structure
+io
+fba
+media
+solvers
+building
+editing
+quality-control
+init
+deletions
+tasks
+gap-filling
+fva
+sampling
+combining
+comparing
+homology
+kegg
+engineering
+curation
+biomass
+```
+
+```{toctree}
+:hidden:
+:caption: Also in this section
+
+../protocol/index
+../tutorials/index
+```
