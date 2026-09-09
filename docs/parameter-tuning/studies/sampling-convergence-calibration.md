@@ -191,8 +191,7 @@ real genome-scale CHRR timing number before deciding whether to attempt a full
 run.
 
 (cobrapy's `OptGPSampler` was not a candidate here: `random_sampling` doesn't
-wire it in, only `'achr'` and `'chrr'`; see
-[flux-sampling-algorithms.md](../flux-sampling-algorithms.md).)
+wire it in, only `'achr'` and `'chrr'`.)
 
 **Result: 4815.3 s (~80 min) for 2 chains × 20 samples.** This settles the
 timing question on its own, independent of sample-count effects: CHRR's cost

@@ -1,3 +1,7 @@
+---
+icon: material/folder-open
+---
+
 # Installation
 
 RAVEN is available as a **MATLAB toolbox** and as the **Python package
