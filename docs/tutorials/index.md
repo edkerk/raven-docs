@@ -27,7 +27,7 @@ folder of the RAVEN repository.
   `checkRaven` passes; see [Installation](../installation/raven.md).
 - Tutorials 2–4 involve editing models in **RAVEN-compatible Excel format**,
   using `importExcelModel`. RAVEN 3 removed `importExcelModel`, so this step
-  does not run as written on RAVEN 3; see [Excel I/O](../raven3-migration.md#excel-io)
+  does not run as written on RAVEN 3; see [Excel I/O](../raven3-migration/formats-and-reconstruction.md#excel-io)
   for the replacement, `curateModelFromTables`, which curates an existing
   model from `.tsv` files rather than importing a full model from `.xlsx`.
 - To run a section of a script in MATLAB, highlight it, right-click, and choose
@@ -42,7 +42,7 @@ raven-toolbox function name; some RAVEN functions map to cobrapy instead
 (`solveLP` → `model.optimize()`), and some have no Python counterpart at all
 (there is no Excel reader). Look each one up in the
 [API reference](../api/index.md), and see
-[RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
+[RAVEN vs. raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
 :::
 
 ```{toctree}

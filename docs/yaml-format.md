@@ -1,4 +1,4 @@
-# RAVEN / cobrapy YAML model format
+# YAML file format
 
 This document describes the YAML format produced and consumed by
 
