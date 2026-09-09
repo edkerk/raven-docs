@@ -51,7 +51,10 @@ with deliberate errors left in, exactly what these checks are for.
 
 The first pass is about the model as a data structure: metabolites no reaction
 uses, reactions with no metabolites, genes nothing refers to, a missing
-objective.
+objective. The two validators do not check the same list, which is why the
+counts below differ;
+[2. Model structure and identifiers](model-structure.md) sets out what each
+one covers.
 
 === "MATLAB"
 
@@ -63,6 +66,13 @@ objective.
     ```text title="Output"
     2 issue(s)
     ```
+
+    The two are a missing objective, reported as `invalid_id` because an
+    objective-less model cannot be written as FBC v2 SBML, and a
+    `cross_reference` finding: one InChI string now matches two different
+    metabolite names. That second one is a consequence of the corrupted
+    formula on `F6P_c` that 9.5 finds by comparison, seen from the
+    annotation side.
 
 === "Python"
 
@@ -146,10 +156,21 @@ carrier will inflate every prediction the model makes.
     Exchange reactions read as unbalanced by design: they are where mass enters
     and leaves, so filter them out before judging the number.
 
+    `getElementalBalance` returns a struct rather than printing. Its
+    `printUnbalanced` and `printUnparsable` options add warnings for the two
+    failure kinds separately, which is worth having when the question is
+    whether a reaction is wrong or merely undecidable. `rxns` restricts the
+    check to a subset.
+
 ## 9.3 What can never carry flux?
 
 A reaction that cannot carry flux under any conditions is either a gap or a
 mistake. It is also the cheapest of these checks to run.
+
+`haveFlux` counts a reaction as active once it carries more than its `cutOff`,
+`1e-6` by default, which keeps solver noise from reading as flux. It shuffles
+the order in which reactions are tested, and takes a `seed` so that order is
+reproducible.
 
 === "MATLAB"
 
@@ -294,6 +315,12 @@ shows whether the finding is new.
       - o2IN: bounds A=(0.0, 0.0) B=(0.0, 1000.0)
       - met F6P_c: formula A=C6H13O9P B=C6H14O12P2
     ```
+
+`diffModels` compares two models entry by entry: which reactions are unique to
+each, and where a shared reaction differs in stoichiometry, bounds, objective
+coefficient, gene rule or metabolite properties. It is the same function
+[17. Comparing models](comparing.md) uses, applied here to a model and its
+last good version.
 
 !!! warning "What can go wrong"
     - **Judging a model by whether it solves.** An unbalanced reaction makes it

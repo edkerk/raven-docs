@@ -192,6 +192,14 @@ differ; only a simulation tells you what the difference costs. (MATLAB reports
 that zero as `-0.0000`; the minus sign is a formatting artefact of a zero
 objective, not a negative growth rate.)
 
+RAVEN can also run this comparison for you. `compareMultipleModels` takes
+`funcCompare` and a `taskFile`, and then compares the models by which
+metabolic tasks each one passes rather than by which reactions each one has.
+That is the same shift from contents to behaviour made by hand above, and
+[12. Metabolic tasks](tasks.md) is where the task file comes from.
+`groupVector` labels the models, by tissue or by condition, so the similarity
+matrix is reported per group.
+
 The two tabs also show what `compareMultipleModels` and `compare_models`
 count differently. RAVEN's matrix has one row per *combination of models*,
 in-first-only, in-second-only, in-both, with `nElements` counting each;

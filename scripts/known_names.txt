@@ -8,6 +8,8 @@
 
 # -- prose terms ------------------------------------------------------------
 camelCase
+ord                           # Python builtin, used in a worked example
+tuple                         # Python builtin, used in a worked example
 snake_case
 Path                          # pathlib, used by several examples
 raven_toolbox                 # the Python package name, not a function
@@ -46,6 +48,7 @@ objective_coefficient        # cobra.Reaction attribute, named in yaml-format.md
 save_yaml_model               # cobra.io.save_yaml_model, named in yaml-format.md
 
 # -- COBRA Toolbox (MATLAB) / cobrapy names mentioned only for comparison ---
+changeCobraSolver             # COBRA Toolbox, sets the solver RAVEN hands over to
 # Named in flux-sampling-algorithms.md to explain what raven-toolbox/RAVEN's own
 # sampler filenames were chosen to avoid clashing with -- not RAVEN functions.
 chrrSampler
@@ -76,6 +79,59 @@ throwErrors                   # checkModelStruct argument
 neverPrefix                   # exportModel argument
 subDirs                       # exportForGit argument
 mainBranchFlag                # exportForGit argument
+allowNewMets                  # addRxns and changeRxns argument
+eqnType                       # addRxns and changeRxns argument
+removeUnusedComps             # removeReactions argument
+standardizeRules              # removeGenes argument
+reactionType                  # addExchangeRxns and getExchangeRxns argument
+closeOthers                   # setExchangeBounds argument
+mediaOnly                     # setExchangeBounds argument
+minGrowth                     # getMinimalMedium argument
+metParam                      # mergeModels argument
+deleteMinMax                  # simplifyModel argument
+deleteInaccessible            # simplifyModel argument
+deleteZeroInterval            # simplifyModel argument
+deleteDuplicates              # simplifyModel argument
+reservedRxns                  # simplifyModel argument
+funcCompare                   # compareMultipleModels argument
+taskFile                      # compareMultipleModels argument
+groupVector                   # compareMultipleModels argument
+ignoreRxns                    # getEssentialRxns argument
+rxnScores                     # fitTasks argument
+printOnlyFailed               # checkTasks argument
+taskStructure                 # checkTasks and fitTasks argument
+printUnbalanced               # getElementalBalance argument
+printUnparsable               # getElementalBalance argument
+cutOffFlux                    # printFluxes argument
+onlyExchange                  # printFluxes argument
+metaboliteList                # printFluxes argument
+outputString                  # printFluxes argument
+maxRatio                      # solveLP and optimizeProb params field
+sPrice                        # solveLP solution field, the shadow prices
+rCost                         # solveLP solution field, the reduced costs
+corrThreshold                 # FSEOF argument
+outputFile                    # FSEOF and reporterMetabolites argument
+printResults                  # reporterMetabolites argument
+geneFoldChanges               # reporterMetabolites argument
+maxPhylDist                   # getKEGGModelForOrganism argument
+minScoreRatioKO               # getKEGGModelForOrganism argument
+minScoreRatioG                # getKEGGModelForOrganism argument
+keepSpontaneous               # getKEGGModelForOrganism argument
+balanceOut                    # scaleBiomassFraction argument
+metPrefix                     # curateModelFromTables argument
+rxnPrefix                     # curateModelFromTables argument
+rxnIdx                        # curation table column, links the two reaction tables
+geneShortNames                # RAVEN model field, and a curation table column
+metNotes                      # RAVEN model field, and a curation table column
+metCharges                    # RAVEN model field
+metMiriams                    # RAVEN model field, the metabolite cross-references
+rxnMiriams                    # RAVEN model field, the reaction cross-references
+rxnNotes                      # RAVEN model field, and a curation table column
+rxnReferences                 # RAVEN model field, and a curation table column
+rxnConfidenceScores           # RAVEN model field, and a curation table column
+subSystems                    # RAVEN model field, and a curation table column
+rxnSBOs                       # RAVEN model field, written by assignSBOterms
+lipidBackbone                 # guide/biomass.md, a component name in the config struct
 extComp                       # prepINITModel argument
 convertGenes                  # prepINITModel argument
 essential_cache_path          # prep_init_model argument
@@ -153,6 +209,8 @@ minScoreRatioG                  # getKEGGModelForOrganism argument (MATLAB)
 removeBlockedRxns               # removeGenes argument (MATLAB)
 
 # -- variables and identifiers used in worked examples ----------------------
+modelKO                       # guide/fba.md, the copied model in 4.4
+ethOUT                        # smallYeast.yml reaction id, the ethanol exchange
 iAL1006                       # model name in legacy tutorial 1
 modelA                        # a stand-in model name in prose
 modelB
@@ -188,6 +246,28 @@ invalid_bounds
 invalid_formula
 cross_reference
 object_id
+
+# -- raven-toolbox keyword arguments named in the guide ---------------------
+allow_new_mets                # add_reactions_from_equations argument
+allow_new_genes               # add_reactions_from_equations argument
+delete_no_flux                # simplify_model argument
+open_exchanges                # simplify_model argument
+charge_balance_met            # a condition-file key, not a function
+gene_targets                  # FSEOFResult attribute
+target_type                   # FSEOFResult.targets column
+min_target                    # fseof argument
+gene_fold_changes             # reporter_metabolites argument
+correlation_threshold         # fseof argument
+met_id_prefix                 # batch_curate argument
+rxn_id_prefix                 # batch_curate argument
+mets_tsv                      # batch_curate_from_tsv argument
+balance_out                   # scale_biomass argument
+pseudoreaction_name           # BiomassComponent field
+mass_strategy                 # BiomassComponent field
+proton_met                    # BiomassConfig field
+biomass_rxn                   # BiomassConfig field
+mw_minus_2h                   # a mass_strategy value
+mw_minus_water                # a mass_strategy value
 
 # -- cobrapy attributes named in the guide ----------------------------------
 # Attributes, not functions, so they resolve nowhere; the guide names them when

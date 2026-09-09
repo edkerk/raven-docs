@@ -40,6 +40,12 @@ and grows at exactly zero.
     model.reactions.get_by_id("o2IN").upper_bound = 1000.0
     ```
 
+The sign convention here is the opposite of yeast-GEM's, where uptake is a
+negative flux through an exchange reaction. Neither is more correct; a model
+carries whichever its author chose, and the direction the equation is written in
+decides which bound opens it. [5. Growth media and conditions](media.md) works
+through the other convention.
+
 ## 6.1 Which solver is in use
 
 === "MATLAB"
@@ -52,10 +58,11 @@ and grows at exactly zero.
     RAVEN solver preference: ...
     ```
 
-    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts,
-    and the answer is whatever *this* installation was last told, which is why
-    the output above is elided. `checkInstallation` prints it along with a test
-    solve.
+    RAVEN keeps the choice in MATLAB's preferences, so it survives restarts, and
+    the answer is whatever *this* installation was last told, which is why the
+    output above is elided. The preference is global to the installation, not a
+    property of the model, so a script that changes it changes it for everything
+    that follows. `checkInstallation` prints it along with a test solve.
 
 === "Python"
 
@@ -73,7 +80,8 @@ and grows at exactly zero.
 
     cobrapy has two levels: `Configuration()` is the default applied to models
     created from then on, and `model.solver` is the interface this model is
-    actually using.
+    actually using. Because the choice travels with the model, two models in one
+    session can use different solvers.
 
 ## 6.2 Change it
 
@@ -88,6 +96,13 @@ academic use.
     setRavenSolver('glpk');     % 'gurobi', or 'cobra' to hand over to the COBRA Toolbox
     ```
 
+    Those three are the accepted values. `'glpk'` uses the binaries RAVEN ships,
+    so it works with no further installation. `'gurobi'` needs Gurobi on the
+    MATLAB path. `'cobra'` translates the problem into COBRA Toolbox form and
+    uses whatever `changeCobraSolver` last selected, which requires the COBRA
+    Toolbox to be initialised first; `setRavenSolver` checks that and errors
+    rather than storing a preference that cannot work.
+
 === "Python"
 
     ```python
@@ -99,7 +114,8 @@ academic use.
 
     Assigning to `model.solver` rebuilds this model's problem; assigning to
     `Configuration().solver` changes the default for models created afterwards
-    and leaves existing ones alone.
+    and leaves existing ones alone. The available names are whichever optlang
+    interfaces are installed.
 
 ## 6.3 What comes back
 
@@ -109,9 +125,18 @@ The two solution objects carry the same information under different names.
 |---|---|---|
 | `sol.f` | `solution.objective_value` | objective value, same sign in both |
 | `sol.x` | `solution.fluxes` | fluxes: a vector in `model.rxns` order, or a Series by id |
-| `sol.stat` | `solution.status` | `1` optimal, `0` feasible, `-1` infeasible |
+| `sol.stat` | `solution.status` | how the solve ended |
 | `sol.msg` | `solution.status` | what the solver said |
 | `sol.sPrice`, `sol.rCost` | `solution.shadow_prices`, `solution.reduced_costs` | duals |
+
+`sol.stat` takes four values: `1` solved to optimality, `0` feasible but not
+proven optimal, `-1` infeasible, and `-2` solved but with the flux minimisation
+of parsimonious FBA failing afterwards. Only `1` means the fluxes are the answer
+to the question that was asked.
+
+The duals are the exception to the correspondence: RAVEN reports `sPrice` and
+`rCost` only when `solveLP` runs without flux minimisation, because the second
+optimisation replaces the problem whose duals they describe.
 
 === "MATLAB"
 
@@ -127,6 +152,15 @@ The two solution objects carry the same information under different names.
     growth 0.1222 /h
     ```
 
+    `solveLP` builds a COBRA-style problem struct and hands it to `optimizeProb`,
+    which is where the selected solver is actually called. Calling `optimizeProb`
+    directly is the way to solve a problem the toolbox built for you, such as the
+    MILPs inside gap-filling, and it takes a `params` struct forwarded to the
+    solver. Two fields of `params` are handled by RAVEN rather than passed on:
+    `verbose`, which shows MILP progress, and `maxRatio`, which splits
+    badly-scaled columns through auxiliary metabolites before solving and leaves
+    the feasible region unchanged.
+
 === "Python"
 
     ```python
@@ -140,6 +174,11 @@ The two solution objects carry the same information under different names.
     status optimal
     growth 0.1222 /h
     ```
+
+    `model.solver` is the optlang problem itself, so the underlying solver is
+    reachable for anything cobrapy does not expose: `model.solver.problem` is the
+    native object, and `model.solver.configuration` carries tolerances,
+    time limits and thread counts.
 
 ## 6.4 When the solve fails
 
@@ -161,6 +200,10 @@ solution with status `infeasible`, and `slim_optimize` returns `nan`.
     stat -1: The problem is infeasible
     ```
 
+    `sol.f` and `sol.x` are empty here, not zero, so arithmetic on them produces
+    an empty result rather than an error. That is how an unchecked infeasible
+    solve turns into a blank in a report.
+
 === "Python"
 
     ```python
@@ -176,9 +219,13 @@ solution with status `infeasible`, and `slim_optimize` returns `nan`.
     slim_optimize: nan
     ```
 
-    Check the status before you use a number. `slim_optimize` skips building a
-    full solution, so it is the fast option inside a loop, at the cost of
-    returning `nan` instead of telling you why.
+    Check the status before using a number. `slim_optimize` skips building a full
+    solution, so it is the fast option inside a loop, at the cost of returning
+    `nan` instead of a reason.
+
+An infeasible model is over-constrained: the constraints as written have no
+solution at all. That is different from a feasible model whose optimum is zero,
+which is a statement about biology rather than about the constraints.
 
 !!! warning "What can go wrong"
     - **A solver that is set but not installed.** `setRavenSolver('gurobi')`
@@ -186,6 +233,9 @@ solution with status `infeasible`, and `slim_optimize` returns `nan`.
       at the next solve. `checkInstallation` tests it directly.
     - **MILP with GLPK.** GLPK solves LPs only, in RAVEN. Anything mixed-integer
       (`getMinimalMedium`, some gap-filling) needs Gurobi.
+    - **Reading fluxes after a non-optimal solve.** `sol.stat` of `0` means a
+      feasible point was found but not proven optimal, and `-2` means the
+      parsimonious step failed after an optimal first solve. Both return numbers.
     - **Tiny differences between solvers.** Alternative optima mean two solvers
       can return different flux distributions for the same objective value. Pin
       one solver for anything you intend to compare.

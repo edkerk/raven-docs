@@ -106,6 +106,13 @@ complex and the reaction goes.
     61 genes tested, 9 essential
     ```
 
+    `fluxes` comes back sparse and with one column per deletion, so the growth
+    row has to be pulled out by the objective's position, as above.
+    `findGeneDeletions` also returns a `details` vector saying what happened to
+    each gene: whether it was deleted, proved lethal, or was skipped because it
+    only appears on dead-end reactions and deleting it could not change the
+    answer.
+
 === "Python"
 
     ```python
@@ -123,14 +130,14 @@ complex and the reaction goes.
     ```
 
     `single_gene_deletion` returns a DataFrame indexed by the deleted gene set,
-    with the resulting growth rate and solver status, so the usual pandas
-    filtering finds the essential ones.
+    with the resulting growth rate and solver status, so ordinary pandas
+    filtering finds the essential ones. The index holds a frozenset per row,
+    because the same function shape serves the double-deletion case.
 
 ## 11.3 Essential reactions
 
-Reaction essentiality asks the same question one level down, and RAVEN frames it
-in terms of a **task**: which reactions must stay for the model to still do this
-particular thing?
+Reaction essentiality asks the same question one level down. The two functions
+below look equivalent and are not, which is why their answers differ by 24.
 
 === "MATLAB"
 
@@ -142,6 +149,13 @@ particular thing?
     ```text title="Output"
     0 essential reactions
     ```
+
+    `getEssentialRxns` zeroes the objective before it starts and calls a
+    reaction essential when constraining it to zero makes the problem
+    **infeasible**. It is asking what the model needs in order to have any
+    solution at all, not what it needs in order to grow. With the medium open,
+    nothing in `smallYeast.yml` is required for feasibility, so the answer is
+    zero. `ignoreRxns` excludes reactions from the search.
 
 === "Python"
 
@@ -156,6 +170,12 @@ particular thing?
     ```text title="Output"
     24 essential reactions
     ```
+
+    `single_reaction_deletion` keeps the objective and counts the reactions
+    whose removal drops growth below the threshold applied afterwards, `1e-6`
+    here. That is essentiality with respect to growth, which is the question
+    most deletion studies mean, and it is why this returns 24 where the MATLAB
+    tab returns none.
 
     For essentiality with respect to a *task* rather than the objective,
     raven-toolbox has `find_task_essential_reactions`; see
@@ -232,6 +252,9 @@ knockout's physiology, and a different answer.
     - **Confusing gene and reaction knockouts.** Deleting a gene only silences a
       reaction when the GPR says so. Isozymes mask single knockouts, which is
       what the double deletions test.
+    - **Comparing essentiality numbers from the two toolboxes.**
+      `getEssentialRxns` measures feasibility and `single_reaction_deletion`
+      measures growth; they are not two implementations of one question.
     - **A knockout that looks lethal because the medium is wrong.** Essentiality
       is relative to the medium and the objective. State both when you report it;
       see [5. Growth media and conditions](media.md).
