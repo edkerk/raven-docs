@@ -3,8 +3,8 @@
 <div class="rh-hero">
   <img class="rh-logo-light" src="_static/raven-logo.png" alt="RAVEN">
   <img class="rh-logo-dark" src="_static/raven-logo-white.png" alt="RAVEN">
-  <p class="rh-tag">MATLAB &amp; Python</p>
   <p class="rh-tagline">A toolkit for building, curating, and simulating genome-scale metabolic models, available as a MATLAB toolbox and a Python package built on cobrapy.</p>
+  <p class="rh-tag">MATLAB &amp; Python</p>
 </div>
 
 ## Install
@@ -174,6 +174,15 @@ archived at
 [https://doi.org/10.5281/zenodo.3689518](https://doi.org/10.5281/zenodo.3689518).
 raven-toolbox, the Python port, is under the MIT license at
 [SysBioChalmers/raven-toolbox](https://github.com/SysBioChalmers/raven-toolbox){.github}.
+
+## Issues and discussions
+
+Report a bug or request a feature on the tracker for the toolbox it concerns:
+[RAVEN issues](https://github.com/SysBioChalmers/RAVEN/issues){.github} for the
+MATLAB toolbox, [raven-toolbox issues](https://github.com/SysBioChalmers/raven-toolbox/issues){.github}
+for the Python package. For questions and general discussion, use
+[RAVEN discussions](https://github.com/SysBioChalmers/RAVEN/discussions){.github}
+or [raven-toolbox discussions](https://github.com/SysBioChalmers/raven-toolbox/discussions){.github}.
 
 ```{toctree}
 :hidden:
