@@ -1,3 +1,7 @@
+---
+icon: material/folder-open
+---
+
 # Methods
 
 RAVEN, both the MATLAB toolbox and raven-toolbox (Python), ships many
