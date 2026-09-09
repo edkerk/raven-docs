@@ -73,7 +73,7 @@ they do rather than by legacy history:
 
 | RAVEN 3 folder | Contents | Mostly came from (RAVEN 2) |
 |---|---|---|
-| `INIT/` | `ftINIT`, and `INIT/tINIT/` for `getINITModel`/`runINIT` | `INIT/` |
+| `INIT/` | `ftINIT`, `INIT/tINIT/` for `getINITModel`/`runINIT`, and HPA/expression parsing + gene scoring (`parseHPA`, `parseHPArna`, `scoreModel`) | `INIT/`, `hpa/` |
 | `analysis/` | FBA-adjacent analyses: FVA, sampling, FSEOF, OptKnock, robustness, production envelope, flux comparison/tracing | `core/` |
 | `annotation/` | MIRIAM editing, SBO term assignment, ΔG CSV I/O | `struct_conversion/` (+ new) |
 | `biomass/` | Biomass composition fitting/scaling, GAM | `core/` (+ new) |
@@ -86,7 +86,6 @@ they do rather than by legacy history:
 | `io/` | Model import/export (SBML, YAML, Excel), FASTA I/O | `io/` |
 | `localization/` | Subcellular localization prediction/scoring, compartment assignment | `external/` (+ new) |
 | `manipulation/` | Structural edits: add/remove/change rxns, mets, genes; merge, sort, simplify | `core/` |
-| `omics/` | HPA/expression parsing and gene scoring | `hpa/` |
 | `queries/` | Non-mutating lookups: indexes, exchange/transport reactions, stoichiometry construction, model checking | `core/` |
 | `reconstruction/` | KEGG- and homology-based draft reconstruction | `external/` |
 | `solver/` | LP/MILP solving | `solver/` |
@@ -261,7 +260,7 @@ codebase" push. None of these have call sites left in RAVEN 3 itself.
 | `core/printModel.m` | Printed reactions to screen/file | `queries/printModelStats.m` / `queries/printFluxes.m` cover related summary/flux printing; no direct one-line-per-reaction dump remains. |
 | `core/getMetsInComp.m` | Returned metabolite indices in a given compartment | Inline it as `model.metComps == compIndex`. |
 | `core/mapCompartments.m` | Remapped compartment labels in a localization-score structure | Superseded by the new predictor-based localization workflow and `localization/defaultCompartmentMap.m`. |
-| `core/getExpressionStructure.m` | Loaded an expression-experiment structure from an ad hoc Excel format | Superseded by `omics/parseHPA.m`/`omics/parseHPArna.m` for the supported expression-data workflow. |
+| `core/getExpressionStructure.m` | Loaded an expression-experiment structure from an ad hoc Excel format | Superseded by `INIT/parseHPA.m`/`INIT/parseHPArna.m` for the supported expression-data workflow. |
 | `core/checkRxn.m` | Per-reaction reactant/product synthesizability debugging | No direct successor; use `gapfilling/findLeakMetabolite.m`, `gapfilling/canExchange.m`, or `gapfilling/checkProduction.m`. |
 | `core/parallelPoolRAVEN.m` | Parallel Computing Toolbox pool setup | Renamed/rewritten as `utils/parallelWorkersRAVEN.m`. |
 | `external/getWoLFScores.m` | WoLF PSORT score parsing | None; see [§3](#backward-incompatible-changes). |
@@ -285,7 +284,7 @@ removed in the next major release") and forwards to the new function.
 | `canProduce(model, mets)` | `canExchange(model, 'produce', 'mets', mets)` | |
 | `canConsume(model, mets)` | `canExchange(model, 'consume', 'mets', mets)` | |
 | `compareRxnsGenesMetsComps` | folded into `comparison/compareMultipleModels.m` | Its rxn/gene/met/comp overlap output is now one part of `compareMultipleModels`'s output; no separate function remains. |
-| `INIT/scoreComplexModel.m` | `omics/scoreModel.m` | **Merged, not renamed.** RAVEN 2 had *both* `INIT/scoreComplexModel.m` and `hpa/scoreModel.m`; RAVEN 3 folded them into one `scoreModel`, called with different settings from tINIT than from ftINIT. A RAVEN 2 call to `scoreModel` is unaffected; a call to `scoreComplexModel` has to move to `scoreModel` *and* pass the settings that reproduce the old behaviour (a single operator for both `and`/`or`, `dataPrecedence` `'reaction'`). |
+| `INIT/scoreComplexModel.m` | `INIT/scoreModel.m` | **Merged, not renamed.** RAVEN 2 had *both* `INIT/scoreComplexModel.m` and `hpa/scoreModel.m`; RAVEN 3 folded them into one `scoreModel`, called with different settings from tINIT than from ftINIT. A RAVEN 2 call to `scoreModel` is unaffected; a call to `scoreComplexModel` has to move to `scoreModel` *and* pass the settings that reproduce the old behaviour (a single operator for both `and`/`or`, `dataPrecedence` `'reaction'`). |
 | `INIT/ftINITFillGapsMILP.m` | folded into `solver/getMinNrFluxes.m` | Exposed now via `getMinNrFluxes`'s `resolveTies`/`proveAbsGap` options. |
 | `INIT/ftINITFillGapsForAllTasks.m` | folded into `gapfilling/ftINITFillGaps.m` and `fitTasks`'s `'preMerged'` gap-fill mode | |
 | `getGenesFromKEGG`/`getMetsFromKEGG`/`getRxnsFromKEGG` | `reconstruction/kegg/readKEGGTable.m` + the raven-data KEGG artifacts | Not a direct signature-compatible rename: the whole data source changed; see [§7](#kegg-reconstruction). |
