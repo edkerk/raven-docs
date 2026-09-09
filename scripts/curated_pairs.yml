@@ -75,6 +75,20 @@ aliases:
   getIndexes: parse_name_comp
   exportToExcelFormat: export_to_excel
 
+  # Gap-filling and analysis
+  getEssentialRxns: find_task_essential_reactions
+  deleteUnusedGenes: remove_genes
+  gapFillFastLP: fill_gaps_fast_lp
+  gapFillMILP: fill_gaps_kumar_milp
+  gapFillTopological: analyse_topology
+  makeFakeBlastStructure: make_ortholog_hits
+  getModelFromKEGG: build_reference_model
+  sampleACHR: random_sampling
+  sampleCHRR: random_sampling
+  gapFillFastCore: fill_gaps_fast_lp
+  gapFillSwiftCore: fill_gaps_fast_lp
+  replaceMets: replace_metabolite
+
 cobrapy:
   # RAVEN function -> the cobrapy object or function that replaces it.
   importModel: cobra.io.read_sbml_model
@@ -91,8 +105,29 @@ cobrapy:
   runPhenotypePhasePlane: cobra.flux_analysis.production_envelope
   modelSummary: cobra.Model.summary
   setRavenSolver: cobra.Configuration
+  addMets: cobra.Metabolite
+  addGenesRaven: cobra.Reaction.gene_reaction_rule
+  addExchangeRxns: cobra.Model.add_boundary
+  getAllowedBounds: cobra.flux_analysis.flux_variability_analysis
+  printModelStats: cobra.Model
+  addIdentifierPrefix: cobra.io.read_sbml_model
+  removeIdentifierPrefix: cobra.io.write_sbml_model
+  getMinimalMedium: cobra.medium.minimal_medium
+  optimizeProb: cobra.Model.solver
+  parseGrRule: cobra.core.gene.GPR
+  grRuleToString: cobra.core.gene.GPR
+  getGenesFromGrRules: cobra.core.gene.GPR
+  getAllRxnsFromGenes: cobra.Gene.reactions
 
 not_ported:
+  getINITModel: >-
+    The original tINIT implementation. RAVEN keeps it for models already
+    built with it; raven-toolbox, a new implementation with no such
+    installed base, carries ftINIT alone.
+  runINIT: >-
+    The original tINIT implementation. RAVEN keeps it for models already
+    built with it; raven-toolbox, a new implementation with no such
+    installed base, carries ftINIT alone.
   runDynamicFBA: >-
     Dynamic FBA is covered by maintained Python packages (dfba, reframed, mewpy).
   ravenCobraWrapper: >-
@@ -107,3 +142,132 @@ not_ported:
   printFluxes: >-
     No equivalent yet. Use cobra's model.summary(), or the solution's fluxes
     Series directly.
+
+  # Internal helpers, subsumed into an already-mapped public function
+  buildEquation: >-
+    Internal helper for building an equation string from raw metabolites and
+    coefficients; the equivalent is inside add_reactions_from_equations and
+    cobra.Reaction.build_reaction_string, both already mapped.
+  constructS: >-
+    Internal helper for building a stoichiometric matrix from equation
+    strings; the equivalent is inside add_reactions_from_equations, already
+    mapped from addRxns.
+  parseRxnEqu: >-
+    Internal helper for extracting metabolite names from equation strings;
+    the equivalent is inside add_reactions_from_equations, already mapped
+    from addRxns.
+  buildGlobalGPR: >-
+    Internal to assembling the global KEGG reference model; the equivalent
+    is inside build_reference_model, already mapped from getModelFromKEGG.
+  buildGlobalKEGGModel: >-
+    Internal to assembling the global KEGG reference model; the equivalent
+    is inside build_reference_model, already mapped from getModelFromKEGG.
+  keggDataVersion: >-
+    Internal to assembling the global KEGG reference model; the equivalent
+    is inside build_reference_model, already mapped from getModelFromKEGG.
+  parseFormulas: >-
+    Internal formula-to-elemental-composition parser; the equivalent is
+    inside get_elemental_balance, not exposed separately.
+  writeExcel: >-
+    Internal low-level .xlsx writer; the equivalent is inside
+    export_to_excel, already mapped from exportToExcelFormat.
+  cleanSheet: >-
+    Internal to the old Excel-import pipeline (importExcelModel), which
+    RAVEN 3 removed; raven-toolbox never had an Excel reader either.
+  sampleChebyshevCenter: >-
+    Internal rounding-step subroutine of RAVEN's own sampleCHRR; raven-toolbox's
+    random_sampling (already mapped from sampleACHR/sampleCHRR) handles
+    rounding and warmup internally without exposing separate functions.
+  sampleMaxVolEllipse: >-
+    Internal rounding-step subroutine of RAVEN's own sampleCHRR; raven-toolbox's
+    random_sampling (already mapped from sampleACHR/sampleCHRR) handles
+    rounding and warmup internally without exposing separate functions.
+  sampleWarmupPoints: >-
+    Internal warmup-point generator for RAVEN's own sampleACHR;
+    raven-toolbox's random_sampling (already mapped from
+    sampleACHR/sampleCHRR) handles warmup internally.
+
+  # MATLAB-specific plumbing, with no Python equivalent needed
+  convertCharArray: >-
+    MATLAB char-array/string-array normalisation; Python has one string type.
+  parseRAVENargs: >-
+    Resolves RAVEN's positional-or-named optional arguments; Python
+    functions take native keyword arguments directly.
+  parseYAML: >-
+    A generic YAML parser for condition files; Python's standard YAML
+    libraries (PyYAML) cover this directly, with no toolbox wrapper needed.
+  printOrange: >-
+    Prints coloured text to the MATLAB Command Window; not applicable
+    outside the MATLAB GUI.
+  ravenList: >-
+    Formats a header and item list for a MATLAB warning()/error() call;
+    Python's own string formatting covers this directly.
+  deprecationWarning: >-
+    Emits RAVEN's own one-time deprecated-function notice; Python's
+    warnings.warn covers this directly.
+  legacyMethodNotice: >-
+    Emits RAVEN's own one-time legacy-method notice; Python's warnings.warn
+    covers this directly.
+  parallelWorkersRAVEN: >-
+    Returns a parfor worker count for the Parallel Computing Toolbox;
+    raven-toolbox's parallelism is configured directly through
+    cobra.Configuration().processes.
+  setRavenProgress: >-
+    Sets a preference for how RAVEN reports progress in the MATLAB GUI or
+    console; no equivalent concept in Python.
+  checkFileExistence: >-
+    A generic file-existence check; Python's own pathlib/os.path cover this
+    directly.
+  checkSolution: >-
+    Checks whether a Mosek solution is feasible and optimal; Mosek is not a
+    solver either toolbox supports through this site's documented setup.
+  splitProbForConditioning: >-
+    Improves LP numerical conditioning by splitting wide-ratio columns
+    before solving; cobrapy and the solvers it wraps (through optlang)
+    handle numerical scaling internally, with no equivalent public option.
+  permuteModel: >-
+    Reorders the parallel arrays of a RAVEN MATLAB struct; a cobra.Model has
+    no comparable field-order concept to reorder.
+  standardizeModelFieldOrder: >-
+    Orders the fields of a RAVEN MATLAB struct to a canonical layout; a
+    cobra.Model has no comparable field-order concept.
+  ravenModelFields: >-
+    A registry of RAVEN's own MATLAB struct fields, used internally by
+    permuteModel and removeReactions; a cobra.Model has no comparable
+    struct-field concept.
+  runRAVENtests: >-
+    Runs RAVEN's own MATLAB unit test suite. raven-toolbox's tests run
+    through pytest, the standard Python testing workflow, not a toolbox
+    function.
+  defaultCompartmentMap: >-
+    raven-toolbox exposes the same table as a module-level constant,
+    localization.DEFAULT_COMPARTMENT_MAP, not a function.
+
+  # No raven-toolbox equivalent yet
+  findPotentialErrors: >-
+    Detects grRules that are not in disjunctive normal form. cobrapy's own
+    GPR class represents a parsed rule directly, so raven-toolbox has no
+    equivalent "detect an invalid legacy string" step.
+  getTransportRxns: >-
+    Classifies which reactions move a metabolite between compartments.
+    raven-toolbox has no equivalent classifier yet.
+  removeBadRxns: >-
+    Iteratively removes reactions that let the model make or consume
+    something from nothing. raven-toolbox has no equivalent yet; see
+    find_leak_metabolite (mapped from makeSomething/consumeSomething) for
+    finding the same kind of issue.
+  reverseRxns: >-
+    Negates a reaction's stoichiometry and bounds to reverse its direction.
+    Simple enough to do directly against a cobra.Reaction's own API; no
+    dedicated function exists.
+  readFasta: >-
+    raven-toolbox has no public FASTA reader; the closest relative is
+    write_fasta (already auto-matched from writeFasta), the read side stays
+    internal to the functions that need it.
+  runRobustnessAnalysis: >-
+    Robustness analysis for one reaction against an objective.
+    raven-toolbox has no equivalent yet.
+  runSimpleOptKnock: >-
+    A simple, brute-force OptKnock implementation. raven-toolbox has no
+    equivalent; strain-design algorithms like OptKnock are explicitly out of
+    scope for both toolboxes, see RAVEN 3 and raven-toolbox.
