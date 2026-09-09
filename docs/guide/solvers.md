@@ -8,10 +8,10 @@ read what it gives back.
 
 | MATLAB | Python | |
 |---|---|---|
-| `setRavenSolver` | `Configuration` <span class="cobrapy-tag">cobrapy</span> | choose the solver |
-| `checkInstallation` | `Configuration` <span class="cobrapy-tag">cobrapy</span> | check the solver works |
-| `solveLP` | `Model.optimize` <span class="cobrapy-tag">cobrapy</span> | solve, and get a solution object |
-| `optimizeProb` | `Model.solver` <span class="cobrapy-tag">cobrapy</span> | solve a problem the toolbox built for you |
+| `setRavenSolver` | `Configuration` {bdg-secondary}`cobrapy` | choose the solver |
+| `checkInstallation` | `Configuration` {bdg-secondary}`cobrapy` | check the solver works |
+| `solveLP` | `Model.optimize` {bdg-secondary}`cobrapy` | solve, and get a solution object |
+| `optimizeProb` | `Model.solver` {bdg-secondary}`cobrapy` | solve a problem the toolbox built for you |
 
 ## Setup
 

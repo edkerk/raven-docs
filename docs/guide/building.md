@@ -9,11 +9,11 @@ reconstruction is involved.
 
 | MATLAB | Python | |
 |---|---|---|
-| `addMets` | `Metabolite` <span class="cobrapy-tag">cobrapy</span> | add metabolites |
+| `addMets` | `Metabolite` {bdg-secondary}`cobrapy` | add metabolites |
 | `addRxns` | `add_reactions_from_equations` | add reactions from equation strings |
-| `addGenesRaven` | auto-created from the GPR <span class="cobrapy-tag">cobrapy</span> | add genes |
-| `addExchangeRxns` | `Model.add_boundary` <span class="cobrapy-tag">cobrapy</span> | add exchange reactions |
-| `constructEquations` | `Reaction.reaction` <span class="cobrapy-tag">cobrapy</span> | read the equations back |
+| `addGenesRaven` | auto-created from the GPR {bdg-secondary}`cobrapy` | add genes |
+| `addExchangeRxns` | `Model.add_boundary` {bdg-secondary}`cobrapy` | add exchange reactions |
+| `constructEquations` | `Reaction.reaction` {bdg-secondary}`cobrapy` | read the equations back |
 
 The important part is the same in both: **write the reaction as an equation
 string** and let the toolbox derive the stoichiometry, rather than filling in a

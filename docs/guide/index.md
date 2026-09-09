@@ -17,7 +17,7 @@ original RAVEN paper. Both are MATLAB only.
 :::{admonition} cobrapy
 :class: info
 Functions that come from cobrapy rather than raven-toolbox carry a
-<span class="cobrapy-tag">cobrapy</span> badge, their import line shows where
+{bdg-secondary}`cobrapy` badge, their import line shows where
 they live (`from cobra.io import read_sbml_model`), and the badge links to
 the cobrapy documentation. The
 [function mapping](../matlab-vs-python.md) lists every such function.

@@ -13,7 +13,7 @@ is usually 0, usually 10, or evenly spread; a sample does.
 | `sampleACHR` | `random_sampling` (`method='achr'`) | hit-and-run MCMC, the default |
 | `sampleCHRR` | `random_sampling` (`method='chrr'`) | hit-and-run with rounding, for thin polytopes |
 | no equivalent | `find_good_reactions` | reactions usable as random objectives |
-| `getAllowedBounds` | `flux_variability_analysis` <span class="cobrapy-tag">cobrapy</span> | the ranges sampling fills in |
+| `getAllowedBounds` | `flux_variability_analysis` {bdg-secondary}`cobrapy` | the ranges sampling fills in |
 
 ## Setup
 

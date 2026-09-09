@@ -8,11 +8,11 @@ gene. Every later page assumes these operations.
 | MATLAB | Python | |
 |---|---|---|
 | `readYAMLmodel` | `read_yaml_model` | read a RAVEN YAML model |
-| `importModel` | `read_sbml_model` <span class="cobrapy-tag">cobrapy</span> | read an SBML model |
-| `printModelStats` | model attributes <span class="cobrapy-tag">cobrapy</span> | how big the model is |
-| `getIndexes` | `get_by_id` <span class="cobrapy-tag">cobrapy</span> | look something up by identifier |
-| `constructEquations` | `Reaction.reaction` <span class="cobrapy-tag">cobrapy</span> | a reaction as a readable string |
-| `getElementalBalance` | `check_mass_balance` <span class="cobrapy-tag">cobrapy</span> | is a reaction balanced |
+| `importModel` | `read_sbml_model` {bdg-secondary}`cobrapy` | read an SBML model |
+| `printModelStats` | model attributes {bdg-secondary}`cobrapy` | how big the model is |
+| `getIndexes` | `get_by_id` {bdg-secondary}`cobrapy` | look something up by identifier |
+| `constructEquations` | `Reaction.reaction` {bdg-secondary}`cobrapy` | a reaction as a readable string |
+| `getElementalBalance` | `check_mass_balance` {bdg-secondary}`cobrapy` | is a reaction balanced |
 
 ## Setup
 

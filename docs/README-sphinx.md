@@ -60,6 +60,11 @@ python -m venv .venv-sphinx
   its own separate from the INIT paper, RAVEN's MATLAB implementation of it.
 - **Link underlines.** `docs/_static/custom.css`, wired in via
   `html_css_files`.
+- **`<span class="cobrapy-tag">` inline badges.** 39 occurrences across 14
+  guide pages, rendered as inert literal text (the CSS class is
+  Material-specific and not defined here). Swapped for sphinx-design's
+  built-in `{bdg-secondary}` role, the same mechanical single-string
+  find/replace as the icon shorthand fix above.
 
 ## Not converted
 
@@ -87,11 +92,6 @@ python -m venv .venv-sphinx
   output blocks. That fence shape changed here (see "Admonitions, content
   tabs..." above); the script would need to read MyST's fence conventions
   instead before it could check this branch's pages.
-- **`<span class="cobrapy-tag">` inline badges.** Scattered across ~40 guide
-  pages inside tables. Renders as inert plain text (the CSS class is
-  Material-specific and not defined here) rather than a badge. Converting
-  every occurrence to a `sphinx-design` badge role is mechanical in the same
-  way the tab/admonition conversion is, just not done in this pass.
 - **`.readthedocs.yaml`.** Still points at the `mkdocs:` build. The target
   block for a real switch:
 

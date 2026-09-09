@@ -12,7 +12,7 @@ of what you need to translate a script between the two.
 | `sortIdentifiers` | `sort_identifiers` | sort reactions, metabolites and genes by id |
 | `getIndexes` | `parse_name_comp` | split a `name[comp]` token |
 | no equivalent | `subsystem_to_str` | one subsystem string, whatever the source stored |
-| `addIdentifierPrefix`, `removeIdentifierPrefix` | handled on read/write <span class="cobrapy-tag">cobrapy</span> | SBML identifier prefixes |
+| `addIdentifierPrefix`, `removeIdentifierPrefix` | handled on read/write {bdg-secondary}`cobrapy` | SBML identifier prefixes |
 | `ravenCobraWrapper` | not needed | convert between RAVEN and COBRA structs |
 
 ## The correspondence

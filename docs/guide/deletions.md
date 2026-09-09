@@ -9,11 +9,11 @@ distribution better than plain FBA does".
 
 | MATLAB | Python | |
 |---|---|---|
-| `findGeneDeletions` | `single_gene_deletion` <span class="cobrapy-tag">cobrapy</span> | knock out every gene in turn |
-| `findGeneDeletions` (`'sgd'`/`'dgd'`) | `double_gene_deletion` <span class="cobrapy-tag">cobrapy</span> | pairs of genes |
+| `findGeneDeletions` | `single_gene_deletion` {bdg-secondary}`cobrapy` | knock out every gene in turn |
+| `findGeneDeletions` (`'sgd'`/`'dgd'`) | `double_gene_deletion` {bdg-secondary}`cobrapy` | pairs of genes |
 | `getEssentialRxns` | `find_task_essential_reactions` | reactions a task cannot do without |
 | `deleteUnusedGenes` | `remove_genes` | remove genes, rather than knock them out |
-| no equivalent | `moma` <span class="cobrapy-tag">cobrapy</span> | a knockout's fluxes, staying near the wild type |
+| no equivalent | `moma` {bdg-secondary}`cobrapy` | a knockout's fluxes, staying near the wild type |
 
 ## Setup
 

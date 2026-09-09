@@ -9,11 +9,11 @@ from one it merely happened to report.
 
 | MATLAB | Python | |
 |---|---|---|
-| `getAllowedBounds` | `flux_variability_analysis` <span class="cobrapy-tag">cobrapy</span> | the range each reaction can take |
-| `haveFlux` | `find_blocked_reactions` <span class="cobrapy-tag">cobrapy</span> | reactions that can carry no flux at all |
-| `solveLP` (`minFlux`) | `pfba` <span class="cobrapy-tag">cobrapy</span> | one representative optimum |
-| no equivalent | `loopless_solution` <span class="cobrapy-tag">cobrapy</span> | an optimum without thermodynamically infeasible loops |
-| no equivalent | `add_loopless` <span class="cobrapy-tag">cobrapy</span> | the constraints behind `loopless="fastSNP"` |
+| `getAllowedBounds` | `flux_variability_analysis` {bdg-secondary}`cobrapy` | the range each reaction can take |
+| `haveFlux` | `find_blocked_reactions` {bdg-secondary}`cobrapy` | reactions that can carry no flux at all |
+| `solveLP` (`minFlux`) | `pfba` {bdg-secondary}`cobrapy` | one representative optimum |
+| no equivalent | `loopless_solution` {bdg-secondary}`cobrapy` | an optimum without thermodynamically infeasible loops |
+| no equivalent | `add_loopless` {bdg-secondary}`cobrapy` | the constraints behind `loopless="fastSNP"` |
 | no equivalent | `find_good_reactions` | reactions whose range is real rather than a loop |
 
 ## Setup
