@@ -204,16 +204,3 @@ hr.rh-divider {
 .md-typeset .doc-heading { scroll-margin-top: 4rem; }
 .md-typeset h2.doc-heading code,
 .md-typeset h3.doc-heading code { font-weight: 600; }
-
-/* cobrapy indicator badge for external functions in the mapping table */
-.cobrapy-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: .25rem;
-  font-size: .72rem;
-  font-weight: 600;
-  padding: .05rem .4rem;
-  border-radius: 6px;
-  background: var(--md-code-bg-color);
-  color: var(--md-default-fg-color--light);
-}
