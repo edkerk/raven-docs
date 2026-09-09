@@ -26,7 +26,8 @@ the rate at which that metabolite enters (negative) or leaves (positive) the
 system. The medium is exactly the set of exchanges with a negative lower bound.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = importModel('yeast-GEM.xml');
@@ -76,7 +77,8 @@ up; every open exchange in yeast-GEM also has an upper bound of 1000, so it
 can secrete as well and is classified `'reverse'`. Selecting on
 `model.lb < 0` is what "the medium" means here.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.io import read_sbml_model
@@ -127,7 +129,8 @@ difference is three reactions: `r_2111` (growth) and the sinks `r_4062` and
 ## 5.2 Change one nutrient
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
@@ -144,7 +147,8 @@ fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), sol.f);
 value to all of them or one value each. `'lb'`, `'ub'` and `'eq'` set bounds;
 `'obj'` sets the objective coefficient.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.conditions import set_reaction_bounds
@@ -177,7 +181,8 @@ That makes it the right tool for "this exact recipe and nothing else", and the
 wrong one for "the shipped medium, but with more glucose".
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 % every uptake closed
@@ -208,7 +213,8 @@ and with its default `closeOthers` shuts every other uptake, which is the
 replace-the-whole-recipe behaviour. `mediaOnly` restricts it to the
 extracellular compartment, so intracellular sink reactions are left alone.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 with model:
@@ -288,7 +294,8 @@ absorbs the difference. Both toolboxes recompute it rather than storing the new
 value, so the file stays readable as a statement of intent.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -304,7 +311,8 @@ installed (`pyenv` in MATLAB shows which interpreter is linked). That is
 also why this block carries no output here: the documentation build has
 no linked interpreter.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.conditions import apply_condition, load_condition
@@ -342,7 +350,8 @@ is doing the work, and catches a nutrient the model can do without because a
 gap-filled reaction produces it internally.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: needs-gurobi -->
 
@@ -389,7 +398,8 @@ GLPK selected it reports `glpk is not suitable for solving MILPs`. cobrapy's
 flux instead, which is why the Python tab runs on any solver and returns
 rates rather than a list.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.medium import minimal_medium

@@ -21,7 +21,8 @@ The same glucose-limited `smallYeast.yml` as [14. Flux variability](fva.md), so
 the two pages can be read against each other.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -32,7 +33,8 @@ model = setParam(model, 'obj', 'biomassOUT', 1);
 ```text
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 import cobra
@@ -65,7 +67,8 @@ minimum at 19.0 and at 18.8. That is why the numbers below are printed to two
 decimals: the distribution is the result, the individual draws are not.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 solutions = randomSampling(model, 200, 'seed', 1);
@@ -76,7 +79,8 @@ fprintf('%d reactions x %d samples\n', size(solutions, 1), size(solutions, 2));
 53 reactions x 200 samples
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.analysis import random_sampling
@@ -108,7 +112,8 @@ infeasible cycle. Sampling does not remove that; it shows how much of the space
 the cycle occupies.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = getIndexes(model, {'FRDS2', 'biomassOUT'}, 'rxns');
@@ -123,7 +128,8 @@ FRDS2  sampled 19 to 1000
 growth sampled 0.01 to 0.10, mean 0.05
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 frds2 = result.samples["FRDS2"]
@@ -164,7 +170,8 @@ points. Vertices are what FBA gives you, which makes that method a way to survey
 alternative optima rather than to describe the space.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [chrrSolutions, ~, info] = randomSampling(model, 200, 'method', 'chrr', 'seed', 1);
@@ -183,7 +190,8 @@ polytope has empty interior`. The polytope was fine; the equality system is
 square and rank-deficient there, and the particular solution came back `NaN`.
 If you see that error, update RAVEN.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 chrr = random_sampling(model, 200, method="chrr", seed=1)
@@ -216,7 +224,8 @@ rarely the question. The useful version is to constrain first (hold growth near
 its optimum, fix a measured flux) and sample the space that is left.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 sol = solveLP(model);
@@ -231,7 +240,8 @@ fprintf('ethanol: free %.2f, at 90%% growth %.2f\n', ...
 ethanol: free 0.80, at 90% growth 0.04
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 at_optimum = model.copy()
@@ -255,7 +265,8 @@ both toolboxes screen them out with a loopless FVA first, the same test
 [14. Flux variability](fva.md) used by hand.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [~, goodRxns] = randomSampling(model, 20, 'method', 'randomObjective', 'seed', 1);
@@ -266,7 +277,8 @@ fprintf('%d of %d reactions usable as objectives\n', numel(goodRxns), numel(mode
 50 of 53 reactions usable as objectives
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.analysis import find_good_reactions

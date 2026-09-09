@@ -57,7 +57,8 @@ model and is really a broken task.
 ## 12.1 Read and run the tasks
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -91,7 +92,8 @@ workers, and defaults to `false`, because starting a pool costs more than
 it saves on a short task list; on a genome-scale list it is the setting
 that matters.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -128,7 +130,8 @@ portable between models, and what makes an incomplete task look like a broken
 model.
 
 ::::{tab-set}
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.tasks import Task
@@ -161,7 +164,8 @@ uses to decide which reactions must survive an extraction regardless of their
 expression score.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [~, essentialRxns] = checkTasks(model, [], 'printOutput', false, ...
@@ -180,7 +184,8 @@ Failed tasks and `SHOULD FAIL` tasks are left out of it, since a task that
 does not pass has no reactions it depends on. `getEssentialRxns` answers
 for the model's own objective and takes no task at all.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.tasks import find_task_essential_reactions
@@ -204,7 +209,8 @@ Both toolboxes can add reactions from a template until the task passes, which is
 [13. Gap-filling](gap-filling.md), approached from the task side.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -213,7 +219,8 @@ template = readYAMLmodel('smallYeast.yml');   % where the reactions come from
 [outModel, addedRxns] = fitTasks(model, template, [], 'taskStructure', tasks);
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.init import fill_tasks

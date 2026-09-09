@@ -31,7 +31,8 @@ are already made, and no sequence search is needed. This is the fast route, and
 the one to prefer when it applies.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = getKEGGModelForOrganism('sce', ...
@@ -51,7 +52,8 @@ This route ignores every setting except `keepSpontaneous`,
 `keepUndefinedStoich`, `keepIncomplete` and `keepGeneral`, since the cut-offs
 and phylogenetic weighting only apply to a sequence search.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.reconstruction.kegg import (
@@ -83,7 +85,8 @@ sequence. Both toolboxes search your proteins against a library of profile HMMs,
 one per KO, trained on either prokaryotic or eukaryotic sequences.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = getKEGGModelForOrganism('hpo', ...
@@ -92,7 +95,8 @@ model = getKEGGModelForOrganism('hpo', ...
     'outDir', fullfile(tempdir, 'hanpo_hmm'));
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.reconstruction.kegg import get_kegg_model_from_sequences

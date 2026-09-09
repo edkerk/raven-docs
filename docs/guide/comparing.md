@@ -22,7 +22,8 @@ the same organism at all.
 deliberate errors. Comparing them is the exercise this page exists for.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 good = readYAMLmodel('smallYeast.yml');
@@ -34,7 +35,8 @@ fprintf('good %d rxns, bad %d rxns\n', numel(good.rxns), numel(bad.rxns));
 good 53 rxns, bad 54 rxns
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 import cobra
@@ -60,7 +62,8 @@ bounds, objective coefficients, gene rules, formulas, charges. It answers a yes
 or no question first (are these the same model?) and then says why not.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 report = diffModels(good, bad);
@@ -78,7 +81,8 @@ equal: 0, 11 differences
   - ADH1: bounds A=[-1000,1000] B=[0,1000]
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.comparison import diff_models
@@ -114,7 +118,8 @@ metabolite names, equations with and without compartments), plus a similarity
 matrix. Pass `'printResults', true` for the full breakdown on screen.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 good.id = 'smallYeast';
@@ -132,7 +137,8 @@ fprintf('%d reactions shared of %d in the union\n', ...
 52 reactions shared of 55 in the union
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.comparison import compare_models
@@ -166,7 +172,8 @@ different reactions can behave identically. The comparison that settles it is of
 the fluxes.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 openGood = setParam(good, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
@@ -182,7 +189,8 @@ fprintf('growth: good %.4f, bad %.4f\n', solGood.f, solBad.f);
 growth: good 0.1222, bad -0.0000
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 for model in (good, bad):

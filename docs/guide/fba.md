@@ -27,7 +27,8 @@ arrives with a growth objective and an aerobic glucose medium already set.
 ## 4.1 Solve
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = importModel('yeast-GEM.xml');
@@ -67,7 +68,8 @@ before reading `x`. A plain solve (`minFlux` left at its default) also returns
 `sol.sPrice` and `sol.rCost`, the shadow prices and reduced costs from the
 LP dual.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.io import read_sbml_model
@@ -103,7 +105,8 @@ The objective is a reaction to maximise: growth, a product exchange, an ATP
 demand.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = setParam(model, 'obj', 'r_2111', 1);   % growth
@@ -118,7 +121,8 @@ growth
 entry, so setting an objective replaces the previous one rather than adding
 to it. A negative coefficient minimises that reaction instead.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 model.objective = "r_2111"
@@ -144,7 +148,8 @@ where the growth rate above comes from; ten times the glucose gives roughly ten
 times the growth.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = getIndexes(model, 'r_1714', 'rxns');     % D-glucose exchange
@@ -162,7 +167,8 @@ shipped bounds: [-1 1000]
 growth on 10 mmol glucose: 0.8370 /h
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 glucose = model.reactions.get_by_id("r_1714")
@@ -197,7 +203,8 @@ the way out. MATLAB has no equivalent; copy the struct, change the copy, and let
 it go out of scope.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 modelKO = setParam(model, 'eq', 'r_1992', 0);   % close oxygen uptake
@@ -218,7 +225,8 @@ back to aerobic: 0.0809 /h
 directions. MATLAB structs are value types, so `modelKO` is a copy from the
 moment it is assigned and `model` cannot be reached through it.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 with model:
@@ -254,7 +262,8 @@ An FBA solution has thousands of numbers, most of them zero and most of the rest
 uninteresting. Both toolboxes offer a filtered view.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 exchanges = {'r_1714', 'r_1992', 'r_1672', 'r_1761'};
@@ -279,7 +288,8 @@ internal reactions, `metaboliteList` restricts the print-out to reactions
 touching named metabolites, and `outputString` controls the columns, with
 `%eqn`, `%lower` and `%upper` available alongside `%flux`.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 solution = model.optimize()
@@ -319,7 +329,8 @@ objective at its optimum and then minimises the total flux, on the reasoning tha
 a cell does not run reactions it gains nothing from.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 solPars = solveLP(model, 'minFlux', 1);   % minimise sum(abs(fluxes))
@@ -339,7 +350,8 @@ mixed-integer problem: the result is easier to read as a pathway, and the
 solve is far slower. Leaving `minFlux` at `0` skips the second solve
 altogether and is the only setting that reports shadow prices.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import pfba

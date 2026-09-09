@@ -47,7 +47,8 @@ metNames	comps	formula	charge	metNotes
 ## 21.1 Apply a table
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -87,7 +88,8 @@ arrives with every field the table supplies.
 `curateModelFromTables` returns a new struct and leaves its input alone, in
 keeping with the rest of RAVEN.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.curation import batch_curate_from_tsv

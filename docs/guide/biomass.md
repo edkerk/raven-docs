@@ -28,7 +28,8 @@ produces, the reaction's name, and how to turn the reaction's substrates into a
 mass.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('yeast-GEM.yml');
@@ -58,7 +59,8 @@ fprintf('%d components configured\n', numel(biomassConfig.components));
 7 components configured
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.biomass import BiomassComponent, BiomassConfig
@@ -114,7 +116,8 @@ in g/gDW, which is how the lipid backbone is written.
 ## 22.1 What is the cell made of?
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 fractions = getBiomassFractions(model, biomassConfig);
@@ -135,7 +138,8 @@ end
   total            1.0051
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.biomass import sum_biomass
@@ -177,7 +181,8 @@ that no longer sums to 1 is worse than one with the old number in it, so both
 functions can balance a second component to absorb the difference.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 rescaled = scaleBiomassFraction(model, biomassConfig, 'protein', 0.5, ...
@@ -191,7 +196,8 @@ fprintf('protein %.4f, carbohydrate %.4f, total %.4f\n', ...
 protein 0.5000, carbohydrate 0.3384, total 1.0000
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.biomass import scale_biomass
@@ -231,7 +237,8 @@ exchange, a metabolite rather than a pseudo-species. Solvers ignore them;
 everything that reads a model afterwards does not.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 small = readYAMLmodel('smallYeast.yml');
@@ -243,7 +250,8 @@ fprintf('rxnSBOs present: %d\n', isfield(annotated, 'rxnSBOs'));
 rxnSBOs present: 0
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.annotation import add_sbo_terms

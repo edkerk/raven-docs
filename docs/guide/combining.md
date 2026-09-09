@@ -24,7 +24,8 @@ it a new id keeps the example honest: whatever the merge does to two identical
 models is the clearest possible statement of what it matches on.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -38,7 +39,8 @@ fprintf('%d rxns, %d mets, %d genes\n', ...
 53 rxns, 52 mets, 61 genes
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 import cobra
@@ -62,7 +64,8 @@ print(f"{len(model.reactions)} rxns, {len(model.metabolites)} mets, "
 ## 16.1 Merging
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 merged = mergeModels({model, second});
@@ -76,7 +79,8 @@ fprintf('merged: %d rxns, %d mets, %d genes\n', ...
 merged: 106 rxns, 52 mets, 61 genes
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import merge_models
@@ -123,7 +127,8 @@ Every reaction from both models survived, so the merged model now describes each
 conversion twice. Collapsing those is a separate step.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 contracted = contractModel(merged);
@@ -134,7 +139,8 @@ fprintf('after contracting: %d rxns\n', numel(contracted.rxns));
 after contracting: 53 rxns
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import remove_duplicate_reactions
@@ -179,7 +185,8 @@ at all, the state [9. Quality control](quality-control.md) measures. That makes
 it a good subject for simplification, and a good warning about it.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 shut = readYAMLmodel('smallYeast.yml');
@@ -194,7 +201,8 @@ fprintf('simplified: %d rxns, %d mets\n', numel(reduced.rxns), numel(reduced.met
 simplified: 2 rxns, 4 mets
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import simplify_model
@@ -223,7 +231,8 @@ Sometimes the compartments are the problem: a draft with unreliable
 localisation, or a comparison against a model that has none.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [flat, deletedRxns] = mergeCompartments(model);
@@ -238,7 +247,8 @@ fprintf('%d transport reactions dropped\n', numel(deletedRxns));
 0 transport reactions dropped
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import merge_compartments

@@ -21,13 +21,15 @@ page is the safe way to do each of those.
 `smallYeast.yml` from [`docs/data/`](../data/README.md).
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -43,7 +45,8 @@ Give the whole equation, not a coefficient: the toolbox rewrites the reaction's
 column in the stoichiometric matrix, which is what keeps everything consistent.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = changeRxns(model, {'PGI'}, {'G6P_c <=> F6P_c'});
@@ -56,7 +59,8 @@ fprintf('%s\n', eqn{1});
 alpha-D-glucose 6-phosphate[c] <=> beta-D-fructofuranose 6-phosphate[c]
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import change_reaction_equations
@@ -85,7 +89,8 @@ matching metabolites by id.
 ## 8.2 Change a gene association
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = changeGrRules(model, {'PGI'}, {'YBR196C or YLR354C'});
@@ -96,7 +101,8 @@ disp(model.grRules{idx});
 YBR196C or YLR354C
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import change_gene_reaction_rules
@@ -127,7 +133,8 @@ alternative complexes. `is_dnf` takes a rule string; `gpr_to_dnf` takes cobrapy'
 parsed `GPR` object and returns the complexes as lists.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 grRules = standardizeGrRules(model);
@@ -144,7 +151,8 @@ Disjunctive normal form is a flat `or` of `and` groups, one group per
 alternative complex, which is the form the scoring in
 [10. Context-specific models](init.md) expects.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.core.gene import GPR
@@ -167,7 +175,8 @@ already DNF: False
 ## 8.4 Change bounds and the objective
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = setParam(model, 'lb', 'PGI', 0);        % make it irreversible
@@ -179,7 +188,8 @@ fprintf('bounds: [%g %g]\n', model.lb(idx), model.ub(idx));
 bounds: [0 1000]
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 model.reactions.get_by_id("PGI").bounds = (0, 1000)
@@ -203,7 +213,8 @@ row or column from **every** field, which is why deletion has its own functions;
 cobrapy's objects know what they are attached to.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 before = numel(model.rxns);
@@ -222,7 +233,8 @@ metabolites and genes that nothing refers to any more, which later read as
 gaps. `removeUnusedComps` does the same for compartments.
 `deleteUnusedGenes` performs the gene half on its own.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 before = len(model.reactions), len(model.genes)
@@ -249,7 +261,8 @@ Removing a gene is not the same as knocking it out: the reactions stay, and
 their GPRs are rewritten without it.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 reduced = removeGenes(model, {'YBR196C'});
@@ -262,7 +275,8 @@ disp(reduced.grRules{getIndexes(reduced, 'PGI', 'rxns')});
 YLR354C
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import remove_genes

@@ -24,7 +24,8 @@ reaction. What gap-filling then puts back is checkable by eye: it should be the
 reaction that was removed.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 template = readYAMLmodel('smallYeast.yml');
@@ -39,7 +40,8 @@ fprintf('draft %d rxns, template %d rxns\n', numel(draft.rxns), numel(template.r
 draft 52 rxns, template 53 rxns
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 import cobra
@@ -72,7 +74,8 @@ Gap-filling without looking first is how a model acquires reactions nobody can
 justify. Start from what cannot carry flux.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 canCarry = haveFlux(draft);
@@ -83,7 +86,8 @@ fprintf('%d of %d reactions can carry flux\n', sum(canCarry), numel(draft.rxns))
 50 of 52 reactions can carry flux
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import find_blocked_reactions
@@ -107,7 +111,8 @@ would let a blocked reaction carry flux at all? No objective, no growth, just
 connectivity.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: needs-gurobi -->
 
@@ -122,7 +127,8 @@ fprintf('%d added: %s\n', numel(addedRxns), strjoin(addedRxns, ', '));
 1 added: ADH1
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.gapfilling import connect_blocked_reactions
@@ -168,7 +174,8 @@ possible. It is the fast option, and the one that scales to a genome-scale
 draft.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [addedRxns, outModel] = gapFillFastLP(draft, template);   % LP, GLPK is enough
@@ -185,7 +192,8 @@ gapFillFastLP: added 8 reaction(s) from universal database.
 8 reactions added
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.gapfilling import fill_gaps_fast_lp
@@ -217,7 +225,8 @@ the mixed-integer formulation is the alternative. It needs a MILP solver, and it
 is slower by a wide margin on anything genome-scale.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: needs-gurobi -->
 
@@ -240,7 +249,8 @@ gapFillMILP: reversed 0 draft reaction(s), added 0 universal reaction(s).
 0 reactions added
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 <!-- run-examples: needs-gurobi -->
 
@@ -270,7 +280,8 @@ which is the form the question usually takes: a model that grows, or that
 produces a particular compound.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 tasks = parseTaskList('tasks.txt');
@@ -283,7 +294,8 @@ tasks = parseTaskList('tasks.txt');
 [Warning: "[LEAK] Biomass from nothing" is set as SHOULD FAIL. Such tasks cannot be modelled using this approach and the task is therefore ignored]
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.init import fill_tasks

@@ -22,9 +22,14 @@ python -m venv .venv-sphinx
   `--8<-- "path"` -> `{literalinclude}`. Re-running it is a no-op (nothing
   left to match).
 - **Navigation.** `mkdocs.yml`'s single `nav:` tree is now a `{toctree}` per
-  section, living in that section's own `index.md` (or `migrate.md` /
-  `reference.md`, two new landing pages mirroring #77's audience-first tabs
-  on the MkDocs side). Nested toctrees give the same depth the old nav had.
+  section, living in that section's own `index.md` (or `migrate.md`, a new
+  landing page). Top level, in order: Migrate, User guide, API reference,
+  Methods, References; API promoted out from under a "Reference" tab that
+  otherwise would have held only citations once MATLAB-vs-Python and tuned
+  parameter defaults moved to Migrate and Methods respectively, so that page
+  was dropped rather than kept half-empty. `collapse_navigation: True`
+  (pydata-sphinx-theme's own default, overridden to `False` in an earlier
+  pass of this branch) keeps only the active tab's own subtree expanded.
 - **The generated API reference and MATLAB vs Python table.** New
   `scripts/gen_api_pages_sphinx.py`, run from `conf.py`'s `setup()` before
   Sphinx reads the source tree. Reuses `api_index.py`'s collection constants
@@ -33,7 +38,26 @@ python -m venv .venv-sphinx
   for why.
 - **The home page.** Hand-converted, not mechanical: MkDocs Material's grid
   cards and the custom pip-install JS widget have no equivalent to translate,
-  so it's rebuilt with `sphinx-design` grids and a plain tab-set instead.
+  so it's rebuilt with `sphinx-design` grids and a plain tab-set instead. The
+  wordmark image (light/dark swap via a small CSS rule) replaces the badge
+  row and the "# RAVEN" heading; the heading itself stays in the source for
+  document structure but is visually hidden, since a raw `<h1>` never
+  registers with MyST's own heading-level check.
+- **Missing icons.** MkDocs Material's `:material-*:`/`:octicons-*:`
+  shorthand inside tab labels (`installation/raven.md`,
+  `installation/python.md`) rendered as literal text; swapped for
+  sphinx-design's built-in `{octicon}` role (`plug`, `download`,
+  `git-branch`, `package`). Every MATLAB/Python code-example tab site-wide
+  also gained a small marker (Ⓜ️ / 🐍) and a `:sync:` key, via
+  `scripts/add_tab_icons_sync.py`, so switching the language in one code
+  block switches every other tab-set on the page.
+- **Announcement banner, "Show Source" links.** `html_theme_options`'
+  `announcement` (RAVEN 3.0.0b1, pre-release) and `html_show_sourcelink =
+  False`, both single-setting changes.
+- **References.** Trimmed to the RAVEN 1/RAVEN 2/Hansenula-protocol/
+  INIT/ftINIT/random-sampling papers only, each verified against its DOI
+  (Crossref/PLOS) rather than typed from memory; tINIT has no citation of
+  its own separate from the INIT paper, RAVEN's MATLAB implementation of it.
 - **Link underlines.** `docs/_static/custom.css`, wired in via
   `html_css_files`.
 
@@ -97,7 +121,7 @@ python -m venv .venv-sphinx
 `sphinx-build -E -b html docs docs/_build/html` (`-E` forces a clean
 re-read; an incremental rebuild under-reports the cross-reference count
 below, since Sphinx does not always revalidate a link when only the *target*
-document changed): **0 errors, 64 warnings.**
+document changed): **0 errors, 67 warnings.**
 
 Two real fixes got the API-reference-generator's own share of that down to
 zero, not just noise-suppression:
@@ -123,5 +147,10 @@ What's left, all in hand-authored pages rather than generated ones:
   `<a name="…"></a>` HTML anchors, which work as plain browser URL fragments
   but aren't in MyST's own validated-target registry, so every markdown link
   pointing at one warns without actually being broken.
-- **1 `toc.not_included`**: `docs/data/README.md`, the same page the MkDocs
-  build also excludes from its nav. Not a regression.
+- **4 `toc.not_included`**: `docs/data/README.md` (the same page the MkDocs
+  build also excludes from its nav), plus three pages this pass deliberately
+  de-listed from Methods rather than deleted, since other pages still link
+  to them inline: `parameter-tuning/studies/init-solver-benchmark.md` and
+  `.../sampling-convergence-calibration.md` (cross-solver benchmark and one
+  of the two sampling pages removed from the Methods listing),
+  `parameter-tuning/flux-sampling-algorithms.md` (the other).

@@ -65,7 +65,8 @@ Downloading on first use puts the download inside the first run, which is not
 always where it should be. Both toolboxes can fetch ahead of that.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 downloadRavenBinaries
@@ -75,7 +76,8 @@ Fetches the executables RAVEN needs into its `software/` directory. The KEGG
 artefacts arrive separately, on the first `getKEGGModelForOrganism` call, into
 the `dataDir` given there.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```bash
 raven-toolbox-binaries --list           # what this platform has bundles for

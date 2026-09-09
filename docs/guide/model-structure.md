@@ -50,13 +50,15 @@ because the structure is maintained by the class rather than by the caller.
 `smallYeast.yml` from [`docs/data/`](../data/README.md).
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -69,7 +71,8 @@ model = read_yaml_model("smallYeast.yml")
 ## 2.1 The same lookup, two ways
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = getIndexes(model, 'PGI', 'rxns');
@@ -97,7 +100,8 @@ every matching index rather than one. Asking for several names at once gives
 back a cell array with one index vector per name; asking for exactly one name
 unwraps that to a plain vector.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 rxn = model.reactions.get_by_id("PGI")
@@ -125,7 +129,8 @@ elsewhere in the model.
 ## 2.2 Compartments
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 disp(model.comps);                       % compartment ids
@@ -146,7 +151,8 @@ two steps above. The indirection keeps compartment names editable in one
 place: renaming a compartment is a single edit to `model.compNames`, with
 nothing to update per metabolite.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 print(model.compartments)
@@ -168,7 +174,8 @@ accepts that form on input. Both toolboxes split the token on the **last**
 bracketed group, so a name that itself contains brackets still resolves.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 % 'metcomps' resolves the name[comp] form; 'metnames' matches names alone
@@ -180,7 +187,8 @@ fprintf('%d %s\n', i, model.mets{i});
 14 G6P_c
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils.parse import parse_name_comp
@@ -211,7 +219,8 @@ cobrapy stores one string per reaction, and `subsystem_to_str` normalises
 whichever form a model arrived with.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 % nest every entry before nesting one, so the field keeps a single shape
@@ -224,7 +233,8 @@ fprintf('%s\n', strjoin(model.subSystems{idx}, '; '));
 Glycolysis; Pentose phosphate pathway
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils.parse import subsystem_to_str
@@ -254,7 +264,8 @@ Both toolboxes provide a validator, and they check different things, because the
 two representations fail in different ways.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 issues = checkModelStruct(model, 'throwErrors', false);
@@ -289,7 +300,8 @@ prints nor throws. Called without one it reports as it goes, and
 `throwErrors` decides whether a structural problem stops the script; advisory
 findings are warnings either way.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils import check_model
@@ -327,7 +339,8 @@ Sorting makes the diff between two versions of a model readable, which is why
 can shift everything after it and turn a one-line change into a whole-file diff.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 sortedModel = sortIdentifiers(model);
@@ -343,7 +356,8 @@ permutes reactions, metabolites, genes and compartments together with every
 field indexed by them, `model.S` and `model.rxnGeneMat` included, so the model
 stays internally consistent.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils import sort_identifiers

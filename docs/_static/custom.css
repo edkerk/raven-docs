@@ -7,3 +7,27 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* ===== Home page: a real "# RAVEN" H1 keeps the document structure valid
+   (and helps a screen reader / search engine), but the logo image beneath it
+   already carries the visible title -- "raven" is the id Sphinx slugifies
+   that exact heading text to, and is unique site-wide. ==================== */
+#raven > h1 {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Home page logo: swap for the dark scheme ======================= */
+.rh-logo-light, .rh-logo-dark {
+  max-width: 420px;
+  width: 100%;
+  height: auto;
+}
+.rh-logo-dark { display: none; }
+html[data-theme="dark"] .rh-logo-light { display: none; }
+html[data-theme="dark"] .rh-logo-dark { display: inline; }

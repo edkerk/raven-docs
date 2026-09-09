@@ -22,7 +22,8 @@ this model is a **positive** flux through a `=> metabolite` reaction, so it is
 the upper bound that opens it.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -36,7 +37,8 @@ fprintf('wild type: %.4f /h\n', sol.f);
 wild type: 0.1222 /h
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -62,7 +64,8 @@ decides. Remove one of two isozymes and nothing happens; remove a subunit of a
 complex and the reaction goes.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 modelKO = removeGenes(model, {'YBR196C'}, 'removeBlockedRxns', true);
@@ -74,7 +77,8 @@ fprintf('PGI1 knockout: %.4f /h\n', solKO.f);
 PGI1 knockout: -0.0000 /h
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.manipulation import knock_out_model_genes
@@ -101,7 +105,8 @@ block.
 ## 11.2 Knock out every gene
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [genes, fluxes] = findGeneDeletions(model, 'testType', 'sgd');
@@ -120,7 +125,8 @@ each gene: whether it was deleted, proved lethal, or was skipped because it
 only appears on dead-end reactions and deleting it could not change the
 answer.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import single_gene_deletion
@@ -149,7 +155,8 @@ Reaction essentiality asks the same question one level down. The two functions
 below look equivalent and are not, which is why their answers differ by 24.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 essential = getEssentialRxns(model);
@@ -167,7 +174,8 @@ solution at all, not what it needs in order to grow. With the medium open,
 nothing in `smallYeast.yml` is required for feasibility, so the answer is
 zero. `ignoreRxns` excludes reactions from the search.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import single_reaction_deletion
@@ -200,7 +208,8 @@ look dispensable but cannot both go. The cost is quadratic in the number of
 genes, so run time grows sharply with model size.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [genes, fluxes] = findGeneDeletions(model, 'testType', 'dgd');
@@ -211,7 +220,8 @@ fprintf('%d gene pairs tested\n', size(genes, 1));
 1830 gene pairs tested
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import double_gene_deletion
@@ -237,7 +247,8 @@ wild type that the mutant can actually achieve, usually a better predictor of a
 knockout's physiology, and a different answer.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 **RAVEN has no MOMA.** It had `qMOMA`, which solved the quadratic problem
 with `quadprog` from MATLAB's **Optimization Toolbox**; RAVEN 3 removed it
@@ -249,7 +260,8 @@ What RAVEN does offer for the same *question* (what changed in the mutant,
 rather than by how much growth fell) is `compareFluxes` on two flux
 vectors from the same model, in [17. Comparing models](comparing.md).
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import moma

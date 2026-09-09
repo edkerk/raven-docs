@@ -26,7 +26,8 @@ column of the stoichiometric matrix by hand.
 sucrose into glucose and fructose. Everything is in one compartment, `e`.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = importModel('empty.xml');
@@ -43,7 +44,8 @@ The model contains 0 errors and 1 warnings.
 sucrose[e] + H2O[e] => glucose[e] + fructose[e]
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.io import read_sbml_model
@@ -67,7 +69,8 @@ We are going to add hexokinase, so the model needs ATP, ADP and
 glucose-6-phosphate first.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 metsToAdd.mets = {'m5', 'm6', 'm7'};
@@ -82,7 +85,8 @@ fprintf('%d metabolites\n', numel(model.mets));
 7 metabolites
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra import Metabolite
@@ -111,7 +115,8 @@ The equation string is the same in both toolboxes: `<=>` for a reversible
 reaction, `=>` for an irreversible one.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 rxnsToAdd.rxns = {'HEX1'};
@@ -147,7 +152,8 @@ mistyped identifier is an error rather than a new entity.
 generates. Adding metabolites with `addMets` first carries more
 annotation than `addRxns` can infer.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.manipulation import add_reactions_from_equations
@@ -192,7 +198,8 @@ metabolite that appears in only one reaction blocks it. Exchange reactions are
 that boundary.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = addExchangeRxns(model, 'both', 'mets', model.mets);
@@ -204,7 +211,8 @@ NOTE: The exchange reactions are assigned to the first compartment
 9 reactions
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 for metabolite in list(model.metabolites):
@@ -234,7 +242,8 @@ Solving the model shows whether the reactions assembled so far can carry
 flux at all.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = setParam(model, 'obj', 'HEX1', 1);
@@ -246,7 +255,8 @@ fprintf('HEX1 flux: %.2f\n', sol.x(getIndexes(model, 'HEX1', 'rxns')));
 HEX1 flux: 1000.00
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 model.objective = "HEX1"

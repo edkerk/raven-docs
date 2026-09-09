@@ -27,7 +27,7 @@ canonical reference is the
 ## Install
 
 ::::{tab-set}
-:::{tab-item} :material-puzzle: Add-Ons manager
+:::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
 Installs from within MATLAB, with no separate download.
 
@@ -35,7 +35,7 @@ Installs from within MATLAB, with no separate download.
 2. Search for **RAVEN Toolbox** and click **Add → Add to MATLAB**.
 3. [Verify the installation](#verify).
 :::
-:::{tab-item} :material-file-download: Release download
+:::{tab-item} {octicon}`download;1em` Release download
 
 Good for offline or managed environments.
 
@@ -45,7 +45,7 @@ Good for offline or managed environments.
 3. In MATLAB, add the RAVEN folder to the path (`pathtool`), then
    [verify](#verify).
 :::
-:::{tab-item} :octicons-git-branch-16: Clone with git
+:::{tab-item} {octicon}`git-branch;1em` Clone with git
 
 Tracks the development branch, and upgrades with a single command.
 
@@ -89,17 +89,17 @@ Checking essential binary executables:
 ## Upgrade
 
 ::::{tab-set}
-:::{tab-item} :material-puzzle: Add-Ons manager
+:::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
 In MATLAB go to **Help → Check for Updates**, click **Update** for RAVEN,
 then run `checkInstallation` again.
 :::
-:::{tab-item} :material-file-download: Release download
+:::{tab-item} {octicon}`download;1em` Release download
 
 Close MATLAB, delete the old RAVEN folder, download and extract the new
 release, and run `checkInstallation`.
 :::
-:::{tab-item} :octicons-git-branch-16: Clone with git
+:::{tab-item} {octicon}`git-branch;1em` Clone with git
 
 ```bash
 git pull origin main
@@ -114,11 +114,11 @@ Then run `checkInstallation`.
 ## Remove
 
 ::::{tab-set}
-:::{tab-item} :material-puzzle: Add-Ons manager
+:::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
 Go to **Add-Ons → Manage Add-Ons** and remove RAVEN from the list.
 :::
-:::{tab-item} :material-file-download: Release download
+:::{tab-item} {octicon}`download;1em` Release download
 
 ```matlab
 which removeRavenFromPath   % locate the installation
@@ -127,7 +127,7 @@ removeRavenFromPath         % clear RAVEN from the MATLAB path
 
 Then delete the RAVEN folder from disk.
 :::
-:::{tab-item} :octicons-git-branch-16: Clone with git
+:::{tab-item} {octicon}`git-branch;1em` Clone with git
 
 ```matlab
 which removeRavenFromPath   % locate the installation

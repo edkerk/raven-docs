@@ -22,7 +22,8 @@ from one it merely happened to report.
 flux through a `=> metabolite` reaction, so it is the upper bound that opens it.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -36,7 +37,8 @@ fprintf('growth: %.4f /h\n', sol.f);
 growth: 0.1222 /h
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -60,7 +62,8 @@ With no further constraint, this asks how far each flux can move anywhere in the
 feasible space; the objective is free.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [minFluxes, maxFluxes] = getAllowedBounds(model);
@@ -79,7 +82,8 @@ a parallel pool and reports how many workers it got. Pass
 `'runParallel', false` to keep it in the one process, which is quicker on a
 model this size and the only option without the Parallel Computing Toolbox.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import flux_variability_analysis
@@ -106,7 +110,8 @@ The useful question for interpreting a result: holding growth at its maximum (or
 at 90 % of it), which fluxes are still free to move?
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 fixed = setParam(model, 'lb', 'biomassOUT', 0.9 * sol.f);
@@ -122,7 +127,8 @@ at 90% of optimum: 1 reactions fixed
 RAVEN has no `fraction_of_optimum` argument: constrain the objective
 reaction yourself, then ask for the bounds.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 at_optimum = flux_variability_analysis(model, fraction_of_optimum=0.9)
@@ -148,7 +154,8 @@ infeasible cycle, flux going round a loop with no net driving force. The widest
 span in 14.1 was 1000, the model's default bound. That span is such a cycle.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 [minFluxes, maxFluxes] = getAllowedBounds(model);
@@ -174,7 +181,8 @@ with FRDS2 shut: growth 0.1222 /h, widest span 4.0
 reaction of a suspected cycle and see whether anything downstream moves.
 Growth is untouched, so those 1000 units of flux were never doing any work.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 plain_ranges = flux_variability_analysis(model, fraction_of_optimum=0.0)
@@ -219,7 +227,8 @@ conditions), take a parsimonious one rather than whatever the solver returns
 first. It is reproducible, and it is the natural companion to the ranges above.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 solPars = solveLP(model, 'minFlux', 1);
@@ -235,7 +244,8 @@ growth: 0.1222 /h, total flux: 20.9
 parsimonious FBA. It is also the closest RAVEN gets to excluding loops: a
 cycle costs flux, so a parsimonious solution has no reason to carry one.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import loopless_solution, pfba

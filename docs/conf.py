@@ -41,19 +41,34 @@ html_theme = "pydata_sphinx_theme"
 # html_title is, so "RAVEN" here would double up with project = "RAVEN"
 # above into a duplicated page title.
 html_title = "RAVEN documentation"
-html_logo = "assets/raven-icon-navy.png"
 html_favicon = "assets/raven-icon-navy.png"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
+# The "view source" link points at this generated MyST file, not anything a
+# reader can act on the way an edit-on-GitHub link would.
+html_show_sourcelink = False
 
 html_theme_options = {
-    "show_nav_level": 2,
+    "show_nav_level": 1,
     "navigation_depth": 4,
+    # Only the active path expands; everything else stays collapsed until
+    # clicked, rather than the whole tree opening at once.
+    "collapse_navigation": True,
     "show_toc_level": 2,
-    "collapse_navigation": False,
     "github_url": "https://github.com/SysBioChalmers/RAVEN",
     "use_edit_page_button": False,
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    # The wordmark already carries the "RAVEN" text, so no separate navbar
+    # logo text is needed alongside it.
+    "logo": {
+        "image_light": "assets/raven-logo.png",
+        "image_dark": "assets/raven-logo-white.png",
+    },
+    "announcement": (
+        "This site documents RAVEN <strong>3.0.0b1</strong> "
+        "(MATLAB and Python), a pre-release version. The API may still "
+        "change before the stable 3.0.0 release."
+    ),
 }
 
 html_context = {

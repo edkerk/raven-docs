@@ -110,7 +110,8 @@ the template and the task list, **not on your data**, so it is done once and
 reused for every sample.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -135,7 +136,8 @@ two files for you. It does **not** run against RAVEN `develop3`: its
 `importTsvFile` returns the `spontaneous` column as text, so the `== 1`
 inside it throws. Calling `prepINITModel` directly, as above, sidesteps that.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 <!-- run-examples: skip -->
 
@@ -180,7 +182,8 @@ of levels. `threshold` is the level above which a gene counts as expressed; leav
 it out and the mean across samples is used per gene instead.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -198,7 +201,8 @@ arrayData.threshold = 1;
 18687 genes x 5 samples
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 <!-- run-examples: skip -->
 
@@ -249,7 +253,8 @@ two tissues, with the levels chosen so each category appears. A real dump is
 [proteinatlas.org](https://www.proteinatlas.org/about/download).
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 hpaData = parseHPA('hpa-sample.tsv');
@@ -275,7 +280,8 @@ The `version` argument is accepted and ignored: the format is inferred from
 the column headers. `hpaData` is what `ftINIT` takes as its fourth positional
 argument, in place of the `transcrData` used above.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.init import parse_hpa
@@ -312,7 +318,8 @@ HPA reports a category, not a quantity, so a level has to become a number before
 the scoring above can use it.
 
 ::::{tab-set}
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.init import HPA_LEVEL_SCORES, hpa_gene_scores
@@ -354,7 +361,8 @@ A tissue has several cell types, and a gene can be measured differently in each.
 `PKM` in the excerpt is `High` in hepatocytes and `Low` in bile duct cells.
 
 ::::{tab-set}
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 best = hpa_gene_scores(hpa, tissue="liver", multiple_celltype="best")
@@ -383,7 +391,8 @@ than a level mapping. Both routes end at a gene-to-score mapping, which is what
 ## 10.3 Extract a model for one sample
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -406,7 +415,8 @@ got wrong:
 - the step list is `'INITSteps'`, not `'steps'`. An unrecognised name is
   taken as a positional value, and you get that same misleading error.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 <!-- run-examples: skip -->
 
@@ -435,7 +445,8 @@ An extracted model is a hypothesis. The tasks it was built to satisfy are the
 first thing to re-check, and the least expensive.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 <!-- run-examples: skip -->
 
@@ -443,7 +454,8 @@ first thing to re-check, and the least expensive.
 taskReport = checkTasks(contextModel, [], 'taskStructure', tasks);
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 <!-- run-examples: skip -->
 

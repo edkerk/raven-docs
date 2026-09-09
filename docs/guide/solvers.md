@@ -24,14 +24,16 @@ its *upper* bound. Reverse that and you get a model that solves, reports success
 and grows at exactly zero.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
 model = setParam(model, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -52,7 +54,8 @@ through the other convention.
 ## 6.1 Which solver is in use
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 fprintf('RAVEN solver preference: %s\n', getpref('RAVEN', 'solver'));
@@ -68,7 +71,8 @@ output above is elided. The preference is global to the installation, not a
 property of the model, so a script that changes it changes it for everything
 that follows. `checkInstallation` prints it along with a test solve.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra import Configuration
@@ -97,7 +101,8 @@ Gurobi is required for the mixed-integer problems that gap-filling and
 academic use.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 setRavenSolver('glpk');     % 'gurobi', or 'cobra' to hand over to the COBRA Toolbox
@@ -110,7 +115,8 @@ uses whatever `changeCobraSolver` last selected, which requires the COBRA
 Toolbox to be initialised first; `setRavenSolver` checks that and errors
 rather than storing a preference that cannot work.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 model.solver = "glpk"       # or "gurobi", "cplex", "osqp", ...
@@ -148,7 +154,8 @@ The duals are the exception to the correspondence: RAVEN reports `sPrice` and
 optimisation replaces the problem whose duals they describe.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = setParam(model, 'obj', 'biomassOUT', 1);
@@ -171,7 +178,8 @@ solver. Two fields of `params` are handled by RAVEN rather than passed on:
 badly-scaled columns through auxiliary metabolites before solving and leaves
 the feasible region unchanged.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 model.objective = "biomassOUT"
@@ -200,7 +208,8 @@ empty flux vector, while cobrapy raises nothing at all; `optimize` returns a
 solution with status `infeasible`, and `slim_optimize` returns `nan`.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 broken = setParam(model, 'lb', 'biomassOUT', 1);   % demand growth with no glucose
@@ -217,7 +226,8 @@ stat -1: The problem is infeasible
 an empty result rather than an error. That is how an unchecked infeasible
 solve turns into a blank in a report.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 with model:

@@ -31,7 +31,8 @@ looks up each hit's source organism by that id to find which template model the
 reaction should come from, so a mismatch leaves every hit unattributable.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 template = readYAMLmodel('smallYeast.yml');
@@ -43,7 +44,8 @@ fprintf('template: %d rxns, %d genes\n', numel(template.rxns), numel(template.ge
 template: 53 rxns, 61 genes
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 import cobra
@@ -76,7 +78,8 @@ transfer step ask whether two genes pick *each other*, which is a much stronger
 claim than either picking the other alone.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 blastStructure = getBlast('hanpo', 'hanpo.faa', {'sce'}, {'sce-template.faa'});
@@ -93,7 +96,8 @@ sce -> hanpo: 159 hits
 hanpo -> sce: 178 hits
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.reconstruction.homology import run_blast
@@ -145,7 +149,8 @@ them in the structure the transfer step expects, so no search is run.
 ## 18.2 From hits to a draft
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 draft = getModelFromHomology({template}, blastStructure, 'hanpo');
@@ -158,7 +163,8 @@ Standardizing grRules of template model with ID "sce" ... done
 draft: 37 rxns, 49 mets, 54 genes
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.reconstruction.homology import get_model_from_homology
@@ -231,7 +237,8 @@ on the size of the database searched, so the choice does not shift when a
 proteome is updated.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 strict = getModelFromHomology({template}, blastStructure, 'hanpo', ...
@@ -244,7 +251,8 @@ Standardizing grRules of template model with ID "sce" ... done
 strict draft: 32 rxns, 46 genes
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 strict = get_model_from_homology([template], hits, "hanpo",
@@ -277,7 +285,8 @@ else. There is no biomass reaction unless a template reaction happened to carry
 one, no exchange reactions, and no guarantee that anything can carry flux.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 exchangeRxns = getExchangeRxns(draft);
@@ -293,7 +302,8 @@ exchange reactions: 0
 reactions that can carry flux: 0 of 37
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import find_blocked_reactions

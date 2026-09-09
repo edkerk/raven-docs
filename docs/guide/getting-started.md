@@ -24,7 +24,8 @@ directory you put it in.
 ## 1.1 Load the model
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -43,7 +44,8 @@ has one row per metabolite and one column per reaction, in those same orders.
 Working with the model means working with indices into these arrays, which is
 why looking an identifier up comes first.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -70,7 +72,8 @@ For SBML use `importModel` in MATLAB and cobrapy's `read_sbml_model` in Python;
 ## 1.2 How big is it?
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 printModelStats(model);
@@ -105,7 +108,8 @@ and the mitochondrion. The same 45 is what
 [16. Combining and simplifying](combining.md) arrives at when it flattens the
 compartments away.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 print(len(model.reactions), len(model.metabolites), len(model.genes))
@@ -128,7 +132,8 @@ Glucose-6-phosphate isomerase, `PGI`, exercises most of what a reaction carries:
 it is reversible, it has a gene association, and it should be mass balanced.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = getIndexes(model, 'PGI', 'rxns');
@@ -151,7 +156,8 @@ field. `constructEquations` builds the readable equation from the
 stoichiometric column, substituting metabolite *names* rather than
 identifiers, which is why the equation reads in words.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 pgi = model.reactions.get_by_id("PGI")
@@ -185,7 +191,8 @@ that.
 ## 1.4 Look at a metabolite
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = getIndexes(model, 'G6P_c', 'mets');
@@ -204,7 +211,8 @@ row of `model.S`. `model.metComps` holds an index into `model.comps` rather
 than the compartment letter itself, which is why the compartment needs two
 lookups.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 g6p = model.metabolites.get_by_id("G6P_c")
@@ -229,7 +237,8 @@ distinction 1.6 turns on.
 ## 1.5 Look at a gene
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 gi = find(strcmp(model.genes, 'YBR196C'));
@@ -246,7 +255,8 @@ means that gene appears in that reaction's rule. It records *which* genes are
 involved, not how they combine; the `and`/`or` structure lives only in
 `model.grRules` as text.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 gene = model.genes.get_by_id("YBR196C")
@@ -270,7 +280,8 @@ same operation in both toolboxes; doing it for a whole model is
 [9. Quality control](quality-control.md).
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 balance = getElementalBalance(model, 'rxns', {'PGI'});
@@ -288,7 +299,8 @@ but no charges, so there is nothing to sum. That is a different statement
 from "the charges do not balance": one says the check could not run, the
 other says it failed.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 print(pgi.check_mass_balance())

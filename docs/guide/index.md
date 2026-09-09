@@ -126,7 +126,7 @@ not yet at parity between the two toolboxes.
 
 ```{toctree}
 :hidden:
-:caption: Pages
+:caption: Functions
 
 getting-started
 model-structure
@@ -154,8 +154,14 @@ biomass
 
 ```{toctree}
 :hidden:
-:caption: Also in this section
+:caption: Legacy protocol (hanpo-GEM)
 
 ../protocol/index
+```
+
+```{toctree}
+:hidden:
+:caption: Legacy tutorials
+
 ../tutorials/index
 ```

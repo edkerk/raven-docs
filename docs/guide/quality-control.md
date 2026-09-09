@@ -22,7 +22,8 @@ nothing.
 with deliberate errors left in, exactly what these checks are for.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeastBad.yml');
@@ -34,7 +35,8 @@ fprintf('%d reactions, %d metabolites\n', numel(model.rxns), numel(model.mets));
 54 reactions, 52 metabolites
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -60,7 +62,8 @@ counts below differ;
 one covers.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 issues = checkModelStruct(model, 'throwErrors', false);
@@ -78,7 +81,8 @@ metabolite names. That second one is a consequence of the corrupted
 formula on `F6P_c` that 9.5 finds by comparison, seen from the
 annotation side.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils import check_model
@@ -102,7 +106,8 @@ An unbalanced reaction can create matter, and one that creates ATP or a redox
 carrier will inflate every prediction the model makes.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 balance = getElementalBalance(model);
@@ -116,7 +121,8 @@ fprintf('balanced %d, unbalanced %d, undecidable %d\n', ...
 balanced 28, unbalanced 24, undecidable 2
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.utils import get_elemental_balance
@@ -181,7 +187,8 @@ the order in which reactions are tested, and takes a `seed` so that order is
 reproducible.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 canCarry = haveFlux(model);
@@ -192,7 +199,8 @@ fprintf('%d of %d reactions can carry flux\n', sum(canCarry), numel(model.rxns))
 2 of 54 reactions can carry flux
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.flux_analysis import find_blocked_reactions
@@ -218,7 +226,8 @@ most damaging class of error, because such a model grows without a carbon
 source.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 exchangeRxns = getExchangeRxns(model);
@@ -242,7 +251,8 @@ reactions as possible, so you have somewhere to start. Both take the
 direction as their second argument, and `'consume'` asks the mirror-image
 question: what this model can take up without limit.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 with model:
@@ -293,7 +303,8 @@ When a check reports something, comparing against the last version that passed
 shows whether the finding is new.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 report = diffModels(good, model);
@@ -308,7 +319,8 @@ only in the good model: 1 reactions
 only in this one:       2 reactions
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.comparison import diff_models

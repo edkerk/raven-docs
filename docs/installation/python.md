@@ -23,13 +23,13 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 ## Install
 
 ::::{tab-set}
-:::{tab-item} :material-package: From PyPI
+:::{tab-item} {octicon}`package;1em` From PyPI
 
 ```bash
 pip install raven-toolbox
 ```
 :::
-:::{tab-item} :octicons-git-branch-16: From source
+:::{tab-item} {octicon}`git-branch;1em` From source
 
 For the latest unreleased code or to contribute:
 
@@ -60,13 +60,13 @@ name is `raven-toolbox` (hyphen).
 ## Upgrade
 
 ::::{tab-set}
-:::{tab-item} :material-package: From PyPI
+:::{tab-item} {octicon}`package;1em` From PyPI
 
 ```bash
 pip install --upgrade raven-toolbox
 ```
 :::
-:::{tab-item} :octicons-git-branch-16: From source
+:::{tab-item} {octicon}`git-branch;1em` From source
 
 ```bash
 git pull origin develop

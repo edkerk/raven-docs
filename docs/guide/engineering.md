@@ -18,7 +18,8 @@ alone; reporter metabolites answer the second from expression data.
 **positive** flux through a `=> metabolite` reaction, so the upper bound opens it.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 model = readYAMLmodel('smallYeast.yml');
@@ -32,7 +33,8 @@ fprintf('growth %.4f /h\n', sol.f);
 growth 0.1222 /h
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -58,7 +60,8 @@ flux rises with the enforced product is an amplification candidate; one that
 falls is a knockdown candidate. Ethanol, `ethOUT`, is the product here.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 targets = FSEOF(model, 'biomassOUT', 'ethOUT', 'outputFile', tempname());
@@ -81,7 +84,8 @@ and the enforced product flux is at least this value, `0.9` by default.
 Alternative optima make individual fluxes jump between steps, and requiring a
 nearly linear response is what keeps that noise out of the target list.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.analysis import fseof
@@ -132,7 +136,8 @@ A target is only as good as the trend behind it. The scan matrix is what
 distinguishes a reaction that rises steadily from one that jumps once and stops.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 idx = find(targets.logical);
@@ -151,7 +156,8 @@ end
   GPM        slope    0.467
 ```
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 print(result.targets.head(5).to_string())
@@ -186,7 +192,8 @@ reproducible the ones below are derived from the gene identifiers, so both tabs
 compute the same input.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 pvalues = zeros(numel(model.genes), 1);
@@ -218,7 +225,8 @@ one for the up-regulated genes and one for the down-regulated, so a
 metabolite that is only interesting in one direction can be told apart from
 one that responds either way.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.analysis import reporter_metabolites

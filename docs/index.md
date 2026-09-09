@@ -1,13 +1,12 @@
 # RAVEN
 
+<img class="rh-logo-light" src="_static/raven-logo.png" alt="RAVEN">
+<img class="rh-logo-dark" src="_static/raven-logo-white.png" alt="RAVEN">
+
 **Reconstruction, Analysis and Visualization of Metabolic Networks**
 
 A toolkit for building, curating, and simulating genome-scale metabolic
 models, available as a MATLAB toolbox and a Python package built on cobrapy.
-
-MIT license · Python ≥ 3.11 · MATLAB R2016b+ · cobrapy · SBML · Gurobi · GLPK
-· Windows · macOS · Linux · DOI
-[10.1371/journal.pcbi.1006541](https://doi.org/10.1371/journal.pcbi.1006541)
 
 ## Install
 
@@ -75,7 +74,8 @@ fulfilment.
 ## Quick start
 
 ::::{tab-set}
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import read_yaml_model
@@ -94,7 +94,8 @@ sol = model.optimize()
 print(f"Growth rate: {sol.objective_value:.4f} h⁻¹")
 ```
 :::
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 % load yeast-GEM from RAVEN YAML
@@ -159,26 +160,15 @@ If you use RAVEN in your research, please cite:
 > coelicolor*.** *PLoS Computational Biology* 14(10): e1006541.
 > <https://doi.org/10.1371/journal.pcbi.1006541>
 
-> Agren R, Liu L, Shoaie S, Vongsangnak W, Nookaew I, Nielsen J (2013).
-> **The RAVEN toolbox and its use for generating a genome-scale metabolic model
-> for *Penicillium chrysogenum*.** *PLoS Computational Biology* 9(3): e1002980.
-> <https://doi.org/10.1371/journal.pcbi.1002980>
-
-If you use the GEM reconstruction protocol, also cite:
-
-> Zorrilla F, Kerkhoven EJ (2022). **Reconstruction of Genome-Scale Metabolic
-> Model for *Hansenula polymorpha* Using RAVEN.** In: Mapelli V, Bettiga M
-> (eds), *Yeast Metabolic Engineering: Methods and Protocols*, Methods in
-> Molecular Biology, vol. 2513. Humana, New York, NY, pp. 271–290.
-> <https://doi.org/10.1007/978-1-0716-2399-2_16>
-
-See [References](references.md) for the full list including methods cited in the protocol.
+See [References](references.md) for the full list, including the earlier
+RAVEN paper and the GEM reconstruction protocol.
 
 ```{toctree}
 :hidden:
 
-guide/index
 migrate
-reference
+guide/index
+api/index
 parameter-tuning/index
+references
 ```

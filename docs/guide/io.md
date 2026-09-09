@@ -27,7 +27,8 @@ This page uses two models from [`docs/data/`](../data/README.md):
 ## 3.1 Read a model
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 modelSmall = readYAMLmodel('smallYeast.yml');
@@ -58,7 +59,8 @@ models.
 on anything older; see the [RAVEN 3 migration guide](../raven3-migration.md#sbml-io)
 if a file is rejected.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.io import read_sbml_model
@@ -96,7 +98,8 @@ in the file, so what differs between the toolboxes is whether it is undone on
 the way back in.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 disp(modelYeast.id);        % from yeast-GEM.xml
@@ -113,7 +116,8 @@ yeastGEM_v9.1.0
 metabolites, compartments, genes, gene rules and the model id, so a
 round trip through SBML returns the ids you started with.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 print("from SBML:", yeast.id)
@@ -150,7 +154,8 @@ other format.
 ## 3.3 Write a model
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 writeYAMLmodel(modelSmall, 'smallYeast-copy.yml');
@@ -177,7 +182,8 @@ that is not valid SBML.
 Both `writeYAMLmodel` and `exportModel` take `sortIds`, which sorts a copy
 before writing and leaves the caller's model untouched.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from cobra.io import write_sbml_model
@@ -213,7 +219,8 @@ metabolites, compartments, genes and the model's own metadata, in a form that
 can be edited without a toolbox.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 exportToExcelFormat(modelSmall, 'fileName', 'smallYeast.xlsx');
@@ -231,7 +238,8 @@ that pass one. There is no matching importer: `curateModelFromTables` reads
 a curated spreadsheet back by applying tabular edits to an existing model,
 not by building one from scratch.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from raven_toolbox.io import export_to_excel
@@ -265,7 +273,8 @@ request. Both toolboxes write that layout directly, one subdirectory per format
 plus a `dependencies.txt` recording the versions the files were written with.
 
 ::::{tab-set}
-:::{tab-item} MATLAB
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
 ```matlab
 exportForGit(modelSmall, 'prefix', 'smallYeast', 'path', 'repo', ...
@@ -293,7 +302,8 @@ switches the `txt` table from metabolite names to metabolite ids, and
 `mainBranchFlag` makes the export fail unless RAVEN itself is on its main
 branch, which pins a release to a released toolbox version.
 :::
-:::{tab-item} Python
+:::{tab-item} 🐍 Python
+:sync: python
 
 ```python
 from pathlib import Path
