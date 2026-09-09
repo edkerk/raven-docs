@@ -66,6 +66,19 @@ def render_page(title: str, intro: str, entries: list[dict], handler: str | None
     return "\n".join(out) + "\n"
 
 
+def render_group_index(title: str, intro: str, links: list[tuple[str, str]]) -> str:
+    """The landing page for a generated group (MATLAB API, Python API).
+
+    Gives the group a real page to attach to in the nav (``navigation.indexes``)
+    instead of a bare, unclickable section label, and a folder icon distinct
+    from the leaf category pages beneath it (``navigation.sections``).
+    """
+    out = ["---", "icon: material/folder-open", "---", "", f"# {title}", "", intro, ""]
+    for link_title, href in links:
+        out.append(f"- [{link_title}]({href})")
+    return "\n".join(out) + "\n"
+
+
 matlab = collect_matlab()
 python_objs = collect_python()
 
@@ -77,7 +90,8 @@ for obj in python_objs:
 summary: list[str] = ["* [Overview](index.md)"]
 
 # --- MATLAB API tree ------------------------------------------------------- #
-summary.append("* MATLAB API (RAVEN)")
+matlab_links: list[tuple[str, str]] = []  # (title, relative link) for the group's own index
+summary.append("* [MATLAB API (RAVEN)](matlab/index.md)")
 for folder, title in MATLAB_CATEGORIES:
     funcs = matlab[folder]
     if not funcs:
@@ -90,13 +104,18 @@ for folder, title in MATLAB_CATEGORIES:
     with mkdocs_gen_files.open(f"api/matlab/{folder}.md", "w") as fh:
         fh.write(render_page(title, intro, entries, handler="matlab"))
     summary.append(f"    * [{title}](matlab/{folder}.md)")
+    matlab_links.append((title, f"{folder}.md"))
+
+with mkdocs_gen_files.open("api/matlab/index.md", "w") as fh:
+    fh.write(render_group_index("MATLAB API (RAVEN)", "RAVEN's MATLAB functions, by category.", matlab_links))
 
 # --- Python API tree ------------------------------------------------------- #
 by_package: dict[str, list[dict]] = {}
 for obj in python_objs:
     by_package.setdefault(obj["package"], []).append(obj)
 
-summary.append("* Python API (raven-toolbox)")
+python_links: list[tuple[str, str]] = []
+summary.append("* [Python API (raven-toolbox)](python/index.md)")
 for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TITLES.get(p, p).lower())):
     objs = sorted(by_package[package], key=lambda o: o["name"].lower())
     title = PY_PACKAGE_TITLES.get(package, package)
@@ -106,6 +125,14 @@ for package in sorted(by_package, key=lambda p: (p == "_toplevel", PY_PACKAGE_TI
     with mkdocs_gen_files.open(f"api/python/{package}.md", "w") as fh:
         fh.write(render_page(f"{title} (Python)", intro, entries, handler=None))
     summary.append(f"    * [{title}](python/{package}.md)")
+    python_links.append((title, f"{package}.md"))
+
+with mkdocs_gen_files.open("api/python/index.md", "w") as fh:
+    fh.write(
+        render_group_index(
+            "Python API (raven-toolbox)", "raven-toolbox's packages, by category.", python_links
+        )
+    )
 
 # --- MATLAB vs Python translation table (top-level page) ------------------- #
 # Automatic pairs: the names normalise to the same string. That only catches the
