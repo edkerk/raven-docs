@@ -94,6 +94,3 @@ cross-toolbox to-do list.
 | Benchmark | Function(s) |
 |---|---|
 | [Parameter benchmarks](benchmarks.md) | `fseof`, `remove_genes`, `connect_blocked_reactions`, `fill_gaps_*`, `check_tasks`, `find_task_essential_reactions` |
-
-See also the [flux sampling algorithms reference](flux-sampling-algorithms.md)
-(CHRR/ACHR, cross-linked from the sampling study and benchmark above).
