@@ -2,14 +2,14 @@
 icon: material/folder-open
 ---
 
-# User guide
+# Guide
 
 Short, task-focused pages: one job per page, three to eight functions, in
 **MATLAB and Python side by side**. Start at
 [Getting started](getting-started.md) and read on, or jump to whichever task you
-have in front of you.
+are working on.
 
-Two older sets of material sit at the end of this section: a complete
+Two older sets of material appear at the end of this section: a complete
 [reconstruction protocol](../protocol/index.md) for *H. polymorpha*, followed
 start to finish, and the [legacy tutorials](../tutorials/index.md) from the
 original RAVEN paper. Both are MATLAB only.
@@ -94,8 +94,8 @@ tutorials at the end of this section are MATLAB-only and are not executed.
     how to condition it on a particular state.
 16. [Combining and simplifying models](combining.md), merging models on
     metabolite names, and taking one apart again.
-17. [Comparing models](comparing.md), what changed between two models, and how
-    much that difference costs.
+17. [Comparing models](comparing.md), what changed between two models, and what
+    effect that difference has.
 18. [Reconstruction from homology](homology.md), BLAST a proteome against a
     template model's genes, and what the cut-offs decide for you.
 19. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
@@ -106,7 +106,7 @@ tutorials at the end of this section are MATLAB-only and are not executed.
 21. [Table-driven curation](curation.md), applying curation as reviewable
     tables rather than a script of function calls.
 22. [Biomass composition and annotation](biomass.md), what the cell is made
-    of, rescaling it, and the annotation that outlives the solve.
+    of, rescaling it, and the annotation that stays useful after the solve.
 
 ## Also in this section
 
@@ -123,14 +123,14 @@ not yet at parity between the two toolboxes.
 
 ```{toctree}
 :hidden:
-:caption: Install
+:caption: Installation
 
 ../installation/index
 ```
 
 ```{toctree}
 :hidden:
-:caption: Functions
+:caption: Task pages
 
 getting-started
 model-structure

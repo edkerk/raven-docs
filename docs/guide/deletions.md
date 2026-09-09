@@ -11,7 +11,7 @@ distribution better than plain FBA does".
 |---|---|---|
 | `findGeneDeletions` | `single_gene_deletion` {bdg-secondary}`cobrapy` | knock out every gene in turn |
 | `findGeneDeletions` (`'sgd'`/`'dgd'`) | `double_gene_deletion` {bdg-secondary}`cobrapy` | pairs of genes |
-| `getEssentialRxns` | `find_task_essential_reactions` | reactions a task cannot do without |
+| `getEssentialRxns` | `find_task_essential_reactions` | reactions a task requires |
 | `deleteUnusedGenes` | `remove_genes` | remove genes, rather than knock them out |
 | no equivalent | `moma` {bdg-secondary}`cobrapy` | a knockout's fluxes, staying near the wild type |
 
@@ -152,7 +152,8 @@ because the same function shape serves the double-deletion case.
 ## 11.3 Essential reactions
 
 Reaction essentiality asks the same question one level down. The two functions
-below look equivalent and are not, which is why their answers differ by 24.
+below look equivalent but ask different questions, which is why their answers
+differ by 24.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -204,8 +205,8 @@ raven-toolbox has `find_task_essential_reactions`; see
 ## 11.4 Two at a time
 
 Double deletions find the redundancy single deletions miss: two genes that each
-look dispensable but cannot both go. The cost is quadratic in the number of
-genes, so run time grows sharply with model size.
+look dispensable but cannot both be deleted. The number of pairs to test is
+quadratic in the number of genes, so run time grows sharply with model size.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB

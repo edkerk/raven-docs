@@ -30,8 +30,8 @@ dependencies were dropped, and the calling convention for optional function
 arguments changed almost everywhere. None of this was accidental; see the
 project's [v3 development review](https://github.com/SysBioChalmers/RAVEN/blob/develop3/docs/v3_review.md)
 for the rationale, but it means that **most non-trivial RAVEN 2 scripts need to
-be checked**, even if most of the core reconstruction/analysis behavior is
-unchanged in spirit.
+be checked**, even though the core reconstruction and analysis behavior is
+mostly the same.
 
 :::{note} This is the MATLAB-to-MATLAB axis
 This page is about RAVEN 2 → RAVEN 3, both MATLAB. How the Python package
@@ -40,8 +40,9 @@ differs from the MATLAB one is a separate question, answered in
 :::
 
 Start with the [upgrade checklist](#upgrade-checklist) below, then read
-[Backward-incompatible changes](#backward-incompatible-changes); it is the
-punch list. The sections after it go into the detail behind each item.
+[Backward-incompatible changes](#backward-incompatible-changes); it lists
+everything that can break. The sections after it go into the detail behind
+each item.
 
 ---
 
@@ -113,7 +114,8 @@ reconstruction), `pathway/` and `plotting/` (visualization), `legacy/`
 (CellDesigner import and other pre-2.0 code), `struct_conversion/`'s Excel-POI
 helpers.
 
-**Practical impact is smaller than it looks.** If your scripts call RAVEN
+**The reorganization affects fewer scripts than the change list suggests.**
+If your scripts call RAVEN
 functions by name (the normal usage pattern, with the whole RAVEN folder tree,
 including subfolders, added to the MATLAB path via `addRavenToUserPath` or
 `addpath(genpath(...))`), moving a file to a new subfolder does not break the
@@ -126,8 +128,8 @@ name with your own; folder names are irrelevant otherwise.
 The full moved-file mapping (RAVEN 2 path → RAVEN 3 path) for every relocated
 function is available on request / in the repository's git history
 (`git diff --stat -M develop...develop3`); it is not reproduced in full here
-because it is large and, per the point above, rarely something you need to act
-on.
+because it is large and, as the point above explains, rarely something you
+need to act on.
 
 ---
 
@@ -154,7 +156,7 @@ parameter name. Everything before that point is assigned positionally, in the
 order the function's `parseRAVENargs` specification declares; everything from
 that point on must be valid name-value pairs.
 
-**This means old positional calls keep working, *provided* the function's new
+**This means old positional calls keep working, if the function's new
 parameter order still matches the old positional order.** In every function
 spot-checked for this guide (`importModel`, `exportModel`,
 `exportToExcelFormat`, `removeReactions`, `ftINIT`, `fillGaps`, `fitTasks`,
@@ -260,8 +262,8 @@ an air-gapped install, and the full dependency comparison.
 ## 4. Removed functionality
 
 Beyond the items already listed as backward-incompatible above, RAVEN 3 removed
-a number of functions and whole subsystems as part of a deliberate "leaner
-codebase" push. None of these have call sites left in RAVEN 3 itself.
+a number of functions and whole subsystems as part of a deliberate effort to
+make the codebase smaller. None of these have call sites left in RAVEN 3 itself.
 
 | Removed | What it did | Replacement / notes |
 |---|---|---|
@@ -493,7 +495,7 @@ functions, except where noted.
 | Installation self-check | `installation/checkInstallation.m`; ran the full test suite to populate its pass/fail table | renamed `checkRaven`, moved to the repo root; does fast, targeted checks (a small import/export round-trip, a trivial LP per solver) instead of invoking the full test classes, and proactively offers to download missing binaries |
 
 Net effect: a bare RAVEN 3 clone is far smaller and installs with fewer MATLAB
-toolbox prerequisites, at the cost of needing network access the first time
+toolbox prerequisites. The trade-off: it needs network access the first time
 KEGG- or homology-based reconstruction functions actually run.
 
 ---

@@ -121,7 +121,7 @@ fprintf('Growth rate: %.4f h-1\n', sol.f);
 
 ::::{grid} 1 2 2 2
 
-:::{grid-item-card} User guide
+:::{grid-item-card} Guide
 :link: guide/index
 :link-type: doc
 
@@ -163,7 +163,7 @@ If you use RAVEN in your research, please cite:
 > coelicolor*.** *PLoS Computational Biology* 14(10): e1006541.
 > <https://doi.org/10.1371/journal.pcbi.1006541>
 
-See [References](references.md) for the full list, including the earlier
+See [Citations](references.md) for the full list, including the earlier
 RAVEN paper and the GEM reconstruction protocol.
 
 ```{toctree}

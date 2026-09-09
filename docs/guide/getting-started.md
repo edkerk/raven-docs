@@ -336,7 +336,7 @@ decide, so an empty result covers both "balanced" and "nothing to check".
 
 ## See also
 
-- [User guide overview](index.md), the other pages, and what is still planned.
+- [Guide overview](index.md), the other pages, and what is still planned.
 - [MATLAB vs Python](../raven3-vs-raven-toolbox.md), what each toolbox has, and where
   cobrapy takes over.
 - [API reference](../api/index.md), every function in both toolboxes.

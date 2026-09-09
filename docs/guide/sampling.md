@@ -151,9 +151,9 @@ generators, so their numbers are not expected to match draw for draw, but they
 describe the same distribution, and that agreement is the check to make.
 
 `FRDS2` is sampled across nearly its whole 1000-unit range, so the loop is not
-some rare corner of the space: it is most of it, and most of the draws are spent
+some rare corner of the space: it is most of it, and most of the draws land
 there. Growth is the opposite. Its range runs from 0 to 0.1222, but the samples
-sit between about 0.01 and 0.1 and average about 0.05, because near-uniform
+fall between about 0.01 and 0.1 and average about 0.05, because near-uniform
 sampling almost never lands on a vertex and the optimum is a corner with no
 volume around it.
 
@@ -209,12 +209,12 @@ chrr: 9 dimensions, MVE converged: False, 1 fixed
 The dimension is a property of the polytope, not of the sampler: it is how many
 degrees of freedom the network really has once the implicitly-determined
 reactions are folded out. A model with 53 reactions has far fewer than 53, and
-the two toolboxes, which implement CHRR separately, both arrive at **9**.
+the two toolboxes, which implement CHRR separately, both compute **9**.
 
 `MVE converged: False` is a warning, not a failure. The rounding step stopped
 before reaching its tolerance, so the last ellipsoid is still a valid rounding
 and the samples are usable, but on a polytope this elongated mixing is slower
-than the defaults assume, and more thinning is the answer if the distribution
+than the defaults assume, and more thinning helps if the distribution
 is uneven.
 
 ## 15.4 Sample a state, not a model
@@ -310,7 +310,7 @@ which on a genome-scale model skips the expensive part of the run.
   space is enormous and the distribution says nothing. Constrain first.
 - **Loops.** They inflate the space being sampled, and every sample drawn
   inside a cycle is wasted. See [14. Flux variability](fva.md).
-- **Genome-scale cost.** Sampling is many LPs per recorded sample. Start with
+- **Genome-scale runtime.** Sampling is many LPs per recorded sample. Start with
   a few hundred samples to see the shape, not tens of thousands.
 :::
 

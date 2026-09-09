@@ -118,7 +118,7 @@ doesn't dominate); a 1% gap is ~30% faster with ~3% reaction-set drift.
 
 Each `eps` value gives a slightly different model (Jaccard ~0.95 across the range); the
 reaction-set spread is ~5%. `eps=1.0` is RAVEN's default; smaller values produce *slightly*
-larger models (loosen the connectivity bar). Pick by what the data justifies; see the
+larger models (loosen the connectivity threshold). Pick by what the data justifies; see the
 caveat at the top of `init.py`.
 
 **prod_weight** (gap=0.005, the metabolite-production reward, *changes the model*):
@@ -190,8 +190,8 @@ Lowering `eps` (1.0 → 0.1) does **not** fix it; the issue is that 100+ reactio
 simultaneously each carry a fixed positive flux in their forced direction at steady state.
 ftINIT avoids this by using an *adaptive* per-reaction forcing magnitude
 (`min(0.99·|previous flux|, force_on)`) so each essential is forced at a value it
-*actually carried* in a prior feasible solution. tINIT's one-size-fits-all `eps`
-mechanism doesn't have that escape hatch.
+*actually carried* in a prior feasible solution. tINIT's `eps` mechanism applies
+one fixed value to every reaction and has no equivalent way to avoid this problem.
 
 **Practical takeaway.** For functional context-specific models on genome-scale data, use
 ftINIT, the task layer (gap-fill, adaptive essential forcing) is what makes the pipeline
@@ -223,7 +223,7 @@ The metabolic-task + gap-fill layer is held fixed; only the expression input is 
 
 **Findings:**
 
-* **Robust to noise, sensitive to sparsity.** Multiplicative expression noise barely changes
+* **The model is robust to noise but sensitive to sparsity.** Multiplicative expression noise barely changes
   the model (Jaccard 0.92–0.95, size stable, all tasks pass). Sparsity is far more damaging:
   50% dropout already drops the reaction set to **0.71 Jaccard** (and shrinks 7777→5968), 70%
   to **0.59**.
@@ -275,7 +275,7 @@ restores fidelity lost to dropout; that is a property of the data, not the pipel
 For the reasons in §1.5, tINIT cannot accept the full task-essential set as forced
 reactions; this section runs `get_init_model` with `essential_rxns=[]` to show the
 realistic tINIT behaviour on the same degradation gradient, i.e. the *cost of not
-having ftINIT's gap-fill safety net*.
+having ftINIT's gap-fill mechanism*.
 
 | input | n_rxns | tasks pass | frac | Jaccard vs clean |
 |-------|-------:|-----------:|-----:|-----------------:|
@@ -287,7 +287,7 @@ having ftINIT's gap-fill safety net*.
 | downsample 50% | 5006 | 24/69 | 0.348 | 0.722 |
 | downsample 70% | 3541 | 19/69 | 0.275 | 0.515 |
 
-**The headline contrast with ftINIT:**
+**The main contrast with ftINIT:**
 
 | | ftINIT (task layer) | tINIT (no task layer) |
 |---|---|---|
@@ -323,7 +323,7 @@ Same conclusion as the ftINIT levers: parameter tuning can nudge (`prod_weight�
 or a larger `eps` modestly grows the model and lifts Jaccard from 0.41 to ~0.48), but
 **no tINIT parameter recovers anything close to ftINIT's functionality** (22/69 at best
 vs ftINIT's 67–69/69 at the same dropout). The gap-fill layer, not the parameter
-choice, is what bridges the gap.
+choice, is what makes up the difference.
 
 ---
 
@@ -350,7 +350,7 @@ nothing to reconcile, but the values rest on convention rather than evidence.
 
 See [init-solver-benchmark.md](init-solver-benchmark.md) for the genome-scale
 solver comparison (Gurobi/HiGHS/GLPK) and [tests/test_init_solvers.py](https://github.com/SysBioChalmers/raven-toolbox/blob/develop/tests/test_init_solvers.py)
-for CI parameterised over installed MILP backends. Headline: at genome scale only Gurobi
+for CI parameterised over installed MILP backends. Summary: at genome scale only Gurobi
 is viable today; HiGHS fails on an upstream optlang `hybrid_interface.clone()` bug; GLPK
 ignores `configuration.timeout` on MIP and ran 1 h+ without converging. Toy-scale
 correctness is portable (Gurobi + GLPK give identical verdicts on the unit-test

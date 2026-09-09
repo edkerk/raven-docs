@@ -17,7 +17,7 @@ compute for independence. On yeast-GEM (`n_samples=300`, `warmup=1000`, Gurobi):
 Even at 500, consecutive samples remain 85% correlated. The decay is too slow
 to fix by raising the setting: a fivefold increase from 20 to 100 removes 0.047 of
 the autocorrelation, and the next fivefold removes 0.077. Reaching roughly
-0.3 (a common rule of thumb for near-independence) would need thinning in the tens of
+0.3 (a commonly used approximate threshold for near-independence) would need thinning in the tens of
 thousands, which is weeks of compute for 1000 samples.
 
 Treating an AR(1) process, effective sample size is `n × (1−ρ) / (1+ρ)`. At the
@@ -76,8 +76,8 @@ Worst-converged reactions:
 
 **Already informative at this scale.** Even on a 95-reaction textbook model,
 one reaction (`EX_succ_e`, succinate exchange, a byproduct/overflow route)
-clears the "not converged" threshold (R-hat 1.30) at the default settings, and
-nearly half the reactions fail the stricter 1.01 bar. This is a genuinely
+exceeds the "not converged" threshold (R-hat 1.30) at the default settings, and
+nearly half the reactions fail the stricter 1.01 threshold. This is a genuinely
 different failure mode from what the single-chain ESS result showed: it's not
 that samples are autocorrelated *within* a chain, it's that independent chains
 land on measurably different distributions for a subset of reactions,
@@ -129,7 +129,7 @@ warning (increase `thinning`/`n_samples`, check ESS, or switch to
 problem; this justifies raising it from an FYI-level note to an explicit
 warning with numbers attached.
 
-## Does `method='chrr'` fix it? Yes on e_coli_core, but at a cost that may not scale
+## Does `method='chrr'` fix it? Yes on e_coli_core, but it comes at a cost that may not scale
 
 Same 4 chains × 300 samples on e_coli_core, `method='chrr'` instead of `'achr'`:
 
@@ -213,10 +213,10 @@ ratio. (Contrast e_coli_core, where 300 samples/chain gave stable,
 well-behaved R-hat throughout.) This run cannot distinguish "CHRR doesn't
 work at genome scale" from "R-hat needs more than 20 samples to mean
 anything"; telling those apart would need a genome-scale CHRR run with
-enough samples for a stable R-hat, which circles back to the cost problem
+enough samples for a stable R-hat, which has the same cost problem described
 above.
 
-## Bottom line
+## Summary
 
 - **Default settings are unconverged for most reactions at genome scale**:
   robust finding, confirmed by two independent lines of evidence (ESS and
@@ -239,7 +239,7 @@ above.
 
 ## Two other sampling settings that were measured
 
-Both diverge from MATLAB, and in both cases the divergence is the point.
+Both diverge from MATLAB, and in both cases the divergence is deliberate.
 
 `replace_max_bound` swaps big-M upper bounds for infinity before sampling, and
 applies only to `method='random_objective'`. RAVEN-convention models use 1000 as

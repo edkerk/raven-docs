@@ -40,7 +40,7 @@ reaction-length field, and the matching column of `model.S`, which is why
 holds its own links, so `model.remove_reactions([...])` is enough and there is no
 state left behind to go stale.
 
-That difference also decides where mistakes surface. A RAVEN model can be left in
+That difference also decides where mistakes become visible. A RAVEN model can be left in
 a state no function rejects but later functions misread, which is why RAVEN ships
 a validator (2.4). A `cobra.Model` cannot reach most of those states at all,
 because the structure is maintained by the class rather than by the caller.

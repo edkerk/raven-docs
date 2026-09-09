@@ -1,9 +1,9 @@
 # 14. Flux variability and alternative optima
 
 An FBA solution is one point in a space of equally optimal answers. Flux
-variability asks the more honest question: **given the objective, how much can
-each reaction's flux still vary?** It is how you tell a flux the model insists on
-from one it merely happened to report.
+variability asks the more accurate question: **given the objective, how much can
+each reaction's flux still vary?** It is how you distinguish a flux the model
+requires from one it merely happened to report.
 
 ### Functions on this page
 
@@ -149,7 +149,7 @@ land on.
 
 ## 14.3 A wide range is not always a real one
 
-A reaction can show a wide range purely because it sits in a thermodynamically
+A reaction can show a wide range purely because it is part of a thermodynamically
 infeasible cycle, flux going round a loop with no net driving force. The widest
 span in 14.1 was 1000, the model's default bound. That span is such a cycle.
 
@@ -242,7 +242,7 @@ growth: 0.1222 /h, total flux: 20.9
 
 `minFlux` minimises total absolute flux subject to the objective, which is
 parsimonious FBA. It is also the closest RAVEN gets to excluding loops: a
-cycle costs flux, so a parsimonious solution has no reason to carry one.
+cycle adds flux, so a parsimonious solution has no reason to carry one.
 :::
 :::{tab-item} 🐍 Python
 :sync: python

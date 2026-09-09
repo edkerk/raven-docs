@@ -243,8 +243,8 @@ slim_optimize: nan
 ```
 
 Check the status before using a number. `slim_optimize` skips building a full
-solution, so it is the fast option inside a loop, at the cost of returning
-`nan` instead of a reason.
+solution, so it is the fast option inside a loop, but it returns `nan` instead
+of a reason.
 :::
 ::::
 

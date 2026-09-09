@@ -124,7 +124,7 @@ recall / F1 and reaction recovery vs the annotation.
 | 1e-100 | 0.87 | 0.50 | 0.64 | 0.47 | 21 |
 
 **Reading:** recall is flat-and-high from 1e-10 to ~1e-30, then falls as the
-cut-off eats into the matched tail, gently for model organisms, sharply for the
+cut-off removes part of the matched tail, gently for model organisms, sharply for the
 divergent `mge` (rxn recall 0.98 → 0.87 from 1e-30 → 1e-50, → 0.47 at 1e-100).
 The recall lost to a stricter cut-off is *not* noise rejection (noise is at 1e-8);
 it is real annotation. `rxn_novel` shrinks with stricter cut-offs because strong

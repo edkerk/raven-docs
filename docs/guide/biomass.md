@@ -176,9 +176,10 @@ representation.
 
 ## 22.2 Change one component
 
-Measured a different protein content? Set it, and say what gives way. A biomass
-that no longer sums to 1 is worse than one with the old number in it, so both
-functions can balance a second component to absorb the difference.
+Measured a different protein content? Set it, and specify which other component
+absorbs the change. A biomass that no longer sums to 1 is worse than one with the
+old number in it, so both functions can balance a second component to absorb the
+difference.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB

@@ -22,9 +22,10 @@ ftINIT and nothing else. A tINIT model has to be reproduced in MATLAB.
 :::
 
 Despite the shared name, the two are **separate implementations that share no
-algorithm code**. Reaction scoring and task gap-filling look forked in the
-table below only because the two entry points call their shared functions with
-different settings, not because two implementations exist:
+algorithm code**. Reaction scoring and task gap-filling look like separate
+implementations in the table below only because the two entry points call
+their shared functions with different settings, not because two
+implementations exist:
 
 | | tINIT | ftINIT |
 |---|---|---|
@@ -36,7 +37,7 @@ different settings, not because two implementations exist:
 
 What they do share is RAVEN's general machinery rather than anything specific to
 the method: `checkTasks` and `getEssentialRxns` decide which tasks are feasible
-and which reactions they need, and beneath that sit `parseTaskList`,
+and which reactions they need, and beneath that are `parseTaskList`,
 `simplifyModel`, the solver layer and the model-manipulation and I/O functions.
 
 `scoreModel` is one function for both: `getINITModel` calls it with a single

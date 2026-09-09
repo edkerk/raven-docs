@@ -271,47 +271,57 @@ def generate(docs_root: Path) -> None:
         listed = "\n  - ".join(unresolved)
         raise SystemExit(f"gen_api_pages_sphinx: scripts/curated_pairs.yml is out of date:\n  - {listed}")
 
-    pairs: list[tuple[str, str, str, str, str, bool]] = []
+    cobrapy_docs_url = "https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html"
+
+    # Each row: (matlab name, matlab folder, python-column markdown, summary text).
+    rows: list[tuple[str, str, str, str]] = []
     seen_matlab: set[str] = set()
+    n_auto = 0
     for folder, _title in MATLAB_CATEGORIES:
         for f in matlab.get(folder, []):
             match = py_by_norm.get(norm(f["name"]))
             if match:
-                pairs.append((f["name"], folder, match["name"], match["package"], f["summary"] or match["summary"], False))
+                p_cell = f"[`{match['name']}`](api/python/{match['package']}.md#{slug(match['name'])})"
+                rows.append((f["name"], folder, p_cell, f["summary"] or match["summary"]))
                 seen_matlab.add(f["name"])
+                n_auto += 1
+    n_curated = 0
     for m_name, p_name in curated["aliases"].items():
         if m_name in seen_matlab:
             continue
         folder = matlab_all[m_name]
         obj = py_by_name[p_name]
         m_summary = next((f["summary"] for f in matlab.get(folder, []) if f["name"] == m_name), "")
-        pairs.append((m_name, folder, p_name, obj["package"], m_summary or obj["summary"], True))
+        p_cell = f"[`{p_name}`](api/python/{obj['package']}.md#{slug(p_name)})"
+        rows.append((m_name, folder, p_cell, m_summary or obj["summary"]))
+        seen_matlab.add(m_name)
+        n_curated += 1
+    n_cobrapy = 0
+    for m_name, target in curated["cobrapy"].items():
+        folder = matlab_all[m_name]
+        m_summary = next((f["summary"] for f in matlab.get(folder, []) if f["name"] == m_name), "")
+        p_cell = f"`{target}` {{bdg-link-secondary}}`cobrapy <{cobrapy_docs_url}>`"
+        rows.append((m_name, folder, p_cell, m_summary))
+        seen_matlab.add(m_name)
+        n_cobrapy += 1
 
-    n_auto = sum(1 for r in pairs if not r[5])
     lines = [
         "# MATLAB vs Python", "",
         "RAVEN ships as a MATLAB toolbox and as the Python package **raven-toolbox**. "
         "This page is generated from the source of both toolboxes at build time. "
-        "Pairs are found automatically where the names match, and completed from a "
-        "curated list where they do not; every name is verified to exist.",
+        "Pairs are found automatically where the names match, completed from a "
+        "curated list where they do not, and marked with a "
+        f"{{bdg-link-secondary}}`cobrapy <{cobrapy_docs_url}>` badge where cobrapy "
+        "covers the function instead of raven-toolbox. Every name is verified to exist.",
         "", "## Paired functions", "",
-        f"**{len(pairs)}** pairs, {n_auto} matched automatically, {len(pairs) - n_auto} curated.",
+        f"**{len(rows)}** RAVEN functions listed: {n_auto} matched automatically, "
+        f"{n_curated} from a curated list, {n_cobrapy} covered by cobrapy instead of "
+        "raven-toolbox.",
         "", "| RAVEN (MATLAB) | raven-toolbox (Python) | Summary |", "|---|---|---|",
     ]
-    for m_name, m_folder, p_name, p_pkg, text, _curated in sorted(pairs, key=lambda r: r[0].lower()):
+    for m_name, m_folder, p_cell, text in sorted(rows, key=lambda r: r[0].lower()):
         m_link = f"[`{m_name}`](api/matlab/{m_folder}.md#{slug(m_name)})"
-        p_link = f"[`{p_name}`](api/python/{p_pkg}.md#{slug(p_name)})"
-        lines.append(f"| {m_link} | {p_link} | {cell(text)} |")
-
-    lines += ["", "## Covered by cobrapy", "",
-              "These RAVEN functions have no raven-toolbox counterpart because cobrapy "
-              "already provides the capability.", "",
-              "| RAVEN (MATLAB) | Use instead |", "|---|---|"]
-    for m_name, target in sorted(curated["cobrapy"].items(), key=lambda kv: kv[0].lower()):
-        folder = matlab_all[m_name]
-        m_link = f"[`{m_name}`](api/matlab/{folder}.md#{slug(m_name)})"
-        url = "https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html"
-        lines.append(f"| {m_link} | [`{target}`]({url}) |")
+        lines.append(f"| {m_link} | {p_cell} | {cell(text)} |")
 
     lines += ["", "## Deliberately not ported", "", "| RAVEN (MATLAB) | Why not |", "|---|---|"]
     for m_name, reason in sorted(curated["not_ported"].items(), key=lambda kv: kv[0].lower()):
@@ -319,7 +329,7 @@ def generate(docs_root: Path) -> None:
         m_link = f"[`{m_name}`](api/matlab/{folder}.md#{slug(m_name)})"
         lines.append(f"| {m_link} | {cell(reason)} |")
 
-    accounted = {r[0] for r in pairs} | set(curated["cobrapy"]) | set(curated["not_ported"])
+    accounted = {r[0] for r in rows} | set(curated["not_ported"])
     unmapped = sorted((n for n in matlab_all if n not in accounted), key=str.lower)
     if unmapped:
         lines += ["", "## Not yet mapped", "",

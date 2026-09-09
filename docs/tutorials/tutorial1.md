@@ -110,9 +110,9 @@ The printed table is capped at 20 rows, but `res.changed` holds every changed
 reaction and `res.turnedOn` / `res.turnedOff` / `res.flipped` list those that
 switched state.
 
-By drilling down this way you can understand the flux redistributions that give
-rise to different phenotypes; for example, on glucose ATP is generated in
-glycolysis, whereas on ethanol it involves acetate.
+Comparing the fluxes this way shows the flux redistributions that produce
+different phenotypes; for example, on glucose ATP is generated in glycolysis,
+whereas on ethanol it involves acetate.
 
 ## Full script
 

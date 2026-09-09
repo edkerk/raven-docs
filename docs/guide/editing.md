@@ -250,7 +250,7 @@ with model:
 ```
 
 `remove_orphans=True` is cobrapy's equivalent of those two flags. Note the
-`with model:`, deletions inside it are rolled back on exit, so the cost of
+`with model:`, deletions inside it are rolled back on exit, so the effect of
 a deletion can be measured without keeping it.
 :::
 ::::

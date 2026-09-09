@@ -1,7 +1,7 @@
 # Tutorial 4: Fix an erroneous model
 
-The power of GEMs comes from their size, but that size makes errors almost
-inevitable, whether you build a model yourself or use someone else's. This
+GEMs are powerful because of their size, but that size also makes errors
+almost inevitable, whether you build a model yourself or use someone else's. This
 exercise is a systematic round of quality control on a deliberately broken
 version of the small yeast model, `smallYeastBad.yml`.
 

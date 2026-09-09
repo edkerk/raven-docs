@@ -50,8 +50,8 @@ Scored against KEGG annotations (higher is better):
 | 50 | 0.882 | 0.736 | 0.640 | 0.323 |
 
 Against OMA the best value is 45 for the three fungi and 35 for *E. coli*. So the
-two sources put the answer between 35 and 45, and 40 sits comfortably inside
-that. Neither supports anything looser.
+two sources put the answer between 35 and 45, and 40 falls well inside that
+range. Neither supports anything looser.
 
 That last point needs stating plainly: counting a missing match as equally bad
 as a wrong one moves the recommendation to 25, a different answer from the same
@@ -80,7 +80,7 @@ identical, so 100 was chosen as the less permissive of the two.
 | 1e-4 … 1e-50 | 0.923 | 0.804 (identical throughout) |
 | 1e-100 | 0.877 | 0.703 |
 
-Five orders of magnitude, one answer. Identity and length have already removed
+The answer does not change across five orders of magnitude. Identity and length have already removed
 whatever a looser e-value would have removed, so it has nothing left to decide.
 Only at 1e-100 does it start discarding good matches. Kept at 1e-30 to match
 RAVEN.
@@ -129,13 +129,13 @@ about 20 minutes per direction.
 
 ## What the numbers do not cover
 
-- **KEGG's annotations lean on BLAST comparisons**, so on their own they would
+- **KEGG's annotations rely on BLAST comparisons**, so on their own they would
   partly measure agreement with the method being tested. OMA infers counterparts
   independently, which is why both were used; they agree.
 - **The two sources are not directly comparable in absolute terms.** KEGG only
   covers genes it has annotated (a few hundred well-studied ones per organism)
   while OMA covers whole proteomes and lists strict counterparts, so ordinary
-  gene duplicates count against us. Compare the shape of each column, not the
+  gene duplicates lower the measured score. Compare the shape of each column, not the
   heights between them.
 - **The *Y. lipolytica* OMA row is the weakest**: 38% of its OMA pairs could not
   be matched to KEGG gene names, so that reference is incomplete.
@@ -151,12 +151,12 @@ non-model-organism GEMs (hanpo-GEM, rhto-GEM) built by RAVEN's own
 homology-based reconstruction. It was dropped, for the reason recorded here
 because it generalises beyond this study.
 
-The diagnostic: walk the thresholds loose one step at a time and ask what
+The diagnostic: loosen the thresholds one step at a time and ask what
 fraction of newly admitted reactions are already in the curated model. The rate
 held between 0.62 and 0.85 up to hanpo-GEM's actual build settings
 (`max_evalue=1e-30, min_align_len=150, min_identity=35`) and collapsed to 0.06
-one step past them. That cliff is the reference remembering its own
-construction: the curated model agrees with predictions made at *its own* build
+one step past them. That sharp drop reflects the reference matching its own
+original build settings: the curated model agrees with predictions made at *its own* build
 settings and disagrees with everything else, regardless of whether those other
 settings are better or worse. Optimising against it returns the build settings
 whether or not they are good; it cannot measure correctness, only

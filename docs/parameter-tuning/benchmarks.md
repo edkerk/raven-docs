@@ -5,11 +5,11 @@ Everything here was run on 2026-06-20 unless a row says otherwise, on yeast-GEM
 (4,102 reactions), iJO1366 (2,583) and e_coli_core (95).
 
 The parameters that did get a dedicated campaign are in the studies listed
-under [Methods](index.md); the current value and one-line reason for every
+under [Parameter tuning](index.md); the current value and one-line reason for every
 parameter on either side is in
 [Tuned parameter defaults](../tuned-parameters.md).
 
-## Two measurements that ask MATLAB to change
+## Two measurements that show MATLAB's default should change
 
 ### `fseof`: MATLAB classifies targets with no tolerance at all
 
@@ -51,7 +51,7 @@ which is essential for aerobic growth on glucose:
 | **`'remove'`** *(Python)* | 94 | **0.000** | GAPD is deleted, glycolysis breaks |
 
 Both behaviours are defensible, for different jobs. Keeping the reaction is right
-when editing gene annotations, where the network should not change under you.
+when editing gene annotations, where the network should not change as a result.
 Removing it is right for essentiality and engineering work, where a reaction with
 no enzyme should not carry flux. The defaults disagree about which job is the
 common one, and the MATLAB default silently produces a false negative in

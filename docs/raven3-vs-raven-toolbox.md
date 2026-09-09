@@ -8,9 +8,9 @@ RAVEN exists as two independent implementations:
   [cobrapy](https://cobrapy.readthedocs.io/), so a model is a `cobra.Model` and
   the wider Python ecosystem works on it directly.
 
-They cover the same ground (homology and KEGG reconstruction, metabolic tasks,
+They do the same things (homology and KEGG reconstruction, metabolic tasks,
 gap-filling, context-specific extraction with ftINIT, compartment assignment,
-model comparison), but they are **not transliterations of each other**. Names
+model comparison), but one is not a direct translation of the other. Names
 differ, some capabilities exist on one side only, and a handful of functions
 answer the same question differently.
 
@@ -20,8 +20,8 @@ build time.
 
 ## Which one should you use?
 
-Neither is a reduced version of the other, so the choice is usually made by
-what surrounds the model rather than by the toolbox itself.
+Neither is a reduced version of the other, so the right choice usually depends
+on the rest of your code, not on the toolbox itself.
 
 **Use raven-toolbox** if the surrounding code is Python, if you want the model
 to be a `cobra.Model` that every cobrapy tool accepts without conversion, if
@@ -36,10 +36,10 @@ Toolbox structure.
 function, the mapping table names the pair; where only one does, the sections
 below say which and why.
 
-## Names do not convert mechanically
+## Changing the case does not give the matching name
 
-MATLAB uses `camelCase`, Python `snake_case`, but rewriting the case is the
-most common way to arrive at a name that does not exist. Much of the API was
+MATLAB uses `camelCase` and Python uses `snake_case`, but changing only the
+case usually produces a name that does not exist. Much of the API was
 deliberately renamed as it was ported:
 
 | MATLAB | Python |
@@ -134,9 +134,8 @@ added only once the difference has been confirmed in both sources.
 
 :::{admonition} Not a complete list
 :class: info
-Absence from this section is not a guarantee of identical behaviour. Where
-an exact answer matters (reproducing a published result, comparing two
-pipelines); see [what "identical results" means](#what-identical-results-means).
+Absence from this section is not a guarantee of identical behaviour. It only
+means the difference has not been confirmed and written up yet.
 :::
 
 ### Duplicate reactions: gene associations are not merged
@@ -154,7 +153,7 @@ not. If you are contracting a draft assembled from several templates, where the
 same reaction commonly arrives with different gene associations, check the GPRs
 of the survivors afterwards.
 
-### Metabolic tasks: same verdicts, very different cost
+### Metabolic tasks: the same result, a different runtime
 
 `checkTasks` rebuilds the working model from the original for each task.
 `check_tasks` instead applies each task's constraints to one model inside a
@@ -162,14 +161,15 @@ of the survivors afterwards.
 of edit cobra's context manager does not track (direct mass-balance bound
 changes).
 
-The pass/fail verdicts are the same. The cost is not: at genome scale the copy
-dominates the MATLAB runtime, which is why the Python version reuses a single
-model. This affects runtime comparisons, not results.
+The pass and fail results are the same. The runtime is not: at genome scale,
+copying the model for each task dominates the MATLAB runtime, which is why the
+Python version reuses a single model. This changes runtime comparisons, not
+results.
 
-### Gap-filling: one function becomes three
+### Gap-filling: `fillGaps` splits into three functions in raven-toolbox
 
-`fillGaps` covers several jobs behind one interface. raven-toolbox splits them,
-so porting a `fillGaps` call means choosing:
+`fillGaps` does several different jobs through one function call.
+raven-toolbox splits them, so porting a `fillGaps` call means choosing:
 
 | What you were doing | Use |
 |---|---|
@@ -178,8 +178,9 @@ so porting a `fillGaps` call means choosing:
 | MILP filling with explicit weights | `fill_gaps_kumar_milp` |
 | Only *finding* the gaps (`canExchange`, `checkProduction`, `getAllSubGraphs`, `haveFlux`) | `analyse_topology` |
 
-The choice changes both the reaction set added and the runtime; they are
-different algorithms, not one algorithm behind three names.
+The choice changes both the reaction set added and the runtime, because each
+of the three functions uses a different algorithm; they are not the same
+algorithm under three different names.
 
 ### Anything solved by MILP
 
@@ -189,72 +190,26 @@ value**. Two runs can return different reaction sets and both be correct; across
 languages, across solvers, and in some configurations across runs of the same
 solver.
 
-Do not compare these outputs for identity. Compare them for overlap, and expect
-a band rather than a number.
+Do not compare these outputs for identity. Compare them for overlap, and
+expect a range of acceptable values, not one exact number.
 
-### A note on elemental balance
+### Elemental balance: an unknown result is not the same as balanced
 
-Both `getElementalBalance` and `get_elemental_balance` grade each reaction rather
-than returning a bare balanced/unbalanced flag: a reaction whose metabolites lack
-formulas is reported as *unknown*, not as balanced. The two agree.
+Elemental balance checks whether a reaction has the same count of each
+chemical element (carbon, hydrogen, oxygen, and so on) on both sides, the way
+a correct chemical equation must. `getElementalBalance` and
+`get_elemental_balance` each report one of three results per reaction, not
+two: `balanced`, `unbalanced`, or `unknown`. A reaction is `unknown` when one
+of its metabolites has no chemical formula recorded, so the element counts
+cannot be computed at all; that is different from `unbalanced`, which means
+the counts were computed and did not match. The two functions agree on this
+three-way result.
 
-The distinction matters when moving to plain cobrapy, whose `check_mass_balance`
-does not make it, which is the reason raven-toolbox keeps its own function
-instead of delegating.
-
-## What "identical results" means
-
-When two implementations of the same method exist, the question is whether they
-give the same answer. That depends on which function you
-mean, because "the same" is achievable for some and meaningless for others.
-
-### Exact
-
-The output can and should match value for value. Anything deterministic that
-transforms a model or a file rather than solving an optimisation problem:
-
-- model I/O: SBML and YAML round-trips, Excel export
-- task-list parsing
-- gene-association normalisation (`grRuleToDNF` / `gpr_to_dnf`)
-- elemental balance
-- identifier sorting, model merging, reversibility splitting, GPR expansion
-- KEGG table parsing and homology ortholog assignment
-
-If these disagree, one of them is wrong.
-
-### Set-level
-
-The output is the solution to a mixed-integer problem that has many optima of
-equal value, so identity is not a meaningful target; a different reaction set of
-the same objective value is not an error. This covers ftINIT extraction,
-gap-filling, and compartment assignment.
-
-The meaningful comparison is overlap: how similar are the two models, expressed
-as a Jaccard index or a containment fraction, against a recorded baseline. Two
-extractions agreeing to a Jaccard of 0.97 on a genome-scale model is a strong
-result, not a near-miss.
-
-Alternate optima also mean the *solver* matters. The same code with Gurobi and
-with GLPK can land on different optima, so a cross-language comparison should
-hold the solver fixed before concluding anything about the languages.
-
-### Statistical
-
-Flux sampling and random sampling explore a space rather than compute a point.
-Two runs of the *same* implementation differ. Compare distributions (means,
-marginals, coverage) at a fixed seed, never individual samples.
-
-### What is actually verified today
-
-raven-toolbox has been validated against MATLAB RAVEN on Human-GEM (five
-Hart2015 cell-line models, Jaccard 0.975–0.980), on yeast, and on a
-multi-organism set. Those are set-level comparisons of the extraction pipeline,
-reported in the raven-toolbox repository.
-
-They are, at present, **reported** rather than **enforced**: no test fails if the
-two implementations drift apart. Building that harness (committed fixtures, a
-MATLAB driver that records the reference output, and tiered assertions matching
-the three levels above) is planned work; this page cannot yet point at it.
+That third case is lost if you switch to plain cobrapy: its
+`check_mass_balance` has no separate `unknown` result, so a reaction with a
+missing formula and a reaction that is genuinely unbalanced can look the
+same. raven-toolbox keeps its own function instead of using cobrapy's
+directly, specifically to keep that distinction.
 
 ## Solvers
 
@@ -262,7 +217,7 @@ the three levels above) is planned work; this page cannot yet point at it.
 |---|---|---|
 | Configuration | `setRavenSolver('gurobi')` | `cobra.Configuration().solver = 'gurobi'` |
 | Recommended solver | Gurobi (free academic licence) | Gurobi (free academic licence) |
-| Open-source option | GLPK (via COBRA Toolbox) | GLPK (bundled with cobrapy) |
+| Open-source option | GLPK (bundled with RAVEN) | GLPK (bundled with cobrapy) |
 
 Genome-scale MILP work (ftINIT extraction in particular) is where the choice
 matters most; see [Installation](installation/index.md) for the full solver
@@ -281,8 +236,8 @@ and RAVEN's `importExcelModel` was removed in the RAVEN 3 refactor.
 
 ## Coming from RAVEN 2.0 to Python
 
-raven-toolbox is not a port of RAVEN 2.0; it is a fresh implementation that
-made different architectural choices where RAVEN 2.0 showed its age. If you are
+raven-toolbox is not a port of RAVEN 2.0; it is a new implementation that
+made different design choices where RAVEN 2.0's design had become outdated. If you are
 moving a RAVEN 2.0 workflow straight to Python rather than to RAVEN 3, three
 differences matter beyond everything above.
 
@@ -301,8 +256,8 @@ straightforward. Every public function carries type annotations and passes
 folder, and raven-toolbox never had it. The reason is not neglect: MetaCyc
 provides a single representative sequence per enzyme, which gives intrinsically
 low gene-calling precision, measured at roughly two-thirds of reaction
-assignments wrong at the default cutoff, with no cutoff that rescues it. Use the
-KEGG or homology routes.
+assignments wrong at the default cutoff, with no cutoff value that fixes the
+problem. Use the KEGG or homology routes.
 
 What stayed the same are the algorithms: homology search, gap-filling and KEGG
 reconstruction follow the same published methods, and models

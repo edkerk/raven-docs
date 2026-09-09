@@ -34,11 +34,12 @@ folder of the RAVEN repository.
   the completed exercise.
 
 :::{tip} Python users
-The reconstruction concepts carry over directly to raven-toolbox, but the
-function names are not always a mechanical `snake_case` rewrite; some RAVEN
-functions map to cobrapy instead (`solveLP` → `model.optimize()`), and some
-have no Python counterpart at all (there is no Excel reader). Look each one up
-in the [API reference](../api/index.md), and see
+The reconstruction concepts carry over directly to raven-toolbox, but
+converting the name to `snake_case` does not always give the matching
+raven-toolbox function name; some RAVEN functions map to cobrapy instead
+(`solveLP` → `model.optimize()`), and some have no Python counterpart at all
+(there is no Excel reader). Look each one up in the
+[API reference](../api/index.md), and see
 [RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
 :::
 
