@@ -75,9 +75,9 @@ metNames	comps	formula	charge	metNotes
     full of `NaN`. RAVEN's optional fields work this way throughout, so code that
     reads one should check with `isfield` first.
 
-    Both fields are still absent afterwards, and that is the point of the
-    example. `curateModelFromTables` writes an optional field onto an
-    **existing** metabolite only when the model already carries that field.
+    Both fields are still absent afterwards. `curateModelFromTables` writes an
+    optional field onto an **existing** metabolite only when the model already
+    carries that field.
     `smallYeast.yml` has neither `metCharges` nor `metNotes`, so both columns are
     dropped for these four rows, silently. `metFormulas` does exist, so the
     formula column is applied. A metabolite the table *adds* is unaffected: it
@@ -112,8 +112,9 @@ metNames	comps	formula	charge	metNotes
 
     `batch_curate_from_tsv` edits the model **in place** and returns a
     `CurationResult` listing what was added and what was updated, split by entity
-    type. It warns when a row overwrites an existing entity, naming the ids, so a
-    table meant to add is easy to tell from one that quietly replaced something.
+    type. It warns when a row overwrites an existing entity, naming the ids, so
+    an addition and a replacement are distinguishable without inspecting the
+    model afterwards.
 
     `batch_curate` takes the same four tables as DataFrames, for a pipeline that
     builds them rather than reading them from disk.

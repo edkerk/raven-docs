@@ -269,7 +269,7 @@ two tissues, with the levels chosen so each category appears. A real dump is
 === "Python"
 
     ```python
-    from raven_toolbox.omics import parse_hpa
+    from raven_toolbox.init import parse_hpa
 
     hpa = parse_hpa("hpa-sample.tsv")
     print(hpa.df.shape[0], "rows")
@@ -303,7 +303,7 @@ the scoring above can use it.
 === "Python"
 
     ```python
-    from raven_toolbox.omics import HPA_LEVEL_SCORES, hpa_gene_scores
+    from raven_toolbox.init import HPA_LEVEL_SCORES, hpa_gene_scores
 
     print(HPA_LEVEL_SCORES)
 

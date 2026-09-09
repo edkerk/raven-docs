@@ -186,7 +186,7 @@ bracketed group, so a name that itself contains brackets still resolves.
 
     `parse_name_comp` returns the compartment as `None` when there is no trailing
     bracket, so one call handles both forms and the caller decides what a missing
-    compartment means. Note the import path: it lives in
+    compartment means. Note the import path: it is in
     `raven_toolbox.utils.parse`, not in the `raven_toolbox.utils` package
     namespace, which re-exports only the curation helpers.
 

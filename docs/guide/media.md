@@ -160,7 +160,8 @@ system. The medium is exactly the set of exchanges with a negative lower bound.
     through a reaction with a sentinel bound.
 
     `slim_optimize` returns the objective value alone, without building a full
-    `Solution`, which is worth using inside a loop over many bound settings.
+    `Solution`, which is the cheaper call inside a loop over many bound
+    settings.
 
 ## 5.3 Define a whole medium
 
@@ -414,8 +415,9 @@ gap-filled reaction produces it internally.
     - **The model grows without a carbon source.** Usually a leak: some reaction
       produces carbon from nothing. [9. Quality control](quality-control.md) is
       where that gets diagnosed, with `canExchange` and `analyse_topology`.
-    - **Results that cannot be reproduced.** If a medium lives in a script, the
-      next person runs a different one. A condition file is data, and it diffs.
+    - **Results that cannot be reproduced.** If a medium is defined inside a
+      script, the next person runs a different one. A condition file is data,
+      and it diffs.
 
 ## See also
 
