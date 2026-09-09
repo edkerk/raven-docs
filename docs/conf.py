@@ -57,7 +57,20 @@ html_theme_options = {
     # clicked, rather than the whole tree opening at once.
     "collapse_navigation": True,
     "show_toc_level": 2,
-    "github_url": "https://github.com/SysBioChalmers/RAVEN",
+    "icon_links": [
+        {
+            "name": "RAVEN (MATLAB) on GitHub",
+            "url": "https://github.com/SysBioChalmers/RAVEN",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+        {
+            "name": "raven-toolbox (Python) on GitHub",
+            "url": "https://github.com/SysBioChalmers/raven-toolbox",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+    ],
     "use_edit_page_button": False,
     "navbar_end": ["theme-switcher", "navbar-icon-links"],
     # The wordmark already carries the "RAVEN" text, so no separate navbar

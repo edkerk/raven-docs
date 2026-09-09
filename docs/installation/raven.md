@@ -73,16 +73,25 @@ setRavenSolver('cobra');
 
 `ravenCobraWrapper` converts a model between the RAVEN struct and the COBRA
 Toolbox structure; see
-[RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md#solvers).
+[RAVEN vs. raven-toolbox](../raven3-vs-raven-toolbox.md#solvers).
 
 ---
 
 ## Install
 
+:::{warning} Getting 3.0.0b1 specifically
+This site documents RAVEN **3.0.0b1**, a pre-release. Both the **Add-Ons
+manager** and the **Release download**'s normal releases page only offer the
+latest stable release (RAVEN 2.x), not 3.0.0b1: neither method can install
+what this site documents. Use the **Clone with git** tab, or the direct
+archive link in the **Release download** tab below.
+:::
+
 ::::{tab-set}
 :::{tab-item} {octicon}`plug;1em` Add-Ons manager
 
-Installs from within MATLAB, with no separate download.
+Installs from within MATLAB, with no separate download. **Installs the
+latest stable release, not 3.0.0b1**; see the warning above.
 
 1. Open the **Home** tab and click **Add-Ons → Get Add-Ons**.
 2. Search for **RAVEN Toolbox** and click **Add → Add to MATLAB**.
@@ -93,20 +102,29 @@ If MATLAB does not pick up the toolbox after step 2, run
 :::
 :::{tab-item} {octicon}`download;1em` Release download
 
-Good for offline or managed environments.
+Good for offline or managed environments. **The
+[RAVEN releases page](https://github.com/SysBioChalmers/RAVEN/releases)
+itself only lists stable releases**; 3.0.0b1 is a git tag with no packaged
+release, so download it directly instead:
 
-1. Download the latest ZIP from the
-   [RAVEN releases page](https://github.com/SysBioChalmers/RAVEN/releases).
+1. Download
+   [the 3.0.0b1 archive](https://github.com/SysBioChalmers/RAVEN/archive/refs/tags/3.0.0b1.zip)
+   directly (this works without git).
 2. Extract it to a location of your choice.
 3. In MATLAB, add the RAVEN folder to the path (`pathtool`), then
    [verify](#verify).
 :::
 :::{tab-item} {octicon}`git-branch;1em` Clone with git
 
-Tracks the development branch, and upgrades with a single command.
+Clones the repository, then checks out the `3.0.0b1` tag specifically: a
+plain `git clone` alone tracks the `main` branch (stable RAVEN 2), not this
+site's pre-release.
 
 ```bash
 git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git
+cd RAVEN
+git fetch --depth=1 origin tag 3.0.0b1
+git checkout 3.0.0b1
 ```
 
 Add the folder to the MATLAB path and [verify](#verify).
@@ -185,11 +203,18 @@ release, and run `checkRaven`.
 :::
 :::{tab-item} {octicon}`git-branch;1em` Clone with git
 
+The `3.0.0b1` tag does not move, so there is nothing to pull while staying on
+it. To move past this site's documented snapshot onto the actively-developed
+branch:
+
 ```bash
-git pull origin main
+git checkout develop3
+git pull origin develop3
 ```
 
-Then run `checkRaven`.
+`develop3` can be ahead of what this page describes; see
+[RAVEN 2 to RAVEN 3](../raven3-migration.md) for what changed and when this
+document was last checked against it. Then run `checkRaven`.
 :::
 ::::
 

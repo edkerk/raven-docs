@@ -56,7 +56,7 @@ makes those annotations unusable as a key for matching metabolites across
 models.
 
 `importModel` accepts SBML Level 3 Version 1 with FBC version 2 and errors
-on anything older; see the [RAVEN 3 migration guide](../raven3-migration.md#sbml-io)
+on anything older; see the [RAVEN 3 migration guide](../raven3-migration/formats-and-reconstruction.md#sbml-io)
 if a file is rejected.
 :::
 :::{tab-item} 🐍 Python
@@ -233,7 +233,7 @@ RXNS, METS, COMPS, GENES, MODEL
 
 `exportToExcelFormat` writes `.xlsx` and errors on any other extension, so a
 bare directory path is rejected rather than interpreted. The
-[RAVEN 3 migration guide](../raven3-migration.md#excel-io) covers scripts
+[RAVEN 3 migration guide](../raven3-migration/formats-and-reconstruction.md#excel-io) covers scripts
 that pass one. There is no matching importer: `curateModelFromTables` reads
 a curated spreadsheet back by applying tabular edits to an existing model,
 not by building one from scratch.

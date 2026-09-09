@@ -126,9 +126,10 @@ not yet at parity between the two toolboxes.
 
 ```{toctree}
 :hidden:
-:caption: Installation
+:caption: Start
 
 ../installation/index
+../yaml-format
 ```
 
 ```{toctree}

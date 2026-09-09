@@ -6,7 +6,7 @@
 **Reconstruction, Analysis and Visualization of Metabolic Networks**
 
 A toolkit for building, curating, and simulating genome-scale metabolic
-models, available as a MATLAB toolbox and a Python package built on cobrapy.
+models, available as a **MATLAB** toolbox and a **Python** package built on cobrapy.
 
 ## Install
 
@@ -20,6 +20,7 @@ pip install --pre raven-toolbox
 :::{tab-item} MATLAB (Add-Ons)
 
 Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox".
+
 Then run `checkRaven` to verify.
 :::
 :::{tab-item} Python (git)
@@ -143,7 +144,7 @@ Complete function reference for both MATLAB and Python.
 Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
 :::
 
-:::{grid-item-card} RAVEN and raven-toolbox
+:::{grid-item-card} RAVEN vs. raven-toolbox
 :link: raven3-vs-raven-toolbox
 :link-type: doc
 
