@@ -164,10 +164,12 @@ Where the two agree on the job but differ in what they hand back, how they order
 it, or what they do to the model on the way. Deliberately short: an entry is
 added only once the difference has been confirmed in both sources.
 
-!!! info "Not a complete list"
-    Absence from this section is not a guarantee of identical behaviour. Where
-    an exact answer matters (reproducing a published result, comparing two
-    pipelines); see [what "identical results" means](#what-identical-results-means).
+:::{admonition} Not a complete list
+:class: info
+Absence from this section is not a guarantee of identical behaviour. Where
+an exact answer matters (reproducing a published result, comparing two
+pipelines); see [what "identical results" means](#what-identical-results-means).
+:::
 
 ### Duplicate reactions: gene associations are not merged
 

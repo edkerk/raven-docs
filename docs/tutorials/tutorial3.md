@@ -7,11 +7,12 @@ simplified model of yeast metabolism (`smallYeast.yml`), imported with
 
 It is assumed you have completed Tutorial 2.
 
-!!! note "Skeleton and solutions"
-    `tutorial3.m` is a skeleton script for you to work through. The completed
-    answers are in the companion script `tutorial3_solutions.m`. The code
-    excerpts below follow the solutions; try to derive them yourself before
-    looking.
+:::{note} Skeleton and solutions
+`tutorial3.m` is a skeleton script for you to work through. The completed
+answers are in the companion script `tutorial3_solutions.m`. The code
+excerpts below follow the solutions; try to derive them yourself before
+looking.
+:::
 
 ## Step by step
 
@@ -112,6 +113,6 @@ end
 
 ## Full script
 
-```matlab
---8<-- "RAVEN/tutorial/tutorial3.m"
+```{literalinclude} ../../RAVEN/tutorial/tutorial3.m
+:language: matlab
 ```

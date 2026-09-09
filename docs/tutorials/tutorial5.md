@@ -7,12 +7,13 @@ file, and runs some functionality checks on the result. The example organism is
 Unlike Tutorials 1–4, this is more of a **showcase**: its main purpose is to
 serve as a scaffold you can adapt to reconstruct a GEM for any organism.
 
-!!! note "Runtime"
-    *De novo* reconstruction performs sequence searches against large HMM
-    databases. Building the model takes up to 20–35 minutes on macOS and Unix
-    systems and 40–55 minutes on Windows, depending on your hardware and the
-    size of the target organism's proteome. `gapReport` can take several to many
-    hours, depending on the number of gaps in the model.
+:::{note} Runtime
+*De novo* reconstruction performs sequence searches against large HMM
+databases. Building the model takes up to 20–35 minutes on macOS and Unix
+systems and 40–55 minutes on Windows, depending on your hardware and the
+size of the target organism's proteome. `gapReport` can take several to many
+hours, depending on the number of gaps in the model.
+:::
 
 ## Step by step
 
@@ -212,6 +213,6 @@ sufficient quality.
 
 ## Full script
 
-```matlab
---8<-- "RAVEN/tutorial/tutorial5.m"
+```{literalinclude} ../../RAVEN/tutorial/tutorial5.m
+:language: matlab
 ```

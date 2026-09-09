@@ -43,9 +43,10 @@ genome, (2) a DNA FASTA for nucleotide ratios, and (3) a GenBank file for
 ribonucleotide ratios. For each template you need a protein FASTA and a model
 file in SBML format.
 
-!!! important "Matching identifiers"
-    For automatic gene matching, the protein FASTA and the model file of each
-    template **must use the same gene identifiers**.
+:::{important} Matching identifiers
+For automatic gene matching, the protein FASTA and the model file of each
+template **must use the same gene identifiers**.
+:::
 
 All required files for *H. polymorpha* are provided in the
 [hanpo-GEM](https://github.com/SysBioChalmers/hanpo-GEM) repository; clone it to
@@ -88,8 +89,9 @@ Checking essential binary executables:
 *** checkInstallation complete ***
 ```
 
-!!! warning
-    If `checkInstallation` reports that parsing Excel format **FAILED**,
-    uninstall MATLAB's **Text Analytics Toolbox**, which conflicts with RAVEN's
-    Excel parser. For support, see the
-    [RAVEN issues](https://github.com/SysBioChalmers/RAVEN/issues) page.
+:::{warning}
+If `checkInstallation` reports that parsing Excel format **FAILED**,
+uninstall MATLAB's **Text Analytics Toolbox**, which conflicts with RAVEN's
+Excel parser. For support, see the
+[RAVEN issues](https://github.com/SysBioChalmers/RAVEN/issues) page.
+:::

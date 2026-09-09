@@ -4,8 +4,8 @@ Parameters whose defaults were measured but did not need a study of their own.
 Everything here was run on 2026-06-20 unless a row says otherwise, on yeast-GEM
 (4,102 reactions), iJO1366 (2,583) and e_coli_core (95).
 
-The parameters that did get a dedicated campaign are in
-[Studies](index.md#studies); the current value and one-line reason for every
+The parameters that did get a dedicated campaign are in the studies listed
+under [Methods](index.md); the current value and one-line reason for every
 parameter on either side is in
 [Tuned parameter defaults](../tuned-parameters.md).
 

@@ -49,10 +49,11 @@ models are used as templates:
 | [yeast-GEM](https://github.com/SysBioChalmers/yeast-GEM) | *Saccharomyces cerevisiae* (ascomycete) | Primary template |
 | [rhto-GEM](https://github.com/SysBioChalmers/rhto-GEM) | *Rhodotorula toruloides* (basidiomycete) | Complementary template |
 
-!!! warning "Same identifier namespace"
-    When using multiple template models it is **essential** that they use the
-    same identifiers for metabolites, reactions and compartments. The yeast-GEM
-    and rhto-GEM models used here share the same identifier style.
+:::{warning} Same identifier namespace
+When using multiple template models it is **essential** that they use the
+same identifiers for metabolites, reactions and compartments. The yeast-GEM
+and rhto-GEM models used here share the same identifier style.
+:::
 
 ## Overview of the steps
 

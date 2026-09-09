@@ -7,12 +7,13 @@ related organism. KEGG needs none: its orthology groups (KOs) are already tied t
 reactions, so annotating a genome with KOs gives you a draft directly. Which
 route you take depends on one thing: whether your organism is already in KEGG.
 
-!!! note "These examples are not run by the documentation build"
-    Every other page in this guide is executed on each commit and its output
-    checked. This one is not. A KEGG reconstruction downloads tens to hundreds of
-    megabytes and takes minutes even once that is cached, which is too much for a
-    per-commit check. The numbers below come from real runs and are quoted with
-    their timings, measured on an ordinary laptop.
+:::{note} These examples are not run by the documentation build
+Every other page in this guide is executed on each commit and its output
+checked. This one is not. A KEGG reconstruction downloads tens to hundreds of
+megabytes and takes minutes even once that is cached, which is too much for a
+per-commit check. The numbers below come from real runs and are quoted with
+their timings, measured on an ordinary laptop.
+:::
 
 ### Functions on this page
 
@@ -29,48 +30,53 @@ If KEGG has your species (`sce` for *S. cerevisiae*), its gene-to-KO assignments
 are already made, and no sequence search is needed. This is the fast route, and
 the one to prefer when it applies.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = getKEGGModelForOrganism('sce', ...
-        'dataDir', fullfile(tempdir, 'kegg118_eukaryotes'));
-    ```
+```matlab
+model = getKEGGModelForOrganism('sce', ...
+    'dataDir', fullfile(tempdir, 'kegg118_eukaryotes'));
+```
 
-    Without a `fastaFile`, the reconstruction runs from the organism
-    abbreviation alone and no sequence search happens, so the HMM library is not
-    fetched; the download is guarded on a FASTA being supplied. What it does need
-    is the global KEGG model, which `getModelFromKEGG` supplies. On first use
-    there is no `keggModel.mat` to load, so it downloads the published artefacts,
-    the gene-free reference model plus the KO, reaction and organism-gene tables,
-    assembles them, and caches the result. That first build takes a while and
-    needs a few hundred MB of disk; later calls load the cached file directly.
+Without a `fastaFile`, the reconstruction runs from the organism
+abbreviation alone and no sequence search happens, so the HMM library is not
+fetched; the download is guarded on a FASTA being supplied. What it does need
+is the global KEGG model, which `getModelFromKEGG` supplies. On first use
+there is no `keggModel.mat` to load, so it downloads the published artefacts,
+the gene-free reference model plus the KO, reaction and organism-gene tables,
+assembles them, and caches the result. That first build takes a while and
+needs a few hundred MB of disk; later calls load the cached file directly.
 
-    This route ignores every setting except `keepSpontaneous`,
-    `keepUndefinedStoich`, `keepIncomplete` and `keepGeneral`, since the cut-offs
-    and phylogenetic weighting only apply to a sequence search.
+This route ignores every setting except `keepSpontaneous`,
+`keepUndefinedStoich`, `keepIncomplete` and `keepGeneral`, since the cut-offs
+and phylogenetic weighting only apply to a sequence search.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.reconstruction.kegg import (
+    get_kegg_model_for_organism_from_artefacts,
+)
 
-    ```python
-    from raven_toolbox.reconstruction.kegg import (
-        get_kegg_model_for_organism_from_artefacts,
-    )
+model = get_kegg_model_for_organism_from_artefacts("sce")
+print(f"{len(model.reactions)} rxns, {len(model.metabolites)} mets, "
+      f"{len(model.genes)} genes")
+```
 
-    model = get_kegg_model_for_organism_from_artefacts("sce")
-    print(f"{len(model.reactions)} rxns, {len(model.metabolites)} mets, "
-          f"{len(model.genes)} genes")
-    ```
+```text
+1357 rxns, 1502 mets, 838 genes
+```
 
-    ```text title="Output"
-    1357 rxns, 1502 mets, 838 genes
-    ```
-
-    The artefacts (a reference model and three tables, about 47 MB) are fetched
-    from the `kegg118` raven-data release on first use and cached; see
-    [Downloaded data and binaries](../installation/data-and-binaries.md) for
-    where, and how to fetch them ahead of a batch run. Expect around five
-    minutes for the first run and much the same afterwards: the download is not
-    the slow part, assembling the draft from the tables is.
+The artefacts (a reference model and three tables, about 47 MB) are fetched
+from the `kegg118` raven-data release on first use and cached; see
+[Downloaded data and binaries](../installation/data-and-binaries.md) for
+where, and how to fetch them ahead of a batch run. Expect around five
+minutes for the first run and much the same afterwards: the download is not
+the slow part, assembling the draft from the tables is.
+:::
+::::
 
 ## 19.2 When it is not
 
@@ -78,22 +84,27 @@ For an organism KEGG has never seen, the KO assignments have to be made from
 sequence. Both toolboxes search your proteins against a library of profile HMMs,
 one per KO, trained on either prokaryotic or eukaryotic sequences.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = getKEGGModelForOrganism('hpo', ...
-        'fastaFile', 'hanpo.faa', ...
-        'dataDir', fullfile(tempdir, 'kegg118_eukaryotes'), ...
-        'outDir', fullfile(tempdir, 'hanpo_hmm'));
-    ```
+```matlab
+model = getKEGGModelForOrganism('hpo', ...
+    'fastaFile', 'hanpo.faa', ...
+    'dataDir', fullfile(tempdir, 'kegg118_eukaryotes'), ...
+    'outDir', fullfile(tempdir, 'hanpo_hmm'));
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.reconstruction.kegg import get_kegg_model_from_sequences
 
-    ```python
-    from raven_toolbox.reconstruction.kegg import get_kegg_model_from_sequences
-
-    model = get_kegg_model_from_sequences("hanpo.faa", domain="eukaryotes")
-    ```
+model = get_kegg_model_from_sequences("hanpo.faa", domain="eukaryotes")
+```
+:::
+::::
 
 This is the expensive route. The eukaryotic HMM library alone is **129 MB
 compressed**, and `hmmsearch` against every KO takes tens of minutes to hours for
@@ -150,19 +161,20 @@ the organism, so measure it rather than assuming it. `keepGeneral` /
 + NAD+", and admitting them produces a network that appears to do far more than
 it can.
 
-!!! warning "What can go wrong"
-    - **Expecting a model.** No biomass reaction, no exchanges, no compartments,
-      no medium. What you have is a reaction inventory with gene associations.
-    - **Trusting the KO assignment.** A KO is an orthology group, not a
-      demonstrated activity in your organism, and a partial HMM hit is weaker
-      still.
-    - **Undefined stoichiometry.** Reactions with `n` or `x` coefficients cannot
-      be mass-balanced. They are kept by default because dropping them loses real
-      chemistry, but they will trip up
-      [9. Quality control](quality-control.md) later.
-    - **Version drift.** The artefacts are built from a specific KEGG release,
-      `kegg118` here. Rebuilding a year later with a different release gives a
-      different model, so record which one you used.
+:::{warning} What can go wrong
+- **Expecting a model.** No biomass reaction, no exchanges, no compartments,
+  no medium. What you have is a reaction inventory with gene associations.
+- **Trusting the KO assignment.** A KO is an orthology group, not a
+  demonstrated activity in your organism, and a partial HMM hit is weaker
+  still.
+- **Undefined stoichiometry.** Reactions with `n` or `x` coefficients cannot
+  be mass-balanced. They are kept by default because dropping them loses real
+  chemistry, but they will trip up
+  [9. Quality control](quality-control.md) later.
+- **Version drift.** The artefacts are built from a specific KEGG release,
+  `kegg118` here. Rebuilding a year later with a different release gives a
+  different model, so record which one you used.
+:::
 
 ## See also
 

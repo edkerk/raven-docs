@@ -69,10 +69,11 @@ weights, this gives the amount of each deoxyribonucleotide needed per gram of
 biomass. Ribonucleotide and amino-acid ratios are derived analogously from the
 coding sequences and the protein FASTA.
 
-!!! note "Lipids use SLIME"
-    Lipid representation depends on two measurement types: **lipid classes**
-    (e.g. triacylglycerol, phosphatidylinositol) and **acyl chains** (e.g. 16:0,
-    18:1). This model uses the SLIME formalism (*Split Lipids Into Measurable
-    Entities*), set up in the next section.
+:::{note} Lipids use SLIME
+Lipid representation depends on two measurement types: **lipid classes**
+(e.g. triacylglycerol, phosphatidylinositol) and **acyl chains** (e.g. 16:0,
+18:1). This model uses the SLIME formalism (*Split Lipids Into Measurable
+Entities*), set up in the next section.
+:::
 
 Next: [Curation of lipid reactions](lipid-curation.md).

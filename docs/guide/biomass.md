@@ -14,7 +14,7 @@ annotation that makes a model interpretable to something other than a solver.
 | `scaleBiomassPseudoreaction` | `rescale_pseudoreaction` | rescale a pseudoreaction and rebalance it |
 | `assignSBOterms` | `add_sbo_terms` | label reactions and metabolites with SBO terms |
 | `loadDeltaGCSV`, `saveDeltaGCSV` | `load_delta_g_csv`, `save_delta_g_csv` | thermodynamic data through CSV |
-| `extractMiriam`, `editMiriam` | `Object.annotation` <span class="cobrapy-tag">cobrapy</span> | read and edit database cross-references |
+| `extractMiriam`, `editMiriam` | `Object.annotation` {bdg-secondary}`cobrapy` | read and edit database cross-references |
 
 ## Setup
 
@@ -27,72 +27,77 @@ as a configuration. Each component names the metabolite its pseudoreaction
 produces, the reaction's name, and how to turn the reaction's substrates into a
 mass.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = readYAMLmodel('yeast-GEM.yml');
+```matlab
+model = readYAMLmodel('yeast-GEM.yml');
 
-    names      = {'protein', 'carbohydrate', 'RNA', 'DNA', ...
-                  'lipidBackbone', 'cofactor', 'ion'};
-    pseudoRxns = {'protein pseudoreaction', 'carbohydrate pseudoreaction', ...
-                  'RNA pseudoreaction', 'DNA pseudoreaction', ...
-                  'lipid backbone pseudoreaction', 'cofactor pseudoreaction', ...
-                  'ion pseudoreaction'};
-    strategies = {'mw_minus_2h', 'mw_minus_2h', 'mw_minus_2h', 'mw_minus_2h', ...
-                  'grams', 'mw_minus_2h', 'mw_minus_2h'};
+names      = {'protein', 'carbohydrate', 'RNA', 'DNA', ...
+              'lipidBackbone', 'cofactor', 'ion'};
+pseudoRxns = {'protein pseudoreaction', 'carbohydrate pseudoreaction', ...
+              'RNA pseudoreaction', 'DNA pseudoreaction', ...
+              'lipid backbone pseudoreaction', 'cofactor pseudoreaction', ...
+              'ion pseudoreaction'};
+strategies = {'mw_minus_2h', 'mw_minus_2h', 'mw_minus_2h', 'mw_minus_2h', ...
+              'grams', 'mw_minus_2h', 'mw_minus_2h'};
 
-    components = cell(1, numel(names));
-    for i = 1:numel(names)
-        components{i} = struct('name', names{i}, ...
-            'pseudoreaction_name', pseudoRxns{i}, ...
-            'mass_strategy', strategies{i});
-    end
+components = cell(1, numel(names));
+for i = 1:numel(names)
+    components{i} = struct('name', names{i}, ...
+        'pseudoreaction_name', pseudoRxns{i}, ...
+        'mass_strategy', strategies{i});
+end
 
-    biomassConfig = struct('biomass_rxn', 'r_4041', ...
-        'proton_met', 's_0794', 'components', {components});
-    fprintf('%d components configured\n', numel(biomassConfig.components));
-    ```
+biomassConfig = struct('biomass_rxn', 'r_4041', ...
+    'proton_met', 's_0794', 'components', {components});
+fprintf('%d components configured\n', numel(biomassConfig.components));
+```
 
-    ```text title="Output"
-    7 components configured
-    ```
+```text
+7 components configured
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.biomass import BiomassComponent, BiomassConfig
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    from raven_toolbox.biomass import BiomassComponent, BiomassConfig
-    from raven_toolbox.io import read_yaml_model
+model = read_yaml_model("yeast-GEM.yml")
 
-    model = read_yaml_model("yeast-GEM.yml")
+strategies = {
+    "protein": "mw_minus_2h",
+    "carbohydrate": "mw_minus_2h",
+    "RNA": "mw_minus_2h",
+    "DNA": "mw_minus_2h",
+    "lipid backbone": "grams",
+    "cofactor": "mw_minus_2h",
+    "ion": "mw_minus_2h",
+}
 
-    strategies = {
-        "protein": "mw_minus_2h",
-        "carbohydrate": "mw_minus_2h",
-        "RNA": "mw_minus_2h",
-        "DNA": "mw_minus_2h",
-        "lipid backbone": "grams",
-        "cofactor": "mw_minus_2h",
-        "ion": "mw_minus_2h",
-    }
+config = BiomassConfig(
+    biomass_rxn="r_4041",
+    proton_met="s_0794",
+    components=tuple(
+        BiomassComponent(
+            name=name,
+            pseudoreaction_name=f"{name} pseudoreaction",
+            mass_strategy=strategy,
+        )
+        for name, strategy in strategies.items()
+    ),
+)
+print(len(config.components), "components configured")
+```
 
-    config = BiomassConfig(
-        biomass_rxn="r_4041",
-        proton_met="s_0794",
-        components=tuple(
-            BiomassComponent(
-                name=name,
-                pseudoreaction_name=f"{name} pseudoreaction",
-                mass_strategy=strategy,
-            )
-            for name, strategy in strategies.items()
-        ),
-    )
-    print(len(config.components), "components configured")
-    ```
-
-    ```text title="Output"
-    7 components configured
-    ```
+```text
+7 components configured
+```
+:::
+::::
 
 The component `name` is used differently on the two sides. MATLAB returns the
 fractions as a struct keyed by that name, so it has to be a valid field name and
@@ -110,47 +115,52 @@ in g/gDW, which is how the lipid backbone is written.
 
 ## 22.1 What is the cell made of?
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    fractions = getBiomassFractions(model, biomassConfig);
-    names = fieldnames(fractions);
-    for i = 1:numel(names)
-        fprintf('  %-16s %.4f\n', names{i}, fractions.(names{i}));
-    end
-    ```
+```matlab
+fractions = getBiomassFractions(model, biomassConfig);
+names = fieldnames(fractions);
+for i = 1:numel(names)
+    fprintf('  %-16s %.4f\n', names{i}, fractions.(names{i}));
+end
+```
 
-    ```text title="Output"
-      protein          0.4648
-      carbohydrate     0.3787
-      RNA              0.0633
-      DNA              0.0039
-      lipidBackbone    0.0873
-      cofactor         0.0048
-      ion              0.0024
-      total            1.0051
-    ```
+```text
+  protein          0.4648
+  carbohydrate     0.3787
+  RNA              0.0633
+  DNA              0.0039
+  lipidBackbone    0.0873
+  cofactor         0.0048
+  ion              0.0024
+  total            1.0051
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.biomass import sum_biomass
 
-    ```python
-    from raven_toolbox.biomass import sum_biomass
+fractions = sum_biomass(model, config)
+for name, value in fractions.items():
+    print(f"  {name:<16} {value:.4f}")
+```
 
-    fractions = sum_biomass(model, config)
-    for name, value in fractions.items():
-        print(f"  {name:<16} {value:.4f}")
-    ```
-
-    ```text title="Output"
-      protein          0.4648
-      carbohydrate     0.3787
-      RNA              0.0633
-      DNA              0.0039
-      lipid backbone   0.0873
-      cofactor         0.0048
-      ion              0.0024
-      total            1.0051
-    ```
+```text
+  protein          0.4648
+  carbohydrate     0.3787
+  RNA              0.0633
+  DNA              0.0039
+  lipid backbone   0.0873
+  cofactor         0.0048
+  ion              0.0024
+  total            1.0051
+```
+:::
+::::
 
 The total is the number to check. A biomass pseudoreaction is written so that one
 unit of flux consumes one gram of cell, which is what makes the growth rate a
@@ -170,36 +180,41 @@ Measured a different protein content? Set it, and say what gives way. A biomass
 that no longer sums to 1 is worse than one with the old number in it, so both
 functions can balance a second component to absorb the difference.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    rescaled = scaleBiomassFraction(model, biomassConfig, 'protein', 0.5, ...
-        'balanceOut', 'carbohydrate');
-    after = getBiomassFractions(rescaled, biomassConfig);
-    fprintf('protein %.4f, carbohydrate %.4f, total %.4f\n', ...
-        after.protein, after.carbohydrate, after.total);
-    ```
+```matlab
+rescaled = scaleBiomassFraction(model, biomassConfig, 'protein', 0.5, ...
+    'balanceOut', 'carbohydrate');
+after = getBiomassFractions(rescaled, biomassConfig);
+fprintf('protein %.4f, carbohydrate %.4f, total %.4f\n', ...
+    after.protein, after.carbohydrate, after.total);
+```
 
-    ```text title="Output"
-    protein 0.5000, carbohydrate 0.3384, total 1.0000
-    ```
+```text
+protein 0.5000, carbohydrate 0.3384, total 1.0000
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.biomass import scale_biomass
 
-    ```python
-    from raven_toolbox.biomass import scale_biomass
+rescaled = model.copy()
+scale_biomass(rescaled, config, "protein", 0.5, balance_out="carbohydrate")
+after = sum_biomass(rescaled, config)
+print(f"protein {after['protein']:.4f}, "
+      f"carbohydrate {after['carbohydrate']:.4f}, "
+      f"total {after['total']:.4f}")
+```
 
-    rescaled = model.copy()
-    scale_biomass(rescaled, config, "protein", 0.5, balance_out="carbohydrate")
-    after = sum_biomass(rescaled, config)
-    print(f"protein {after['protein']:.4f}, "
-          f"carbohydrate {after['carbohydrate']:.4f}, "
-          f"total {after['total']:.4f}")
-    ```
-
-    ```text title="Output"
-    protein 0.5000, carbohydrate 0.3384, total 1.0000
-    ```
+```text
+protein 0.5000, carbohydrate 0.3384, total 1.0000
+```
+:::
+::::
 
 `scale_biomass` edits the model **in place** and returns `None`, while
 `scaleBiomassFraction` returns a new struct and leaves its input alone. That is
@@ -221,32 +236,37 @@ An SBO term says what a reaction or metabolite *is*: a transport reaction, an
 exchange, a metabolite rather than a pseudo-species. Solvers ignore them;
 everything that reads a model afterwards does not.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    small = readYAMLmodel('smallYeast.yml');
-    annotated = assignSBOterms(small);
-    fprintf('rxnSBOs present: %d\n', isfield(annotated, 'rxnSBOs'));
-    ```
+```matlab
+small = readYAMLmodel('smallYeast.yml');
+annotated = assignSBOterms(small);
+fprintf('rxnSBOs present: %d\n', isfield(annotated, 'rxnSBOs'));
+```
 
-    ```text title="Output"
-    rxnSBOs present: 0
-    ```
+```text
+rxnSBOs present: 0
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.annotation import add_sbo_terms
 
-    ```python
-    from raven_toolbox.annotation import add_sbo_terms
+small = read_yaml_model("smallYeast.yml")
+add_sbo_terms(small)
+labelled = sum(1 for r in small.reactions if "sbo" in r.annotation)
+print(f"{labelled} of {len(small.reactions)} reactions labelled")
+```
 
-    small = read_yaml_model("smallYeast.yml")
-    add_sbo_terms(small)
-    labelled = sum(1 for r in small.reactions if "sbo" in r.annotation)
-    print(f"{labelled} of {len(small.reactions)} reactions labelled")
-    ```
-
-    ```text title="Output"
-    53 of 53 reactions labelled
-    ```
+```text
+53 of 53 reactions labelled
+```
+:::
+::::
 
 The terms are assigned from what the model already says: a reaction with one
 metabolite and a boundary is an exchange, a reaction whose metabolites differ
@@ -269,21 +289,22 @@ onto the reactions, and `saveDeltaGCSV` and `save_delta_g_csv` write it back out
 Keeping it in CSV means a thermodynamics run can be versioned and reviewed
 separately from the model, and re-applied after the model changes.
 
-!!! warning "What can go wrong"
-    - **A configuration that does not match the model.** Components are matched
-      on the pseudoreaction's **name**, not its id. A component whose
-      pseudoreaction is missing contributes zero rather than failing, so a
-      mistyped name shows up as a total that is short.
-    - **The wrong mass strategy.** Using `mw` where the convention is
-      `mw_minus_2h` inflates every polymer by the mass of the bonds, and the
-      total tells you: it will not land near 1.
-    - **Rescaling without balancing.** Setting protein to a measured value and
-      leaving the rest alone changes the total, and therefore rescales every
-      growth rate the model produces.
-    - **Counting a lipid twice.** A backbone-and-chain representation states the
-      same mass two ways. Include one.
-    - **Trusting SBO terms as validation.** They record what the model already
-      implies. They are useful downstream, not a check on the model.
+:::{warning} What can go wrong
+- **A configuration that does not match the model.** Components are matched
+  on the pseudoreaction's **name**, not its id. A component whose
+  pseudoreaction is missing contributes zero rather than failing, so a
+  mistyped name shows up as a total that is short.
+- **The wrong mass strategy.** Using `mw` where the convention is
+  `mw_minus_2h` inflates every polymer by the mass of the bonds, and the
+  total tells you: it will not land near 1.
+- **Rescaling without balancing.** Setting protein to a measured value and
+  leaving the rest alone changes the total, and therefore rescales every
+  growth rate the model produces.
+- **Counting a lipid twice.** A backbone-and-chain representation states the
+  same mass two ways. Include one.
+- **Trusting SBO terms as validation.** They record what the model already
+  implies. They are useful downstream, not a check on the model.
+:::
 
 ## See also
 

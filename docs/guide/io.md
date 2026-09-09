@@ -7,8 +7,8 @@ directory layout a Git-maintained model repository expects.
 
 | MATLAB | Python | |
 |---|---|---|
-| `importModel` | `read_sbml_model` <span class="cobrapy-tag">cobrapy</span> | read SBML |
-| `exportModel` | `write_sbml_model` <span class="cobrapy-tag">cobrapy</span> | write SBML |
+| `importModel` | `read_sbml_model` {bdg-secondary}`cobrapy` | read SBML |
+| `exportModel` | `write_sbml_model` {bdg-secondary}`cobrapy` | write SBML |
 | `readYAMLmodel` | `read_yaml_model` | read RAVEN YAML |
 | `writeYAMLmodel` | `write_yaml_model` | write RAVEN YAML |
 | `exportToExcelFormat` | `export_to_excel` | write the RAVEN Excel format |
@@ -26,63 +26,68 @@ This page uses two models from [`docs/data/`](../data/README.md):
 
 ## 3.1 Read a model
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    modelSmall = readYAMLmodel('smallYeast.yml');
-    modelYeast = importModel('yeast-GEM.xml');
+```matlab
+modelSmall = readYAMLmodel('smallYeast.yml');
+modelYeast = importModel('yeast-GEM.xml');
 
-    fprintf('%s %d reactions\n', modelSmall.id, numel(modelSmall.rxns));
-    fprintf('%s %d reactions\n', modelYeast.id, numel(modelYeast.rxns));
-    ```
+fprintf('%s %d reactions\n', modelSmall.id, numel(modelSmall.rxns));
+fprintf('%s %d reactions\n', modelYeast.id, numel(modelYeast.rxns));
+```
 
-    ```text title="Output"
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
-    [Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
-    smallYeast 53 reactions
-    yeastGEM_v9.1.0 4102 reactions
-    ```
+```text
+[Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+[Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
+smallYeast 53 reactions
+yeastGEM_v9.1.0 4102 reactions
+```
 
-    Both warnings are informational and neither stops the read. The first says
-    `importModel` stripped the `R_`, `M_`, `G_` and `C_` prefixes SBML requires
-    on identifiers, which it does only when every identifier of that type
-    carries one; pass `removePrefix` as `false` to keep them, which is what a
-    comparison against the file's own ids requires. The second reports that the
-    model annotates several differently-named metabolites with the same database
-    identifier. That is a property of yeast-GEM rather than of the reader, and it
-    makes those annotations unusable as a key for matching metabolites across
-    models.
+Both warnings are informational and neither stops the read. The first says
+`importModel` stripped the `R_`, `M_`, `G_` and `C_` prefixes SBML requires
+on identifiers, which it does only when every identifier of that type
+carries one; pass `removePrefix` as `false` to keep them, which is what a
+comparison against the file's own ids requires. The second reports that the
+model annotates several differently-named metabolites with the same database
+identifier. That is a property of yeast-GEM rather than of the reader, and it
+makes those annotations unusable as a key for matching metabolites across
+models.
 
-    `importModel` accepts SBML Level 3 Version 1 with FBC version 2 and errors
-    on anything older; see the [RAVEN 3 migration guide](../raven3-migration.md#sbml-io)
-    if a file is rejected.
+`importModel` accepts SBML Level 3 Version 1 with FBC version 2 and errors
+on anything older; see the [RAVEN 3 migration guide](../raven3-migration.md#sbml-io)
+if a file is rejected.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from cobra.io import read_sbml_model
 
-    ```python
-    from cobra.io import read_sbml_model
+from raven_toolbox.io import read_yaml_model
 
-    from raven_toolbox.io import read_yaml_model
+small = read_yaml_model("smallYeast.yml")
+yeast = read_sbml_model("yeast-GEM.xml")
 
-    small = read_yaml_model("smallYeast.yml")
-    yeast = read_sbml_model("yeast-GEM.xml")
+print(small.id, len(small.reactions), "reactions")
+print(yeast.id, len(yeast.reactions), "reactions")
+```
 
-    print(small.id, len(small.reactions), "reactions")
-    print(yeast.id, len(yeast.reactions), "reactions")
-    ```
+```text
+smallYeast 53 reactions
+yeastGEM_v9__46__1__46__0 4102 reactions
+```
 
-    ```text title="Output"
-    smallYeast 53 reactions
-    yeastGEM_v9__46__1__46__0 4102 reactions
-    ```
+`read_sbml_model` is cobrapy's own reader and strips the same SBML prefixes.
+`read_yaml_model` is raven-toolbox's, and returns a plain `cobra.Model`, so
+the two are interchangeable from here on. It reads gzipped files
+transparently and accepts both the current YAML layout and the older RAVEN
+one, so an archived model does not need converting first.
 
-    `read_sbml_model` is cobrapy's own reader and strips the same SBML prefixes.
-    `read_yaml_model` is raven-toolbox's, and returns a plain `cobra.Model`, so
-    the two are interchangeable from here on. It reads gzipped files
-    transparently and accepts both the current YAML layout and the older RAVEN
-    one, so an archived model does not need converting first.
-
-    The two ids printed above are not the same, which is 3.2.
+The two ids printed above are not the same, which is 3.2.
+:::
+::::
 
 ## 3.2 Watch the identifier mangling
 
@@ -92,105 +97,116 @@ reaction and metabolite ids that do are encoded when the file is written, as
 in the file, so what differs between the toolboxes is whether it is undone on
 the way back in.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    disp(modelYeast.id);        % from yeast-GEM.xml
-    modelFromYaml = readYAMLmodel('yeast-GEM.yml');
-    disp(modelFromYaml.id);     % same release, unencoded
-    ```
+```matlab
+disp(modelYeast.id);        % from yeast-GEM.xml
+modelFromYaml = readYAMLmodel('yeast-GEM.yml');
+disp(modelFromYaml.id);     % same release, unencoded
+```
 
-    ```text title="Output"
-    yeastGEM_v9.1.0
-    yeastGEM_v9.1.0
-    ```
+```text
+yeastGEM_v9.1.0
+yeastGEM_v9.1.0
+```
 
-    `importModel` decodes every `__NN__` back to its character, across reactions,
-    metabolites, compartments, genes, gene rules and the model id, so a
-    round trip through SBML returns the ids you started with.
+`importModel` decodes every `__NN__` back to its character, across reactions,
+metabolites, compartments, genes, gene rules and the model id, so a
+round trip through SBML returns the ids you started with.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+print("from SBML:", yeast.id)
 
-    ```python
-    print("from SBML:", yeast.id)
+from_yaml = read_yaml_model("yeast-GEM.yml")
+print("from YAML:", from_yaml.id)
+print("same size:", len(from_yaml.reactions) == len(yeast.reactions))
+```
 
-    from_yaml = read_yaml_model("yeast-GEM.yml")
-    print("from YAML:", from_yaml.id)
-    print("same size:", len(from_yaml.reactions) == len(yeast.reactions))
-    ```
+```text
+from SBML: yeastGEM_v9__46__1__46__0
+from YAML: yeastGEM_v9.1.0
+same size: True
+```
 
-    ```text title="Output"
-    from SBML: yeastGEM_v9__46__1__46__0
-    from YAML: yeastGEM_v9.1.0
-    same size: True
-    ```
+cobrapy leaves the encoding in place, so the same release read from the two
+formats reports two different ids while being the same model. Only the
+*identifiers* are affected; `model.name` and the annotations are unchanged.
+Ids have to be decoded before they can be matched against a model read from
+YAML.
+:::
+::::
 
-    cobrapy leaves the encoding in place, so the same release read from the two
-    formats reports two different ids while being the same model. Only the
-    *identifiers* are affected; `model.name` and the annotations are unchanged.
-    Ids have to be decoded before they can be matched against a model read from
-    YAML.
-
-!!! note "Each toolbox is slow in the other's favourite format"
-    Reading yeast-GEM takes about **17 s from SBML and 73 s from YAML in
-    Python**, and about **78 s from SBML and 17 s from YAML in MATLAB**, so the
-    ranking is reversed. RAVEN parses YAML itself and goes through libSBML for
-    SBML; cobrapy has the opposite balance. The format therefore follows from what is
-    needed from it, a readable diff or the RAVEN-specific fields YAML preserves,
-    and a script that spends its time in the reader will often run faster in the
-    other format.
+:::{note} Each toolbox is slow in the other's favourite format
+Reading yeast-GEM takes about **17 s from SBML and 73 s from YAML in
+Python**, and about **78 s from SBML and 17 s from YAML in MATLAB**, so the
+ranking is reversed. RAVEN parses YAML itself and goes through libSBML for
+SBML; cobrapy has the opposite balance. The format therefore follows from what is
+needed from it, a readable diff or the RAVEN-specific fields YAML preserves,
+and a script that spends its time in the reader will often run faster in the
+other format.
+:::
 
 ## 3.3 Write a model
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    writeYAMLmodel(modelSmall, 'smallYeast-copy.yml');
-    exportModel(modelSmall, 'smallYeast.xml');
+```matlab
+writeYAMLmodel(modelSmall, 'smallYeast-copy.yml');
+exportModel(modelSmall, 'smallYeast.xml');
 
-    roundtrip = importModel('smallYeast.xml');
-    fprintf('%d %d %d\n', numel(roundtrip.rxns), numel(roundtrip.mets), ...
-        numel(roundtrip.genes));
-    ```
+roundtrip = importModel('smallYeast.xml');
+fprintf('%d %d %d\n', numel(roundtrip.rxns), numel(roundtrip.mets), ...
+    numel(roundtrip.genes));
+```
 
-    ```text title="Output"
-    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
-    Document written
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
-    53 52 61
-    ```
+```text
+[Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
+Document written
+[Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+53 52 61
+```
 
-    The two warnings are the prefixing rule in both directions: `exportModel`
-    adds a prefix to a whole field as soon as one id in it starts with something
-    other than a letter or underscore, and `importModel` takes it off again.
-    Pass `neverPrefix` as `true` to suppress the addition, at the cost of a file
-    that is not valid SBML.
+The two warnings are the prefixing rule in both directions: `exportModel`
+adds a prefix to a whole field as soon as one id in it starts with something
+other than a letter or underscore, and `importModel` takes it off again.
+Pass `neverPrefix` as `true` to suppress the addition, at the cost of a file
+that is not valid SBML.
 
-    Both `writeYAMLmodel` and `exportModel` take `sortIds`, which sorts a copy
-    before writing and leaves the caller's model untouched.
+Both `writeYAMLmodel` and `exportModel` take `sortIds`, which sorts a copy
+before writing and leaves the caller's model untouched.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from cobra.io import write_sbml_model
 
-    ```python
-    from cobra.io import write_sbml_model
+from raven_toolbox.io import write_yaml_model
 
-    from raven_toolbox.io import write_yaml_model
+write_yaml_model(small, "smallYeast-copy.yml")
+write_sbml_model(small, "smallYeast.xml")
 
-    write_yaml_model(small, "smallYeast-copy.yml")
-    write_sbml_model(small, "smallYeast.xml")
+roundtrip = read_sbml_model("smallYeast.xml")
+print(len(roundtrip.reactions), len(roundtrip.metabolites), len(roundtrip.genes))
+```
 
-    roundtrip = read_sbml_model("smallYeast.xml")
-    print(len(roundtrip.reactions), len(roundtrip.metabolites), len(roundtrip.genes))
-    ```
+```text
+53 52 61
+```
 
-    ```text title="Output"
-    53 52 61
-    ```
-
-    `write_yaml_model` and `export_to_excel` take `sort_ids`, which sorts what is
-    written without touching the model. cobrapy's `write_sbml_model` has no such
-    argument, so a stable SBML diff needs the sort applied first, on a copy:
-    `write_sbml_model(sort_identifiers(small.copy()), path)`.
+`write_yaml_model` and `export_to_excel` take `sort_ids`, which sorts what is
+written without touching the model. cobrapy's `write_sbml_model` has no such
+argument, so a stable SBML diff needs the sort applied first, on a copy:
+`write_sbml_model(sort_identifiers(small.copy()), path)`.
+:::
+::::
 
 Both toolboxes write reactions in whatever order the model holds them, so
 inserting one reaction near the front shifts every line after it. Sorting first
@@ -202,46 +218,51 @@ The Excel format holds the model as five sheets, covering reactions,
 metabolites, compartments, genes and the model's own metadata, in a form that
 can be edited without a toolbox.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    exportToExcelFormat(modelSmall, 'fileName', 'smallYeast.xlsx');
-    fprintf('%s\n', strjoin(sheetnames('smallYeast.xlsx'), ', '));
-    ```
+```matlab
+exportToExcelFormat(modelSmall, 'fileName', 'smallYeast.xlsx');
+fprintf('%s\n', strjoin(sheetnames('smallYeast.xlsx'), ', '));
+```
 
-    ```text title="Output"
-    RXNS, METS, COMPS, GENES, MODEL
-    ```
+```text
+RXNS, METS, COMPS, GENES, MODEL
+```
 
-    `exportToExcelFormat` writes `.xlsx` and errors on any other extension, so a
-    bare directory path is rejected rather than interpreted. The
-    [RAVEN 3 migration guide](../raven3-migration.md#excel-io) covers scripts
-    that pass one. There is no matching importer: `curateModelFromTables` reads
-    a curated spreadsheet back by applying tabular edits to an existing model,
-    not by building one from scratch.
+`exportToExcelFormat` writes `.xlsx` and errors on any other extension, so a
+bare directory path is rejected rather than interpreted. The
+[RAVEN 3 migration guide](../raven3-migration.md#excel-io) covers scripts
+that pass one. There is no matching importer: `curateModelFromTables` reads
+a curated spreadsheet back by applying tabular edits to an existing model,
+not by building one from scratch.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.io import export_to_excel
 
-    ```python
-    from raven_toolbox.io import export_to_excel
+export_to_excel(small, "smallYeast.xlsx")
 
-    export_to_excel(small, "smallYeast.xlsx")
+from openpyxl import load_workbook
 
-    from openpyxl import load_workbook
+print(load_workbook("smallYeast.xlsx").sheetnames)
+```
 
-    print(load_workbook("smallYeast.xlsx").sheetnames)
-    ```
+```text
+['RXNS', 'METS', 'COMPS', 'GENES', 'MODEL']
+```
 
-    ```text title="Output"
-    ['RXNS', 'METS', 'COMPS', 'GENES', 'MODEL']
-    ```
-
-    `export_to_excel` needs the `excel` extra (`pip install raven-toolbox[excel]`)
-    and writes the same five sheets, plus ENZYMES and ENZRXNS for an
-    enzyme-constrained model. Neither toolbox exports a whole model as a set of
-    tab-delimited files any more; the single reaction table that `exportForGit`
-    writes as its `txt` format is what remains, and pandas over the model's
-    collections covers the rest.
+`export_to_excel` needs the `excel` extra (`pip install raven-toolbox[excel]`)
+and writes the same five sheets, plus ENZYMES and ENZRXNS for an
+enzyme-constrained model. Neither toolbox exports a whole model as a set of
+tab-delimited files any more; the single reaction table that `exportForGit`
+writes as its `txt` format is what remains, and pandas over the model's
+collections covers the rest.
+:::
+::::
 
 ## 3.5 Export for a model repository
 
@@ -251,73 +272,79 @@ that a release is usable without a toolbox and a diff is readable in a pull
 request. Both toolboxes write that layout directly, one subdirectory per format
 plus a `dependencies.txt` recording the versions the files were written with.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    exportForGit(modelSmall, 'prefix', 'smallYeast', 'path', 'repo', ...
-        'formats', {'yml', 'xml'});
+```matlab
+exportForGit(modelSmall, 'prefix', 'smallYeast', 'path', 'repo', ...
+    'formats', {'yml', 'xml'});
 
-    written = dir(fullfile('repo', 'model', '**', '*'));
-    written = written(~[written.isdir]);
-    fprintf('%s\n', strjoin(sort({written.name}), ', '));
-    ```
+written = dir(fullfile('repo', 'model', '**', '*'));
+written = written(~[written.isdir]);
+fprintf('%s\n', strjoin(sort({written.name}), ', '));
+```
 
-    ```text title="Output"
-    [Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
-    Document written
-    dependencies.txt, smallYeast.xml, smallYeast.yml
-    ```
+```text
+[Warning: The following fields have one or more entries that do not start with a letter or _ (conflicting with SBML specifications). Prefixes are added to all entries in those fields:]
+Document written
+dependencies.txt, smallYeast.xml, smallYeast.yml
+```
 
-    `dir` reports names, so the subdirectories the files sit in are not visible
-    above: the layout written is `repo/model/yml/smallYeast.yml` and
-    `repo/model/xml/smallYeast.xml`. Set `subDirs` to `false` to put everything
-    in one folder instead. Identifiers are sorted before writing, with no option
-    to skip it, so successive releases diff cleanly. Left to itself
-    `exportForGit` writes all five formats,
-    `mat`, `txt`, `xlsx`, `xml` and `yml`; `formats` narrows that. `COBRAtext`
-    switches the `txt` table from metabolite names to metabolite ids, and
-    `mainBranchFlag` makes the export fail unless RAVEN itself is on its main
-    branch, which pins a release to a released toolbox version.
+`dir` reports names, so the subdirectories the files sit in are not visible
+above: the layout written is `repo/model/yml/smallYeast.yml` and
+`repo/model/xml/smallYeast.xml`. Set `subDirs` to `false` to put everything
+in one folder instead. Identifiers are sorted before writing, with no option
+to skip it, so successive releases diff cleanly. Left to itself
+`exportForGit` writes all five formats,
+`mat`, `txt`, `xlsx`, `xml` and `yml`; `formats` narrows that. `COBRAtext`
+switches the `txt` table from metabolite names to metabolite ids, and
+`mainBranchFlag` makes the export fail unless RAVEN itself is on its main
+branch, which pins a release to a released toolbox version.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from pathlib import Path
 
-    ```python
-    from pathlib import Path
+from raven_toolbox.io import export_for_git
 
-    from raven_toolbox.io import export_for_git
+root = export_for_git(small, "repo", prefix="smallYeast", formats=("yml", "xml"))
+print(sorted(p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file()))
+```
 
-    root = export_for_git(small, "repo", prefix="smallYeast", formats=("yml", "xml"))
-    print(sorted(p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file()))
-    ```
+```text
+['dependencies.txt', 'xml/smallYeast.xml', 'yml/smallYeast.yml']
+```
 
-    ```text title="Output"
-    ['dependencies.txt', 'xml/smallYeast.xml', 'yml/smallYeast.yml']
-    ```
+`export_for_git` returns the `model/` directory it wrote, and sorts a copy of
+the model first, so the files are diff-friendly and the model you passed is
+unchanged. Its default `formats` are `yml`, `xml`, `mat` and `xlsx`; ask for
+`txt` explicitly if the repository expects one. `sub_dirs=False` flattens the
+layout, and `varname` sets the variable name inside the `.mat` file for
+repositories that pin one.
+:::
+::::
 
-    `export_for_git` returns the `model/` directory it wrote, and sorts a copy of
-    the model first, so the files are diff-friendly and the model you passed is
-    unchanged. Its default `formats` are `yml`, `xml`, `mat` and `xlsx`; ask for
-    `txt` explicitly if the repository expects one. `sub_dirs=False` flattens the
-    layout, and `varname` sets the variable name inside the `.mat` file for
-    repositories that pin one.
-
-!!! warning "What can go wrong"
-    - **The SBML writer refuses an identifier.** SBML ids must start with a
-      letter or underscore. Both toolboxes add a prefix to a whole field when any
-      id in it does not, which is why `importModel` and `read_sbml_model` strip
-      prefixes on the way back.
-    - **Ids differ between two copies of the same release.** An id that contained
-      a dot comes back encoded from SBML in Python. Compare on `model.name` or on
-      annotations, or decode first.
-    - **Excel export fails with a missing module.** The Python side needs
-      `openpyxl`; install `raven-toolbox[excel]`.
-    - **A YAML round trip loses a field neither format defines.** RAVEN YAML
-      carries the RAVEN model fields; anything a plugin added outside them is not
-      guaranteed to survive. Check with a diff, not by eye.
-    - **A hand-written SBML release diffs badly.** `exportForGit` and
-      `export_for_git` sort identifiers for you, but a direct
-      `write_sbml_model` does not, so a file written that way reorders whenever
-      the model does.
+:::{warning} What can go wrong
+- **The SBML writer refuses an identifier.** SBML ids must start with a
+  letter or underscore. Both toolboxes add a prefix to a whole field when any
+  id in it does not, which is why `importModel` and `read_sbml_model` strip
+  prefixes on the way back.
+- **Ids differ between two copies of the same release.** An id that contained
+  a dot comes back encoded from SBML in Python. Compare on `model.name` or on
+  annotations, or decode first.
+- **Excel export fails with a missing module.** The Python side needs
+  `openpyxl`; install `raven-toolbox[excel]`.
+- **A YAML round trip loses a field neither format defines.** RAVEN YAML
+  carries the RAVEN model fields; anything a plugin added outside them is not
+  guaranteed to survive. Check with a diff, not by eye.
+- **A hand-written SBML release diffs badly.** `exportForGit` and
+  `export_for_git` sort identifiers for you, but a direct
+  `write_sbml_model` does not, so a file written that way reorders whenever
+  the model does.
+:::
 
 ## See also
 

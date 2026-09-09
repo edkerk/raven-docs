@@ -10,8 +10,8 @@ limits, literature constants. [Tuned parameter defaults](../tuned-parameters.md)
 gives the short version of every one of them: current value, one-line reason,
 grouped by capability. This section is the detail behind that page: the
 methodology used to evaluate a default, the full write-up for every parameter
-that got a dedicated measurement campaign (**studies**), and the quicker
-per-function working notes produced along the way (**benchmarks**).
+that got a dedicated measurement campaign, and the quicker per-function
+working notes produced along the way (**benchmarks**).
 
 ## Evaluation methodology
 
@@ -74,18 +74,18 @@ The following criteria apply in rough priority order:
    that supports it, and update the default and its docstring.
 ```
 
-## Studies
-
-The primary measurement campaigns: full methodology, raw results, and the
-reasoning behind each conclusion.
+## Homology and KEGG reconstruction
 
 | Study | Covers |
 |---|---|
 | [Homology cut-off calibration](studies/homology-cutoff-calibration.md) | `min_align_len`, `min_identity`, `max_evalue` in homology-based reconstruction, measured against independent KEGG and OMA ortholog references across a 4-organism relatedness series |
 | [KEGG HMM cut-off calibration](studies/kegg-hmm-cutoff-calibration.md) | `cutoff`, `min_score_ratio_ko`, `min_score_ratio_g` in KEGG HMM-based reconstruction, measured against real KEGG gene→KO annotations across 4 organisms |
-| [Sampling convergence calibration](studies/sampling-convergence-calibration.md) | Between-chain (Gelman-Rubin R-hat) convergence of ACHR/CHRR flux sampling at genome scale |
+
+## Context-specific extraction (INIT / ftINIT)
+
+| Study | Covers |
+|---|---|
 | [INIT parameter calibration](studies/init-param-calibration.md) | `mip_gap`, `time_limit` in INIT/ftINIT, measured on genome-scale Human-GEM (multiple cell lines) |
-| [INIT solver benchmark](studies/init-solver-benchmark.md) | Solver-backend behaviour (Gurobi / GLPK / HiGHS) for the INIT/ftINIT MILP |
 | [ftINIT reproducibility](studies/ftinit-determinism.md) | What `resolve_ties`/`prove_abs_gap` buy (and cost) on genome-scale Human-GEM, and how `reference_reactions` closes most of the remaining stability gap (13x less spurious essential-gene drift after a template edit) |
 | [Human-GEM validation vs MATLAB RAVEN](studies/humangem-validation.md) | raven-toolbox's INIT/ftINIT output validated against MATLAB RAVEN on Human-GEM across 5 cell lines (Jaccard 0.975–0.980) |
 
@@ -98,3 +98,27 @@ cross-toolbox to-do list.
 | Benchmark | Function(s) |
 |---|---|
 | [Parameter benchmarks](benchmarks.md) | `fseof`, `remove_genes`, `connect_blocked_reactions`, `fill_gaps_*`, `check_tasks`, `find_task_essential_reactions` |
+
+```{toctree}
+:hidden:
+
+../tuned-parameters
+benchmarks
+```
+
+```{toctree}
+:hidden:
+:caption: Homology and KEGG reconstruction
+
+studies/homology-cutoff-calibration
+studies/kegg-hmm-cutoff-calibration
+```
+
+```{toctree}
+:hidden:
+:caption: Context-specific extraction (INIT / ftINIT)
+
+studies/init-param-calibration
+studies/ftinit-determinism
+studies/humangem-validation
+```

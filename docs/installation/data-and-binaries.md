@@ -64,30 +64,35 @@ reached only on a machine that has none. The environment variable per tool is
 Downloading on first use puts the download inside the first run, which is not
 always where it should be. Both toolboxes can fetch ahead of that.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    downloadRavenBinaries
-    ```
+```matlab
+downloadRavenBinaries
+```
 
-    Fetches the executables RAVEN needs into its `software/` directory. The KEGG
-    artefacts arrive separately, on the first `getKEGGModelForOrganism` call, into
-    the `dataDir` given there.
+Fetches the executables RAVEN needs into its `software/` directory. The KEGG
+artefacts arrive separately, on the first `getKEGGModelForOrganism` call, into
+the `dataDir` given there.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```bash
+raven-toolbox-binaries --list           # what this platform has bundles for
+raven-toolbox-binaries --set runtime    # blastp, makeblastdb, diamond, hmmsearch
+raven-toolbox-binaries --set build      # hmmbuild, mafft, cd-hit
+```
 
-    ```bash
-    raven-toolbox-binaries --list           # what this platform has bundles for
-    raven-toolbox-binaries --set runtime    # blastp, makeblastdb, diamond, hmmsearch
-    raven-toolbox-binaries --set build      # hmmbuild, mafft, cd-hit
-    ```
+The `runtime` set is what an ordinary reconstruction needs. The `build` set is
+for rebuilding the KEGG HMM libraries, which end users do not do.
 
-    The `runtime` set is what an ordinary reconstruction needs. The `build` set is
-    for rebuilding the KEGG HMM libraries, which end users do not do.
-
-    The command skips anything already on the `PATH`, verifies every download
-    against its checksum, and reports tools with no bundle for this platform
-    rather than failing.
+The command skips anything already on the `PATH`, verifies every download
+against its checksum, and reports tools with no bundle for this platform
+rather than failing.
+:::
+::::
 
 ## Working offline
 
@@ -151,21 +156,22 @@ The bundles carry their upstream licence text, and the terms differ:
 - The **KEGG** artefacts are derived from a licensed KEGG dump and redistributed
   with permission. Using them in published work means citing KEGG.
 
-!!! warning "What can go wrong"
-    - **A machine with no network.** The first reconstruction fails at the
-      download. Fetch on a connected machine, copy `~/.cache/raven_toolbox`, and
-      set `RAVEN_PYTHON_AUTOFETCH=0`.
-    - **An unexpected version of a tool.** The `PATH` takes precedence over the
-      pinned bundle, so a conda environment carrying an old BLAST+ supplies it
-      with no message. Point the `RAVEN_PYTHON_*` variable at the intended
-      binary.
-    - **A read-only or unusual home directory.** The cache follows
-      `XDG_CACHE_HOME`; set it somewhere writable on a shared or containerised
-      machine.
-    - **Trying to build HMM libraries on Windows.** MAFFT and CD-HIT have no
-      Windows builds. Use WSL2, and keep Python and the binaries both inside it.
-    - **Disk.** The HMM libraries are the large item, and the first KEGG model
-      build needs a few hundred MB of working space beyond the download.
+:::{warning} What can go wrong
+- **A machine with no network.** The first reconstruction fails at the
+  download. Fetch on a connected machine, copy `~/.cache/raven_toolbox`, and
+  set `RAVEN_PYTHON_AUTOFETCH=0`.
+- **An unexpected version of a tool.** The `PATH` takes precedence over the
+  pinned bundle, so a conda environment carrying an old BLAST+ supplies it
+  with no message. Point the `RAVEN_PYTHON_*` variable at the intended
+  binary.
+- **A read-only or unusual home directory.** The cache follows
+  `XDG_CACHE_HOME`; set it somewhere writable on a shared or containerised
+  machine.
+- **Trying to build HMM libraries on Windows.** MAFFT and CD-HIT have no
+  Windows builds. Use WSL2, and keep Python and the binaries both inside it.
+- **Disk.** The HMM libraries are the large item, and the first KEGG model
+  build needs a few hundred MB of working space beyond the download.
+:::
 
 ## See also
 

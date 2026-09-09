@@ -43,6 +43,6 @@ on these pages) is the
 [`reconstructionProtocol.m`](https://github.com/SysBioChalmers/hanpo-GEM/blob/main/code/reconstructionProtocol.m)
 script in the hanpo-GEM repository, reproduced here:
 
-```matlab
---8<-- "hanpo-GEM/code/reconstructionProtocol.m"
+```{literalinclude} ../../hanpo-GEM/code/reconstructionProtocol.m
+:language: matlab
 ```

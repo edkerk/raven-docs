@@ -14,11 +14,12 @@ for what it should do.
 `tutorial4_solutions.m`. Many of these checks are also wrapped by the
 `gapReport` function, but doing them step by step is far more instructive.
 
-!!! note
-    Many of these changes are easier to do in the Excel sheet. They are done
-    here in code just to avoid having several model files. It is assumed that
-    you have already completed Tutorials 2–3 and are familiar with
-    linear programming.
+:::{note}
+Many of these changes are easier to do in the Excel sheet. They are done
+here in code just to avoid having several model files. It is assumed that
+you have already completed Tutorials 2–3 and are familiar with
+linear programming.
+:::
 
 ## Step by step
 
@@ -146,6 +147,6 @@ to connect the remaining gaps.
 
 ## Full script
 
-```matlab
---8<-- "RAVEN/tutorial/tutorial4.m"
+```{literalinclude} ../../RAVEN/tutorial/tutorial4.m
+:language: matlab
 ```

@@ -9,18 +9,19 @@ value already established elsewhere in RAVEN). This page gives the short version
 the MATLAB and Python (raven-toolbox) implementations. For the full measurements
 and methodology, follow the linked study.
 
-!!! note "Where the two implementations still differ"
-    RAVEN has existed as MATLAB since 2013 and gained a Python implementation
-    (raven-toolbox) from 2026; a handful of parameters have only been
-    re-measured on one side and haven't yet been ported to the other. Neither
-    implementation's un-measured default was assumed correct going in; where
-    the two disagreed, the answer was to measure, not to defer to whichever
-    came first. Every row below states today's actual value(s); where the two
-    genuinely still differ, both are given, with which side is pending.
-    [Cross-toolbox parity decisions](#cross-toolbox-parity-decisions) below is
-    the full accounting, including the cases that are *deliberately* kept
-    different because the two implementations rest on different solvers or
-    algorithms.
+:::{note} Where the two implementations still differ
+RAVEN has existed as MATLAB since 2013 and gained a Python implementation
+(raven-toolbox) from 2026; a handful of parameters have only been
+re-measured on one side and haven't yet been ported to the other. Neither
+implementation's un-measured default was assumed correct going in; where
+the two disagreed, the answer was to measure, not to defer to whichever
+came first. Every row below states today's actual value(s); where the two
+genuinely still differ, both are given, with which side is pending.
+[Cross-toolbox parity decisions](#cross-toolbox-parity-decisions) below is
+the full accounting, including the cases that are *deliberately* kept
+different because the two implementations rest on different solvers or
+algorithms.
+:::
 
 ## Flux sampling
 
@@ -269,7 +270,6 @@ measured on, and the only one a `time_limit` value does anything on today.
 | `predict_localization.time_limit` | `None` | `maxTime=15` (minutes) | Confirmed by reading `core/predictLocalization.m` directly (2026-08-28): MATLAB solves the problem with simulated annealing (`maxTime` is its search budget; more time generally improves the heuristic answer, no optimality guarantee either way), while Python solves a deterministic MILP (`time_limit` is a solver cutoff; returns a proven-bounded incumbent). The same number plays a structurally different role in each; not a value to unify. Previously listed as a tentative unify-at-`None` candidate, which assumed both sides were solving the same kind of problem. |
 | `predict_localization.default_compartment` | `'c'` | required arg (no default) | MATLAB has no default at all; Python's `'c'` is a convenience default for the near-universal correct choice, produces no output difference (a MATLAB user must already supply `'c'` explicitly in the common case). Optional, low-priority: MATLAB could add the same default. |
 | `run_blast`/`run_diamond`/`run_hmmsearch`/`build_ko_hmm` `threads` | `max(1, cpu_count-1)` | all cores | Confirmed deterministic regardless of thread count; doesn't affect output, so this is a resource-policy choice (leave one core free), not a correctness-relevant value. Both are dynamic ("use available cores") in spirit. |
-
 
 ## Changes needed in MATLAB RAVEN for parity
 

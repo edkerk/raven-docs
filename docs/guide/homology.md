@@ -30,34 +30,39 @@ The template model's id must match the id used for the BLAST. The transfer step
 looks up each hit's source organism by that id to find which template model the
 reaction should come from, so a mismatch leaves every hit unattributable.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    template = readYAMLmodel('smallYeast.yml');
-    template.id = 'sce';
-    fprintf('template: %d rxns, %d genes\n', numel(template.rxns), numel(template.genes));
-    ```
+```matlab
+template = readYAMLmodel('smallYeast.yml');
+template.id = 'sce';
+fprintf('template: %d rxns, %d genes\n', numel(template.rxns), numel(template.genes));
+```
 
-    ```text title="Output"
-    template: 53 rxns, 61 genes
-    ```
+```text
+template: 53 rxns, 61 genes
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+import cobra
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    import cobra
-    from raven_toolbox.io import read_yaml_model
+cobra.Configuration().processes = 1
 
-    cobra.Configuration().processes = 1
+template = read_yaml_model("smallYeast.yml")
+template.id = "sce"
+print(f"template: {len(template.reactions)} rxns, {len(template.genes)} genes")
+```
 
-    template = read_yaml_model("smallYeast.yml")
-    template.id = "sce"
-    print(f"template: {len(template.reactions)} rxns, {len(template.genes)} genes")
-    ```
-
-    ```text title="Output"
-    template: 53 rxns, 61 genes
-    ```
+```text
+template: 53 rxns, 61 genes
+```
+:::
+::::
 
 ## 18.1 BLAST, in both directions
 
@@ -72,39 +77,44 @@ attract hits from genes that do a different job. Searching both ways lets the
 transfer step ask whether two genes pick *each other*, which is a much stronger
 claim than either picking the other alone.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    blastStructure = getBlast('hanpo', 'hanpo.faa', {'sce'}, {'sce-template.faa'});
-    for i = 1:numel(blastStructure)
-        fprintf('%s -> %s: %d hits\n', blastStructure(i).fromId, ...
-            blastStructure(i).toId, numel(blastStructure(i).fromGenes));
-    end
-    ```
+```matlab
+blastStructure = getBlast('hanpo', 'hanpo.faa', {'sce'}, {'sce-template.faa'});
+for i = 1:numel(blastStructure)
+    fprintf('%s -> %s: %d hits\n', blastStructure(i).fromId, ...
+        blastStructure(i).toId, numel(blastStructure(i).fromGenes));
+end
+```
 
-    ```text title="Output"
-    BLASTing "sce" against "hanpo"..
-    BLASTing "hanpo" against "sce"..
-    sce -> hanpo: 159 hits
-    hanpo -> sce: 178 hits
-    ```
+```text
+BLASTing "sce" against "hanpo"..
+BLASTing "hanpo" against "sce"..
+sce -> hanpo: 159 hits
+hanpo -> sce: 178 hits
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.reconstruction.homology import run_blast
 
-    ```python
-    from raven_toolbox.reconstruction.homology import run_blast
+hits = run_blast("hanpo", "hanpo.faa", ["sce"], ["sce-template.faa"])
+print(f"{len(hits)} hits total")
+print(hits.groupby(["from_id", "to_id"]).size().to_string())
+```
 
-    hits = run_blast("hanpo", "hanpo.faa", ["sce"], ["sce-template.faa"])
-    print(f"{len(hits)} hits total")
-    print(hits.groupby(["from_id", "to_id"]).size().to_string())
-    ```
-
-    ```text title="Output"
-    337 hits total
-    from_id  to_id
-    hanpo    sce      178
-    sce      hanpo    159
-    ```
+```text
+337 hits total
+from_id  to_id
+hanpo    sce      178
+sce      hanpo    159
+```
+:::
+::::
 
 The two directions return different counts because they ask different questions:
 159 template genes found a match in *H. polymorpha*, and 178 *H. polymorpha*
@@ -138,33 +148,38 @@ them in the structure the transfer step expects, so no search is run.
 
 ## 18.2 From hits to a draft
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    draft = getModelFromHomology({template}, blastStructure, 'hanpo');
-    fprintf('draft: %d rxns, %d mets, %d genes\n', ...
-        numel(draft.rxns), numel(draft.mets), numel(draft.genes));
-    ```
+```matlab
+draft = getModelFromHomology({template}, blastStructure, 'hanpo');
+fprintf('draft: %d rxns, %d mets, %d genes\n', ...
+    numel(draft.rxns), numel(draft.mets), numel(draft.genes));
+```
 
-    ```text title="Output"
-    Standardizing grRules of template model with ID "sce" ... done
-    draft: 37 rxns, 49 mets, 54 genes
-    ```
+```text
+Standardizing grRules of template model with ID "sce" ... done
+draft: 37 rxns, 49 mets, 54 genes
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.reconstruction.homology import get_model_from_homology
 
-    ```python
-    from raven_toolbox.reconstruction.homology import get_model_from_homology
+result = get_model_from_homology([template], hits, "hanpo")
+draft = result.model
+print(f"draft: {len(draft.reactions)} rxns, {len(draft.metabolites)} mets, "
+      f"{len(draft.genes)} genes")
+```
 
-    result = get_model_from_homology([template], hits, "hanpo")
-    draft = result.model
-    print(f"draft: {len(draft.reactions)} rxns, {len(draft.metabolites)} mets, "
-          f"{len(draft.genes)} genes")
-    ```
-
-    ```text title="Output"
-    draft: 37 rxns, 49 mets, 54 genes
-    ```
+```text
+draft: 37 rxns, 49 mets, 54 genes
+```
+:::
+::::
 
 The transfer works reaction by reaction. For each reaction in the template, the
 genes named in its gene-reaction rule are looked up in the hit table; a template
@@ -221,30 +236,35 @@ candidate hits are broken on bitscore, which unlike the E-value does not depend
 on the size of the database searched, so the choice does not shift when a
 proteome is updated.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    strict = getModelFromHomology({template}, blastStructure, 'hanpo', ...
-        'maxE', 1e-100, 'minLen', 250);
-    fprintf('strict draft: %d rxns, %d genes\n', numel(strict.rxns), numel(strict.genes));
-    ```
+```matlab
+strict = getModelFromHomology({template}, blastStructure, 'hanpo', ...
+    'maxE', 1e-100, 'minLen', 250);
+fprintf('strict draft: %d rxns, %d genes\n', numel(strict.rxns), numel(strict.genes));
+```
 
-    ```text title="Output"
-    Standardizing grRules of template model with ID "sce" ... done
-    strict draft: 32 rxns, 46 genes
-    ```
+```text
+Standardizing grRules of template model with ID "sce" ... done
+strict draft: 32 rxns, 46 genes
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+strict = get_model_from_homology([template], hits, "hanpo",
+                                 max_evalue=1e-100, min_align_len=250).model
+print(f"strict draft: {len(strict.reactions)} rxns, {len(strict.genes)} genes")
+```
 
-    ```python
-    strict = get_model_from_homology([template], hits, "hanpo",
-                                     max_evalue=1e-100, min_align_len=250).model
-    print(f"strict draft: {len(strict.reactions)} rxns, {len(strict.genes)} genes")
-    ```
-
-    ```text title="Output"
-    strict draft: 32 rxns, 46 genes
-    ```
+```text
+strict draft: 32 rxns, 46 genes
+```
+:::
+::::
 
 Raising the two thresholds costs five reactions and eight genes. Whether that is
 an improvement depends on what the draft is for: a model that will be curated
@@ -252,10 +272,11 @@ by hand benefits from the extra candidates, since a wrong reaction is easier to
 spot than a missing one, while a model used directly for prediction is better
 with fewer and better-supported reactions.
 
-!!! note "Reproducing an older reconstruction"
-    Some of these defaults are not the values RAVEN 2 used, so the same script
-    can produce a different draft under RAVEN 3. Set them explicitly, or see
-    [Migrating from RAVEN 2](../raven3-migration.md).
+:::{note} Reproducing an older reconstruction
+Some of these defaults are not the values RAVEN 2 used, so the same script
+can produce a different draft under RAVEN 3. Set them explicitly, or see
+[Migrating from RAVEN 2](../raven3-migration.md).
+:::
 
 ## 18.4 A draft is not a model
 
@@ -263,39 +284,44 @@ What comes out of this step has reactions, metabolites and genes, and nothing
 else. There is no biomass reaction unless a template reaction happened to carry
 one, no exchange reactions, and no guarantee that anything can carry flux.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    exchangeRxns = getExchangeRxns(draft);
-    fprintf('objective set: %d\n', any(draft.c ~= 0));
-    fprintf('exchange reactions: %d\n', numel(exchangeRxns));
-    fprintf('reactions that can carry flux: %d of %d\n', ...
-        sum(haveFlux(draft)), numel(draft.rxns));
-    ```
+```matlab
+exchangeRxns = getExchangeRxns(draft);
+fprintf('objective set: %d\n', any(draft.c ~= 0));
+fprintf('exchange reactions: %d\n', numel(exchangeRxns));
+fprintf('reactions that can carry flux: %d of %d\n', ...
+    sum(haveFlux(draft)), numel(draft.rxns));
+```
 
-    ```text title="Output"
-    objective set: 0
-    exchange reactions: 0
-    reactions that can carry flux: 0 of 37
-    ```
+```text
+objective set: 0
+exchange reactions: 0
+reactions that can carry flux: 0 of 37
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from cobra.flux_analysis import find_blocked_reactions
 
-    ```python
-    from cobra.flux_analysis import find_blocked_reactions
+blocked = find_blocked_reactions(draft)
+print(f"objective set: {str(draft.objective.expression) != '0'}")
+print(f"exchange reactions: {len(draft.boundary)}")
+print(f"reactions that can carry flux: {len(draft.reactions) - len(blocked)} "
+      f"of {len(draft.reactions)}")
+```
 
-    blocked = find_blocked_reactions(draft)
-    print(f"objective set: {str(draft.objective.expression) != '0'}")
-    print(f"exchange reactions: {len(draft.boundary)}")
-    print(f"reactions that can carry flux: {len(draft.reactions) - len(blocked)} "
-          f"of {len(draft.reactions)}")
-    ```
-
-    ```text title="Output"
-    objective set: False
-    exchange reactions: 0
-    reactions that can carry flux: 0 of 37
-    ```
+```text
+objective set: False
+exchange reactions: 0
+reactions that can carry flux: 0 of 37
+```
+:::
+::::
 
 None of the 37 reactions can carry flux. This is not a defect in the draft: with
 no exchange reactions there is no way for anything to enter or leave the system,
@@ -311,20 +337,21 @@ what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
 [GEM reconstruction protocol](../protocol/index.md) follows that path for
 *H. polymorpha* at full scale.
 
-!!! warning "What can go wrong"
-    - **Identifiers that do not match.** The FASTA headers must carry the same
-      gene ids as the template model's `genes`. A mismatch produces a draft with
-      no reactions and no error.
-    - **One template, one organism's biases.** Every reaction in the draft comes
-      from the template, so anything the template lacks the draft cannot have.
-      Several templates, with `preferredOrder`, spread that risk.
-    - **Reading absence as evidence.** A reaction left out means no acceptable
-      hit was found, not that the organism lacks the capability. Sequencing
-      gaps, divergent sequences and short proteins all look the same here.
-    - **Full proteomes are slow.** The example on this page finishes in seconds
-      because the template proteome is 61 sequences. Two complete proteomes take
-      minutes to hours with BLASTP; that is what `getDiamond` and `run_diamond`
-      are for.
+:::{warning} What can go wrong
+- **Identifiers that do not match.** The FASTA headers must carry the same
+  gene ids as the template model's `genes`. A mismatch produces a draft with
+  no reactions and no error.
+- **One template, one organism's biases.** Every reaction in the draft comes
+  from the template, so anything the template lacks the draft cannot have.
+  Several templates, with `preferredOrder`, spread that risk.
+- **Reading absence as evidence.** A reaction left out means no acceptable
+  hit was found, not that the organism lacks the capability. Sequencing
+  gaps, divergent sequences and short proteins all look the same here.
+- **Full proteomes are slow.** The example on this page finishes in seconds
+  because the template proteome is 61 sequences. Two complete proteomes take
+  minutes to hours with BLASTP; that is what `getDiamond` and `run_diamond`
+  are for.
+:::
 
 ## See also
 

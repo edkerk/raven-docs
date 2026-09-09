@@ -33,10 +33,21 @@ folder of the RAVEN repository.
 - Tutorials 2, 3 and 4 ship with a `*_solutions.m` companion script containing
   the completed exercise.
 
-!!! tip "Python users"
-    The reconstruction concepts carry over directly to raven-toolbox, but the
-    function names are not always a mechanical `snake_case` rewrite; some RAVEN
-    functions map to cobrapy instead (`solveLP` → `model.optimize()`), and some
-    have no Python counterpart at all (there is no Excel reader). Look each one up
-    in the [API reference](../api/index.md), and see
-    [RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
+:::{tip} Python users
+The reconstruction concepts carry over directly to raven-toolbox, but the
+function names are not always a mechanical `snake_case` rewrite; some RAVEN
+functions map to cobrapy instead (`solveLP` → `model.optimize()`), and some
+have no Python counterpart at all (there is no Excel reader). Look each one up
+in the [API reference](../api/index.md), and see
+[RAVEN 3 and raven-toolbox](../raven3-vs-raven-toolbox.md) for what maps where.
+:::
+
+```{toctree}
+:hidden:
+
+tutorial1
+tutorial2
+tutorial3
+tutorial4
+tutorial5
+```

@@ -13,40 +13,45 @@ is usually 0, usually 10, or evenly spread; a sample does.
 | `sampleACHR` | `random_sampling` (`method='achr'`) | hit-and-run MCMC, the default |
 | `sampleCHRR` | `random_sampling` (`method='chrr'`) | hit-and-run with rounding, for thin polytopes |
 | no equivalent | `find_good_reactions` | reactions usable as random objectives |
-| `getAllowedBounds` | `flux_variability_analysis` <span class="cobrapy-tag">cobrapy</span> | the ranges sampling fills in |
+| `getAllowedBounds` | `flux_variability_analysis` {bdg-secondary}`cobrapy` | the ranges sampling fills in |
 
 ## Setup
 
 The same glucose-limited `smallYeast.yml` as [14. Flux variability](fva.md), so
 the two pages can be read against each other.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = readYAMLmodel('smallYeast.yml');
-    model = setParam(model, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
-    model = setParam(model, 'obj', 'biomassOUT', 1);
-    ```
+```matlab
+model = readYAMLmodel('smallYeast.yml');
+model = setParam(model, 'ub', {'glcIN', 'o2IN'}, [1 1000]);
+model = setParam(model, 'obj', 'biomassOUT', 1);
+```
 
-    ```text title="Output"
-    ```
+```text
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+import cobra
+from raven_toolbox.io import read_yaml_model
 
-    ```python
-    import cobra
-    from raven_toolbox.io import read_yaml_model
+cobra.Configuration().processes = 1
 
-    cobra.Configuration().processes = 1
+model = read_yaml_model("smallYeast.yml")
+model.reactions.get_by_id("glcIN").upper_bound = 1.0
+model.reactions.get_by_id("o2IN").upper_bound = 1000.0
+model.objective = "biomassOUT"
+```
 
-    model = read_yaml_model("smallYeast.yml")
-    model.reactions.get_by_id("glcIN").upper_bound = 1.0
-    model.reactions.get_by_id("o2IN").upper_bound = 1000.0
-    model.objective = "biomassOUT"
-    ```
-
-    ```text title="Output"
-    ```
+```text
+```
+:::
+::::
 
 ## 15.1 A first sample
 
@@ -61,37 +66,43 @@ slightly different walk: running this page on both put `FRDS2`'s sampled
 minimum at 19.0 and at 18.8. That is why the numbers below are printed to two
 decimals: the distribution is the result, the individual draws are not.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    solutions = randomSampling(model, 200, 'seed', 1);
-    fprintf('%d reactions x %d samples\n', size(solutions, 1), size(solutions, 2));
-    ```
+```matlab
+solutions = randomSampling(model, 200, 'seed', 1);
+fprintf('%d reactions x %d samples\n', size(solutions, 1), size(solutions, 2));
+```
 
-    ```text title="Output"
-    53 reactions x 200 samples
-    ```
+```text
+53 reactions x 200 samples
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.analysis import random_sampling
 
-    ```python
-    from raven_toolbox.analysis import random_sampling
+result = random_sampling(model, 200, seed=1)
+print(f"{result.samples.shape[0]} samples x {result.samples.shape[1]} reactions")
+print(f"method: {result.method}")
+```
 
-    result = random_sampling(model, 200, seed=1)
-    print(f"{result.samples.shape[0]} samples x {result.samples.shape[1]} reactions")
-    print(f"method: {result.method}")
-    ```
+```text
+200 samples x 53 reactions
+method: achr
+```
+:::
+::::
 
-    ```text title="Output"
-    200 samples x 53 reactions
-    method: achr
-    ```
-
-!!! warning "The two are transposed"
-    RAVEN returns **reactions × samples**; raven-toolbox returns a DataFrame of
-    **samples × reactions**, the `cobra.sampling` layout. Every mean, histogram
-    and correlation you compute has to pick the right axis, and getting it wrong
-    is silent; you get numbers, just not the ones you meant.
+:::{warning} The two are transposed
+RAVEN returns **reactions × samples**; raven-toolbox returns a DataFrame of
+**samples × reactions**, the `cobra.sampling` layout. Every mean, histogram
+and correlation you compute has to pick the right axis, and getting it wrong
+is silent; you get numbers, just not the ones you meant.
+:::
 
 ## 15.2 What a distribution says that a range does not
 
@@ -100,35 +111,40 @@ range in this model, 1000 units, and that all of it is a thermodynamically
 infeasible cycle. Sampling does not remove that; it shows how much of the space
 the cycle occupies.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    idx = getIndexes(model, {'FRDS2', 'biomassOUT'}, 'rxns');
-    fprintf('FRDS2  sampled %.0f to %.0f\n', ...
-        min(solutions(idx(1), :)), max(solutions(idx(1), :)));
-    fprintf('growth sampled %.2f to %.2f, mean %.2f\n', ...
-        min(solutions(idx(2), :)), max(solutions(idx(2), :)), mean(solutions(idx(2), :)));
-    ```
+```matlab
+idx = getIndexes(model, {'FRDS2', 'biomassOUT'}, 'rxns');
+fprintf('FRDS2  sampled %.0f to %.0f\n', ...
+    min(solutions(idx(1), :)), max(solutions(idx(1), :)));
+fprintf('growth sampled %.2f to %.2f, mean %.2f\n', ...
+    min(solutions(idx(2), :)), max(solutions(idx(2), :)), mean(solutions(idx(2), :)));
+```
 
-    ```text title="Output"
-    FRDS2  sampled 19 to 1000
-    growth sampled 0.01 to 0.10, mean 0.05
-    ```
+```text
+FRDS2  sampled 19 to 1000
+growth sampled 0.01 to 0.10, mean 0.05
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+frds2 = result.samples["FRDS2"]
+growth = result.samples["biomassOUT"]
+print(f"FRDS2  sampled {frds2.min():.0f} to {frds2.max():.0f}")
+print(f"growth sampled {growth.min():.2f} to {growth.max():.2f}, "
+      f"mean {growth.mean():.2f}")
+```
 
-    ```python
-    frds2 = result.samples["FRDS2"]
-    growth = result.samples["biomassOUT"]
-    print(f"FRDS2  sampled {frds2.min():.0f} to {frds2.max():.0f}")
-    print(f"growth sampled {growth.min():.2f} to {growth.max():.2f}, "
-          f"mean {growth.mean():.2f}")
-    ```
-
-    ```text title="Output"
-    FRDS2  sampled 1 to 998
-    growth sampled 0.01 to 0.09, mean 0.05
-    ```
+```text
+FRDS2  sampled 1 to 998
+growth sampled 0.01 to 0.09, mean 0.05
+```
+:::
+::::
 
 The two tabs are separate implementations with separate random number
 generators, so their numbers are not expected to match draw for draw, but they
@@ -153,37 +169,42 @@ random objective each time, so it returns **vertices** rather than interior
 points. Vertices are what FBA gives you, which makes that method a way to survey
 alternative optima rather than to describe the space.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    [chrrSolutions, ~, info] = randomSampling(model, 200, 'method', 'chrr', 'seed', 1);
-    fprintf('chrr: %d dimensions, MVE converged: %d, %d fixed\n', ...
-        info.nDimensions, info.mveConverged, numel(info.fixedRxns));
-    ```
+```matlab
+[chrrSolutions, ~, info] = randomSampling(model, 200, 'method', 'chrr', 'seed', 1);
+fprintf('chrr: %d dimensions, MVE converged: %d, %d fixed\n', ...
+    info.nDimensions, info.mveConverged, numel(info.fixedRxns));
+```
 
-    ```text title="Output"
-    [Warning: The maximum-volume ellipsoid rounding did not converge; the samples may be poorly mixed. Inspect the mveConverged field of the second output.]
-    chrr: 9 dimensions, MVE converged: 0, 1 fixed
-    ```
+```text
+[Warning: The maximum-volume ellipsoid rounding did not converge; the samples may be poorly mixed. Inspect the mveConverged field of the second output.]
+chrr: 9 dimensions, MVE converged: 0, 1 fixed
+```
 
-    On RAVEN before [#696](https://github.com/SysBioChalmers/RAVEN/pull/696) this
-    call failed on `smallYeast` with `sampleChebyshevCenter: LP infeasible - flux
-    polytope has empty interior`. The polytope was fine; the equality system is
-    square and rank-deficient there, and the particular solution came back `NaN`.
-    If you see that error, update RAVEN.
+On RAVEN before [#696](https://github.com/SysBioChalmers/RAVEN/pull/696) this
+call failed on `smallYeast` with `sampleChebyshevCenter: LP infeasible - flux
+polytope has empty interior`. The polytope was fine; the equality system is
+square and rank-deficient there, and the particular solution came back `NaN`.
+If you see that error, update RAVEN.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+chrr = random_sampling(model, 200, method="chrr", seed=1)
+print(f"chrr: {chrr.n_dimensions} dimensions, "
+      f"MVE converged: {chrr.mve_converged}, "
+      f"{len(chrr.fixed_reactions)} fixed")
+```
 
-    ```python
-    chrr = random_sampling(model, 200, method="chrr", seed=1)
-    print(f"chrr: {chrr.n_dimensions} dimensions, "
-          f"MVE converged: {chrr.mve_converged}, "
-          f"{len(chrr.fixed_reactions)} fixed")
-    ```
-
-    ```text title="Output"
-    chrr: 9 dimensions, MVE converged: False, 1 fixed
-    ```
+```text
+chrr: 9 dimensions, MVE converged: False, 1 fixed
+```
+:::
+::::
 
 The dimension is a property of the polytope, not of the sampler: it is how many
 degrees of freedom the network really has once the implicitly-determined
@@ -202,34 +223,39 @@ Sampling an unconstrained model answers "what could this network do?", which is
 rarely the question. The useful version is to constrain first (hold growth near
 its optimum, fix a measured flux) and sample the space that is left.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    sol = solveLP(model);
-    atOptimum = setParam(model, 'lb', 'biomassOUT', 0.9 * sol.f);
-    constrained = randomSampling(atOptimum, 200, 'seed', 1);
-    ethIdx = getIndexes(model, 'ethOUT', 'rxns');
-    fprintf('ethanol: free %.2f, at 90%% growth %.2f\n', ...
-        mean(solutions(ethIdx, :)), mean(constrained(ethIdx, :)));
-    ```
+```matlab
+sol = solveLP(model);
+atOptimum = setParam(model, 'lb', 'biomassOUT', 0.9 * sol.f);
+constrained = randomSampling(atOptimum, 200, 'seed', 1);
+ethIdx = getIndexes(model, 'ethOUT', 'rxns');
+fprintf('ethanol: free %.2f, at 90%% growth %.2f\n', ...
+    mean(solutions(ethIdx, :)), mean(constrained(ethIdx, :)));
+```
 
-    ```text title="Output"
-    ethanol: free 0.80, at 90% growth 0.04
-    ```
+```text
+ethanol: free 0.80, at 90% growth 0.04
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+at_optimum = model.copy()
+at_optimum.reactions.get_by_id("biomassOUT").lower_bound = 0.9 * model.slim_optimize()
+constrained = random_sampling(at_optimum, 200, seed=1)
+print(f"ethanol: free {result.samples['ethOUT'].mean():.2f}, "
+      f"at 90% growth {constrained.samples['ethOUT'].mean():.2f}")
+```
 
-    ```python
-    at_optimum = model.copy()
-    at_optimum.reactions.get_by_id("biomassOUT").lower_bound = 0.9 * model.slim_optimize()
-    constrained = random_sampling(at_optimum, 200, seed=1)
-    print(f"ethanol: free {result.samples['ethOUT'].mean():.2f}, "
-          f"at 90% growth {constrained.samples['ethOUT'].mean():.2f}")
-    ```
-
-    ```text title="Output"
-    ethanol: free 0.72, at 90% growth 0.04
-    ```
+```text
+ethanol: free 0.72, at 90% growth 0.04
+```
+:::
+::::
 
 ## 15.5 Which reactions to sample over
 
@@ -238,49 +264,55 @@ objectives. Reactions that move only through a loop are useless for that, so
 both toolboxes screen them out with a loopless FVA first, the same test
 [14. Flux variability](fva.md) used by hand.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    [~, goodRxns] = randomSampling(model, 20, 'method', 'randomObjective', 'seed', 1);
-    fprintf('%d of %d reactions usable as objectives\n', numel(goodRxns), numel(model.rxns));
-    ```
+```matlab
+[~, goodRxns] = randomSampling(model, 20, 'method', 'randomObjective', 'seed', 1);
+fprintf('%d of %d reactions usable as objectives\n', numel(goodRxns), numel(model.rxns));
+```
 
-    ```text title="Output"
-    50 of 53 reactions usable as objectives
-    ```
+```text
+50 of 53 reactions usable as objectives
+```
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.analysis import find_good_reactions
 
-    ```python
-    from raven_toolbox.analysis import find_good_reactions
+good = find_good_reactions(model)
+print(f"{len(good)} of {len(model.reactions)} reactions usable as objectives")
+```
 
-    good = find_good_reactions(model)
-    print(f"{len(good)} of {len(model.reactions)} reactions usable as objectives")
-    ```
+```text
+50 of 53 reactions usable as objectives
+```
 
-    ```text title="Output"
-    50 of 53 reactions usable as objectives
-    ```
+Passing the list back as `good_reactions=` on a later call skips the FVA,
+which on a genome-scale model skips the expensive part of the run.
+:::
+::::
 
-    Passing the list back as `good_reactions=` on a later call skips the FVA,
-    which on a genome-scale model skips the expensive part of the run.
-
-!!! warning "What can go wrong"
-    - **No seed.** The numbers change every run. Set one, and report it, and do
-      not expect a seed alone to reproduce a MATLAB chain on another machine
-      (see 15.1). Report the distribution, not the draws.
-    - **Too little thinning.** Consecutive MCMC steps are correlated; the default
-      of 100 steps between recorded samples exists for that reason. Lowering it
-      gains speed and loses independence.
-    - **Reading a mean as a prediction.** The mean of a sample describes the
-      *feasible space*, not the cell. A reaction can average 5 while no
-      individual feasible state puts it near 5.
-    - **Sampling a model that is wide open.** With an unconstrained medium the
-      space is enormous and the distribution says nothing. Constrain first.
-    - **Loops.** They inflate the space being sampled, and every sample drawn
-      inside a cycle is wasted. See [14. Flux variability](fva.md).
-    - **Genome-scale cost.** Sampling is many LPs per recorded sample. Start with
-      a few hundred samples to see the shape, not tens of thousands.
+:::{warning} What can go wrong
+- **No seed.** The numbers change every run. Set one, and report it, and do
+  not expect a seed alone to reproduce a MATLAB chain on another machine
+  (see 15.1). Report the distribution, not the draws.
+- **Too little thinning.** Consecutive MCMC steps are correlated; the default
+  of 100 steps between recorded samples exists for that reason. Lowering it
+  gains speed and loses independence.
+- **Reading a mean as a prediction.** The mean of a sample describes the
+  *feasible space*, not the cell. A reaction can average 5 while no
+  individual feasible state puts it near 5.
+- **Sampling a model that is wide open.** With an unconstrained medium the
+  space is enormous and the distribution says nothing. Constrain first.
+- **Loops.** They inflate the space being sampled, and every sample drawn
+  inside a cycle is wasted. See [14. Flux variability](fva.md).
+- **Genome-scale cost.** Sampling is many LPs per recorded sample. Start with
+  a few hundred samples to see the shape, not tens of thousands.
+:::
 
 ## See also
 

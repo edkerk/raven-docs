@@ -8,10 +8,10 @@ a condition as reviewable data instead of a paragraph of bound-setting code.
 
 | MATLAB | Python | |
 |---|---|---|
-| `getExchangeRxns` | `Model.exchanges` <span class="cobrapy-tag">cobrapy</span> | find the exchange reactions |
-| `setExchangeBounds` | `Model.medium` <span class="cobrapy-tag">cobrapy</span> | set a whole medium, closing the rest |
+| `getExchangeRxns` | `Model.exchanges` {bdg-secondary}`cobrapy` | find the exchange reactions |
+| `setExchangeBounds` | `Model.medium` {bdg-secondary}`cobrapy` | set a whole medium, closing the rest |
 | `setParam` | `set_reaction_bounds` | set one reaction's bounds |
-| `getMinimalMedium` | `minimal_medium` <span class="cobrapy-tag">cobrapy</span> | the smallest medium that still supports growth |
+| `getMinimalMedium` | `minimal_medium` {bdg-secondary}`cobrapy` | the smallest medium that still supports growth |
 | `applyCondition` | `apply_condition`, `load_condition` | apply a condition file |
 
 ## Setup
@@ -25,143 +25,154 @@ An exchange reaction connects a boundary metabolite to nothing, so its flux is
 the rate at which that metabolite enters (negative) or leaves (positive) the
 system. The medium is exactly the set of exchanges with a negative lower bound.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = importModel('yeast-GEM.xml');
-    [exchangeRxns, exchangeIdx] = getExchangeRxns(model);
-    fprintf('%d exchange reactions\n', numel(exchangeRxns));
+```matlab
+model = importModel('yeast-GEM.xml');
+[exchangeRxns, exchangeIdx] = getExchangeRxns(model);
+fprintf('%d exchange reactions\n', numel(exchangeRxns));
 
-    open = sort(exchangeIdx(model.lb(exchangeIdx) < 0));
-    for i = 1:numel(open)
-        fprintf('  %s  %-28s %8.1f\n', model.rxns{open(i)}, ...
-            model.rxnNames{open(i)}, -model.lb(open(i)));
-    end
-    ```
+open = sort(exchangeIdx(model.lb(exchangeIdx) < 0));
+for i = 1:numel(open)
+    fprintf('  %s  %-28s %8.1f\n', model.rxns{open(i)}, ...
+        model.rxnNames{open(i)}, -model.lb(open(i)));
+end
+```
 
-    ```text title="Output"
-    [Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
-    [Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
-    273 exchange reactions
-      r_1654  ammonium exchange              1000.0
-      r_1714  D-glucose exchange                1.0
-      r_1832  H+ exchange                    1000.0
-      r_1861  iron(2+) exchange              1000.0
-      r_1992  oxygen exchange                1000.0
-      r_2005  phosphate exchange             1000.0
-      r_2020  potassium exchange             1000.0
-      r_2049  sodium exchange                1000.0
-      r_2060  sulphate exchange              1000.0
-      r_2100  water exchange                 1000.0
-      r_4593  chloride exchange              1000.0
-      r_4594  Cu2(+) exchange                1000.0
-      r_4595  Mn(2+) exchange                1000.0
-      r_4596  Zn(2+) exchange                1000.0
-      r_4597  Mg(2+) exchange                1000.0
-      r_4600  Ca(2+) exchange                1000.0
-    ```
+```text
+[Warning: The following fields have prefixes removed from all entries. If this is undesired, run importModel with removePrefix as false. Example: importModel('filename.xml',[],false);]
+[Warning: The following MIRIAM strings are associated to more than one unique metabolite name: bigg.metabolite/ficytb5 bigg.metabolite/hdd2coa bigg.metabolite/pail_cho bigg.metabolite/pchol_cho bigg.metabolite/succ bigg.metabolite/tchola chebi/CHEBI:138108 chebi/CHEBI:17140 chebi/CHEBI:18097 ...and 23 more]
+273 exchange reactions
+  r_1654  ammonium exchange              1000.0
+  r_1714  D-glucose exchange                1.0
+  r_1832  H+ exchange                    1000.0
+  r_1861  iron(2+) exchange              1000.0
+  r_1992  oxygen exchange                1000.0
+  r_2005  phosphate exchange             1000.0
+  r_2020  potassium exchange             1000.0
+  r_2049  sodium exchange                1000.0
+  r_2060  sulphate exchange              1000.0
+  r_2100  water exchange                 1000.0
+  r_4593  chloride exchange              1000.0
+  r_4594  Cu2(+) exchange                1000.0
+  r_4595  Mn(2+) exchange                1000.0
+  r_4596  Zn(2+) exchange                1000.0
+  r_4597  Mg(2+) exchange                1000.0
+  r_4600  Ca(2+) exchange                1000.0
+```
 
-    `getExchangeRxns` identifies an exchange by its stoichiometry, as a reaction
-    with no substrates or no products, so it does not depend on a naming
-    convention. Its `reactionType` argument can filter by bounds instead of
-    returning all of them: `'uptake'`, `'excrete'`, `'reverse'` and `'blocked'`
-    classify a reaction by what its bounds permit, while `'in'` and `'out'`
-    classify by which side the boundary metabolite sits on and ignore the bounds
-    entirely.
+`getExchangeRxns` identifies an exchange by its stoichiometry, as a reaction
+with no substrates or no products, so it does not depend on a naming
+convention. Its `reactionType` argument can filter by bounds instead of
+returning all of them: `'uptake'`, `'excrete'`, `'reverse'` and `'blocked'`
+classify a reaction by what its bounds permit, while `'in'` and `'out'`
+classify by which side the boundary metabolite sits on and ignore the bounds
+entirely.
 
-    The filter above is written by hand rather than as `'uptake'` because the two
-    ask different questions. `'uptake'` returns reactions that can *only* take
-    up; every open exchange in yeast-GEM also has an upper bound of 1000, so it
-    can secrete as well and is classified `'reverse'`. Selecting on
-    `model.lb < 0` is what "the medium" means here.
+The filter above is written by hand rather than as `'uptake'` because the two
+ask different questions. `'uptake'` returns reactions that can *only* take
+up; every open exchange in yeast-GEM also has an upper bound of 1000, so it
+can secrete as well and is classified `'reverse'`. Selecting on
+`model.lb < 0` is what "the medium" means here.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from cobra.io import read_sbml_model
 
-    ```python
-    from cobra.io import read_sbml_model
+model = read_sbml_model("yeast-GEM.xml")
+shipped = dict(model.medium)          # keep it; later steps restore from here
+print(len(model.exchanges), "exchange reactions")
 
-    model = read_sbml_model("yeast-GEM.xml")
-    shipped = dict(model.medium)          # keep it; later steps restore from here
-    print(len(model.exchanges), "exchange reactions")
+for rxn_id, uptake in sorted(model.medium.items()):
+    print(f"  {rxn_id}  {model.reactions.get_by_id(rxn_id).name:<28} {uptake:>8}")
+```
 
-    for rxn_id, uptake in sorted(model.medium.items()):
-        print(f"  {rxn_id}  {model.reactions.get_by_id(rxn_id).name:<28} {uptake:>8}")
-    ```
+```text
+270 exchange reactions
+  r_1654  ammonium exchange              1000.0
+  r_1714  D-glucose exchange                1.0
+  r_1832  H+ exchange                    1000.0
+  r_1861  iron(2+) exchange              1000.0
+  r_1992  oxygen exchange                1000.0
+  r_2005  phosphate exchange             1000.0
+  r_2020  potassium exchange             1000.0
+  r_2049  sodium exchange                1000.0
+  r_2060  sulphate exchange              1000.0
+  r_2100  water exchange                 1000.0
+  r_4593  chloride exchange              1000.0
+  r_4594  Cu2(+) exchange                1000.0
+  r_4595  Mn(2+) exchange                1000.0
+  r_4596  Zn(2+) exchange                1000.0
+  r_4597  Mg(2+) exchange                1000.0
+  r_4600  Ca(2+) exchange                1000.0
+```
 
-    ```text title="Output"
-    270 exchange reactions
-      r_1654  ammonium exchange              1000.0
-      r_1714  D-glucose exchange                1.0
-      r_1832  H+ exchange                    1000.0
-      r_1861  iron(2+) exchange              1000.0
-      r_1992  oxygen exchange                1000.0
-      r_2005  phosphate exchange             1000.0
-      r_2020  potassium exchange             1000.0
-      r_2049  sodium exchange                1000.0
-      r_2060  sulphate exchange              1000.0
-      r_2100  water exchange                 1000.0
-      r_4593  chloride exchange              1000.0
-      r_4594  Cu2(+) exchange                1000.0
-      r_4595  Mn(2+) exchange                1000.0
-      r_4596  Zn(2+) exchange                1000.0
-      r_4597  Mg(2+) exchange                1000.0
-      r_4600  Ca(2+) exchange                1000.0
-    ```
+`model.medium` is a dict of `{exchange id: maximum uptake rate}`, given as a
+**positive** number; cobrapy flips the sign for you, so a medium entry of
+`1.0` means a lower bound of `-1.0`. It lists only the exchanges that are
+open, which is why the loop above prints 16 rows out of 270 reactions.
+:::
+::::
 
-    `model.medium` is a dict of `{exchange id: maximum uptake rate}`, given as a
-    **positive** number; cobrapy flips the sign for you, so a medium entry of
-    `1.0` means a lower bound of `-1.0`. It lists only the exchanges that are
-    open, which is why the loop above prints 16 rows out of 270 reactions.
-
-!!! note "270 or 273?"
-    The two toolboxes count exchange reactions differently, and both are right.
-    cobrapy sorts single-metabolite reactions into `exchanges`, `demands` and
-    `sinks`; `getExchangeRxns` returns all of them together. In yeast-GEM the
-    difference is three reactions: `r_2111` (growth) and the sinks `r_4062` and
-    `r_4064`, so MATLAB reports 273 where `model.exchanges` reports 270.
+:::{note} 270 or 273?
+The two toolboxes count exchange reactions differently, and both are right.
+cobrapy sorts single-metabolite reactions into `exchanges`, `demands` and
+`sinks`; `getExchangeRxns` returns all of them together. In yeast-GEM the
+difference is three reactions: `r_2111` (growth) and the sinks `r_4062` and
+`r_4064`, so MATLAB reports 273 where `model.exchanges` reports 270.
+:::
 
 ## 5.2 Change one nutrient
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
-    sol = solveLP(model);
-    idx = getIndexes(model, 'r_1714', 'rxns');
-    fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), sol.f);
-    ```
+```matlab
+model = setParam(model, 'lb', 'r_1714', -10);   % D-glucose exchange
+sol = solveLP(model);
+idx = getIndexes(model, 'r_1714', 'rxns');
+fprintf('[%g %g] -> %.4f /h\n', model.lb(idx), model.ub(idx), sol.f);
+```
 
-    ```text title="Output"
-    [-10 1000] -> 0.8370 /h
-    ```
+```text
+[-10 1000] -> 0.8370 /h
+```
 
-    `setParam` takes a reaction id, a list of ids, or indices, and applies one
-    value to all of them or one value each. `'lb'`, `'ub'` and `'eq'` set bounds;
-    `'obj'` sets the objective coefficient.
+`setParam` takes a reaction id, a list of ids, or indices, and applies one
+value to all of them or one value each. `'lb'`, `'ub'` and `'eq'` set bounds;
+`'obj'` sets the objective coefficient.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.conditions import set_reaction_bounds
 
-    ```python
-    from raven_toolbox.conditions import set_reaction_bounds
+glucose = model.reactions.get_by_id("r_1714")
+set_reaction_bounds(glucose, -10.0, 1000.0)
+print(glucose.bounds, "->", f"{model.slim_optimize():.4f} /h")
+```
 
-    glucose = model.reactions.get_by_id("r_1714")
-    set_reaction_bounds(glucose, -10.0, 1000.0)
-    print(glucose.bounds, "->", f"{model.slim_optimize():.4f} /h")
-    ```
+```text
+(-10.0, 1000.0) -> 0.8370 /h
+```
 
-    ```text title="Output"
-    (-10.0, 1000.0) -> 0.8370 /h
-    ```
+`reaction.bounds = (-10.0, 1000.0)` does the same thing for ordinary edits.
+`set_reaction_bounds` exists for the case cobrapy refuses: it writes the
+underlying attributes directly, so a condition can land on `lb > ub`, which
+cobrapy's own setter rejects as invalid. Conditions use that to force flux
+through a reaction with a sentinel bound.
 
-    `reaction.bounds = (-10.0, 1000.0)` does the same thing for ordinary edits.
-    `set_reaction_bounds` exists for the case cobrapy refuses: it writes the
-    underlying attributes directly, so a condition can land on `lb > ub`, which
-    cobrapy's own setter rejects as invalid. Conditions use that to force flux
-    through a reaction with a sentinel bound.
-
-    `slim_optimize` returns the objective value alone, without building a full
-    `Solution`, which is the cheaper call inside a loop over many bound
-    settings.
+`slim_optimize` returns the objective value alone, without building a full
+`Solution`, which is the cheaper call inside a loop over many bound
+settings.
+:::
+::::
 
 ## 5.3 Define a whole medium
 
@@ -169,68 +180,73 @@ Assigning to the medium is **not** a patch: everything not in the dict is closed
 That makes it the right tool for "this exact recipe and nothing else", and the
 wrong one for "the shipped medium, but with more glucose".
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    ```matlab
-    % every uptake closed
-    [~, exchIdx] = getExchangeRxns(model);
-    modelClosed = setParam(model, 'lb', model.rxns(exchIdx), 0);
-    sol = solveLP(modelClosed);
-    fprintf('growth with nothing to eat: %.4f /h\n', sol.f);
+```matlab
+% every uptake closed
+[~, exchIdx] = getExchangeRxns(model);
+modelClosed = setParam(model, 'lb', model.rxns(exchIdx), 0);
+sol = solveLP(modelClosed);
+fprintf('growth with nothing to eat: %.4f /h\n', sol.f);
 
-    % the shipped recipe, with more glucose
-    model = setParam(model, 'lb', 'r_1714', -10);
-    sol = solveLP(model);
-    fprintf('complete medium:           %.4f /h\n', sol.f);
-    ```
+% the shipped recipe, with more glucose
+model = setParam(model, 'lb', 'r_1714', -10);
+sol = solveLP(model);
+fprintf('complete medium:           %.4f /h\n', sol.f);
+```
 
-    ```text title="Output"
-    growth with nothing to eat:  /h
-    complete medium:           0.8370 /h
-    ```
+```text
+growth with nothing to eat:  /h
+complete medium:           0.8370 /h
+```
 
-    The first line prints no number at all. With every uptake closed the LP is
-    infeasible, and `solveLP` returns `sol.f` as an empty array with `sol.stat`
-    set to `-1`; `fprintf` prints nothing for an empty argument. Check `sol.stat`
-    rather than the value, as in [4. Simulating growth with FBA](fba.md).
+The first line prints no number at all. With every uptake closed the LP is
+infeasible, and `solveLP` returns `sol.f` as an empty array with `sol.stat`
+set to `-1`; `fprintf` prints nothing for an empty argument. Check `sol.stat`
+rather than the value, as in [4. Simulating growth with FBA](fba.md).
 
-    `setExchangeBounds` is the closer counterpart to assigning `model.medium`. It
-    takes **metabolites** rather than reaction ids, sets their exchange bounds,
-    and with its default `closeOthers` shuts every other uptake, which is the
-    replace-the-whole-recipe behaviour. `mediaOnly` restricts it to the
-    extracellular compartment, so intracellular sink reactions are left alone.
+`setExchangeBounds` is the closer counterpart to assigning `model.medium`. It
+takes **metabolites** rather than reaction ids, sets their exchange bounds,
+and with its default `closeOthers` shuts every other uptake, which is the
+replace-the-whole-recipe behaviour. `mediaOnly` restricts it to the
+extracellular compartment, so intracellular sink reactions are left alone.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+with model:
+    model.medium = {}                             # every uptake closed
+    print(f"growth with nothing to eat: {model.slim_optimize():.4f} /h")
 
-    ```python
-    with model:
-        model.medium = {}                             # every uptake closed
-        print(f"growth with nothing to eat: {model.slim_optimize():.4f} /h")
+with model:
+    model.medium = {"r_1714": 10.0, "r_1992": 1000.0}   # only glucose and oxygen
+    print(f"glucose and oxygen alone:  {model.slim_optimize():.4f} /h")
 
-    with model:
-        model.medium = {"r_1714": 10.0, "r_1992": 1000.0}   # only glucose and oxygen
-        print(f"glucose and oxygen alone:  {model.slim_optimize():.4f} /h")
+model.medium = {**shipped, "r_1714": 10.0}        # the shipped recipe, more glucose
+print(f"complete medium:           {model.slim_optimize():.4f} /h")
+```
 
-    model.medium = {**shipped, "r_1714": 10.0}        # the shipped recipe, more glucose
-    print(f"complete medium:           {model.slim_optimize():.4f} /h")
-    ```
+```text
+growth with nothing to eat: nan /h
+glucose and oxygen alone:  0.0000 /h
+complete medium:           0.8370 /h
+```
 
-    ```text title="Output"
-    growth with nothing to eat: nan /h
-    glucose and oxygen alone:  0.0000 /h
-    complete medium:           0.8370 /h
-    ```
+Glucose and oxygen alone are not enough; yeast-GEM also needs nitrogen,
+phosphate, sulphate and a handful of ions, which is why building a medium from
+`dict(model.medium)` and editing individual entries leaves the rest of the
+recipe intact, where writing it out in full does not.
 
-    Glucose and oxygen alone are not enough; yeast-GEM also needs nitrogen,
-    phosphate, sulphate and a handful of ions, which is why building a medium from
-    `dict(model.medium)` and editing individual entries leaves the rest of the
-    recipe intact, where writing it out in full does not.
-
-    The three results are three different states. `nan` means the LP had no
-    solution; `0.0000` means it solved and the optimum is zero; `0.8370` means it
-    solved and the model grows. `slim_optimize` returns `nan` for the first case
-    rather than raising, so check `model.optimize().status` when a number is
-    unexpected.
+The three results are three different states. `nan` means the LP had no
+solution; `0.0000` means it solved and the optimum is zero; `0.8370` means it
+solved and the model grows. `slim_optimize` returns `nan` for the first case
+rather than raising, so check `model.optimize().status` when a number is
+unexpected.
+:::
+::::
 
 ## 5.4 Anaerobic growth, and why a condition is more than bounds
 
@@ -277,48 +293,53 @@ imbalanced, so `charge_balance_met` names the metabolite whose coefficient
 absorbs the difference. Both toolboxes recompute it rather than storing the new
 value, so the file stays readable as a statement of intent.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    <!-- run-examples: skip -->
+<!-- run-examples: skip -->
 
-    ```matlab
-    modelAnaerobic = applyCondition(model, 'anaerobic.yml');
-    sol = solveLP(modelAnaerobic);
-    fprintf('anaerobic growth: %.4f /h\n', sol.f);
-    ```
+```matlab
+modelAnaerobic = applyCondition(model, 'anaerobic.yml');
+sol = solveLP(modelAnaerobic);
+fprintf('anaerobic growth: %.4f /h\n', sol.f);
+```
 
-    `applyCondition` reads the file with `parseYAML`, which goes through
-    MATLAB's Python bridge, so it needs a linked CPython with `pyyaml`
-    installed (`pyenv` in MATLAB shows which interpreter is linked). That is
-    also why this block carries no output here: the documentation build has
-    no linked interpreter.
+`applyCondition` reads the file with `parseYAML`, which goes through
+MATLAB's Python bridge, so it needs a linked CPython with `pyyaml`
+installed (`pyenv` in MATLAB shows which interpreter is linked). That is
+also why this block carries no output here: the documentation build has
+no linked interpreter.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from raven_toolbox.conditions import apply_condition, load_condition
 
-    ```python
-    from raven_toolbox.conditions import apply_condition, load_condition
+condition = load_condition("anaerobic.yml")
+print("bounds changed:", len(condition["bounds"]))
 
-    condition = load_condition("anaerobic.yml")
-    print("bounds changed:", len(condition["bounds"]))
+anaerobic = apply_condition(model.copy(), condition)
+print(f"anaerobic growth: {anaerobic.slim_optimize():.4f} /h")
+```
 
-    anaerobic = apply_condition(model.copy(), condition)
-    print(f"anaerobic growth: {anaerobic.slim_optimize():.4f} /h")
-    ```
+```text
+bounds changed: 12
+anaerobic growth: 0.1615 /h
+```
 
-    ```text title="Output"
-    bounds changed: 12
-    anaerobic growth: 0.1615 /h
-    ```
+`apply_condition` edits the model **in place** and returns it, so pass a copy
+to keep the aerobic model as well. It also takes the path directly:
+`apply_condition(model, "anaerobic.yml")`. `load_condition` is the parse step
+on its own, for inspecting or editing a condition before applying it.
 
-    `apply_condition` edits the model **in place** and returns it, so pass a copy
-    to keep the aerobic model as well. It also takes the path directly:
-    `apply_condition(model, "anaerobic.yml")`. `load_condition` is the parse step
-    on its own, for inspecting or editing a condition before applying it.
-
-    Compare 0.1615 /h against the 0.8370 /h the same model reached aerobically
-    in 5.3: both are on 10 mmol glucose, because the condition is applied to the
-    model as 5.3 left it. Fermentation yields far less ATP per glucose than
-    respiration, and the ratio is the point of the comparison.
+Compare 0.1615 /h against the 0.8370 /h the same model reached aerobically
+in 5.3: both are on 10 mmol glucose, because the condition is applied to the
+model as 5.3 left it. Fermentation yields far less ATP per glucose than
+respiration, and the ratio is the point of the comparison.
+:::
+::::
 
 ## 5.5 What is the model actually living on?
 
@@ -328,96 +349,102 @@ uptakes that still supports a given growth rate, which identifies which componen
 is doing the work, and catches a nutrient the model can do without because a
 gap-filled reaction produces it internally.
 
-=== "MATLAB"
+::::{tab-set}
+:::{tab-item} Ⓜ️ MATLAB
+:sync: matlab
 
-    <!-- run-examples: needs-gurobi -->
+<!-- run-examples: needs-gurobi -->
 
-    ```matlab
-    setRavenSolver('gurobi');   % getMinimalMedium solves a MILP
-    sol = solveLP(model);
-    medium = getMinimalMedium(model, 'minGrowth', 0.9 * sol.f);
-    ```
+```matlab
+setRavenSolver('gurobi');   % getMinimalMedium solves a MILP
+sol = solveLP(model);
+medium = getMinimalMedium(model, 'minGrowth', 0.9 * sol.f);
+```
 
-    ```text title="Output"
-    ==============================================================
-      Minimal medium  (14 of 16 candidate uptake reactions)
-      Target growth: 0.7533
-    --------------------------------------------------------------
-      r_1654                ammonium exchange
-      r_1714                D-glucose exchange
-      r_1861                iron(2+) exchange
-      r_1992                oxygen exchange
-      r_2005                phosphate exchange
-      r_2020                potassium exchange
-      r_2049                sodium exchange
-      r_2060                sulphate exchange
-      r_4593                chloride exchange
-      r_4594                Cu2(+) exchange
-      r_4595                Mn(2+) exchange
-      r_4596                Zn(2+) exchange
-      r_4597                Mg(2+) exchange
-      r_4600                Ca(2+) exchange
-    ==============================================================
-    ```
+```text
+==============================================================
+  Minimal medium  (14 of 16 candidate uptake reactions)
+  Target growth: 0.7533
+--------------------------------------------------------------
+  r_1654                ammonium exchange
+  r_1714                D-glucose exchange
+  r_1861                iron(2+) exchange
+  r_1992                oxygen exchange
+  r_2005                phosphate exchange
+  r_2020                potassium exchange
+  r_2049                sodium exchange
+  r_2060                sulphate exchange
+  r_4593                chloride exchange
+  r_4594                Cu2(+) exchange
+  r_4595                Mn(2+) exchange
+  r_4596                Zn(2+) exchange
+  r_4597                Mg(2+) exchange
+  r_4600                Ca(2+) exchange
+==============================================================
+```
 
-    Candidates are the exchanges that already have `lb < 0`; a nutrient the model
-    cannot take up in the first place is never proposed. `minGrowth` defaults to
-    10% of the unconstrained optimum, which is loose enough that most components
-    drop out, so state it explicitly, as here, when the question is about a
-    particular growth rate. `verbose` set to `false` suppresses the table and
-    returns the ids alone.
+Candidates are the exchanges that already have `lb < 0`; a nutrient the model
+cannot take up in the first place is never proposed. `minGrowth` defaults to
+10% of the unconstrained optimum, which is loose enough that most components
+drop out, so state it explicitly, as here, when the question is about a
+particular growth rate. `verbose` set to `false` suppresses the table and
+returns the ids alone.
 
-    Of the 16 open uptakes, 14 are kept: water and H+ are dropped because other
-    reactions supply them. `getMinimalMedium` solves a **MILP**, minimising the
-    number of open uptakes, which the GLPK that ships with RAVEN cannot do: with
-    GLPK selected it reports `glpk is not suitable for solving MILPs`. cobrapy's
-    `minimal_medium` defaults to an LP relaxation that minimises total uptake
-    flux instead, which is why the Python tab runs on any solver and returns
-    rates rather than a list.
+Of the 16 open uptakes, 14 are kept: water and H+ are dropped because other
+reactions supply them. `getMinimalMedium` solves a **MILP**, minimising the
+number of open uptakes, which the GLPK that ships with RAVEN cannot do: with
+GLPK selected it reports `glpk is not suitable for solving MILPs`. cobrapy's
+`minimal_medium` defaults to an LP relaxation that minimises total uptake
+flux instead, which is why the Python tab runs on any solver and returns
+rates rather than a list.
+:::
+:::{tab-item} 🐍 Python
+:sync: python
 
-=== "Python"
+```python
+from cobra.medium import minimal_medium
 
-    ```python
-    from cobra.medium import minimal_medium
+minimal = minimal_medium(model, model.slim_optimize() * 0.9)
+print(minimal.round(3).to_string())
+```
 
-    minimal = minimal_medium(model, model.slim_optimize() * 0.9)
-    print(minimal.round(3).to_string())
-    ```
+```text
+r_1654     4.959
+r_1714     9.004
+r_1861     0.000
+r_1992    20.139
+r_2005     0.210
+r_2020     0.003
+r_2049     0.003
+r_2060     0.105
+r_4593     0.001
+r_4594     0.000
+r_4595     0.002
+r_4596     0.001
+r_4597     0.001
+r_4600     0.000
+```
 
-    ```text title="Output"
-    r_1654     4.959
-    r_1714     9.004
-    r_1861     0.000
-    r_1992    20.139
-    r_2005     0.210
-    r_2020     0.003
-    r_2049     0.003
-    r_2060     0.105
-    r_4593     0.001
-    r_4594     0.000
-    r_4595     0.002
-    r_4596     0.001
-    r_4597     0.001
-    r_4600     0.000
-    ```
+The values are uptake rates, not bounds, and the zeros are components the
+solution needs at a rate below the printed precision rather than not at all.
+Passing `minimize_components=True` switches to the MILP formulation and
+returns the same kind of answer `getMinimalMedium` gives.
+:::
+::::
 
-    The values are uptake rates, not bounds, and the zeros are components the
-    solution needs at a rate below the printed precision rather than not at all.
-    Passing `minimize_components=True` switches to the MILP formulation and
-    returns the same kind of answer `getMinimalMedium` gives.
-
-!!! warning "What can go wrong"
-    - **`infeasible` right after setting a medium.** Something essential is
-      closed. Reopen the medium one component at a time, or start from
-      `minimal_medium` on the working model and compare.
-    - **The sign convention bites.** Uptake is a *negative* flux, but
-      `model.medium` takes *positive* numbers. Both are right; mixing them is not.
-    - **The model grows without a carbon source.** Usually a leak: some reaction
-      produces carbon from nothing. [9. Quality control](quality-control.md) is
-      where that gets diagnosed, with `canExchange` and `analyse_topology`.
-    - **Results that cannot be reproduced.** If a medium is defined inside a
-      script, the next person runs a different one. A condition file is data,
-      and it diffs.
+:::{warning} What can go wrong
+- **`infeasible` right after setting a medium.** Something essential is
+  closed. Reopen the medium one component at a time, or start from
+  `minimal_medium` on the working model and compare.
+- **The sign convention bites.** Uptake is a *negative* flux, but
+  `model.medium` takes *positive* numbers. Both are right; mixing them is not.
+- **The model grows without a carbon source.** Usually a leak: some reaction
+  produces carbon from nothing. [9. Quality control](quality-control.md) is
+  where that gets diagnosed, with `canExchange` and `analyse_topology`.
+- **Results that cannot be reproduced.** If a medium is defined inside a
+  script, the next person runs a different one. A condition file is data,
+  and it diffs.
+:::
 
 ## See also
 
