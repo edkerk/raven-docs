@@ -1,8 +1,10 @@
-"""Sphinx configuration for the pydata-sphinx-theme exploration.
+"""Sphinx configuration for the RAVEN documentation.
 
-Parallel to mkdocs.yml, not a replacement for it yet: the MkDocs build stays
-the one CI and Read the Docs use. See docs/README-sphinx.md for what this
-branch does and does not cover.
+`.readthedocs.yaml` builds from this file. `mkdocs.yml` is retired but not
+yet removed; see docs/README-sphinx.md for what still needs following up
+(scripts/check_names.py and scripts/run_examples.py both still assume the
+old MkDocs plugin API and fence syntax) and requirements-sphinx.txt for the
+Python dependencies this build needs.
 """
 
 from __future__ import annotations
