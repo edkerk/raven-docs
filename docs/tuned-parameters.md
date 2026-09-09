@@ -68,7 +68,7 @@ RAVEN MATLAB: `runINIT`, `scoreModel`, `getINITModel`, `ftINIT`, `prepINITModel`
 
 Only the MATLAB side has tINIT (`runINIT`, `getINITModel`); raven-toolbox
 implements ftINIT alone; see
-[10. Context-specific models](guide/init.md). Rows below that were measured
+[14. Context-specific models](guide/init.md). Rows below that were measured
 across both algorithms say so.
 
 | Parameter | Default | How determined |

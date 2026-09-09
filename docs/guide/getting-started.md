@@ -105,7 +105,7 @@ compartment its metabolites touch; a transport reaction appears under both.
 And *unique* means biochemically unique, ignoring compartments: 52
 metabolites collapse to 45 because seven of them exist in both the cytosol
 and the mitochondrion. The same 45 is what
-[16. Combining and simplifying](combining.md) arrives at when it flattens the
+[20. Combining and simplifying](combining.md) arrives at when it flattens the
 compartments away.
 :::
 :::{tab-item} 🐍 Python

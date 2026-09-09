@@ -2,7 +2,7 @@
 icon: material/folder-open
 ---
 
-# Worked protocol: *Hansenula polymorpha*
+# GEM reconstruction protocol: *Hansenula polymorpha*
 
 A complete homology-based reconstruction of `hanpo-GEM`, followed from start to
 finish: it takes template models as input and produces a growing methylotrophic
@@ -27,19 +27,18 @@ with this site.
 | [Introduction](reconstruction.md) | what is being built, and from what |
 | [Materials and installation](materials.md) | software, databases and input files |
 | [Import template models](template-models.md) | the *S. cerevisiae* and *R. toruloides* models the draft is built from |
-| [Draft from homology](homology.md) | BLAST and `getModelFromHomology`; see also [18. Reconstruction from homology](../guide/homology.md) |
+| [Draft from homology](homology.md) | BLAST and `getModelFromHomology`; see also [12. Reconstruction from homology](../guide/homology.md) |
 | [Biomass composition](biomass.md) | measuring and assembling the biomass equation |
 | [Curation of lipid reactions](lipid-curation.md) | the part that never generalises |
-| [Gap-filling](gap-filling.md) | closing the holes; see also [13. Gap-filling](../guide/gap-filling.md) |
+| [Gap-filling](gap-filling.md) | closing the holes; see also [17. Gap-filling](../guide/gap-filling.md) |
 | [Save and simulate](simulation.md) | writing the model out and checking it grows |
 | [Manual curation](manual-curation.md) | what no function does for you |
-| [Anticipated results](anticipated-results.md) | what the finished model should look like |
 
 ## Related
 
 - [Legacy tutorials](../tutorials/index.md), five shorter exercises from the
   original RAVEN paper.
-- [18. Reconstruction from homology](../guide/homology.md), the same technique
+- [12. Reconstruction from homology](../guide/homology.md), the same technique
   at small scale, in both languages, with every example executed.
 
 ```{toctree}
@@ -54,5 +53,4 @@ lipid-curation
 gap-filling
 simulation
 manual-curation
-anticipated-results
 ```

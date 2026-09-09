@@ -25,6 +25,9 @@ signature, parameters and returns:
   `Manipulation`, `Input / output`, …).
 - **Python API (raven-toolbox)**: one page per package, mirroring the same
   categories.
+- **[MATLAB vs Python](../matlab-vs-python.md)**: a third page pairing every
+  function that exists in both, generated at build time from both toolboxes'
+  sources.
 
 Every page opens with a *Functions* table you can scan, followed by the full
 help for each function.
@@ -60,4 +63,5 @@ Use the navigation to browse either tree, or start from the
 
 matlab/index
 python/index
+../matlab-vs-python
 ```

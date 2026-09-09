@@ -18,6 +18,12 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 ```
 :::
 
+:::{note} Working offline
+raven-toolbox fetches KEGG data and reconstruction binaries (BLAST+, DIAMOND,
+HMMER) on first use. [Download data and binaries](data-and-binaries.md)
+covers preparing a machine with no network access ahead of time.
+:::
+
 ---
 
 ## Install

@@ -1,4 +1,4 @@
-# 15. Random sampling
+# 19. Random sampling
 
 Flux variability gives the extremes a reaction can reach. Sampling gives the
 **distribution** in between: draw many flux vectors from the feasible space and
@@ -17,7 +17,7 @@ is usually 0, usually 10, or evenly spread; a sample does.
 
 ## Setup
 
-The same glucose-limited `smallYeast.yml` as [14. Flux variability](fva.md), so
+The same glucose-limited `smallYeast.yml` as [18. Flux variability](fva.md), so
 the two pages can be read against each other.
 
 ::::{tab-set}
@@ -53,7 +53,7 @@ model.objective = "biomassOUT"
 :::
 ::::
 
-## 15.1 A first sample
+## 19.1 A first sample
 
 Both toolboxes take a `seed`, and you should always set one: without it a chain
 is different every run and nothing you report can be reproduced.
@@ -104,9 +104,9 @@ and correlation you compute has to pick the right axis, and getting it wrong
 is silent; you get numbers, just not the ones you meant.
 :::
 
-## 15.2 What a distribution says that a range does not
+## 19.2 What a distribution says that a range does not
 
-[14. Flux variability](fva.md) found that `FRDS2` and `SDH` have the widest
+[18. Flux variability](fva.md) found that `FRDS2` and `SDH` have the widest
 range in this model, 1000 units, and that all of it is a thermodynamically
 infeasible cycle. Sampling does not remove that; it shows how much of the space
 the cycle occupies.
@@ -161,7 +161,7 @@ That is the distinction this page turns on. A sampled mean is a statement about
 the *shape of the feasible space*, not a prediction: this model's mean sampled
 growth is less than half its optimum, and no biology changed to make it so.
 
-## 15.3 Choosing a method
+## 19.3 Choosing a method
 
 `achr` and `chrr` both draw the near-uniform interior distribution;
 `randomObjective` (`random_objective` in Python) instead maximises a small
@@ -217,7 +217,7 @@ and the samples are usable, but on a polytope this elongated mixing is slower
 than the defaults assume, and more thinning helps if the distribution
 is uneven.
 
-## 15.4 Sample a state, not a model
+## 19.4 Sample a state, not a model
 
 Sampling an unconstrained model answers "what could this network do?", which is
 rarely the question. The useful version is to constrain first (hold growth near
@@ -257,12 +257,12 @@ ethanol: free 0.72, at 90% growth 0.04
 :::
 ::::
 
-## 15.5 Which reactions to sample over
+## 19.5 Which reactions to sample over
 
 The `randomObjective` method needs reactions that can carry real flux to use as
 objectives. Reactions that move only through a loop are useless for that, so
 both toolboxes screen them out with a loopless FVA first, the same test
-[14. Flux variability](fva.md) used by hand.
+[18. Flux variability](fva.md) used by hand.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -299,7 +299,7 @@ which on a genome-scale model skips the expensive part of the run.
 :::{warning} What can go wrong
 - **No seed.** The numbers change every run. Set one, and report it, and do
   not expect a seed alone to reproduce a MATLAB chain on another machine
-  (see 15.1). Report the distribution, not the draws.
+  (see 19.1). Report the distribution, not the draws.
 - **Too little thinning.** Consecutive MCMC steps are correlated; the default
   of 100 steps between recorded samples exists for that reason. Lowering it
   gains speed and loses independence.
@@ -309,14 +309,14 @@ which on a genome-scale model skips the expensive part of the run.
 - **Sampling a model that is wide open.** With an unconstrained medium the
   space is enormous and the distribution says nothing. Constrain first.
 - **Loops.** They inflate the space being sampled, and every sample drawn
-  inside a cycle is wasted. See [14. Flux variability](fva.md).
+  inside a cycle is wasted. See [18. Flux variability](fva.md).
 - **Genome-scale runtime.** Sampling is many LPs per recorded sample. Start with
   a few hundred samples to see the shape, not tens of thousands.
 :::
 
 ## See also
 
-- [14. Flux variability](fva.md), the ranges this page fills in.
+- [18. Flux variability](fva.md), the ranges this page fills in.
 - [4. Simulating growth with FBA](fba.md), the single point sampling surrounds.
-- [11. Deletions and essentiality](deletions.md), the other way to ask what the
+- [16. Deletions and essentiality](deletions.md), the other way to ask what the
   model depends on.

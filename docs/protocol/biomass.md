@@ -1,4 +1,4 @@
-# 3.4 Define the biomass composition
+# Define the biomass composition
 
 Metabolism must be able to synthesise the macromolecules that make up biomass.
 GEMs encode this in **biomass pseudoreactions** that specify which macromolecules

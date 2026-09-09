@@ -1,4 +1,4 @@
-# 12. Metabolic tasks
+# 15. Metabolic tasks
 
 A metabolic task is a statement of something the model must be able to do:
 "given glucose and oxygen, produce biomass", "make ATP", "do *not* produce
@@ -54,7 +54,7 @@ because a task closes the model's own exchanges and growth has to put its carbon
 somewhere. Leave CO₂ out and the task is infeasible, which looks like a broken
 model and is really a broken task.
 
-## 12.1 Read and run the tasks
+## 15.1 Read and run the tasks
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -121,7 +121,7 @@ That is why a task list is portable between models in a way a script full of
 :::
 ::::
 
-## 12.2 A task defines its own medium
+## 15.2 A task defines its own medium
 
 `check_tasks` closes every exchange, sink and demand the model has before
 applying a task, exactly as RAVEN does. The task's inputs and outputs are then
@@ -156,7 +156,7 @@ The only difference between the two is the CO₂ output.
 :::
 ::::
 
-## 12.3 Which reactions does a task depend on?
+## 15.3 Which reactions does a task depend on?
 
 Essentiality with respect to a task, rather than to the objective: remove each
 candidate reaction and see whether the task still passes. This is what ftINIT
@@ -202,11 +202,11 @@ print(sorted(result.reactions)[:5])
 :::
 ::::
 
-## 12.4 When a task fails
+## 15.4 When a task fails
 
 A failing task is a gap: something the model should be able to do and cannot.
 Both toolboxes can add reactions from a template until the task passes, which is
-[13. Gap-filling](gap-filling.md), approached from the task side.
+[17. Gap-filling](gap-filling.md), approached from the task side.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -246,8 +246,8 @@ every task feasible again.
 
 ## See also
 
-- [13. Gap-filling](gap-filling.md), making a failing task pass.
-- [10. Context-specific models](init.md), tasks as the thing an extraction must
+- [17. Gap-filling](gap-filling.md), making a failing task pass.
+- [14. Context-specific models](init.md), tasks as the thing an extraction must
   preserve.
 - [9. Quality control](quality-control.md), the checks that do not need a task
   list.

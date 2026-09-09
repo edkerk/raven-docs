@@ -1,4 +1,4 @@
-# 21. Table-driven curation
+# 10. Table-driven curation
 
 Curation done one function call at a time is hard to review and harder to repeat.
 Both toolboxes can instead take the curation as **tables**: one row per
@@ -44,7 +44,7 @@ metNames	comps	formula	charge	metNotes
 3-phospho-D-glycerate	c	C3H7O7P	-3	charge assigned at pH 7.3
 ```
 
-## 21.1 Apply a table
+## 10.1 Apply a table
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -137,7 +137,7 @@ the table was applied in full, and note that this is a divergence between the
 two toolboxes rather than a difference in the tables.
 :::
 
-## 21.2 Adding rather than updating
+## 10.2 Adding rather than updating
 
 A row whose name matches nothing in the model adds a new entity, and the
 identifier is minted rather than taken from the file. Both toolboxes find the

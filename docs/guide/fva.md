@@ -1,4 +1,4 @@
-# 14. Flux variability and alternative optima
+# 18. Flux variability and alternative optima
 
 An FBA solution is one point in a space of equally optimal answers. Flux
 variability asks the more accurate question: **given the objective, how much can
@@ -56,7 +56,7 @@ growth: 0.1222 /h
 :::
 ::::
 
-## 14.1 The range of every reaction
+## 18.1 The range of every reaction
 
 With no further constraint, this asks how far each flux can move anywhere in the
 feasible space; the objective is free.
@@ -104,7 +104,7 @@ asks a different question; see the next section.
 :::
 ::::
 
-## 14.2 The range *at* the optimum
+## 18.2 The range *at* the optimum
 
 The useful question for interpreting a result: holding growth at its maximum (or
 at 90 % of it), which fluxes are still free to move?
@@ -147,11 +147,11 @@ no choice about. Those are the predictions the model determines; a flux with a
 wide range at the optimum is an artefact of which vertex the solver happened to
 land on.
 
-## 14.3 A wide range is not always a real one
+## 18.3 A wide range is not always a real one
 
 A reaction can show a wide range purely because it is part of a thermodynamically
 infeasible cycle, flux going round a loop with no net driving force. The widest
-span in 14.1 was 1000, the model's default bound. That span is such a cycle.
+span in 18.1 was 1000, the model's default bound. That span is such a cycle.
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -220,7 +220,7 @@ means `"cycleFreeFlux"`, but it is deprecated; name the algorithm.
 `find_good_reactions` uses the same idea to decide which reactions are worth
 sampling over, keeping a reaction only if its **loopless** range is non-trivial.
 
-## 14.4 One representative solution
+## 18.4 One representative solution
 
 When a single flux distribution is needed (for a figure, or to compare two
 conditions), take a parsimonious one rather than whatever the solver returns
@@ -262,7 +262,7 @@ pFBA      20.9
 ```
 
 All three agree here: this particular optimum happens to carry no loop flux,
-even though 14.3 showed the cycle is there. Nothing guaranteed that: the
+even though 18.3 showed the cycle is there. Nothing guaranteed that: the
 solver could as easily have returned a vertex with 1000 units going round
 `FRDS2` and `SDH`, which is exactly the failure `loopless_solution` exists to
 prevent.
@@ -277,7 +277,7 @@ prevent.
 - **Reporting a flux with a wide range.** If the range at the optimum is wide,
   the number in your table is one of many equally good answers.
 - **Mistaking a loop for capacity.** Wide ranges on internal cycles are a
-  property of the stoichiometry, not of the organism; see 14.3.
+  property of the stoichiometry, not of the organism; see 18.3.
 - **Loopless FVA is a MILP.** `loopless="fastSNP"` adds binary variables, so it is
   far slower than plain FVA and wants a good solver on anything larger than
   a toy model.
@@ -289,7 +289,7 @@ prevent.
 ## See also
 
 - [4. Simulating growth with FBA](fba.md), the single solve this qualifies.
-- [11. Deletions and essentiality](deletions.md), the other way to ask what the
+- [16. Deletions and essentiality](deletions.md), the other way to ask what the
   model depends on.
 - [9. Quality control](quality-control.md), blocked reactions, the degenerate
   case of a zero range.

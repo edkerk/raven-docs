@@ -19,8 +19,13 @@ canonical reference is the
   build for your platform on first use, so the reconstruction functions need
   internet access the first time they run. `downloadRavenBinaries` fetches them
   ahead of time. See
-  [Downloaded data and binaries](data-and-binaries.md) for the full set, where
+  [Download data and binaries](data-and-binaries.md) for the full set, where
   it is cached, and how to prepare an offline machine.
+
+:::{note} Working offline
+[Download data and binaries](data-and-binaries.md) covers preparing a machine
+with no network access ahead of time.
+:::
 
 ---
 
@@ -124,21 +129,37 @@ A successful run looks like:
 ```text
 *** THE RAVEN TOOLBOX ***
 
-Checking if RAVEN is on the MATLAB path...                                  OK
-Checking if it is possible to parse a model in Microsoft Excel format...    OK
-Checking if it is possible to import an SBML model using libSBML...         OK
-Solver found in preferences... gurobi
-Checking if it is possible to solve an LP problem using gurobi...           OK
-Checking essential binary executables:
-    BLAST+... OK
-    DIAMOND... OK
-    HMMER... OK
+ > Installation type                    Advanced (via git)
+ > Checking RAVEN release               3.0.0
+ > Checking MATLAB release              R2024b
+ > Set RAVEN in MATLAB path             Pass
+ > Save MATLAB path                     Pass
+
+=== Model import and export ===
+ > Checking libSBML version             5.20.0
+ > Checking model import and export
+   > Import SBML format                Pass
+   > Export SBML format                Pass
+   > Import YAML format                Pass
+   > Export YAML format                Pass
+   > Export Excel format               Pass
+
+=== Model solvers ===
+ > Checking for LP solvers
+   > glpk                               Pass
+   > gurobi                             Pass
+ > Set RAVEN solver                     gurobi
+
+=== Essential binary executables ===
+ > Checking BLAST+                      Pass
+ > Checking DIAMOND                     Pass
+ > Checking HMMER                       Pass
+
+=== Compatibility ===
+ > Checking function uniqueness
+
 *** checkRaven complete ***
 ```
-
-`checkInstallation` still works too: it is the old name, kept as a deprecated
-wrapper that forwards to `checkRaven` after a warning. Use `checkRaven`
-directly in new work.
 
 If MATLAB reports that it could not save the path (common on shared or
 managed installations where you do not have write access to MATLAB's own

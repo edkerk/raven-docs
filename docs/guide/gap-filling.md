@@ -1,4 +1,4 @@
-# 13. Gap-filling
+# 17. Gap-filling
 
 A draft model always has holes: reactions that cannot carry flux because
 something upstream is missing, metabolites nothing produces, a biomass component
@@ -14,7 +14,7 @@ holes close, and the judgement is in deciding which holes are worth closing.
 | `gapFillFastLP` | `fill_gaps_fast_lp` | the LP formulation (fastGapFill / swiftGapFill) |
 | `gapFillMILP` | `fill_gaps_kumar_milp` | the MILP formulation, when the LP is not enough |
 | `gapFillTopological` | `analyse_topology` | connectivity, without solving an LP |
-| `fitTasks` | `fill_tasks` | fill until a task passes; see [12. Metabolic tasks](tasks.md) |
+| `fitTasks` | `fill_tasks` | fill until a task passes; see [15. Metabolic tasks](tasks.md) |
 
 ## Setup
 
@@ -68,7 +68,7 @@ a model in that state and you are asking the wrong question entirely.
 :::
 ::::
 
-## 13.1 Find the holes before filling them
+## 17.1 Find the holes before filling them
 
 Gap-filling without looking first is how a model acquires reactions nobody can
 justify. Start from what cannot carry flux.
@@ -104,7 +104,7 @@ print(sorted(blocked)[:5])
 :::
 ::::
 
-## 13.2 Connectivity gap-filling
+## 17.2 Connectivity gap-filling
 
 The question here is structural: which template reactions, added to the draft,
 would let a blocked reaction carry flux at all? No objective, no growth, just
@@ -161,7 +161,7 @@ the harder question and usually adds more reactions.
 :::
 ::::
 
-## 13.3 The LP formulation
+## 17.3 The LP formulation
 
 Note the argument: `fillGaps` takes a **cell array** of template models, while
 `gapFillFastLP` and `gapFillMILP` take a **single struct**. Passing a cell to
@@ -218,7 +218,7 @@ the gap between the counts closes.
 :::
 ::::
 
-## 13.4 The MILP formulation
+## 17.4 The MILP formulation
 
 When the LP relaxation adds too much, or you want the provably smallest set,
 the mixed-integer formulation is the alternative. It needs a MILP solver, and it
@@ -272,7 +272,7 @@ fill_gaps_kumar_milp: reversed 0 reaction(s), added 0 template reaction(s).
 :::
 ::::
 
-## 13.5 Filling towards a task, not a hole
+## 17.5 Filling towards a task, not a hole
 
 Connectivity gap-filling asks "can this reaction carry flux?". The other question
 ("can the model still do *this*?") is answered by filling against a task list,
@@ -301,8 +301,8 @@ tasks = parseTaskList('tasks.txt');
 from raven_toolbox.init import fill_tasks
 ```
 
-See [12. Metabolic tasks](tasks.md) for the task list itself, and
-[10. Context-specific models](init.md) for `fill_tasks` in its usual role,
+See [15. Metabolic tasks](tasks.md) for the task list itself, and
+[14. Context-specific models](init.md) for `fill_tasks` in its usual role,
 repairing a model that ftINIT has just cut down.
 
 `fitTasks` fills one task at a time rather than all of them at once, so
@@ -337,6 +337,6 @@ already contains the draft, which is the form ftINIT passes.
 
 - [9. Quality control](quality-control.md), finding the holes, and deciding
   which matter.
-- [12. Metabolic tasks](tasks.md), the other way to say what the model must do.
+- [15. Metabolic tasks](tasks.md), the other way to say what the model must do.
 - [3. Reading and writing models](io.md), saving the filled model with a record
   of what was added.

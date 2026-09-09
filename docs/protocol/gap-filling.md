@@ -1,4 +1,4 @@
-# 3.6 Perform gap-filling
+# Perform gap-filling
 
 Homology-based draft models tend to have many **gaps**: missing reactions that
 break a pathway needed to produce biomass macromolecules. The pathway is likely

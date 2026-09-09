@@ -1,4 +1,4 @@
-# 3.9 Manual curation
+# Manual curation
 
 A draft GEM always requires manual curation to become a high-quality model.
 Curation can mean correcting gene associations, adding or removing reactions, and
@@ -80,6 +80,5 @@ newCommit(model);
 
 The draft model is now methylotrophic, in agreement with the literature.
 
-See [Anticipated results](anticipated-results.md) for what the finished draft
-should look like, and the full runnable script in
+The full runnable script for the whole protocol is
 [`code/reconstructionProtocol.m`](https://github.com/SysBioChalmers/hanpo-GEM/blob/main/code/reconstructionProtocol.m).
