@@ -77,24 +77,6 @@ distance matrix. RAVEN consumes pre-built artefacts; it does not produce them.
 This is what keeps the KEGG route reproducible against a stated KEGG release
 rather than against whichever artefact is currently distributed.
 
-### Confidence tracking
-
-Per-reaction, multi-facet confidence scoring: evidence for a reaction's presence
-graded across several independent facets, with the bands calibrated against
-curated models. Used to prioritise manual curation on a draft: reactions the
-score is least sure about are where a curator's time goes furthest.
-
-### A newer compartment assignment
-
-Both toolboxes have `assignCompartments`, and they are **not** the same
-function. RAVEN's is a port of raven-toolbox's earlier design, in which
-functionality is fused into the placement MILP as a hard flux-gating
-constraint. raven-toolbox has since separated the two: placement is decided by a
-score MILP, then *certified* by a real FBA on the materialised model, so a
-placement that breaks biomass production is rejected rather than returned. It
-can couple gap-filling into that loop, and keeps a second compartment for a
-reaction only when a loopless FVA shows it carries flux there.
-
 ### Smaller additions
 
 - **Growth conditions**: apply a named, versioned growth condition to a model.
@@ -125,20 +107,6 @@ has to be reproduced in MATLAB; see
 `ravenCobraWrapper` converts between the RAVEN and COBRA Toolbox model
 structures. There is nothing to convert in Python: the model is already a
 `cobra.Model`, so no equivalent exists or is needed.
-
-### Scope: reconstruction and analysis
-
-RAVEN's functions concentrate on **reconstruction**: building a model from a
-genome by homology or from KEGG, extracting a context-specific one from
-expression data, gap-filling it, and validating it against metabolic tasks. Its
-analysis functions cover what those steps require.
-
-The COBRA Toolbox covers more **analysis**: thermodynamic constraints,
-strain-design algorithms such as OptKnock and OptForce, community and whole-body
-models, and further sampling and loopless variants. RAVEN does not reimplement
-them. `ravenCobraWrapper` converts a RAVEN model into COBRA Toolbox form, and a
-raven-toolbox model is already a `cobra.Model`, so both are direct inputs to
-those analyses.
 
 ### Dynamic FBA
 

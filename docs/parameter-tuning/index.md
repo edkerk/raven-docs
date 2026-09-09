@@ -99,11 +99,18 @@ cross-toolbox to-do list.
 |---|---|
 | [Parameter benchmarks](benchmarks.md) | `fseof`, `remove_genes`, `connect_blocked_reactions`, `fill_gaps_*`, `check_tasks`, `find_task_essential_reactions` |
 
+## Model file format
+
+[YAML model format](../yaml-format.md): the format cobrapy, raven-toolbox and
+RAVEN MATLAB all read and write, for moving a model file between any of them
+or into version control.
+
 ```{toctree}
 :hidden:
 
 ../tuned-parameters
 benchmarks
+../yaml-format
 ```
 
 ```{toctree}

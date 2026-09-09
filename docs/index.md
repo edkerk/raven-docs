@@ -14,12 +14,13 @@ models, available as a MATLAB toolbox and a Python package built on cobrapy.
 :::{tab-item} Python (pip)
 
 ```bash
-pip install raven-toolbox
+pip install --pre raven-toolbox
 ```
 :::
 :::{tab-item} MATLAB (Add-Ons)
 
-Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox"
+Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox", then run `checkRaven`
+to verify.
 :::
 :::{tab-item} Python (git)
 
@@ -33,6 +34,8 @@ pip install -e raven-toolbox/
 ```bash
 git clone --depth=1 https://github.com/SysBioChalmers/RAVEN.git
 ```
+
+Add the folder to the MATLAB path, then run `checkRaven` to verify.
 :::
 ::::
 

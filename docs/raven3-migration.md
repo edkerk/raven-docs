@@ -1,5 +1,17 @@
 # Migrating from RAVEN 2 to RAVEN 3
 
+:::{admonition} If you read nothing else
+:class: important
+
+Run `checkRaven` (replaces `checkInstallation`) right after upgrading: it
+offers to fetch any missing on-demand binaries/data, and its checks catch
+several of the changes below before your scripts do. Beyond that, the two
+changes most likely to break silently rather than error are homology/KEGG
+reconstruction returning a different draft model from the same call
+([§7](#kegg-reconstruction)), and WoLF PSORT-based localization scores having
+no in-toolbox migration path ([§3](#backward-incompatible-changes)).
+:::
+
 This guide describes what changed between RAVEN 2 and RAVEN 3. It is written
 for existing RAVEN 2 users who need to know what will break in their scripts,
 what moved, what was removed outright, and what new capabilities are
@@ -33,7 +45,8 @@ punch list. The sections after it go into the detail behind each item.
 
 ---
 
-## Upgrade checklist <a name="upgrade-checklist"></a>
+(upgrade-checklist)=
+## Upgrade checklist
 
 1. Update to RAVEN 3.0.0 (or later) and run `checkRaven` (replaces
    `checkInstallation`); it will offer to fetch any missing on-demand
@@ -155,7 +168,8 @@ names, use the explicit name-value form for that argument to avoid ambiguity.
 
 ---
 
-## 3. Backward-incompatible changes <a name="backward-incompatible-changes"></a>
+(backward-incompatible-changes)=
+## 3. Backward-incompatible changes
 
 This is the consolidated list of everything a RAVEN 2 script could plausibly
 break on, or silently produce different output from, when run against RAVEN 3.
@@ -242,7 +256,8 @@ an air-gapped install, and the full dependency comparison.
 
 ---
 
-## 4. Removed functionality <a name="removed-functionality"></a>
+(removed-functionality)=
+## 4. Removed functionality
 
 Beyond the items already listed as backward-incompatible above, RAVEN 3 removed
 a number of functions and whole subsystems as part of a deliberate "leaner
@@ -271,7 +286,8 @@ codebase" push. None of these have call sites left in RAVEN 3 itself.
 
 ---
 
-## 5. Renamed, merged, and consolidated functions <a name="renamed-merged-and-consolidated-functions"></a>
+(renamed-merged-and-consolidated-functions)=
+## 5. Renamed, merged, and consolidated functions
 
 RAVEN 3 introduces a formal **`deprecated/` folder convention**: functions that
 were merged into a more general replacement stay callable under their old name,
@@ -300,9 +316,11 @@ them.
 
 ---
 
-## 6. File formats and model I/O <a name="file-formats-and-model-io"></a>
+(file-formats-and-model-io)=
+## 6. File formats and model I/O
 
-### SBML I/O <a name="sbml-io"></a>
+(sbml-io)=
+### SBML I/O
 
 | | RAVEN 2 | RAVEN 3 |
 |---|---|---|
@@ -313,7 +331,8 @@ them.
 Older SBML files must be converted first (e.g. re-exported from COBRApy/COBRA
 Toolbox) before `importModel` will accept them.
 
-### Excel I/O <a name="excel-io"></a>
+(excel-io)=
+### Excel I/O
 
 | | RAVEN 2 | RAVEN 3 |
 |---|---|---|
@@ -343,7 +362,8 @@ model files:
 | Empty `gene_reaction_rule` | written as an empty string | omitted |
 | `objective_coefficient` on import | ignored | honored |
 
-### RAVEN⇄COBRA interoperability <a name="raven-cobra-interoperability"></a>
+(raven-cobra-interoperability)=
+### RAVEN⇄COBRA interoperability
 
 `conversion/ravenCobraWrapper.m` keeps its signature
 (`newModel = ravenCobraWrapper(model)`) unchanged. Two correctness fixes change
@@ -354,7 +374,8 @@ annotation conversion; both fixed.
 
 ---
 
-## 7. Reconstruction: KEGG and homology pipelines <a name="kegg-reconstruction"></a>
+(kegg-reconstruction)=
+## 7. Reconstruction: KEGG and homology pipelines
 
 ### KEGG-based reconstruction (`getModelFromKEGG`, `getKEGGModelForOrganism`)
 
@@ -391,7 +412,8 @@ mapping table.
 
 ---
 
-## 8. Gene-reaction-rule (GPR) parsing <a name="gpr-parsing"></a>
+(gpr-parsing)=
+## 8. Gene-reaction-rule (GPR) parsing
 
 RAVEN 3 adds a proper grRule tokenizer/parser: `utils/parseGrRule.m` builds a
 parse tree (`type`: `'gene'|'and'|'or'`, with `children`); `utils/grRuleToDNF.m`
@@ -417,7 +439,8 @@ string-splitting logic it always did.
 
 ---
 
-## 9. Gap-filling and context-specific model extraction <a name="ftinit"></a>
+(ftinit)=
+## 9. Gap-filling and context-specific model extraction
 
 | | RAVEN 2 | RAVEN 3 |
 |---|---|---|
@@ -433,7 +456,8 @@ string-splitting logic it always did.
 
 ---
 
-## 10. New functionality <a name="new-functionality"></a>
+(new-functionality)=
+## 10. New functionality
 
 All additive; none of this replaces or changes behavior of existing RAVEN 2
 functions, except where noted.
@@ -453,7 +477,8 @@ functions, except where noted.
 
 ---
 
-## 11. Toolbox dependencies and installation <a name="toolbox-deps"></a>
+(toolbox-deps)=
+## 11. Toolbox dependencies and installation
 
 | | RAVEN 2 | RAVEN 3 |
 |---|---|---|
