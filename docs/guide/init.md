@@ -1,4 +1,4 @@
-# 10. Context-specific models with tINIT and ftINIT
+# 14. Context-specific models with ftINIT
 
 A genome-scale model describes what an organism *can* do. tINIT and ftINIT cut it
 down to what a particular sample (a tissue, a cell line, a condition) appears to
@@ -102,7 +102,7 @@ git clone --depth=1 https://github.com/SysBioChalmers/Human-GEM.git
 Both extractions are mixed-integer problems, so **GLPK will not do**: set Gurobi
 up first ([6. Solvers and configuration](solvers.md)).
 
-## 10.1 Prepare the template: once
+## 14.1 Prepare the template: once
 
 The preparation finds the task-essential reactions, classifies every reaction
 into omics-independent categories, merges linear stretches, and rescales the
@@ -176,7 +176,7 @@ same machine and solver. Two things affect the run:
 :::
 ::::
 
-## 10.2 Bring in the expression data
+## 14.2 Bring in the expression data
 
 RAVEN wants one struct: the genes, the sample names, and a genes × samples matrix
 of levels. `threshold` is the level above which a gene counts as expressed; leave
@@ -385,11 +385,11 @@ question does not arise.
 
 `parseHPArna` and `parse_hpa_rna` read the RNA-seq dump instead, whose header is
 `Gene`, `Gene name`, `Tissue` followed by the TPM columns. Those are quantities
-already, so `rna_gene_scores` applies the same logarithmic rule as 10.2 rather
+already, so `rna_gene_scores` applies the same logarithmic rule as 14.2 rather
 than a level mapping. Both routes end at a gene-to-score mapping, which is what
 `score_reactions_from_genes` walks the GPRs with.
 
-## 10.3 Extract a model for one sample
+## 14.3 Extract a model for one sample
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -440,7 +440,7 @@ takes 30–60 s per sample; `1+1` adds a second optimisation over those reaction
 takes two to three times longer, and gives a smaller model. The run above is
 `1+0`: **12 931 → 9 595 reactions and 2 848 → 1 761 genes, in 70 seconds.**
 
-## 10.4 Check what came out
+## 14.4 Check what came out
 
 An extracted model is a hypothesis. The tasks it was built to satisfy are the
 first thing to re-check, and the least expensive.

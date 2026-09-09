@@ -1,4 +1,4 @@
-# 16. Combining and simplifying models
+# 20. Combining and simplifying models
 
 This page covers two operations that look like simple bookkeeping but carry real
 risk. **Merging** puts models
@@ -62,7 +62,7 @@ print(f"{len(model.reactions)} rxns, {len(model.metabolites)} mets, "
 :::
 ::::
 
-## 16.1 Merging
+## 20.1 Merging
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -122,7 +122,7 @@ halves that happen to live in the same struct. Merging is a claim that the
 naming is consistent; check it before you make it, not after.
 :::
 
-## 16.2 Merging does not de-duplicate
+## 20.2 Merging does not de-duplicate
 
 Every reaction from both models survived, so the merged model now describes each
 conversion twice. Collapsing those is a separate step.
@@ -179,7 +179,7 @@ alone. The Python side is not uniform:
 in Python. Copy the model first to keep the original.
 :::
 
-## 16.3 Dropping what cannot carry flux
+## 20.3 Dropping what cannot carry flux
 
 `smallYeast` ships with its medium shut, so almost nothing in it can carry flux
 at all, the state [9. Quality control](quality-control.md) measures. That makes
@@ -226,7 +226,7 @@ medium, not of the organism. Open the conditions you intend to simulate
 **before** simplifying, or you will delete the pathways you were about to study;
 see [5. Growth media and conditions](media.md).
 
-## 16.4 Collapsing compartments
+## 20.4 Collapsing compartments
 
 Sometimes the compartments are the problem: a draft with unreliable
 localisation, or a comparison against a model that has none.
@@ -313,7 +313,7 @@ Flatten a copy, for a specific question, and keep the original.
 ## See also
 
 - [9. Quality control](quality-control.md), deciding what *should* be removed.
-- [13. Gap-filling](gap-filling.md), the opposite operation, and the usual
+- [17. Gap-filling](gap-filling.md), the opposite operation, and the usual
   reason for having a template model to merge from.
-- [10. Context-specific models](init.md), cutting a model down by evidence
+- [14. Context-specific models](init.md), cutting a model down by evidence
   rather than by connectivity.

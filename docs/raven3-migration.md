@@ -1,4 +1,4 @@
-# Migrating from RAVEN 2 to RAVEN 3
+# RAVEN 2 to RAVEN 3
 
 :::{admonition} If you read nothing else
 :class: important
@@ -36,7 +36,7 @@ mostly the same.
 :::{note} This is the MATLAB-to-MATLAB axis
 This page is about RAVEN 2 → RAVEN 3, both MATLAB. How the Python package
 differs from the MATLAB one is a separate question, answered in
-[RAVEN 3 and raven-toolbox](raven3-vs-raven-toolbox.md).
+[RAVEN and raven-toolbox](raven3-vs-raven-toolbox.md).
 :::
 
 Start with the [upgrade checklist](#upgrade-checklist) below, then read

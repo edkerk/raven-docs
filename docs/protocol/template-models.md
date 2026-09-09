@@ -1,4 +1,4 @@
-# 3.2 Import template models
+# Import template models
 
 RAVEN creates a draft GEM by using models of phylogenetically related organisms
 as templates. For *H. polymorpha*, the *S. cerevisiae* model (yeast-GEM) is the

@@ -27,8 +27,8 @@ the cobrapy documentation. The
 :class: info
 Every snippet on the nineteen numbered pages is run on each commit and
 checked against the output shown beneath it, in both languages. Two pages
-cannot be: [10. Context-specific models](init.md), whose steps take hours on
-Human-GEM, and [19. Reconstruction from KEGG](kegg.md), which downloads
+cannot be: [14. Context-specific models](init.md), whose steps take hours on
+Human-GEM, and [13. Reconstruction from KEGG](kegg.md), which downloads
 tens of megabytes and takes minutes. Both say so at the top and quote the
 wall-clock of the run their numbers came from.
 
@@ -74,45 +74,48 @@ tutorials at the end of this section are MATLAB-only and are not executed.
    deletions.
 9. [Quality control](quality-control.md), structure, mass balance, blocked
    reactions, mass from nothing.
+10. [Table-driven curation](curation.md), applying curation as reviewable
+    tables rather than a script of function calls.
+11. [Biomass composition and annotation](biomass.md), what the cell is made
+    of, rescaling it, and the annotation that stays useful after the solve.
 
 **Reconstruction**
 
-10. [Context-specific models (tINIT / ftINIT)](init.md), omics integration and
+12. [Reconstruction from homology](homology.md), BLAST a proteome against a
+    template model's genes, and what the cut-offs decide for you.
+13. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
+    and what such a draft is missing.
+14. [Context-specific models (ftINIT)](init.md), omics integration and
     extracting a cell-line
     model from Human-GEM and RNA-seq, end to end.
 
 **Analysis and repair**
 
-11. [Deletions and essentiality](deletions.md), knockouts, essential genes and
-    reactions, MOMA.
-12. [Metabolic tasks](tasks.md), saying what a model must be able to do, and
+15. [Metabolic tasks](tasks.md), saying what a model must be able to do, and
     checking that it still can.
-13. [Gap-filling](gap-filling.md), closing the holes a draft model has.
-14. [Flux variability](fva.md), how much each flux can still move, and
+16. [Deletions and essentiality](deletions.md), knockouts, essential genes and
+    reactions, MOMA.
+17. [Gap-filling](gap-filling.md), closing the holes a draft model has.
+18. [Flux variability](fva.md), how much each flux can still move, and
     which predictions the model has no choice about.
-15. [Random sampling](sampling.md), the distribution behind those ranges, and
+19. [Random sampling](sampling.md), the distribution behind those ranges, and
     how to condition it on a particular state.
-16. [Combining and simplifying models](combining.md), merging models on
+
+**Comparing and engineering**
+
+20. [Combining and simplifying models](combining.md), merging models on
     metabolite names, and taking one apart again.
-17. [Comparing models](comparing.md), what changed between two models, and what
+21. [Comparing models](comparing.md), what changed between two models, and what
     effect that difference has.
-18. [Reconstruction from homology](homology.md), BLAST a proteome against a
-    template model's genes, and what the cut-offs decide for you.
-19. [Reconstruction from KEGG](kegg.md), a draft with no template model at all,
-    and what such a draft is missing.
-20. [Engineering targets](engineering.md), FSEOF for over-production targets
+22. [Engineering targets](engineering.md), FSEOF for over-production targets
     and reporter metabolites for the metabolites a transcriptional response
     surrounds.
-21. [Table-driven curation](curation.md), applying curation as reviewable
-    tables rather than a script of function calls.
-22. [Biomass composition and annotation](biomass.md), what the cell is made
-    of, rescaling it, and the annotation that stays useful after the solve.
 
 ## Also in this section
 
 | | |
 |---|---|
-| [Worked protocol, *H. polymorpha*](../protocol/index.md) | homology-based reconstruction of `hanpo-GEM`, end to end, from template models to a growing methylotrophic draft. A published pipeline followed from start to finish. MATLAB only, not executed here. |
+| [GEM reconstruction protocol, *H. polymorpha*](../protocol/index.md) | homology-based reconstruction of `hanpo-GEM`, end to end, from template models to a growing methylotrophic draft. A published pipeline followed from start to finish. MATLAB only, not executed here. |
 | [Legacy tutorials](../tutorials/index.md) | five exercises from the original RAVEN paper (Agren et al., 2013), updated to run with current RAVEN but otherwise unchanged. MATLAB only. |
 
 Use the numbered pages to look something up; use the protocol to see a whole
@@ -141,31 +144,25 @@ solvers
 building
 editing
 quality-control
+curation
+biomass
+homology
+kegg
 init
-deletions
 tasks
+deletions
 gap-filling
 fva
 sampling
 combining
 comparing
-homology
-kegg
 engineering
-curation
-biomass
 ```
 
 ```{toctree}
 :hidden:
-:caption: Legacy protocol (hanpo-GEM)
+:caption: Legacy
 
 ../protocol/index
-```
-
-```{toctree}
-:hidden:
-:caption: Legacy tutorials
-
 ../tutorials/index
 ```

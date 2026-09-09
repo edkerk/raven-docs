@@ -1,6 +1,6 @@
-# 3.7–3.8 Save to GitHub and simulate
+# Save to GitHub and simulate
 
-## 3.7 Save to GitHub
+## Save to GitHub
 
 The model is tracked and distributed through a GitHub repository. Before saving,
 add some metadata to the model structure:
@@ -43,7 +43,7 @@ several formats, while `code/` and `data/` contain everything needed to
 regenerate the model and run analyses.
 :::
 
-## 3.8 Perform simulations
+## Perform simulations
 
 The draft model can now simulate biomass production. Set biomass formation as the
 objective, run FBA with `solveLP`, and inspect the active fluxes with

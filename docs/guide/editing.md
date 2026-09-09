@@ -149,7 +149,7 @@ YBR196C or YLR354C
 model, so the results have to be assigned back into the struct to persist.
 Disjunctive normal form is a flat `or` of `and` groups, one group per
 alternative complex, which is the form the scoring in
-[10. Context-specific models](init.md) expects.
+[14. Context-specific models](init.md) expects.
 :::
 :::{tab-item} 🐍 Python
 :sync: python
@@ -297,7 +297,7 @@ PGI rule: 'YLR354C'
 `removeGenes` rewrites each affected GPR without the removed gene. Its
 `removeBlockedRxns` flag, off by default, additionally deletes reactions that
 lose their last catalyst, which turns a gene deletion into a reaction deletion;
-[11. Deletions and essentiality](deletions.md) covers when that is the
+[16. Deletions and essentiality](deletions.md) covers when that is the
 question being asked. `standardizeRules`, on by default, normalises the
 rewritten rules.
 

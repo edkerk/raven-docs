@@ -349,7 +349,7 @@ Models differ (11 differences):
 `diffModels` compares two models entry by entry: which reactions are unique to
 each, and where a shared reaction differs in stoichiometry, bounds, objective
 coefficient, gene rule or metabolite properties. It is the same function
-[17. Comparing models](comparing.md) uses, applied here to a model and its
+[21. Comparing models](comparing.md) uses, applied here to a model and its
 last good version.
 
 :::{warning} What can go wrong

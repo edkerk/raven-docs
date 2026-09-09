@@ -1,4 +1,4 @@
-# 11. Deletions and essentiality
+# 16. Deletions and essentiality
 
 Which genes can the organism lose and still grow? Knock each one out, re-solve,
 and compare. The same machinery answers "which reactions are essential", "what
@@ -56,7 +56,7 @@ wild type: 0.1222 /h
 :::
 ::::
 
-## 11.1 Knock out one gene
+## 16.1 Knock out one gene
 
 The question underneath every deletion study: with this gene gone, can the model
 still reach its objective? A gene knockout is not a reaction knockout: the GPR
@@ -102,7 +102,7 @@ block.
 :::
 ::::
 
-## 11.2 Knock out every gene
+## 16.2 Knock out every gene
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -149,7 +149,7 @@ because the same function shape serves the double-deletion case.
 :::
 ::::
 
-## 11.3 Essential reactions
+## 16.3 Essential reactions
 
 Reaction essentiality asks the same question one level down. The two functions
 below look equivalent but ask different questions, which is why their answers
@@ -198,11 +198,11 @@ tab returns none.
 
 For essentiality with respect to a *task* rather than the objective,
 raven-toolbox has `find_task_essential_reactions`; see
-[12. Metabolic tasks](tasks.md).
+[15. Metabolic tasks](tasks.md).
 :::
 ::::
 
-## 11.4 Two at a time
+## 16.4 Two at a time
 
 Double deletions find the redundancy single deletions miss: two genes that each
 look dispensable but cannot both be deleted. The number of pairs to test is
@@ -240,7 +240,7 @@ lowest growth: 0.0000 /h
 :::
 ::::
 
-## 11.5 A knockout's fluxes, not just its growth rate
+## 16.5 A knockout's fluxes, not just its growth rate
 
 FBA assumes the knockout re-optimises perfectly, which a cell that just lost a
 gene does not do. MOMA instead looks for the flux distribution closest to the
@@ -259,7 +259,7 @@ or from the COBRA Toolbox, which keeps its own.
 
 What RAVEN does offer for the same *question* (what changed in the mutant,
 rather than by how much growth fell) is `compareFluxes` on two flux
-vectors from the same model, in [17. Comparing models](comparing.md).
+vectors from the same model, in [21. Comparing models](comparing.md).
 :::
 :::{tab-item} 🐍 Python
 :sync: python
@@ -298,5 +298,5 @@ MOMA growth: 0.0000 /h
 ## See also
 
 - [4. Simulating growth with FBA](fba.md), the solve underneath all of this.
-- [12. Metabolic tasks](tasks.md), essentiality with respect to a task.
+- [15. Metabolic tasks](tasks.md), essentiality with respect to a task.
 - [9. Quality control](quality-control.md), before trusting any of it.

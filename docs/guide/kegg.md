@@ -1,8 +1,8 @@
 <!-- run-examples: skip-file -->
 
-# 19. Reconstruction from KEGG
+# 13. Reconstruction from KEGG
 
-[18. Reconstruction from homology](homology.md) needs a template model of a
+[12. Reconstruction from homology](homology.md) needs a template model of a
 related organism. KEGG needs none: its orthology groups (KOs) are already tied to
 reactions, so annotating a genome with KOs gives you a draft directly. Which
 route you take depends on one thing: whether your organism is already in KEGG.
@@ -24,7 +24,7 @@ their timings, measured on an ordinary laptop.
 | `getModelFromKEGG` | `build_reference_model` | assemble and cache the global KEGG model |
 | `getPhylDist` | `PhylDist` | phylogenetic distance, used to weight the search |
 
-## 19.1 When the organism is already in KEGG
+## 13.1 When the organism is already in KEGG
 
 If KEGG has your species (`sce` for *S. cerevisiae*), its gene-to-KO assignments
 are already made, and no sequence search is needed. This is the fast route, and
@@ -71,14 +71,14 @@ print(f"{len(model.reactions)} rxns, {len(model.metabolites)} mets, "
 
 The artefacts (a reference model and three tables, about 47 MB) are fetched
 from the `kegg118` raven-data release on first use and cached; see
-[Downloaded data and binaries](../installation/data-and-binaries.md) for
+[Download data and binaries](../installation/data-and-binaries.md) for
 where, and how to fetch them ahead of a batch run. Expect around five
 minutes for the first run and much the same afterwards: the download is not
 the slow part, assembling the draft from the tables is.
 :::
 ::::
 
-## 19.2 When it is not
+## 13.2 When it is not
 
 For an organism KEGG has never seen, the KO assignments have to be made from
 sequence. Both toolboxes search your proteins against a library of profile HMMs,
@@ -111,7 +111,7 @@ compressed**, and `hmmsearch` against every KO takes tens of minutes to hours fo
 a full proteome, which is why `outDir` exists in the MATLAB version: results are
 kept per-KO so an interrupted run can resume rather than start again. It also
 needs HMMER, which has no bundle for every platform;
-[Downloaded data and binaries](../installation/data-and-binaries.md) has the
+[Download data and binaries](../installation/data-and-binaries.md) has the
 matrix.
 
 The organism id still matters even here. It sets the phylogenetic distance used
@@ -127,7 +127,7 @@ defaults were measured rather than inherited, and the
 [KEGG HMM cut-off study](../parameter-tuning/studies/kegg-hmm-cutoff-calibration.md)
 records which of them actually moves the result.
 
-## 19.3 What a KEGG draft is
+## 13.3 What a KEGG draft is
 
 A KEGG draft is genome-scale in size, and unlike a working model in every other
 respect.
@@ -144,7 +144,7 @@ objective:       none
 **There are no compartments.** KEGG describes reactions, not cell biology, so
 every metabolite lands in one undifferentiated space. A KEGG draft cannot
 distinguish mitochondrial from cytosolic anything until you localise it;
-see [16. Combining and simplifying](combining.md) for the reverse operation, and
+see [20. Combining and simplifying](combining.md) for the reverse operation, and
 what is lost by it.
 
 The flags decide how inclusive the draft is. `keepIncomplete` /
@@ -179,9 +179,9 @@ it can.
 
 ## See also
 
-- [18. Reconstruction from homology](homology.md), the same goal from a template
+- [12. Reconstruction from homology](homology.md), the same goal from a template
   model instead of an orthology database.
-- [13. Gap-filling](gap-filling.md), what to do with 1357 reactions that cannot
+- [17. Gap-filling](gap-filling.md), what to do with 1357 reactions that cannot
   yet carry flux.
 - [Legacy tutorial 5](../tutorials/tutorial5.md), the original KEGG
   reconstruction exercise from the RAVEN paper.

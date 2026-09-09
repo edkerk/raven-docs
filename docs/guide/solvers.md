@@ -9,7 +9,7 @@ read what it gives back.
 | MATLAB | Python | |
 |---|---|---|
 | `setRavenSolver` | `Configuration` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | choose the solver |
-| `checkInstallation` | `Configuration` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | check the solver works |
+| `checkRaven` | `Configuration` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | check the solver works |
 | `solveLP` | `Model.optimize` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve, and get a solution object |
 | `optimizeProb` | `Model.solver` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve a problem the toolbox built for you |
 
@@ -69,7 +69,7 @@ RAVEN keeps the choice in MATLAB's preferences, so it survives restarts, and
 the answer is whatever *this* installation was last told, which is why the
 output above is elided. The preference is global to the installation, not a
 property of the model, so a script that changes it changes it for everything
-that follows. `checkInstallation` prints it along with a test solve.
+that follows. `checkRaven` prints it along with a test solve.
 :::
 :::{tab-item} 🐍 Python
 :sync: python
@@ -255,7 +255,7 @@ which is a statement about biology rather than about the constraints.
 :::{warning} What can go wrong
 - **A solver that is set but not installed.** `setRavenSolver('gurobi')`
   stores the preference whether or not Gurobi is there; the failure appears
-  at the next solve. `checkInstallation` tests it directly.
+  at the next solve. `checkRaven` tests it directly.
 - **MILP with GLPK.** GLPK solves LPs only, in RAVEN. Anything mixed-integer
   (`getMinimalMedium`, some gap-filling) needs Gurobi.
 - **Reading fluxes after a non-optimal solve.** `sol.stat` of `0` means a

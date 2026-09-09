@@ -1,4 +1,4 @@
-# 22. Biomass composition and annotation
+# 11. Biomass composition and annotation
 
 The biomass pseudoreaction is where a model states what a cell is made of, and it
 sets the units of every growth rate the model reports. This page is about reading
@@ -113,7 +113,7 @@ polymerised, two hydrogens or a water, which is what makes a protein weigh less
 than the sum of its amino acids. `grams` takes the coefficients as already being
 in g/gDW, which is how the lipid backbone is written.
 
-## 22.1 What is the cell made of?
+## 11.1 What is the cell made of?
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -174,7 +174,7 @@ same mass, so counting both would double it; the
 [lipid curation](../protocol/lipid-curation.md) step in the protocol explains the
 representation.
 
-## 22.2 Change one component
+## 11.2 Change one component
 
 Measured a different protein content? Set it, and specify which other component
 absorbs the change. A biomass that no longer sums to 1 is worse than one with the
@@ -219,7 +219,7 @@ protein 0.5000, carbohydrate 0.3384, total 1.0000
 
 `scale_biomass` edits the model **in place** and returns `None`, while
 `scaleBiomassFraction` returns a new struct and leaves its input alone. That is
-the same split as in [16. Combining and simplifying](combining.md), and it is why
+the same split as in [20. Combining and simplifying](combining.md), and it is why
 the Python tab copies the model first.
 
 `balanceOut` names the component that absorbs the change, so the total stays
@@ -231,7 +231,7 @@ a single pseudoreaction rather than a named component, and rebalance the protons
 afterwards using the `proton_met` from the configuration. That is what keeps the
 reaction charge balanced when its coefficients move.
 
-## 22.3 Annotation: SBO terms
+## 11.3 Annotation: SBO terms
 
 An SBO term says what a reaction or metabolite *is*: a transport reaction, an
 exchange, a metabolite rather than a pseudo-species. Solvers ignore them;
@@ -275,7 +275,7 @@ only by compartment is a transport, and so on. Nothing is inferred that the
 stoichiometry does not already support, so running it on a model with mislabelled
 compartments propagates that mistake rather than catching it.
 
-## 22.4 Annotation: cross-references and thermodynamics
+## 11.4 Annotation: cross-references and thermodynamics
 
 Database cross-references travel in MIRIAM form: a namespace and an identifier,
 such as `chebi/CHEBI:15589`. RAVEN keeps them in `metMiriams` and `rxnMiriams`
@@ -312,5 +312,5 @@ separately from the model, and re-applied after the model changes.
 - [4. Simulating growth with FBA](fba.md), where the growth rate these units
   belong to comes from.
 - [8. Editing an existing model](editing.md), changing a pseudoreaction by hand.
-- [Worked protocol: biomass composition](../protocol/biomass.md), building the
-  pseudoreactions from measurements for a new organism.
+- [GEM reconstruction protocol: biomass composition](../protocol/biomass.md),
+  building the pseudoreactions from measurements for a new organism.

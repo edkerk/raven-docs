@@ -1,4 +1,10 @@
-# RAVEN 3 and raven-toolbox
+# RAVEN and raven-toolbox
+
+:::{note} Looking for a specific function?
+The [MATLAB vs Python](matlab-vs-python.md) table pairs every function that
+exists in both, and links straight to the reference entry for each. This
+page is the narrative comparison; that page is the lookup.
+:::
 
 RAVEN exists as two independent implementations:
 
@@ -90,7 +96,7 @@ rather than against whichever artefact is currently distributed.
   same release. What is Python-only is the baked registry that pins a given
   release to the exact assets it was tested against; RAVEN resolves from the
   published release each time. See
-  [Downloaded data and binaries](installation/data-and-binaries.md).
+  [Download data and binaries](installation/data-and-binaries.md).
 
 ## What only RAVEN has
 
@@ -100,7 +106,7 @@ rather than against whichever artefact is currently distributed.
 them for the models already built with them; raven-toolbox, a new
 implementation with no such installed base, carries ftINIT alone. A tINIT model
 has to be reproduced in MATLAB; see
-[10. Context-specific models](guide/init.md).
+[14. Context-specific models](guide/init.md).
 
 ### COBRA Toolbox conversion
 
@@ -223,42 +229,3 @@ Genome-scale MILP work (ftINIT extraction in particular) is where the choice
 matters most; see [Installation](installation/index.md) for the full solver
 matrix.
 
-## Moving a model between them
-
-Models move through **SBML** (`.xml`) and **YAML** (`.yml`). raven-toolbox's
-YAML follows the cobrapy layout plus RAVEN's own per-entry fields, so a model
-written by either side round-trips through the other; see
-[the YAML format reference](yaml-format.md) for the field-by-field spec and
-interoperability matrix.
-
-Excel is **export-only** on both sides: raven-toolbox has never had a reader,
-and RAVEN's `importExcelModel` was removed in the RAVEN 3 refactor.
-
-## Coming from RAVEN 2.0 to Python
-
-raven-toolbox is not a port of RAVEN 2.0; it is a new implementation that
-made different design choices where RAVEN 2.0's design had become outdated. If you are
-moving a RAVEN 2.0 workflow straight to Python rather than to RAVEN 3, three
-differences matter beyond everything above.
-
-**The model data structure.** RAVEN 2.0 represents a model as a MATLAB struct
-with `.rxns`, `.mets`, `.S`, `.lb`, `.ub`. raven-toolbox loads directly into a
-`cobra.Model`; the struct format is not used internally at all, and solver calls
-go through cobrapy's unified interface.
-
-**Packaging and typing.** raven-toolbox installs from PyPI
-(`pip install raven-toolbox`), so environments are reproducible and CI is
-straightforward. Every public function carries type annotations and passes
-`mypy`.
-
-**MetaCyc reconstruction is gone, on both sides.** RAVEN 2.0 shipped
-`getMetaCycModelForOrganism`; RAVEN 3 removed the whole `external/metacyc`
-folder, and raven-toolbox never had it. The reason is not neglect: MetaCyc
-provides a single representative sequence per enzyme, which gives intrinsically
-low gene-calling precision, measured at roughly two-thirds of reaction
-assignments wrong at the default cutoff, with no cutoff value that fixes the
-problem. Use the KEGG or homology routes.
-
-What stayed the same are the algorithms: homology search, gap-filling and KEGG
-reconstruction follow the same published methods, and models
-move between all three through SBML and YAML.

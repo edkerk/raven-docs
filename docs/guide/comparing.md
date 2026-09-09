@@ -1,4 +1,4 @@
-# 17. Comparing models
+# 21. Comparing models
 
 Curation produces several versions of one model: a draft and a curated
 version, the model before and after gap-filling, a local build and a
@@ -55,7 +55,7 @@ good 53 rxns, bad 54 rxns
 :::
 ::::
 
-## 17.1 What exactly is different?
+## 21.1 What exactly is different?
 
 `diffModels` matches by identifier and compares what it finds: stoichiometry,
 bounds, objective coefficients, gene rules, formulas, charges. It answers a yes
@@ -107,7 +107,7 @@ This is the comparison to put in a test. `DiffReport` is falsy when the models
 differ, so `assert diff_models(before, after)` is a working regression test for a
 curation script, and in MATLAB, `report.equal` does the same job.
 
-## 17.2 How alike are they?
+## 21.2 How alike are they?
 
 The other question is coarser: across the whole reaction set, how much do two
 models overlap? `compare_models` builds a presence matrix, one row per
@@ -159,13 +159,13 @@ similarity: 0.945
 
 :::{warning} A high similarity does not mean the models agree
 These two models are **0.945** alike on the reaction set, and one of them is
-broken. The differences 17.1 lists are a doubled stoichiometric coefficient
+broken. The differences 21.1 lists are a doubled stoichiometric coefficient
 and a reaction made irreversible, changes that alter what the model
 *predicts* while barely moving a set-overlap score. Similarity is for
 grouping models, not for validating one.
 :::
 
-## 17.3 Compare what they do, not what they contain
+## 21.3 Compare what they do, not what they contain
 
 Two models with the same reactions can behave differently, and two models with
 different reactions can behave identically. The comparison that settles it is of
@@ -218,7 +218,7 @@ RAVEN can also run this comparison for you. `compareMultipleModels` takes
 `funcCompare` and a `taskFile`, and then compares the models by which
 metabolic tasks each one passes rather than by which reactions each one has.
 That is the same shift from contents to behaviour made by hand above, and
-[12. Metabolic tasks](tasks.md) is where the task file comes from.
+[15. Metabolic tasks](tasks.md) is where the task file comes from.
 `groupVector` labels the models, by tissue or by condition, so the similarity
 matrix is reported per group.
 
@@ -232,7 +232,7 @@ answer the same question, but you index them in opposite directions.
 - **Comparing on identifiers alone.** Both functions match by id. Two models
   from different databases share few ids and will look unrelated even when
   they describe the same metabolism; see
-  [16. Combining and simplifying](combining.md), where merging matches on
+  [20. Combining and simplifying](combining.md), where merging matches on
   names instead.
 - **Reading similarity as quality.** It measures overlap, not correctness.
 - **Forgetting the medium.** A flux comparison compares conditions as much as
@@ -247,7 +247,7 @@ answer the same question, but you index them in opposite directions.
 ## See also
 
 - [9. Quality control](quality-control.md), checking one model rather than two.
-- [16. Combining and simplifying](combining.md), putting models together, and
+- [20. Combining and simplifying](combining.md), putting models together, and
   what has to line up first.
 - [4. Simulating growth with FBA](fba.md), the simulation a flux comparison
   rests on.

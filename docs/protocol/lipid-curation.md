@@ -1,4 +1,4 @@
-# 3.5 Curation of lipid reactions
+# Curation of lipid reactions
 
 After adjusting the biomass composition it is useful to curate reactions already
 known to differ in the target organism. Using the **SLIME** formalism (*Split

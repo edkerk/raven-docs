@@ -1,4 +1,4 @@
-# 20. Engineering targets
+# 22. Engineering targets
 
 Two questions underlie most strain-design work. Which reactions would have to
 change for the cell to make more of something, and which metabolites are most
@@ -53,7 +53,7 @@ growth 0.1222 /h
 :::
 ::::
 
-## 20.1 Which reactions track the product?
+## 22.1 Which reactions track the product?
 
 FSEOF forces the product exchange to carry progressively more flux, maximising
 growth at each step, and records what every other reaction does. A reaction whose
@@ -131,7 +131,7 @@ zero.
 :::
 ::::
 
-## 20.2 Reading the scan
+## 22.2 Reading the scan
 
 A target's reliability depends on the trend behind it. The scan matrix is what
 distinguishes a reaction that rises steadily from one that jumps once and stops.
@@ -180,7 +180,7 @@ sign says which way to push, and its magnitude says how hard. Neither says the
 change is achievable: FSEOF works on the stoichiometry and the bounds, and knows
 nothing about regulation, enzyme capacity or toxicity.
 
-## 20.3 Reporter metabolites
+## 22.3 Reporter metabolites
 
 The other direction. Given a differential-expression result, which metabolites
 have the most transcriptionally-responsive neighbourhood? The algorithm scores
@@ -297,7 +297,7 @@ above.
 ## See also
 
 - [4. Simulating growth with FBA](fba.md), the solve each FSEOF step performs.
-- [15. Random sampling](sampling.md), the other way to ask what a network can do
+- [19. Random sampling](sampling.md), the other way to ask what a network can do
   rather than what one optimum says.
-- [11. Deletions and essentiality](deletions.md), knockouts rather than
+- [16. Deletions and essentiality](deletions.md), knockouts rather than
   amplification.

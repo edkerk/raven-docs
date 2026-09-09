@@ -1,4 +1,4 @@
-# Downloaded data and binaries
+# Download data and binaries
 
 Neither toolbox ships the large files it needs. The KEGG reference data, the
 profile-HMM libraries, and the BLAST+, DIAMOND and HMMER executables are all
@@ -13,10 +13,10 @@ files RAVEN downloads and the files raven-toolbox downloads are the same files.
 
 | Artefact | Size | Needed for |
 |---|---|---|
-| KEGG core bundle (reference model plus the KO, reaction and organism-gene tables) | about 47 MB | [19. Reconstruction from KEGG](../guide/kegg.md), either route |
+| KEGG core bundle (reference model plus the KO, reaction and organism-gene tables) | about 47 MB | [13. Reconstruction from KEGG](../guide/kegg.md), either route |
 | KEGG HMM library, one per domain | 129 MB compressed, eukaryotes | a KEGG draft for an organism KEGG has never seen |
 | KEGG taxonomy | small | phylogenetic weighting of KO assignments |
-| BLAST+ (`blastp`, `makeblastdb`) | small | [18. Reconstruction from homology](../guide/homology.md) |
+| BLAST+ (`blastp`, `makeblastdb`) | small | [12. Reconstruction from homology](../guide/homology.md) |
 | DIAMOND | small | the faster homology route |
 | HMMER (`hmmsearch`) | small | searching the KEGG HMM library |
 
@@ -25,19 +25,43 @@ comparing models require none of it.
 
 ## Where it goes
 
-raven-toolbox caches under `$XDG_CACHE_HOME`, or `~/.cache` when that is unset:
+raven-toolbox caches under `$XDG_CACHE_HOME`, or `~/.cache` when that is
+unset, using the same rule on every platform:
+
+::::{tab-set}
+:::{tab-item} Linux
 
 | | Path |
 |---|---|
-| Data artefacts | `~/.cache/raven_toolbox/data/<dataset>-<version>/` |
-| Binaries | `~/.cache/raven_toolbox/binaries/` |
+| Data artefacts | `/home/<user>/.cache/raven_toolbox/data/<dataset>-<version>/` |
+| Binaries | `/home/<user>/.cache/raven_toolbox/binaries/` |
+:::
+:::{tab-item} macOS
+
+| | Path |
+|---|---|
+| Data artefacts | `/Users/<user>/.cache/raven_toolbox/data/<dataset>-<version>/` |
+| Binaries | `/Users/<user>/.cache/raven_toolbox/binaries/` |
+:::
+:::{tab-item} Windows
+
+| | Path |
+|---|---|
+| Data artefacts | `C:\Users\<user>\.cache\raven_toolbox\data\<dataset>-<version>\` |
+| Binaries | `C:\Users\<user>\.cache\raven_toolbox\binaries\` |
+:::
+::::
+
+raven-toolbox does not use each platform's own convention (`%LOCALAPPDATA%`
+on Windows, `~/Library/Caches` on macOS); `~/.cache` is literal everywhere.
 
 The version is part of the path, so two KEGG releases coexist and a pinned run
 keeps fetching the release it was pinned to.
 
 In MATLAB the KEGG artefacts go wherever `dataDir` points, which
 `getKEGGModelForOrganism` requires you to pass, and the executables live in
-RAVEN's own `software/` directory.
+`software/` inside wherever RAVEN itself is installed, the same on every
+platform.
 
 ## How a tool is found
 
@@ -127,35 +151,6 @@ not, because that needs MAFFT and CD-HIT, which have no Windows builds. Use WSL2
 calls the resolved executable directly and does not translate paths between
 Windows and WSL.
 
-## Integrity and versions
-
-Every file carries a SHA256 that is checked after download, so a truncated or
-substituted file raises an error instead of being used.
-
-The two toolboxes pin differently, and both are deliberate. A raven-toolbox
-release carries a baked snapshot of the artefact registry, so a given version
-always fetches the exact files it was tested against; setting
-`RAVEN_PYTHON_MANIFEST` to another manifest's URL or path overrides that. RAVEN
-resolves from the published release each time instead, having no baked registry
-to keep in step.
-
-Artefacts are versioned by their upstream version, not by a toolbox release:
-`kegg118` for a KEGG release, `diamond-2.1.17` for a DIAMOND build. An asset is
-published once under its own tag and never replaced, so a run that pins
-`kegg118` keeps getting the same bytes after a `kegg119` appears.
-
-## Licences
-
-The bundles carry their upstream licence text, and the terms differ:
-
-- **BLAST+** is produced by the NCBI and is in the public domain.
-- **DIAMOND** is GPL-3.0. It is redistributed unmodified, as a separate download
-  rather than inside any package, which is what keeps the toolbox's own licence
-  unaffected.
-- **HMMER** is BSD-3-Clause.
-- The **KEGG** artefacts are derived from a licensed KEGG dump and redistributed
-  with permission. Using them in published work means citing KEGG.
-
 :::{warning} What can go wrong
 - **A machine with no network.** The first reconstruction fails at the
   download. Fetch on a connected machine, copy `~/.cache/raven_toolbox`, and
@@ -175,8 +170,8 @@ The bundles carry their upstream licence text, and the terms differ:
 
 ## See also
 
-- [19. Reconstruction from KEGG](../guide/kegg.md), the workflow that pulls the
+- [13. Reconstruction from KEGG](../guide/kegg.md), the workflow that pulls the
   KEGG artefacts.
-- [18. Reconstruction from homology](../guide/homology.md), the one that needs
+- [12. Reconstruction from homology](../guide/homology.md), the one that needs
   BLAST+ or DIAMOND.
 - [Installing RAVEN](raven.md) and [Installing raven-toolbox](python.md).

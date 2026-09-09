@@ -1,4 +1,4 @@
-# 18. Reconstruction from homology
+# 12. Reconstruction from homology
 
 Homology-based reconstruction builds a draft model for an organism that has none,
 using a curated model of a related organism as the source of reactions. Genes in
@@ -64,7 +64,7 @@ template: 53 rxns, 61 genes
 :::
 ::::
 
-## 18.1 BLAST, in both directions
+## 12.1 BLAST, in both directions
 
 Both toolboxes run BLASTP twice: the new organism's proteome against the
 template's, and the template's against the new organism's.
@@ -146,7 +146,7 @@ If you already have orthology assignments from another source (OrthoFinder,
 OMA, a published table), `makeFakeBlastStructure` and `make_ortholog_hits` wrap
 them in the structure the transfer step expects, so no search is run.
 
-## 18.2 From hits to a draft
+## 12.2 From hits to a draft
 
 ::::{tab-set}
 :::{tab-item} Ⓜ️ MATLAB
@@ -208,7 +208,7 @@ accepted counterpart are not carried over. That is the intended behaviour, and
 also the main source of error: a reaction left out because no hit passed the
 cut-offs looks exactly like a reaction the organism genuinely lacks.
 
-## 18.3 The cut-offs decide the model
+## 12.3 The cut-offs decide the model
 
 Three cut-offs control which hits are accepted, and tightening any of them
 shrinks the draft.
@@ -278,7 +278,7 @@ can produce a different draft under RAVEN 3. Set them explicitly, or see
 [Migrating from RAVEN 2](../raven3-migration.md).
 :::
 
-## 18.4 A draft is not a model
+## 12.4 A draft is not a model
 
 What comes out of this step has reactions, metabolites and genes, and nothing
 else. There is no biomass reaction unless a template reaction happened to carry
@@ -332,8 +332,8 @@ the reconstruction, and will only become informative once a medium is defined.
 A homology draft is a set of claims about which reactions the organism has. Turning
 it into a model means giving it a medium
 ([5. Growth media and conditions](media.md)), closing the gaps that stop it
-producing biomass ([13. Gap-filling](gap-filling.md)), and checking it against
-what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
+producing biomass ([17. Gap-filling](gap-filling.md)), and checking it against
+what the organism is known to do ([15. Metabolic tasks](tasks.md)). The
 [GEM reconstruction protocol](../protocol/index.md) follows that path for
 *H. polymorpha* at full scale.
 
@@ -355,9 +355,9 @@ what the organism is known to do ([12. Metabolic tasks](tasks.md)). The
 
 ## See also
 
-- [13. Gap-filling](gap-filling.md), the usual next step, and the one that
+- [17. Gap-filling](gap-filling.md), the usual next step, and the one that
   decides what the draft is missing.
-- [10. Context-specific models](init.md), cutting a model down by evidence
+- [14. Context-specific models](init.md), cutting a model down by evidence
   instead of building one up from homology.
-- [17. Comparing models](comparing.md), checking a draft against a curated
+- [21. Comparing models](comparing.md), checking a draft against a curated
   model of the same organism.

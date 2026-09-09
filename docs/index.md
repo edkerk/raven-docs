@@ -19,13 +19,13 @@ pip install --pre raven-toolbox
 :::
 :::{tab-item} MATLAB (Add-Ons)
 
-Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox", then run `checkRaven`
-to verify.
+Home → Add-Ons → Get Add-Ons → search "RAVEN Toolbox".
+Then run `checkRaven` to verify.
 :::
 :::{tab-item} Python (git)
 
 ```bash
-git clone https://github.com/SysBioChalmers/raven-toolbox.git
+git clone --depth=1 https://github.com/SysBioChalmers/raven-toolbox.git
 pip install -e raven-toolbox/
 ```
 :::
@@ -143,7 +143,7 @@ Complete function reference for both MATLAB and Python.
 Set up RAVEN in MATLAB or raven-toolbox in Python with a solver.
 :::
 
-:::{grid-item-card} RAVEN 3 and raven-toolbox
+:::{grid-item-card} RAVEN and raven-toolbox
 :link: raven3-vs-raven-toolbox
 :link-type: doc
 

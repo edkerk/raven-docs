@@ -1,11 +1,11 @@
-# 3.3 Generate a draft model from homology
+# Generate a draft model from homology
 
 The protein FASTA files of the target and template organisms are compared to
 build a draft *H. polymorpha* model based on homology. Two RAVEN functions do
 the work: `getBlast` aligns the protein sequences, and `getModelFromHomology`
 uses those results to assemble the first draft.
 
-## 3.3.1 Clean and match protein identifiers
+## Clean and match protein identifiers
 
 The gene identifiers in each template model **must match** those in its protein
 FASTA (compare against, e.g., *S. cerevisiae* `YML001W`). For the target
@@ -13,7 +13,7 @@ organism it is also convenient to shorten the identifiers to a standard format
 such as `Hanpo2_12345`. The *H. polymorpha* FASTA from JGI needs some editing to
 strip annotations; see [Note 2](#notes) below.
 
-## 3.3.2 Determine homology by BLAST
+## Determine homology by BLAST
 
 Evidence of homology is determined by **bidirectional** BLAST of the target
 proteome against both template proteomes (this can take some minutes):

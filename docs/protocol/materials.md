@@ -61,37 +61,22 @@ protein, lipid and carbohydrate content for *H. polymorpha*, used to set the
 biomass stoichiometric coefficients ([Biomass composition](biomass.md)). Where
 organism-specific data is missing, values from related organisms can be used.
 
-## 3.1 Install RAVEN
+## Install RAVEN
 
-After obtaining the software and files, install RAVEN (see the
-[RAVEN Wiki](https://github.com/SysBioChalmers/RAVEN/wiki/Installation)). Use
-`pathtool` to add the RAVEN, libSBML and Gurobi subfolders to the MATLAB path,
-then verify with:
+After obtaining the software and files, install RAVEN (see
+[Installing RAVEN](../installation/raven.md)). Use `pathtool` to add the
+RAVEN, libSBML and Gurobi subfolders to the MATLAB path, then verify with:
 
 ```matlab
-checkInstallation
+checkRaven
 ```
 
-A successful run looks like:
-
-```text
-*** THE RAVEN TOOLBOX ***
-
-Checking if RAVEN is on the MATLAB path...                                  OK
-Checking if it is possible to parse a model in Microsoft Excel format...    OK
-Checking if it is possible to import an SBML model using libSBML...         OK
-Solver found in preferences... gurobi
-Checking if it is possible to solve an LP problem using gurobi...           OK
-Checking essential binary executables:
-    BLAST+... OK
-    DIAMOND... OK
-    HMMER... OK
-*** checkInstallation complete ***
-```
+See [Installing RAVEN](../installation/raven.md#verify) for what a
+successful run looks like.
 
 :::{warning}
-If `checkInstallation` reports that parsing Excel format **FAILED**,
-uninstall MATLAB's **Text Analytics Toolbox**, which conflicts with RAVEN's
-Excel parser. For support, see the
+If `checkRaven` reports that importing SBML format **failed**, uninstall
+MATLAB's **Text Analytics Toolbox**, which conflicts with RAVEN's Excel
+parser. For support, see the
 [RAVEN issues](https://github.com/SysBioChalmers/RAVEN/issues) page.
 :::

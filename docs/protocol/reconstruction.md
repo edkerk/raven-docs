@@ -17,6 +17,12 @@ the section numbering there matches the page titles here. The commands shown in
 these pages are occasionally more concise than in the script (typically around
 file locations).
 
+:::{note} Written for RAVEN 2
+The original, published protocol was written for RAVEN 2. This site applies
+minor modifications to the commands shown so the same protocol also works with
+RAVEN 3.
+:::
+
 ## What are genome-scale metabolic models?
 
 Cellular metabolism is a complex network of hundreds to thousands of reactions
@@ -68,6 +74,3 @@ section):
 6. [Gap-filling](gap-filling.md), make the draft able to produce biomass.
 7. [Save and simulate](simulation.md), version control and FBA.
 8. [Manual curation](manual-curation.md), fix gene associations, add methanol metabolism.
-
-See [Anticipated results](anticipated-results.md) for what the finished draft
-should look like.

@@ -52,7 +52,7 @@ numbers unreproducible for a reader who takes the model from RAVEN instead.
 
 ## Proteomes, for the homology page
 
-`hanpo.faa` and `sce-template.faa` back [18. Reconstruction from
+`hanpo.faa` and `sce-template.faa` back [12. Reconstruction from
 homology](../guide/homology.md).
 
 | file | what it is |

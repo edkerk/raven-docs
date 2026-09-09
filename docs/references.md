@@ -23,21 +23,24 @@
 
 ## Context-specific extraction (INIT / ftINIT)
 
-INIT is the method both `runINIT`/`getINITModel` (RAVEN's MATLAB
-implementation, called tINIT) and `ftinit` (raven-toolbox, and RAVEN's
-`ftINIT`) build on; tINIT has no citation of its own separate from the INIT
-paper below.
-
-> Agren R, Bordel S, Mardinoglu A, Pornputtapong N, Nookaew I, Nielsen J
-> (2012). **Reconstruction of genome-scale active metabolic networks for 69
-> human cell types and 16 cancer types using INIT.** *PLoS Computational
-> Biology* 8(5): e1002518. <https://doi.org/10.1371/journal.pcbi.1002518>
+### ftINIT
 
 > Gustafsson J, Anton M, Roshanzamir F, Jörnsten R, Kerkhoven EJ, Robinson JL,
 > Nielsen J (2023). **Generation and analysis of context-specific genome-scale
 > metabolic models derived from single-cell RNA-Seq data.** *Proceedings of
 > the National Academy of Sciences* 120(6): e2217868120.
 > <https://doi.org/10.1073/pnas.2217868120>
+
+### tINIT
+
+`runINIT`/`getINITModel` (RAVEN's MATLAB implementation of tINIT) build on
+the INIT method described in the paper below; tINIT has no citation of its
+own separate from it.
+
+> Agren R, Bordel S, Mardinoglu A, Pornputtapong N, Nookaew I, Nielsen J
+> (2012). **Reconstruction of genome-scale active metabolic networks for 69
+> human cell types and 16 cancer types using INIT.** *PLoS Computational
+> Biology* 8(5): e1002518. <https://doi.org/10.1371/journal.pcbi.1002518>
 
 ## Random sampling
 
