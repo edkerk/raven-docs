@@ -8,10 +8,10 @@ a condition as reviewable data instead of a paragraph of bound-setting code.
 
 | MATLAB | Python | |
 |---|---|---|
-| `getExchangeRxns` | `Model.exchanges` {bdg-secondary}`cobrapy` | find the exchange reactions |
-| `setExchangeBounds` | `Model.medium` {bdg-secondary}`cobrapy` | set a whole medium, closing the rest |
+| `getExchangeRxns` | `Model.exchanges` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | find the exchange reactions |
+| `setExchangeBounds` | `Model.medium` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | set a whole medium, closing the rest |
 | `setParam` | `set_reaction_bounds` | set one reaction's bounds |
-| `getMinimalMedium` | `minimal_medium` {bdg-secondary}`cobrapy` | the smallest medium that still supports growth |
+| `getMinimalMedium` | `minimal_medium` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the smallest medium that still supports growth |
 | `applyCondition` | `apply_condition`, `load_condition` | apply a condition file |
 
 ## Setup

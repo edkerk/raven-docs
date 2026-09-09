@@ -9,11 +9,11 @@ requires from one it merely happened to report.
 
 | MATLAB | Python | |
 |---|---|---|
-| `getAllowedBounds` | `flux_variability_analysis` {bdg-secondary}`cobrapy` | the range each reaction can take |
-| `haveFlux` | `find_blocked_reactions` {bdg-secondary}`cobrapy` | reactions that can carry no flux at all |
-| `solveLP` (`minFlux`) | `pfba` {bdg-secondary}`cobrapy` | one representative optimum |
-| no equivalent | `loopless_solution` {bdg-secondary}`cobrapy` | an optimum without thermodynamically infeasible loops |
-| no equivalent | `add_loopless` {bdg-secondary}`cobrapy` | the constraints behind `loopless="fastSNP"` |
+| `getAllowedBounds` | `flux_variability_analysis` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the range each reaction can take |
+| `haveFlux` | `find_blocked_reactions` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | reactions that can carry no flux at all |
+| `solveLP` (`minFlux`) | `pfba` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | one representative optimum |
+| no equivalent | `loopless_solution` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | an optimum without thermodynamically infeasible loops |
+| no equivalent | `add_loopless` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | the constraints behind `loopless="fastSNP"` |
 | no equivalent | `find_good_reactions` | reactions whose range is real rather than a loop |
 
 ## Setup

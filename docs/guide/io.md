@@ -7,8 +7,8 @@ directory layout a Git-maintained model repository expects.
 
 | MATLAB | Python | |
 |---|---|---|
-| `importModel` | `read_sbml_model` {bdg-secondary}`cobrapy` | read SBML |
-| `exportModel` | `write_sbml_model` {bdg-secondary}`cobrapy` | write SBML |
+| `importModel` | `read_sbml_model` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | read SBML |
+| `exportModel` | `write_sbml_model` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | write SBML |
 | `readYAMLmodel` | `read_yaml_model` | read RAVEN YAML |
 | `writeYAMLmodel` | `write_yaml_model` | write RAVEN YAML |
 | `exportToExcelFormat` | `export_to_excel` | write the RAVEN Excel format |

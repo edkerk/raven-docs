@@ -11,9 +11,9 @@ nothing.
 |---|---|---|
 | `checkModelStruct` | `check_model` | structural problems |
 | `getElementalBalance` | `get_elemental_balance` | mass balance, reaction by reaction |
-| `haveFlux` | `find_blocked_reactions` {bdg-secondary}`cobrapy` | reactions that can never carry flux |
+| `haveFlux` | `find_blocked_reactions` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | reactions that can never carry flux |
 | `canExchange` | `analyse_topology` | which metabolites the model can make, or consume, given its medium |
-| `findLeakMetabolite` | `Model.optimize` on a demand {bdg-secondary}`cobrapy` | can the model make something from **nothing** |
+| `findLeakMetabolite` | `Model.optimize` on a demand {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | can the model make something from **nothing** |
 | `gapReport` | `check_model` + `analyse_topology` | one summary of the gaps |
 
 ## Setup

@@ -11,8 +11,8 @@ page is the safe way to do each of those.
 | `changeRxns` | `change_reaction_equations` | replace a reaction's stoichiometry |
 | `changeGrRules` | `change_gene_reaction_rules` | set or extend gene associations |
 | `standardizeGrRules` | `gpr_to_dnf` | normalise a GPR |
-| `setParam` | `Reaction.bounds` {bdg-secondary}`cobrapy` | change bounds, objective |
-| `removeReactions` | `Model.remove_reactions` {bdg-secondary}`cobrapy` | delete reactions |
+| `setParam` | `Reaction.bounds` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | change bounds, objective |
+| `removeReactions` | `Model.remove_reactions` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | delete reactions |
 | `removeMets` | `remove_metabolites` | delete metabolites |
 | `removeGenes`, `deleteUnusedGenes` | `remove_genes` | delete genes |
 

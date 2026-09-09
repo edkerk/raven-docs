@@ -7,15 +7,15 @@ This is the loop every other analysis on this site is built from.
 
 | MATLAB | Python | |
 |---|---|---|
-| `setParam` | `Reaction.bounds`, `Model.objective` {bdg-secondary}`cobrapy` | set bounds and the objective |
-| `solveLP` | `Model.optimize` {bdg-secondary}`cobrapy` | solve the LP |
-| `printFluxes` | `Model.summary` {bdg-secondary}`cobrapy` | show the fluxes that carry material |
-| `solveLP` (`minFlux`) | `pfba` {bdg-secondary}`cobrapy` | pick a parsimonious solution among the optima |
+| `setParam` | `Reaction.bounds`, `Model.objective` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | set bounds and the objective |
+| `solveLP` | `Model.optimize` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | solve the LP |
+| `printFluxes` | `Model.summary` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | show the fluxes that carry material |
+| `solveLP` (`minFlux`) | `pfba` {bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` | pick a parsimonious solution among the optima |
 
 :::{admonition} Where the Python functions come from
 :class: info
 Every simulation step on this page is cobrapy, marked
-{bdg-secondary}`cobrapy` in the table above. In MATLAB,
+{bdg-link-secondary}`cobrapy <https://cobrapy.readthedocs.io/en/latest/autoapi/cobra/index.html>` in the table above. In MATLAB,
 `solveLP` needs neither the COBRA Toolbox nor anything else outside RAVEN.
 :::
 
